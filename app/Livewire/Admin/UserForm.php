@@ -22,6 +22,7 @@ class UserForm extends Component
         'view dashboard' => false,
         'view products' => false, // Obat
         'view stock' => false,    // Stok
+        'adjust stock' => false,  // Penyesuaian Stok
         'access pos' => false,    // Kasir
         'view reports' => false,  // Laporan
         'view finance' => false,  // Finance

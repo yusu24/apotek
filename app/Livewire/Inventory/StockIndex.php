@@ -18,28 +18,30 @@ class StockIndex extends Component
     public $search = '';
     
     #[Url]
-    public $filter_status = 'all'; // all, expired, low_stock
+    public $filter_status = 'all'; // all, low_stock
 
     public function render()
     {
-        $batches = Batch::with('product')
+        $products = Product::query()
+            ->with(['category', 'unit', 'batches' => function($q) {
+                $q->orderBy('expired_date');
+            }])
+            ->withSum('batches as total_stock', 'stock_current')
             ->when($this->search, function($q) {
-                $q->whereHas('product', function($sq) {
-                    $sq->where('name', 'like', '%'.$this->search.'%');
-                })->orWhere('batch_no', 'like', '%'.$this->search.'%');
+                $q->where('name', 'like', '%'.$this->search.'%')
+                  ->orWhere('barcode', 'like', '%'.$this->search.'%');
             })
-            ->when($this->filter_status === 'expired', function($q) {
-                $q->whereDate('expired_date', '<=', now());
+            ->when($this->filter_status === 'low_stock', function($q) {
+                $q->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock');
             })
-            ->orderBy('expired_date', 'asc')
-            ->paginate(10)
-            ->onEachSide(2);
+            ->orderBy('name')
+            ->paginate(10);
 
         return view('livewire.inventory.stock-index', [
-            'batches' => $batches,
-            'low_stock_products' => Product::whereRaw('
-                (SELECT SUM(stock_current) FROM batches WHERE product_id = products.id) <= min_stock
-            ')->get(),
+            'products' => $products,
+            'low_stock_products' => Product::query()
+                ->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock')
+                ->get(),
         ]);
     }
 }

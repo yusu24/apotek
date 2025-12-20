@@ -65,6 +65,10 @@
                             <span class="ml-2 text-sm text-gray-700">Stok (Inventory)</span>
                         </label>
                         <label class="flex items-center">
+                            <input type="checkbox" wire:model="menu_permissions.adjust stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Penyesuaian Stok</span>
+                        </label>
+                        <label class="flex items-center">
                             <input type="checkbox" wire:model="menu_permissions.access pos" class="w-4 h-4 text-blue-600 rounded border-gray-300">
                             <span class="ml-2 text-sm text-gray-700">Kasir (POS)</span>
                         </label>

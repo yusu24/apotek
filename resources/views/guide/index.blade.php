@@ -53,8 +53,8 @@
                         <li>Masukkan <strong>Password</strong>.</li>
                         <li>Klik tombol <strong>Log in</strong>.</li>
                     </ol>
-                    <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 text-center h-48 flex items-center justify-center text-gray-400 italic mb-4">
-                        [Screenshot Halaman Login]
+                    <div class="my-6 border rounded-lg overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/guide/login.png') }}" alt="Screenshot Login" class="w-full">
                     </div>
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
                         <p class="text-sm text-yellow-700"><strong>Catatan:</strong> Jika lupa password, hubungi Super Admin untuk reset password.</p>
@@ -77,8 +77,8 @@
                         <li><strong>Stok Kritis:</strong> Daftar obat yang stoknya menipis.</li>
                         <li><strong>Grafik Tren:</strong> Visualisasi pendapatan.</li>
                     </ul>
-                    <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 text-center h-48 flex items-center justify-center text-gray-400 italic">
-                        [Screenshot Dashboard]
+                    <div class="my-6 border rounded-lg overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/guide/dashboard.png') }}" alt="Screenshot Dashboard" class="w-full">
                     </div>
                 </div>
             </section>
@@ -100,8 +100,8 @@
                         <li>Isi formulir (Nama, Kategori, Harga Beli, Harga Jual, Satuan, Min Stok).</li>
                         <li>Klik <strong>Simpan</strong>.</li>
                     </ol>
-                    <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 text-center h-48 flex items-center justify-center text-gray-400 italic">
-                        [Screenshot Form Produk]
+                    <div class="my-6 border rounded-lg overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/guide/product.png') }}" alt="Screenshot Produk" class="w-full">
                     </div>
                 </div>
             </section>
@@ -132,8 +132,8 @@
                         <p class="text-sm text-blue-700"><strong>Info Stok:</strong> Sistem akan menolak pembayaran jika stok produk yang ada di keranjang melebihi stok yang tersedia di gudang.</p>
                     </div>
 
-                    <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 text-center h-64 flex items-center justify-center text-gray-400 italic">
-                        [Screenshot Halaman Kasir]
+                    <div class="my-6 border rounded-lg overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/guide/pos.png') }}" alt="Screenshot POS" class="w-full">
                     </div>
                 </div>
             </section>
@@ -185,7 +185,9 @@
                         <li>Gunakan filter <strong>Periode</strong> untuk melihat data Harian, Mingguan, Bulanan, atau Custom Tanggal.</li>
                         <li>Grafik akan menyesuaikan secara otomatis.</li>
                         <li>Arahkan mouse ke grafik untuk melihat detail nilai uang.</li>
-                    </ul>
+                    <div class="my-6 border rounded-lg overflow-hidden shadow-lg">
+                        <img src="{{ asset('images/guide/report.png') }}" alt="Screenshot Laporan" class="w-full">
+                    </div>
                 </div>
             </section>
 

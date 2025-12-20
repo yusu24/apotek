@@ -24,9 +24,9 @@ class StockAdjustment extends Component
 
     public function mount($batchId)
     {
-        // Check permission - Super Admin only
-        if (!auth()->user()->hasRole('super-admin')) {
-            abort(403, 'Hanya Super Admin yang dapat menyesuaikan stok.');
+        // Check permission - anyone with 'adjust stock' permission
+        if (!auth()->user()->can('adjust stock')) {
+            abort(403, 'Anda tidak memiliki akses untuk menyesuaikan stok.');
         }
 
         $batch = Batch::with('product')->findOrFail($batchId);

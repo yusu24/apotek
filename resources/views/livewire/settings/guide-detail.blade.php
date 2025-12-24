@@ -173,7 +173,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="bg-[#0f172a] text-white">
+                                    <tr style="background-color: #0f172a !important;" class="text-white">
                                         <th class="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-slate-400">Field</th>
                                         <th class="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-slate-400">Keterangan Pengisian</th>
                                         <th class="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-center text-slate-400">Sifat</th>
@@ -216,7 +216,7 @@
                     <div class="p-3 divide-y divide-slate-50">
                         @foreach($guide['sub_menus'] as $sub)
                         <div class="p-4 group">
-                            <h5 class="font-bold text-slate-900 text-xs mb-1 group-hover:text-blue-600 transition-colors uppercase">{{ $sub['name'] }}</h5>
+                            <h5 class="font-bold text-slate-900 text-xs mb-1 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{{ $sub['name'] }}</h5>
                             <p class="text-slate-500 text-[11px] leading-relaxed font-medium">{{ $sub['func'] }}</p>
                         </div>
                         @endforeach
@@ -224,14 +224,14 @@
                 </div>
 
                 <!-- Action Buttons Card -->
-                <div class="bg-[#0f172a] rounded-3xl shadow-xl overflow-hidden no-print">
+                <div style="background-color: #0f172a !important;" class="rounded-3xl shadow-xl overflow-hidden no-print">
                     <div class="p-6 border-b border-white/5">
                         <h4 class="text-xs font-bold text-white uppercase tracking-widest">Fungsi Tombol</h4>
                     </div>
                     <div class="p-3">
                         @foreach($guide['buttons'] as $btn)
                         <div class="p-4 flex items-start gap-4 rounded-2xl hover:bg-white/5 transition-colors group">
-                            <div class="p-2 bg-blue-600 text-white rounded-lg flex-shrink-0">
+                            <div class="p-2 bg-blue-600 text-white rounded-lg flex-shrink-0 shadow-lg shadow-blue-900/20">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <div>

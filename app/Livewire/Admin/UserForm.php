@@ -21,6 +21,8 @@ class UserForm extends Component
     public $menu_permissions = [
         'view dashboard' => false,
         'view products' => false, // Obat
+        'manage product units' => false, // Satuan Produk
+        'view stock' => false,    // Stok
         'view stock' => false,    // Stok
         'adjust stock' => false,  // Penyesuaian Stok
         'access pos' => false,    // Kasir

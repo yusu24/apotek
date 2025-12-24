@@ -1,15 +1,13 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                {{ $user_id ? 'Edit User' : 'Tambah User Baru' }}
-            </h2>
-            <a href="{{ route('admin.users.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali
-            </a>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {{ $user_id ? 'Edit User' : 'Tambah User Baru' }}
+        </h2>
+        <a href="{{ route('admin.users.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali
+        </a>
+    </div>
 
     <div class="bg-white rounded-lg shadow-lg p-6">
         <form wire:submit="save">
@@ -59,6 +57,10 @@
                         <label class="flex items-center">
                             <input type="checkbox" wire:model="menu_permissions.view products" class="w-4 h-4 text-blue-600 rounded border-gray-300">
                             <span class="ml-2 text-sm text-gray-700">Obat (Data Obat)</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" wire:model="menu_permissions.manage product units" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Satuan Produk</span>
                         </label>
                         <label class="flex items-center">
                             <input type="checkbox" wire:model="menu_permissions.view stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">

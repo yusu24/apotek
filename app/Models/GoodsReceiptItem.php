@@ -9,6 +9,10 @@ class GoodsReceiptItem extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'conversion_factor' => 'decimal:4',
+    ];
+
     public function goodsReceipt()
     {
         return $this->belongsTo(GoodsReceipt::class);
@@ -17,5 +21,10 @@ class GoodsReceiptItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

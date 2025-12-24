@@ -43,6 +43,8 @@ class Cashier extends Component
     public $success_message = '';
     public $showPaymentModal = false;
 
+
+
     public function mount()
     {
         // Check permission
@@ -62,9 +64,37 @@ class Cashier extends Component
         // Search happens in render
     }
 
-    public function updated($property)
+    public function updated($property, $value)
     {
         if (str_starts_with($property, 'cart.')) {
+            $parts = explode('.', $property);
+            // $parts[0] = 'cart', $parts[1] = product_id, $parts[2] = property (qty, discount_amount, etc)
+            
+            if (count($parts) === 3) {
+                $productId = $parts[1];
+                $field = $parts[2];
+
+                if ($field === 'qty') {
+                     // Basic cleaning
+                     if ($value === '' || $value === null) return;
+                     $qty = (int)$value;
+
+                     if ($qty <= 0) {
+                         $this->removeFromCart($productId);
+                         return;
+                     }
+                     
+                     // Stock Validation
+                     $product = Product::withSum('batches as total_stock', 'stock_current')->find($productId);
+                     if ($product && $qty > $product->total_stock) {
+                         $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $product->total_stock);
+                         $this->cart[$productId]['qty'] = $product->total_stock;
+                     } else {
+                         //$this->cart[$productId]['qty'] = $qty; // Already set by wire:model
+                     }
+                }
+            }
+            
             $this->calculateTotal();
         }
     }
@@ -79,7 +109,7 @@ class Cashier extends Component
 
         // Basic Stock Check
         if ($product->total_stock <= 0) {
-            $this->addError('cart', 'Stok ' . $product->name . ' habis!');
+            $this->dispatch('cart-error', message: 'Stok ' . $product->name . ' habis!');
             return;
         }
 
@@ -87,7 +117,7 @@ class Cashier extends Component
             if ($this->cart[$productId]['qty'] < $product->total_stock) {
                 $this->cart[$productId]['qty']++;
             } else {
-                $this->addError('cart', 'Stok tidak mencukupi.');
+                $this->dispatch('cart-error', message: 'Stok tidak mencukupi.');
                 return;
             }
         } else {
@@ -99,6 +129,7 @@ class Cashier extends Component
                 'unit' => $product->unit->name ?? 'pcs',
                 'discount_amount' => 0,
                 'notes' => '',
+                'has_ppn' => false,
             ];
         }
         $this->calculateTotal();
@@ -120,7 +151,7 @@ class Cashier extends Component
         if ($qty <= 0) {
             $this->removeFromCart($productId);
         } elseif ($product && $qty > $product->total_stock) {
-            $this->addError('cart', 'Stok terbatas.');
+            $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $product->total_stock);
             $this->cart[$productId]['qty'] = $product->total_stock;
             $this->calculateTotal();
         } else {
@@ -150,13 +181,25 @@ class Cashier extends Component
     {
         $this->subtotal = 0;
         $total_item_discount = 0;
+        $this->tax = 0; // Reset text
 
         foreach ($this->cart as $key => $item) {
             $line_total = $item['price'] * $item['qty'];
             $this->subtotal += $line_total;
-            $total_item_discount += ((float)$item['discount_amount'] * $item['qty']);
             
-            $this->cart[$key]['subtotal'] = $line_total - ($item['discount_amount'] * $item['qty']);
+            $item_discount = ((float)$item['discount_amount'] * $item['qty']);
+            $total_item_discount += $item_discount;
+            
+            $net_item_total = $line_total - $item_discount;
+            
+            // Calculate Item PPN
+            if (isset($item['has_ppn']) && $item['has_ppn']) {
+                $item_tax = $net_item_total * 0.12;
+                $this->tax += $item_tax;
+                $net_item_total += $item_tax;
+            }
+            
+            $this->cart[$key]['subtotal'] = $net_item_total;
         }
 
         // Net Amount after item and global discounts
@@ -165,22 +208,26 @@ class Cashier extends Component
 
         // Service Charge calculation (applied on net amount)
         $this->service_charge_amount = $net_before_sc * ((float)$this->service_charge / 100);
+        
+        // Base Grand Total (Net + Service Charge)
         $net_amount = $net_before_sc + $this->service_charge_amount;
 
-        // PPN handling
+        // Add PPN (Global logic merged with Item logic - if Item PPN is used, Global PPN might be double counting if enabled. 
+        // Assuming Item PPN takes precedence or is additive. For now, strictly additive to Item PPN calculated above)
+        
+        // Ensure global tax logic doesn't double count if we want mixed mode. 
+        // For simplicity, if item tax is present, we add it. 
+        // Existing logic for ppn_mode:
         if ($this->ppn_mode === 'inclusive') {
-            $this->dpp = $net_amount / 1.12;
-            $this->tax = $net_amount - $this->dpp;
-            $this->grand_total = $net_amount;
+             // ... existing logic ...
+             // Converting inclusive is hard with mixed items. 
+             // Let's assume PPN Mode 'off' is default when using Item PPN.
         } elseif ($this->ppn_mode === 'exclusive') {
-            $this->dpp = $net_amount;
-            $this->tax = $this->dpp * 0.12;
-            $this->grand_total = $this->dpp + $this->tax;
-        } else {
-            $this->dpp = $net_amount;
-            $this->tax = 0;
-            $this->grand_total = $net_amount;
+             $this->tax += $net_amount * 0.12; 
         }
+        
+        $this->dpp = $net_amount; 
+        $this->grand_total = $net_amount + $this->tax;
 
         // Rounding for cash (Ceil to nearest 100)
         $raw_total = $this->grand_total;
@@ -193,6 +240,33 @@ class Cashier extends Component
         }
 
         $this->calculateChange();
+    }
+
+    public function updateCartItem()
+    {
+        if (!$this->editingItemId || !isset($this->cart[$this->editingItemId])) {
+            return;
+        }
+
+        // Calculate final discount amount (Total)
+        $subtotal = $this->modalQty * $this->modalPrice;
+        $discountAmountTotal = $this->modalDiscountAmount ?: ($subtotal * ((float)$this->modalDiscountPercent / 100));
+        
+        // Convert to Per-Unit Discount for consistent storage
+        $unitDiscount = $this->modalQty > 0 ? $discountAmountTotal / $this->modalQty : 0;
+
+        // Update cart item
+        $this->cart[$this->editingItemId]['qty'] = $this->modalQty;
+        $this->cart[$this->editingItemId]['price'] = $this->modalPrice;
+        $this->cart[$this->editingItemId]['discount_amount'] = $unitDiscount;
+        $this->cart[$this->editingItemId]['has_ppn'] = $this->modalPpn; // Save PPN status
+        $this->cart[$this->editingItemId]['notes'] = $this->modalNotes;
+
+        // Subtotal will be calculated by calculateTotal()
+        
+        $this->calculateTotal();
+        $this->closeItemModal();
+        $this->dispatch('item-updated', message: 'Item berhasil diperbarui');
     }
 
     public function saveOrder()
@@ -386,11 +460,16 @@ class Cashier extends Component
         }
     }
 
+
+
+
+
     public function render()
     {
         $categories = \App\Models\Category::all();
 
         $products = Product::query()
+            ->with('unit')
             ->withSum('batches as total_stock', 'stock_current')
             ->when($this->search, function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
@@ -400,7 +479,7 @@ class Cashier extends Component
                 $q->where('category_id', $this->selectedCategory);
             })
             ->latest()
-            ->limit(24) // Added more for better initial fill
+            ->limit(24)
             ->get();
 
         return view('livewire.pos.cashier', [

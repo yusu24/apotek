@@ -9,7 +9,16 @@ class SaleItem extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'sale_id', 'product_id', 'batch_id', 'quantity', 'sell_price', 
+        'discount_amount', 'subtotal', 'notes'
+    ];
+
+    protected $casts = [
+        'sell_price' => 'float',
+        'subtotal' => 'float',
+        'quantity' => 'integer',
+    ];
 
     public function product()
     {

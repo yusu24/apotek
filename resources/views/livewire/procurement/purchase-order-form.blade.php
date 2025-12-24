@@ -1,15 +1,13 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                {{ $purchaseOrder ? 'Edit Pesanan' : 'Buat Pesanan Baru' }}
-            </h2>
-            <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali
-            </a>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {{ $purchaseOrder ? 'Edit Pesanan' : 'Buat Pesanan Baru' }}
+        </h2>
+        <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali
+        </a>
+    </div>
 
     <form wire:submit="save">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -20,18 +18,18 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">No. PO</label>
+                            <label class="block text-sm font-medium text-gray-700">No. PO <span class="text-red-500">*</span></label>
                             <input type="text" wire:model="po_number" class="mt-1 block w-full rounded-lg border-gray-300 bg-gray-100" readonly>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Tanggal</label>
+                            <label class="block text-sm font-medium text-gray-700">Tanggal <span class="text-red-500">*</span></label>
                             <input type="date" wire:model="date" class="mt-1 block w-full rounded-lg border-gray-300">
                             @error('date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Supplier</label>
+                            <label class="block text-sm font-medium text-gray-700">Supplier <span class="text-red-500">*</span></label>
                             <select wire:model="supplier_id" class="mt-1 block w-full rounded-lg border-gray-300">
                                 <option value="">-- Pilih Supplier --</option>
                                 @foreach($suppliers as $sup)
@@ -66,57 +64,91 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Item Pesanan</h3>
-                        <button type="button" wire:click="addItem" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                        <button type="button" wire:click="openModal" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium transition">
                             + Tambah Barang
                         </button>
                     </div>
 
                     @error('items') <div class="text-red-500 text-sm mb-2">{{ $message }}</div> @enderror
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
-                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20">Qty</th>
-                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">Harga Satuan</th>
-                                    <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase w-32">Subtotal</th>
-                                    <th class="px-3 py-2 w-10"></th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Produk</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider w-20">Qty</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">Satuan</th>
+                                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider w-40">Harga Satuan</th>
+                                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider w-40">Subtotal</th>
+                                    <th class="px-4 py-3 text-center w-24">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @foreach($items as $index => $item)
-                                    <tr>
-                                        <td class="px-3 py-2">
-                                            <select wire:model.live="items.{{ $index }}.product_id" class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
-                                                <option value="">Pilih Produk</option>
-                                                @foreach($products as $prod)
-                                                    <option value="{{ $prod->id }}">{{ $prod->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error("items.{$index}.product_id") <span class="text-red-500 text-xs text-nowrap">Wajib pilih</span> @enderror
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @forelse($items as $index => $item)
+                                    @php
+                                        $product = $products->firstWhere('id', $item['product_id']);
+                                    @endphp
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-4 py-3">
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->name ?? '-' }}</div>
+                                            <div class="text-xs text-gray-500">{{ $product->barcode ?? '' }}</div>
                                         </td>
-                                        <td class="px-3 py-2">
-                                            <input type="number" wire:model.live="items.{{ $index }}.qty" class="w-full text-sm rounded-lg border-gray-300 text-center" min="1">
+                                        <td class="px-4 py-3 text-center">
+                                            <div class="text-sm text-gray-900">{{ $item['qty'] }}</div>
                                         </td>
-                                        <td class="px-3 py-2">
-                                            <input type="number" wire:model.live="items.{{ $index }}.unit_price" class="w-full text-sm rounded-lg border-gray-300 text-right">
+                                        <td class="px-4 py-3 text-center">
+                                            @php
+                                                $unitName = $product->unit->name ?? '-';
+                                                if (!empty($item['unit_id'])) {
+                                                    if ($product->unit_id == $item['unit_id']) {
+                                                        $unitName = $product->unit->name;
+                                                    } else {
+                                                        $conversion = $product->unitConversions->where('from_unit_id', $item['unit_id'])->first();
+                                                        if ($conversion) {
+                                                            $unitName = $conversion->fromUnit->name;
+                                                        } else {
+                                                             $conversionOriginal = $product->unitConversions->first(function($c) use ($item) {
+                                                                return $c->from_unit_id == $item['unit_id'];
+                                                             });
+                                                             if($conversionOriginal) $unitName = $conversionOriginal->fromUnit->name;
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
+                                            <div class="text-xs text-gray-500">{{ $unitName }}</div>
                                         </td>
-                                        <td class="px-3 py-2 text-right font-bold text-gray-900">
-                                            {{ number_format($item['subtotal'], 0, ',', '.') }}
+                                        <td class="px-4 py-3 text-right text-sm text-gray-900">
+                                            Rp {{ number_format($item['unit_price'], 0, ',', '.') }}
                                         </td>
-                                        <td class="px-3 py-2 text-center">
-                                            <button type="button" wire:click="removeItem({{ $index }})" class="text-red-500 hover:text-red-700">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                            </button>
+                                        <td class="px-4 py-3 text-right text-sm font-bold text-gray-900">
+                                            Rp {{ number_format($item['subtotal'], 0, ',', '.') }}
+                                            @if(!empty($item['has_ppn']))
+                                                <div class="text-[10px] text-gray-500 font-normal">+PPN 12%</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <button type="button" wire:click="openModal({{ $index }})" class="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                                </button>
+                                                <button type="button" wire:click="removeItem({{ $index }})" class="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded transition">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="px-4 py-8 text-center text-gray-500 italic">
+                                            Belum ada barang yang ditambahkan
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
-                            <tfoot class="bg-gray-50">
+                            <tfoot class="bg-gray-50 font-bold border-t border-gray-200">
                                 <tr>
-                                    <td colspan="3" class="px-3 py-3 text-right font-bold text-gray-700">Total Est.</td>
-                                    <td class="px-3 py-3 text-right font-bold text-gray-900 text-lg">
+                                    <td colspan="4" class="px-4 py-3 text-right text-gray-700">Total Pesanan:</td>
+                                    <td class="px-4 py-3 text-right text-blue-800 text-lg">
                                         Rp {{ number_format(collect($items)->sum('subtotal'), 0, ',', '.') }}
                                     </td>
                                     <td></td>
@@ -134,4 +166,178 @@
             </div>
         </div>
     </form>
+
+    <!-- Modal Item moved outside main form -->
+    @if($showModal)
+        <div class="fixed inset-0 z-50 overflow-y-auto" x-data x-cloak>
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" wire:click="closeModal"></div>
+            
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <form wire:submit.prevent="saveItem" class="relative bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all my-8">
+                    
+                    <!-- Header -->
+                    <div class="bg-blue-900 px-5 py-3 flex justify-between items-center">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                            {{ $editingItemIndex !== null ? 'Edit Item' : 'Tambah Item' }}
+                        </h3>
+                        <button type="button" wire:click="closeModal" class="text-blue-200 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+                        <!-- Product Selection (Searchable) -->
+                        <div x-data="{
+                            open: false,
+                            search: '',
+                            selectedId: @entangle('modalProductId').live,
+                            products: {{ $products->map(fn($p) => ['id' => $p->id, 'name' => $p->name, 'barcode' => $p->barcode])->toJson() }},
+                            get filteredProducts() {
+                                if (this.search === '') return this.products;
+                                return this.products.filter(p => 
+                                    p.name.toLowerCase().includes(this.search.toLowerCase()) || 
+                                    (p.barcode && p.barcode.toLowerCase().includes(this.search.toLowerCase()))
+                                );
+                            },
+                            selectProduct(product) {
+                                this.selectedId = product.id;
+                                this.search = product.name;
+                                this.open = false;
+                            },
+                            init() {
+                                this.$watch('selectedId', (value) => {
+                                    if(!value) { this.search = ''; return; }
+                                    const product = this.products.find(p => p.id == value);
+                                    if (product) this.search = product.name;
+                                });
+                                // Initial State
+                                if(this.selectedId) {
+                                    const product = this.products.find(p => p.id == this.selectedId);
+                                    if (product) this.search = product.name;
+                                }
+                            }
+                        }" class="relative">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Pilih Produk <span class="text-red-500">*</span></label>
+                            
+                            <div class="relative">
+                                <input type="text" 
+                                    x-model="search"
+                                    @focus="open = true"
+                                    @click.away="open = false"
+                                    @keydown.escape="open = false"
+                                    class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-4 pr-10"
+                                    placeholder="Ketik nama produk atau scan barcode..."
+                                >
+                                
+                                <!-- Search Icon / Loading -->
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </div>
+
+                                <!-- Dropdown List -->
+                                <div x-show="open && filteredProducts.length > 0" 
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
+                                     style="display: none;">
+                                    <ul class="py-1">
+                                        <template x-for="product in filteredProducts" :key="product.id">
+                                            <li @click="selectProduct(product)" 
+                                                class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors">
+                                                <div>
+                                                    <div class="text-sm font-semibold text-gray-800" x-text="product.name"></div>
+                                                    <div class="text-xs text-gray-500" x-text="product.barcode"></div>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+
+                                <!-- No Results -->
+                                <div x-show="open && filteredProducts.length === 0" 
+                                     class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 p-4 text-center text-gray-500 text-sm"
+                                     style="display: none;">
+                                    Produk tidak ditemukan.
+                                </div>
+                            </div>
+                            @error('modalProductId') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Product Details (Read Only) -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gray-50 p-2 rounded-lg border border-gray-200">
+                                <label class="block text-[10px] font-semibold text-gray-500 uppercase">Kode</label>
+                                <div class="font-mono text-xs text-gray-800">{{ $modalProductCode ?: '-' }}</div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Satuan <span class="text-red-500">*</span></label>
+                                <select wire:model.live="modalUnitId" wire:key="unit-select-{{ $modalProductId }}" class="block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold">
+                                    @foreach($availableUnits as $u)
+                                        <option value="{{ $u['id'] }}">
+                                            {{ $u['name'] }}
+                                            @if($u['factor'] > 1) 
+                                                ({{ (float)$u['factor'] }} {{ $availableUnits[0]['name'] ?? 'Base' }})
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Input Grid -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Qty -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Kuantitas <span class="text-red-500">*</span></label>
+                                <div class="flex rounded-lg shadow-sm h-9">
+                                    <button type="button" wire:click="decrementQty" class="px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg hover:bg-gray-200 font-bold text-gray-600">-</button>
+                                    <input type="number" wire:model.live="modalQty" class="flex-1 min-w-0 block w-full px-2 border-gray-300 text-center font-bold focus:ring-blue-500 focus:border-blue-500 text-sm" min="1">
+                                    <button type="button" wire:click="incrementQty" class="px-3 bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 font-bold text-gray-600">+</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Price -->
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Harga Beli Satuan <span class="text-red-500">*</span></label>
+                                <div class="relative rounded-lg shadow-sm h-9">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 text-xs">Rp</span>
+                                    </div>
+                                    <input type="number" wire:model.live="modalPrice" class="block w-full pl-8 pr-3 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right font-bold text-sm" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtotal Display -->
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between pt-2">
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
+                                    <input type="checkbox" wire:model.live="modalPpn" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm font-medium text-gray-700">Kenakan PPN 12%</span>
+                                </label>
+                            </div>
+
+                            <div class="bg-blue-50 p-3 rounded-lg flex items-center justify-between border border-blue-100">
+                                <span class="text-blue-800 text-sm font-semibold">Subtotal</span>
+                                <span class="text-lg font-bold text-blue-900">Rp {{ number_format($modalSubtotal, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2 border-t border-gray-200">
+                        <button wire:click="closeModal" type="button" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium transition text-gray-700">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold shadow transition">
+                            Simpan Item
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 </div>

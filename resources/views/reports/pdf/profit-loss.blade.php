@@ -2,83 +2,174 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Laporan Laba Rugi</title>
+    <meta charset="UTF-8">
+    <title>Laporan Laba Rugi - {{ $storeName }}</title>
     <style>
-        body { font-family: sans-serif; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .company-name { font-size: 24px; font-weight: bold; }
-        .report-title { font-size: 18px; margin-top: 5px; }
-        .period { font-size: 14px; color: #555; }
+        @page {
+            margin: 1.5cm;
+        }
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+        }
+        .store-name { 
+            font-size: 20pt; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .store-address {
+            font-size: 10pt;
+            font-style: italic;
+        }
+        .report-title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            margin-top: 20px;
+            text-align: center;
+        }
+        .report-period {
+            font-size: 11pt;
+            text-align: center;
+            margin-bottom: 30px;
+        }
         
-        .summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 10px; }
-        .summary-table th { background-color: #f2f2f2; text-align: left; }
-        .summary-table td.amount { text-align: right; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         
-        .section-header { background-color: #e9e9e9; font-weight: bold; }
-        .total-row { font-weight: bold; background-color: #f8f8f8; }
-        .net-profit { font-size: 16px; font-weight: bold; background-color: #e6fffa; }
-        .net-loss { font-size: 16px; font-weight: bold; background-color: #ffe6e6; }
+        .p-l-table td { padding: 8px 5px; }
+        .p-l-table .label { width: 60%; }
+        .p-l-table .amount { width: 40%; text-align: right; }
+        
+        .section-title { 
+            font-weight: bold; 
+            text-decoration: underline;
+            padding-top: 15px !important;
+        }
+        .sub-item { padding-left: 20px !important; }
+        .total-item { font-weight: bold; border-top: 1px solid #000; }
+        .grand-total { 
+            font-size: 13pt; 
+            font-weight: bold; 
+            border-top: 2px solid #000; 
+            border-bottom: 2px solid #000;
+            padding: 10px 5px !important;
+        }
+        
+        .footer { 
+            margin-top: 50px; 
+            font-size: 9pt; 
+        }
+        .signature-box {
+            float: right;
+            width: 200px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .signature-line {
+            margin-top: 60px;
+            border-top: 1px solid #000;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="company-name">{{ config('app.name', 'Apotek') }}</div>
-        <div class="report-title">Laporan Laba Rugi</div>
-        <div class="period">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
-        </div>
+        <div class="store-name">{{ $storeName }}</div>
+        <div class="store-address">{{ $storeAddress }}</div>
     </div>
 
-    <table class="summary-table">
+    <div class="report-title">LAPORAN LABA RUGI</div>
+    <div class="report-period">
+        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+    </div>
+
+    <table class="p-l-table">
         <tbody>
-            <!-- REVENUE -->
-            <tr class="section-header">
-                <td colspan="2">PENDAPATAN</td>
+            <!-- PENDAPATAN -->
+            <tr>
+                <td class="label section-title">PENDAPATAN</td>
+                <td class="amount"></td>
             </tr>
             <tr>
-                <td>Pendapatan Bersih (Penjualan - Pajak)</td>
-                <td class="amount">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
-            </tr>
-            <tr class="total-row">
-                <td>Total Pendapatan</td>
-                <td class="amount">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
-            </tr>
-            
-            <!-- COGS -->
-            <tr class="section-header">
-                <td colspan="2">HARGA POKOK PENJUALAN (HPP)</td>
+                <td class="label sub-item">Penjualan Kotor</td>
+                <td class="amount">Rp {{ number_format($revenue + $totalDiscount, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>HPP (Metode FIFO)</td>
-                <td class="amount">(Rp {{ number_format($cogs, 0, ',', '.') }})</td>
+                <td class="label sub-item">Potongan Penjualan (Diskon)</td>
+                <td class="amount">({{ number_format($totalDiscount, 0, ',', '.') }})</td>
             </tr>
-            
-            <!-- GROSS PROFIT -->
-            <tr class="total-row">
-                <td>LABA KOTOR</td>
+            <tr class="total-item">
+                <td class="label">PENJUALAN BERSIH</td>
+                <td class="amount">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
+            </tr>
+
+            <!-- HPP -->
+            <tr>
+                <td class="label section-title">HARGA POKOK PENJUALAN</td>
+                <td class="amount"></td>
+            </tr>
+            <tr>
+                <td class="label sub-item">Total Harga Pokok Penjualan (HPP)</td>
+                <td class="amount">Rp {{ number_format($cogs, 0, ',', '.') }}</td>
+            </tr>
+            <tr class="total-item">
+                <td class="label">TOTAL HPP</td>
+                <td class="amount">Rp {{ number_format($cogs, 0, ',', '.') }}</td>
+            </tr>
+
+            <!-- LABA KOTOR -->
+            <tr class="total-item" style="height: 20px;"><td></td><td></td></tr>
+            <tr class="total-item">
+                <td class="label">LABA KOTOR (GROSS PROFIT)</td>
                 <td class="amount">Rp {{ number_format($grossProfit, 0, ',', '.') }}</td>
             </tr>
-            
-            <!-- EXPENSES -->
-            <tr class="section-header">
-                <td colspan="2">BEBAN OPERASIONAL</td>
-            </tr>
+
+            <!-- BIAYA OPERASIONAL -->
             <tr>
-                <td>Total Beban Operasional</td>
-                <td class="amount">(Rp {{ number_format($expenses, 0, ',', '.') }})</td>
+                <td class="label section-title">BIAYA OPERASIONAL / PENGELUARAN</td>
+                <td class="amount"></td>
             </tr>
-            
-            <!-- NET PROFIT -->
-            <tr class="{{ $netProfit >= 0 ? 'net-profit' : 'net-loss' }}">
-                <td>LABA BERSIH</td>
+            @forelse($expenseDetails->groupBy('category') as $category => $items)
+            <tr>
+                <td class="label sub-item">{{ strtoupper($category) }}</td>
+                <td class="amount">Rp {{ number_format($items->sum('amount'), 0, ',', '.') }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td class="label sub-item">- Tidak ada pengeluaran -</td>
+                <td class="amount">Rp 0</td>
+            </tr>
+            @endforelse
+            <tr class="total-item">
+                <td class="label">TOTAL BIAYA OPERASIONAL</td>
+                <td class="amount">Rp {{ number_format($expenses, 0, ',', '.') }}</td>
+            </tr>
+
+            <!-- LABA BERSIH -->
+            <tr style="height: 30px;"><td></td><td></td></tr>
+            <tr class="grand-total">
+                <td class="label">LABA BERSIH (NET PROFIT)</td>
                 <td class="amount">Rp {{ number_format($netProfit, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
-    
-    <div style="margin-top: 30px; font-size: 12px; color: #777;">
-        Dicetak pada: {{ now()->format('d M Y H:i:s') }} oleh {{ auth()->user()->name }}
+
+    <div class="footer">
+        * Penjualan tidak termasuk PPN ({{ number_format($totalTax, 0, ',', '.') }})<br>
+        Dicetak pada: {{ now()->format('d/m/Y H:i:s') }} oleh {{ auth()->user()->name }}
+    </div>
+
+    <div class="signature-box">
+        <p>Dicetak Oleh,</p>
+        <div class="signature-line"></div>
+        <p>{{ auth()->user()->name }}</p>
     </div>
 </body>
 </html>

@@ -9,7 +9,15 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'category_id', 'unit_id', 'name', 'slug', 'barcode', 
+        'min_stock', 'sell_price', 'description'
+    ];
+
+    protected $casts = [
+        'min_stock' => 'integer',
+        'sell_price' => 'float',
+    ];
 
     public function category()
     {
@@ -24,5 +32,10 @@ class Product extends Model
     public function batches()
     {
         return $this->hasMany(Batch::class);
+    }
+
+    public function unitConversions()
+    {
+        return $this->hasMany(UnitConversion::class);
     }
 }

@@ -1,15 +1,13 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                Penerimaan Barang (Goods Receipt)
-            </h2>
-            <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali
-            </a>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+             Penerimaan Pesanan
+        </h2>
+        <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali
+        </a>
+    </div>
 
     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
         <p class="text-sm text-yellow-700">
@@ -52,6 +50,29 @@
                             <label class="block text-sm font-medium text-gray-700">Catatan</label>
                             <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300"></textarea>
                         </div>
+
+                        <div x-data="{ paymentMethod: @entangle('payment_method') }">
+                            <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
+                            <select wire:model.live="payment_method" class="mt-1 block w-full rounded-lg border-gray-300">
+                                <option value="cash">Cash</option>
+                                <option value="transfer">Transfer</option>
+                                <option value="due_date">Jatuh Tempo</option>
+                            </select>
+                            @error('payment_method') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+
+                            <!-- Conditional Due Date Selector -->
+                            <div x-show="paymentMethod === 'due_date'" x-cloak class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700">Jangka Waktu</label>
+                                <select wire:model="due_date_weeks" class="mt-1 block w-full rounded-lg border-gray-300">
+                                    <option value="">-- Pilih Jangka Waktu --</option>
+                                    <option value="1">1 Minggu</option>
+                                    <option value="2">2 Minggu</option>
+                                    <option value="3">3 Minggu</option>
+                                    <option value="4">4 Minggu</option>
+                                </select>
+                                @error('due_date_weeks') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,13 +103,14 @@
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">No. Batch</th>
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">Exp Date</th>
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-20">Qty</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-24">Satuan</th>
                                     <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase w-32">Harga Beli</th>
                                     <th class="px-3 py-2 w-10"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 @foreach($items as $index => $item)
-                                    <tr>
+                                    <tr wire:key="item-{{ $index }}">
                                         <td class="px-3 py-2">
                                             @if($purchase_order_id)
                                                 <div class="text-sm font-medium text-gray-900">{{ $item['product_name'] }}</div>
@@ -114,6 +136,29 @@
                                         <td class="px-3 py-2">
                                             <input type="number" wire:model="items.{{ $index }}.qty_received" class="w-full text-sm rounded-lg border-gray-300 text-center" min="1">
                                             @error("items.{$index}.qty_received") <span class="text-red-500 text-xs">Wajib diisi</span> @enderror
+                                        </td>
+                                        <td class="px-3 py-2">
+                                            @php
+                                                $selectedProduct = $products->firstWhere('id', $item['product_id']);
+                                            @endphp
+                                            @if($selectedProduct)
+                                                <select wire:model.live="items.{{ $index }}.unit_id" class="w-full text-sm rounded-lg border-gray-300 p-1">
+                                                    @if($selectedProduct->unit)
+                                                        <option value="{{ $selectedProduct->unit_id }}">
+                                                            {{ $selectedProduct->unit->name }} (1)
+                                                        </option>
+                                                    @endif
+                                                    @foreach($selectedProduct->unitConversions as $conversion)
+                                                        @if($conversion->to_unit_id == $selectedProduct->unit_id)
+                                                            <option value="{{ $conversion->from_unit_id }}">
+                                                                {{ $conversion->fromUnit->name }} ({{ (float)$conversion->conversion_factor }})
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <div class="text-sm text-gray-400">-</div>
+                                            @endif
                                         </td>
                                         <td class="px-3 py-2">
                                             <input type="number" wire:model="items.{{ $index }}.buy_price" class="w-full text-sm rounded-lg border-gray-300 text-right" min="0" step="0.01" placeholder="0">

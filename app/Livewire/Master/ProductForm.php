@@ -67,8 +67,9 @@ class ProductForm extends Component
             'description' => $this->description,
         ];
 
-        // Only Super Admin can update price and min_stock
-        if ($this->canEditPrice) {
+        // Only Super Admin can modify price and min_stock on existing products.
+        // For NEW products, anyone allowed to create can set the initial values.
+        if ($this->canEditPrice || !$this->product_id) {
             $data['min_stock'] = $this->min_stock;
             $data['sell_price'] = $this->sell_price;
         }

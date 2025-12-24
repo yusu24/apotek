@@ -25,105 +25,128 @@
             <div x-init="showAlertFn('{{ session('success') }}')" class="hidden"></div>
         @endif
 
-        <!-- MAIN POS CONTAINER (2 Column Split Screen with Fixed Cart) -->
-        <div class="absolute inset-0 flex flex-row gap-4 p-4 overflow-hidden">
+        <!-- MAIN POS CONTAINER (Responsive: Stack on mobile, Side-by-side on desktop) -->
+        <div class="absolute inset-x-0 bottom-0 top-16 xl:top-0 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
             
-            <!-- LEFT: Keranjang/Order (Fixed & Sticky) -->
-            <div class="w-[400px] lg:w-[450px] shrink-0 bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200 z-10 h-full">
+            <!-- LEFT/TOP: Keranjang/Order (Fixed on desktop, scrollable on mobile) -->
+            <div class="w-full md:w-[350px] lg:w-[380px] md:shrink-0 bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200 z-10 h-1/2 md:h-full">
                 
                 <!-- Cart Header -->
-                <div class="p-6 border-b border-gray-100">
+                <div class="p-4 md:p-6 border-b border-gray-100">
                     <div class="flex items-center gap-2 mb-1">
-                        <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        <h2 class="text-2xl font-bold text-gray-900">Keranjang</h2>
+                        <svg class="w-6 h-6 md:w-7 md:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900">Keranjang</h2>
                     </div>
-                    <p class="text-sm text-gray-500">{{ count($cart) }} Item</p>
+                    <p class="text-xs md:text-sm text-gray-500">{{ count($cart) }} Item</p>
                 </div>
 
                 <!-- Cart Items (Scrollable Table) -->
-                <div class="flex-1 overflow-y-auto bg-white">
+                <div class="flex-1 overflow-auto bg-white">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="px-4 py-3">Produk</th>
                                 <th class="px-2 py-3 text-center">Qty</th>
                                 <th class="px-4 py-3 text-right">Total</th>
+                                <th class="px-2 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($cart as $id => $item)
-                            <tr class="hover:bg-blue-50 group transition-colors" x-data="{ showDiscount: false, showNotes: false }">
+                            <tr class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
                                 <td class="px-4 py-3 align-top">
-                                    <div class="font-bold text-gray-900 line-clamp-2">{{ $item['name'] }}</div>
+                                    <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1">{{ $item['name'] }}</div>
                                     
-                                    <!-- Price & Discount Display -->
-                                    <div class="text-xs text-gray-500 mt-0.5" x-show="!showDiscount">
-                                        @ {{ number_format($item['price'], 0, ',', '.') }}
+                                    <!-- Price Display -->
+                                    <div class="text-xs text-gray-500 flex items-center gap-1" x-show="!openDisc && !openNote">
+                                        <span>@ {{ number_format($item['price'], 0, ',', '.') }}</span>
                                         @if($item['discount_amount'] > 0)
-                                         <span class="text-amber-600 font-medium ml-1">(-{{ number_format($item['discount_amount'], 0, ',', '.') }})</span>
+                                            <span class="text-amber-600 font-bold">
+                                                (-{{ number_format($item['discount_amount'], 0, ',', '.') }})
+                                            </span>
                                         @endif
                                     </div>
-                                    
-                                    <!-- Discount Input -->
-                                    <div x-show="showDiscount" class="mt-1" style="display: none;">
-                                        <div class="flex items-center gap-1">
-                                            <span class="text-xs text-amber-600 font-bold">Disc: Rp</span>
+
+                                    <!-- Inline Edit Forms (Toggled) -->
+                                    <div class="space-y-2 mt-1">
+                                        <!-- Discount Input -->
+                                        <div x-show="openDisc" x-transition class="flex items-center gap-2">
+                                            <span class="text-[10px] font-bold text-gray-400 uppercase w-8">Disc</span>
                                             <input type="number" 
-                                                wire:model.blur="cart.{{ $id }}.discount_amount"
-                                                class="w-24 text-xs py-1 px-1 border border-amber-300 rounded focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
-                                                @blur="showDiscount = false"
-                                                @keyup.enter="$event.target.blur()"
-                                                x-ref="discInput"
-                                            >
+                                                wire:model.live.debounce.500ms="cart.{{ $id }}.discount_amount"
+                                                class="w-24 px-2 py-1 text-xs text-right border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Rp 0"
+                                                x-ref="discInput_{{ $id }}"
+                                                @keydown.enter="openDisc = false"
+                                                @blur="openDisc = false">
+                                        </div>
+
+                                        <!-- Note Input -->
+                                        <div x-show="openNote" x-transition>
+                                            <input type="text" 
+                                                wire:model.blur="cart.{{ $id }}.notes"
+                                                class="w-full px-2 py-1 text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                                                placeholder="Tulis catatan..."
+                                                x-ref="noteInput_{{ $id }}"
+                                                @keydown.enter="openNote = false"
+                                                @blur="openNote = false">
                                         </div>
                                     </div>
 
-                                    <!-- Notes Display -->
-                                    @if($item['notes'] && !$item['discount_amount']) <!-- Hide notes if editing disc to prevent clutter, logic adjustable -->
-                                    <div class="text-xs text-blue-600 mt-1 italic flex items-start gap-1" x-show="!showNotes">
-                                        <span>📝</span> {{ $item['notes'] }}
+                                    <!-- Badges (Active State Indicators) -->
+                                    <div class="flex flex-wrap gap-1 mt-1" x-show="!openDisc && !openNote">
+                                        @if(!empty($item['notes']))
+                                            <div class="mt-1 max-w-[180px] md:max-w-[220px]">
+                                                <div class="text-[10px] text-gray-500 italic truncate flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100" title="{{ $item['notes'] }}">
+                                                    <span class="flex-shrink-0">📝</span> 
+                                                    <span class="truncate">{{ $item['notes'] }}</span>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
-                                    @endif
+                                </td>
+                                <td class="px-2 py-3 text-center align-top">
+                                    <div class="w-16 mx-auto">
+                                        <input type="number" 
+                                               wire:model.live.debounce.300ms="cart.{{ $id }}.qty"
+                                               class="w-full px-1 py-1 text-center text-sm font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                                               min="1">
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right align-top font-bold text-gray-900">
+                                    {{ number_format($item['subtotal'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-2 py-3 text-center align-top">
+                                    <div class="flex items-center justify-center gap-1">
+                                        <!-- Discount Toggle -->
+                                        <button @click="openDisc = !openDisc; $nextTick(() => $refs.discInput_{{ $id }}.focus())" 
+                                                class="p-1.5 rounded-lg transition"
+                                                :class="openDisc || {{ $item['discount_amount'] > 0 ? 'true' : 'false' }} ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                title="Diskon">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
+                                        </button>
 
-                                    <!-- Notes Input -->
-                                    <div x-show="showNotes" class="mt-2" style="display: none;">
-                                        <input type="text" 
-                                            wire:model.blur="cart.{{ $id }}.notes"
-                                            class="w-full text-xs py-1 px-2 border border-blue-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                            placeholder="Catatan..."
-                                            @blur="showNotes = false"
-                                            @keyup.enter="$event.target.blur()"
-                                            x-ref="noteInput"
-                                        >
-                                    </div>
-                                    
-                                    <!-- Inline Actions -->
-                                    <div class="flex gap-3 mt-2 opacity-60 group-hover:opacity-100 transition-opacity" x-show="!showDiscount && !showNotes">
-                                        <button type="button" @click="showDiscount = true; $nextTick(() => $refs.discInput.focus())" class="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:underline">
-                                            Diskon
+                                        <!-- Note Toggle -->
+                                        <button @click="openNote = !openNote; $nextTick(() => $refs.noteInput_{{ $id }}.focus())" 
+                                                class="p-1.5 rounded-lg transition"
+                                                :class="openNote || '{{ $item['notes'] }}'.length > 0 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                title="Catatan">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </button>
-                                        <button type="button" @click="showNotes = true; $nextTick(() => $refs.noteInput.focus())" class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline">
-                                            Catatan
-                                        </button>
-                                        <button type="button" wire:click="removeFromCart({{ $id }})" class="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline">
-                                            Hapus
+
+
+
+                                        <!-- Delete -->
+                                        <button wire:click="removeFromCart({{ $id }})" class="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </div>
                                 </td>
-                                <td class="px-2 py-3 align-top">
-                                     <div class="flex items-center justify-center border border-gray-200 rounded-lg bg-white overflow-hidden w-24 mx-auto">
-                                        <button wire:click="updateQty({{ $id }}, {{ $item['qty'] - 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">−</button>
-                                        <input type="number" wire:model.blur="cart.{{ $id }}.qty" wire:change="calculateTotal" class="w-8 text-center border-0 p-0 text-sm font-bold focus:ring-0 text-gray-900" min="1">
-                                        <button wire:click="updateQty({{ $id }}, {{ $item['qty'] + 1 }})" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors">+</button>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3 align-top text-right font-bold text-gray-900 whitespace-nowrap">
-                                    Rp {{ number_format($item['subtotal'], 0, ',', '.') }}
-                                </td>
+
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="3" class="py-20 text-center text-gray-400">
+                                <td colspan="4" class="py-20 text-center text-gray-400">
                                     <div class="flex flex-col items-center">
                                          <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
                                             <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
@@ -197,23 +220,80 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Katalog Produk (Flexible) -->
-            <div class="flex-1 min-w-0 bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden border border-gray-100">
+            <!-- RIGHT/BOTTOM: Katalog Produk (Flexible, scrollable on mobile) -->
+            <div class="flex-1 min-w-0 bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden border border-gray-100 h-1/2 md:h-full">
                 
                 <!-- Search & Filter Header -->
-                <div class="p-6 border-b border-gray-100 space-y-4">
+                <div class="p-3 md:p-6 border-b border-gray-100 space-y-3 md:space-y-4">
                     <!-- Search Bar -->
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center">
+                    <!-- Search Bar with Dropdown -->
+                    <div class="relative" 
+                         x-data="{ 
+                            open: false, 
+                            highlightedIndex: 0,
+                            search: @entangle('search').live,
+                            selectItem(id) {
+                                if (id) {
+                                    $wire.addToCart(id);
+                                    this.open = false;
+                                    this.highlightedIndex = 0;
+                                    this.$refs.searchInput.blur();
+                                }
+                            }
+                         }"
+                         @click.outside="open = false; highlightedIndex = 0">
+                        
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </span>
+                        
                         <input type="text" 
-                            wire:model.live.debounce.300ms="search" 
+                            x-ref="searchInput"
+                            x-model="search"
+                            @focus="open = true"
+                            @input="open = true; highlightedIndex = 0"
+                            @keydown.arrow-down.prevent="highlightedIndex = (highlightedIndex + 1) % {{ min(count($products), 10) }}; open = true"
+                            @keydown.arrow-up.prevent="highlightedIndex = (highlightedIndex - 1 + {{ min(count($products), 10) }}) % {{ min(count($products), 10) }}; open = true"
+                            @keydown.enter.prevent="if(open && search.length > 0) { 
+                                $refs['dropdown-item-' + highlightedIndex]?.click(); 
+                            } else {
+                                open = true;
+                            }"
+                            @keydown.escape="open = false; $refs.searchInput.blur()"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Cari produk / Scan barcode (F2)..." 
-                            id="pos-search-input">
+                            id="pos-search-input"
+                            autocomplete="off">
+
+                        <!-- Dropdown Results -->
+                        <div x-show="open && search.length > 0" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
+                            
+                            @forelse($products->take(10) as $index => $product)
+                                <div id="dropdown-item-{{ $index }}"
+                                     x-ref="dropdown-item-{{ $index }}"
+                                     @click="selectItem({{ $product->id }})"
+                                     class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 hover:bg-blue-50 transition-colors"
+                                     :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
+                                    <div class="flex-1 min-w-0 mr-3">
+                                        <div class="font-bold text-gray-900 truncate">{{ $product->name }}</div>
+                                        <div class="text-xs text-gray-500">Stok: {{ $product->total_stock }}</div>
+                                    </div>
+                                    <div class="font-bold text-blue-600 text-sm whitespace-nowrap">
+                                        Rp {{ number_format($product->sell_price, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="p-4 text-center text-gray-500 text-sm">
+                                    Tidak ada produk ditemukan
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
 
                     <!-- Category Filter -->
@@ -234,8 +314,8 @@
                 </div>
 
                 <!-- Product Grid (Scrollable) -->
-                <div class="flex-1 p-6 overflow-y-auto">
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div class="flex-1 p-3 md:p-6 overflow-y-auto">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
                         @forelse($products as $product)
                         <div wire:click="addToCart({{ $product->id }})" 
                              class="bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg cursor-pointer transition-all group relative">
@@ -259,7 +339,7 @@
                             </div>
                             
                             <!-- Product Info -->
-                            <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10">{{ $product->name }}</h4>
+                            <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis">{{ $product->name }}</h4>
                             <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
                             
                             <!-- Stock Info Text -->
@@ -287,7 +367,7 @@
     <div class="fixed inset-0 z-50 overflow-y-auto">
         <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
         <div class="flex min-h-full items-center justify-center p-4">
-            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <form wire:submit.prevent="processPayment" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
                 
                 <!-- Modal Header -->
                 <div class="p-6 border-b border-gray-100 flex justify-between items-center">
@@ -357,7 +437,7 @@
 
                 <!-- Modal Footer -->
                 <div class="p-6 border-t border-gray-100 space-y-3">
-                    <button wire:click="processPayment" 
+                    <button type="submit" 
                         class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">
                         Cetak Struk Transaksi
                     </button>
@@ -366,7 +446,7 @@
                         Kembali
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     @endif

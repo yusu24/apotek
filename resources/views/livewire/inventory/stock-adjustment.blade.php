@@ -1,15 +1,13 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                Penyesuaian Stok (Stock Adjustment)
-            </h2>
-            <a href="{{ route('inventory.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali
-            </a>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            Penyesuaian Stok (Stock Adjustment)
+        </h2>
+        <a href="{{ route('inventory.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali
+        </a>
+    </div>
 
     @if (session()->has('message'))
         <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 shadow-sm">
@@ -44,7 +42,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <!-- Product Info -->
         <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <p class="text-sm text-gray-600">Produk:</p>
                     <p class="font-bold text-gray-900">{{ $product_name }}</p>

@@ -1,11 +1,9 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                Pesanan Pembelian (PO)
-            </h2>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            Pesanan Pembelian (PO)
+        </h2>
+    </div>
 
     @if (session()->has('message'))
         <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 shadow-sm">

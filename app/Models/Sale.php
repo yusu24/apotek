@@ -9,7 +9,22 @@ class Sale extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id', 'invoice_no', 'date', 'total_amount', 'discount', 
+        'service_charge_amount', 'service_charge_percentage', 'tax', 
+        'dpp', 'ppn_mode', 'order_mode', 'rounding', 'grand_total', 
+        'payment_method', 'cash_amount', 'change_amount', 'notes', 'status'
+    ];
+
+    protected $casts = [
+        'total_amount' => 'float',
+        'tax' => 'float',
+        'discount' => 'float',
+        'grand_total' => 'float',
+        'cash_amount' => 'float',
+        'change_amount' => 'float',
+        'date' => 'datetime',
+    ];
 
     public function saleItems()
     {

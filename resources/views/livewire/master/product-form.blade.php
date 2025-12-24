@@ -1,22 +1,20 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                {{ $product_id ? 'Edit Obat / Produk' : 'Tambah Obat Baru' }}
-            </h2>
-            <a href="{{ route('products.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali
-            </a>
-        </div>
-    </x-slot>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {{ $product_id ? 'Edit Obat / Produk' : 'Tambah Obat Baru' }}
+        </h2>
+        <a href="{{ route('products.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali
+        </a>
+    </div>
 
     <div class="bg-white rounded-lg shadow-lg p-6">
 
         <form wire:submit="save">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Obat -->
-                <div class="col-span-2">
+                <div class="col-span-1 md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Nama Obat</label>
                     <input type="text" wire:model="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -76,7 +74,7 @@
                 </div>
                 
                 <!-- Deskripsi -->
-                <div class="col-span-2">
+                <div class="col-span-1 md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Deskripsi / Indikasi</label>
                     <textarea wire:model="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
                 </div>

@@ -40,7 +40,12 @@
         <table>
             @foreach($sale->saleItems as $item)
                 <tr>
-                    <td colspan="2">{{ $item->product->name }}</td>
+                    <td colspan="2">
+                        {{ $item->product->name }}
+                        @if($item->notes)
+                            <br><span style="font-size: 10px; font-style: italic;">(Note: {{ $item->notes }})</span>
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td>{{ $item->quantity }} x {{ number_format($item->sell_price, 0, ',', '.') }}</td>

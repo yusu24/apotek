@@ -66,8 +66,9 @@
         <thead>
             <tr class="bg-gray-800 text-white text-sm uppercase">
                 <th class="py-3 px-4 text-left rounded-l-lg">Produk</th>
-                <th class="py-3 px-4 text-right">Harga Satuan</th>
                 <th class="py-3 px-4 text-center">Qty</th>
+                <th class="py-3 px-4 text-center">Satuan</th>
+                <th class="py-3 px-4 text-right">Harga Satuan</th>
                 <th class="py-3 px-4 text-right rounded-r-lg">Total</th>
             </tr>
         </thead>
@@ -76,17 +77,18 @@
             <tr class="border-b border-gray-100 items-center">
                 <td class="py-3 px-4">
                     <div class="font-bold text-gray-900">{{ $item->product->name }}</div>
-                    <div class="text-xs text-gray-500">Unit: {{ $item->product->unit->name ?? 'pcs' }}</div>
+                    <div class="text-xs text-gray-500">Kode: {{ $item->product->barcode ?? '-' }}</div>
                 </td>
-                <td class="py-3 px-4 text-right">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 text-center font-bold">{{ $item->quantity }}</td>
+                <td class="py-3 px-4 text-center text-gray-600">{{ $item->product->unit->name ?? 'pcs' }}</td>
+                <td class="py-3 px-4 text-right">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 text-right font-bold">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot class="text-gray-900">
             <tr>
-                <td colspan="3" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Akhir</td>
+                <td colspan="4" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Akhir</td>
                 <td class="py-4 px-4 text-right text-xl font-bold bg-gray-50 rounded-lg">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
@@ -98,14 +100,11 @@
             <p class="font-bold mb-1">Catatan:</p>
             <p class="italic">{{ $po->notes ?? 'Tidak ada catatan tambahan.' }}</p>
         </div>
-        <div class="flex gap-12 text-center">
+        <div class="flex gap-12 text-center justify-end">
             <div>
-                <p class="text-sm text-gray-500 mb-16">Diterima Oleh,</p>
-                <div class="h-px bg-gray-400 w-32 mx-auto"></div>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500 mb-16">Disetujui Oleh,</p>
-                <div class="h-px bg-gray-400 w-32 mx-auto"></div>
+                <p class="text-sm text-gray-500 mb-2">Pemesan,</p>
+                <p class="font-bold text-gray-900 text-lg mt-16">{{ $po->user->name ?? '-' }}</p>
+                <div class="h-px bg-gray-400 w-40 mx-auto mt-1"></div>
             </div>
         </div>
     </div>

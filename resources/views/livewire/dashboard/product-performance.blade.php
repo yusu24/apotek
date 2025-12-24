@@ -6,10 +6,10 @@
         this.topChart = new Chart(topCtx, {
             type: 'bar',
             data: {
-                labels: @js($topSelling->pluck('product.name')),
+                labels: @js($topSellingChart['labels']),
                 datasets: [{
                     label: 'Unit Terjual',
-                    data: @js($topSelling->pluck('total_qty')),
+                    data: @js($topSellingChart['data']),
                     backgroundColor: 'rgba(59, 130, 246, 0.8)',
                     borderColor: 'rgb(59, 130, 246)',
                     borderWidth: 1,
@@ -33,10 +33,10 @@
         this.slowChart = new Chart(slowCtx, {
             type: 'bar',
             data: {
-                labels: @js($slowMoving->pluck('product.name')),
+                labels: @js($slowMovingChart['labels']),
                 datasets: [{
                     label: 'Unit Terjual',
-                    data: @js($slowMoving->pluck('total_qty')),
+                    data: @js($slowMovingChart['data']),
                     backgroundColor: 'rgba(244, 63, 94, 0.8)',
                     borderColor: 'rgb(244, 63, 94)',
                     borderWidth: 1,
@@ -56,7 +56,7 @@
     },
     topChart: null,
     slowChart: null
-}" x-init="initCharts(); $watch('period', () => { setTimeout(() => initCharts(), 100) })">
+}" x-init="initCharts(); Livewire.on('chart-update', () => { setTimeout(() => initCharts(), 100) })">
     <!-- Top Selling Products -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-slate-100 dark:border-gray-700 overflow-hidden">
         <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">

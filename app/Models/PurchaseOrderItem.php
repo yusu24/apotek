@@ -9,6 +9,13 @@ class PurchaseOrderItem extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'qty_ordered' => 'integer',
+        'unit_price' => 'float',
+        'subtotal' => 'float',
+        'conversion_factor' => 'float',
+    ];
+
     public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
@@ -17,5 +24,10 @@ class PurchaseOrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

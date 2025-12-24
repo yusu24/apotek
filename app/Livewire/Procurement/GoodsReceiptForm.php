@@ -10,6 +10,8 @@ class GoodsReceiptForm extends Component
     public $delivery_note_number;
     public $received_date;
     public $notes;
+    public $payment_method = 'cash';
+    public $due_date_weeks = null;
     public $items = []; // ['product_id', 'product_name', 'batch_no', 'expired_date', 'qty_received', 'buy_price']
 
     public $purchaseOrders = [];
@@ -19,7 +21,7 @@ class GoodsReceiptForm extends Component
     {
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
-        $this->products = \App\Models\Product::select('id', 'name')->get();
+        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'unit_id')->get();
         
         $this->addItem(); // Start with 1 empty item
     }
@@ -38,6 +40,8 @@ class GoodsReceiptForm extends Component
                         'expired_date' => '',
                         'qty_received' => $poItem->qty_ordered, // Default to ordered qty
                         'buy_price' => $poItem->unit_price,
+                        'unit_id' => $poItem->unit_id,
+                        'conversion_factor' => $poItem->conversion_factor,
                     ];
                 }
             }
@@ -53,6 +57,8 @@ class GoodsReceiptForm extends Component
             'expired_date' => '',
             'qty_received' => 1,
             'buy_price' => 0,
+            'unit_id' => null,
+            'conversion_factor' => 1,
         ];
     }
 
@@ -60,6 +66,45 @@ class GoodsReceiptForm extends Component
     {
         unset($this->items[$index]);
         $this->items = array_values($this->items);
+    }
+
+    public function updatedItems($value, $key)
+    {
+        $parts = explode('.', $key);
+        if (count($parts) == 3 && $parts[2] == 'product_id') {
+           $index = $parts[0];
+           $product = $this->products->firstWhere('id', $value);
+           if ($product) {
+               $this->items[$index]['unit_id'] = $product->unit_id;
+               $this->items[$index]['conversion_factor'] = 1;
+           }
+        }
+        
+        if (count($parts) == 3 && $parts[2] == 'unit_id') {
+            $index = $parts[0];
+            $unitId = $value;
+            $productId = $this->items[$index]['product_id'] ?? null;
+            
+            if ($productId) {
+                $product = $this->products->firstWhere('id', $productId);
+                if ($product) {
+                    if ($unitId == $product->unit_id) {
+                        $this->items[$index]['conversion_factor'] = 1;
+                    } else {
+                        $conversion = $product->unitConversions->where('from_unit_id', $unitId)->first();
+                        // Try reverse or other logic if your conversions are bidirectional or strict.
+                        // Assuming standard: from_unit(Large) -> to_unit(Small/Base) = factor.
+                        // If selected unit is "Box" (from_unit_id), and base is "Pcs" (to_unit_id).
+                        if ($conversion) {
+                            $this->items[$index]['conversion_factor'] = $conversion->conversion_factor;
+                        } else {
+                             // Fallback or 1
+                             $this->items[$index]['conversion_factor'] = 1;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function generateNextBatchNo()
@@ -103,6 +148,15 @@ class GoodsReceiptForm extends Component
             'items.*.buy_price.required' => 'Harga beli wajib diisi',
         ]);
 
+        // Validate due_date_weeks if payment method is due_date
+        if ($this->payment_method === 'due_date') {
+            $this->validate([
+                'due_date_weeks' => 'required|in:1,2,3,4',
+            ], [
+                'due_date_weeks.required' => 'Jangka waktu jatuh tempo wajib dipilih',
+            ]);
+        }
+
         \Illuminate\Support\Facades\DB::transaction(function () {
             // 1. Create Goods Receipt
             $gr = \App\Models\GoodsReceipt::create([
@@ -111,6 +165,8 @@ class GoodsReceiptForm extends Component
                 'received_date' => $this->received_date,
                 'user_id' => auth()->id(),
                 'notes' => $this->notes,
+                'payment_method' => $this->payment_method,
+                'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
             ]);
 
             foreach ($this->items as $item) {
@@ -121,7 +177,17 @@ class GoodsReceiptForm extends Component
                     'expired_date' => $item['expired_date'],
                     'qty_received' => $item['qty_received'],
                     'buy_price' => $item['buy_price'],
+                    'unit_id' => $item['unit_id'] ?? null,
+                    'conversion_factor' => $item['conversion_factor'] ?? 1,
                 ]);
+
+                // Calculate Base Quantity for Stock Update
+                $baseQty = $item['qty_received'] * ($item['conversion_factor'] ?? 1);
+                
+                // Calculate Base Buy Price for COGS (Price / Factor)
+                $baseBuyPrice = ($item['conversion_factor'] ?? 1) > 0 
+                    ? $item['buy_price'] / ($item['conversion_factor'] ?? 1)
+                    : $item['buy_price'];
 
                 // 3. Update or Create Batch
                 $batch = \App\Models\Batch::updateOrCreate(
@@ -131,11 +197,11 @@ class GoodsReceiptForm extends Component
                     ],
                     [
                         'expired_date' => $item['expired_date'],
-                        // We increment stock
+                        'buy_price' => $baseBuyPrice,
                     ]
                 );
-                $batch->increment('stock_in', $item['qty_received']);
-                $batch->increment('stock_current', $item['qty_received']);
+                $batch->increment('stock_in', $baseQty);
+                $batch->increment('stock_current', $baseQty);
 
                 // 4. Update Product Master Stock
                 $product = \App\Models\Product::find($item['product_id']);
@@ -153,9 +219,9 @@ class GoodsReceiptForm extends Component
                     'product_id' => $item['product_id'],
                     'batch_id' => $batch->id,
                     'type' => 'in',
-                    'quantity' => $item['qty_received'],
+                    'quantity' => $baseQty,
                     'doc_ref' => 'GR-' . $gr->id . ' (SJ: ' . $this->delivery_note_number . ')',
-                    'description' => 'Penerimaan Barang dari ' . ($gr->purchaseOrder->supplier->name ?? 'Direct'),
+                    'description' => 'Penerimaan Barang dari ' . ($gr->purchaseOrder?->supplier?->name ?? 'Direct'),
                     'user_id' => auth()->id(),
                 ]);
             }

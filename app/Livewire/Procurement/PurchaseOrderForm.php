@@ -12,15 +12,32 @@ class PurchaseOrderForm extends Component
     public $date;
     public $notes;
     public $status = 'ordered';
-    public $items = []; // [ ['product_id' => '', 'qty' => 1, 'unit_price' => 0, 'subtotal' => 0] ]
-
+    public $items = []; 
     public $suppliers = [];
     public $products = [];
+
+    // Modal Properties
+    public $showModal = false;
+    public $editingItemIndex = null;
+    public $modalProductId = '';
+    public $modalProductName = '';
+    public $modalProductCode = '';
+    public $modalQty = 1;
+    public $modalUnit = '';
+    public $modalPrice = 0;
+    public $modalSubtotal = 0;
+    public $modalNotes = '';
+    public $modalPpn = false;
+    public $modalUnitId = null;
+    public $modalConversionFactor = 1;
+    public $availableUnits = [];
+    
+
 
     public function mount($id = null)
     {
         $this->suppliers = \App\Models\Supplier::all();
-        $this->products = \App\Models\Product::select('id', 'name', 'sell_price')->get(); // Ideally use buy_price if available, using sell_price as placeholder or fetch latest cost
+        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'sell_price', 'unit_id')->get();
 
         if ($id) {
             $this->purchaseOrder = \App\Models\PurchaseOrder::with('items')->findOrFail($id);
@@ -35,46 +52,199 @@ class PurchaseOrderForm extends Component
                     'product_id' => $item->product_id,
                     'qty' => $item->qty_ordered,
                     'unit_price' => $item->unit_price,
+                    'has_ppn' => $item->has_ppn,
                     'subtotal' => $item->subtotal,
+                    'unit_id' => $item->unit_id,
+                    'conversion_factor' => $item->conversion_factor,
                 ];
             }
         } else {
             $this->date = date('Y-m-d');
             $this->po_number = 'PO-' . date('Ymd') . '-' . rand(100, 999);
-            $this->items = [
-                ['product_id' => '', 'qty' => 1, 'unit_price' => 0, 'subtotal' => 0]
-            ];
+            // No initial empty item needed if using modal
+            // $this->items = []; 
         }
     }
 
-    public function addItem()
+
+
+    public function openModal($index = null)
     {
-        $this->items[] = ['product_id' => '', 'qty' => 1, 'unit_price' => 0, 'subtotal' => 0];
+        $this->resetModal();
+        $this->editingItemIndex = $index;
+
+        if (!is_null($index) && isset($this->items[$index])) {
+            $item = $this->items[$index];
+            $this->modalProductId = $item['product_id'];
+            $this->modalQty = $item['qty'];
+            $this->modalPrice = $item['unit_price'];
+            $this->modalPpn = $item['has_ppn'] ?? false;
+            // Fetch product details for display
+            $product = $this->products->firstWhere('id', $item['product_id']);
+            if ($product) {
+               $this->updatedModalProductId($item['product_id']); 
+               $this->modalQty = $item['qty'];
+               $this->modalPrice = $item['unit_price']; 
+               $this->modalUnitId = $item['unit_id'] ?? $product->unit_id;
+               $this->updatedModalUnitId($this->modalUnitId); // Refresh unit name/factor
+               $this->modalConversionFactor = $item['conversion_factor'] ?? 1; 
+            }
+        }
+        
+        $this->calculateModalTotal();
+        $this->showModal = true;
+    }
+
+    public function closeModal()
+    {
+        $this->showModal = false;
+        $this->resetModal();
+    }
+
+    public function resetModal()
+    {
+        $this->editingItemIndex = null;
+        $this->modalProductId = '';
+        $this->modalProductName = '';
+        $this->modalProductCode = '';
+        $this->modalQty = 1;
+        $this->modalUnit = '';
+        $this->modalPrice = 0;
+        $this->modalSubtotal = 0;
+        $this->modalNotes = '';
+        $this->modalPpn = false;
+        $this->modalUnitId = null;
+        $this->modalConversionFactor = 1;
+        $this->availableUnits = [];
+    }
+
+    public function updatedModalProductId($value)
+    {
+        $product = $this->products->firstWhere('id', $value);
+        if ($product) {
+            $this->modalProductName = $product->name;
+            $this->modalProductCode = $product->barcode;
+            
+            // Prepare available units: Base Unit + Conversions
+            $this->availableUnits = [];
+            
+            // Base Unit (Smallest)
+            if ($product->unit) {
+                $this->availableUnits[] = [
+                    'id' => $product->unit_id,
+                    'name' => $product->unit->name,
+                    'factor' => 1,
+                ];
+            }
+
+            // Conversions (Larger Units) where to_unit_id is the base unit? 
+            // Usually conversions are defined as "1 Box = 10 Pcs". 
+            // If product unit is Pcs (to_unit), and we have conversion from Box (from_unit).
+            // We need to check both directions or standard direction.
+            // Assuming unitConversions stores: from_unit (Box), to_unit (Pcs), factor (10).
+            foreach ($product->unitConversions as $conversion) {
+                if ($conversion->to_unit_id == $product->unit_id) {
+                    $this->availableUnits[] = [
+                        'id' => $conversion->from_unit_id,
+                        'name' => $conversion->fromUnit->name ?? 'Unknown',
+                        'factor' => $conversion->conversion_factor,
+                    ];
+                }
+            }
+            
+            // Default to Base Unit (Smallest)
+            $this->modalUnitId = null; // Clear first to trigger update if same
+            $this->modalUnitId = $product->unit_id;
+            $this->updatedModalUnitId($this->modalUnitId);
+
+        } else {
+            $this->modalProductName = '';
+            $this->modalProductCode = '';
+            $this->modalUnit = '';
+            $this->availableUnits = [];
+            $this->modalUnitId = null;
+        }
+    }
+
+    public function updatedModalUnitId($value)
+    {
+        $selected = collect($this->availableUnits)->firstWhere('id', $value);
+        if ($selected) {
+            $this->modalUnit = $selected['name'];
+            $this->modalConversionFactor = $selected['factor'];
+        } else {
+            $this->modalUnit = '-';
+            $this->modalConversionFactor = 1;
+        }
+    }
+
+    public function updatedModalQty()
+    {
+        $this->calculateModalTotal();
+    }
+
+    public function updatedModalPrice()
+    {
+        $this->calculateModalTotal();
+    }
+    
+    public function updatedModalPpn()
+    {
+        $this->calculateModalTotal();
+    }
+
+    public function incrementQty()
+    {
+        $this->modalQty = (int)$this->modalQty + 1;
+        $this->calculateModalTotal();
+    }
+
+    public function decrementQty()
+    {
+        $this->modalQty = max(1, (int)$this->modalQty - 1);
+        $this->calculateModalTotal();
+    }
+
+    public function calculateModalTotal()
+    {
+        $total = (float)$this->modalQty * (float)$this->modalPrice;
+        if ($this->modalPpn) {
+            $total = $total * 1.12; // Add 12% PPN
+        }
+        $this->modalSubtotal = $total;
+    }
+
+    public function saveItem()
+    {
+        $this->validate([
+            'modalProductId' => 'required',
+            'modalQty' => 'required|numeric|min:1',
+            'modalPrice' => 'required|numeric|min:0',
+        ]);
+
+        $newItem = [
+            'product_id' => $this->modalProductId,
+            'qty' => $this->modalQty,
+            'unit_price' => $this->modalPrice,
+            'has_ppn' => $this->modalPpn,
+            'subtotal' => $this->modalSubtotal,
+            'unit_id' => $this->modalUnitId,
+            'conversion_factor' => $this->modalConversionFactor,
+        ];
+
+        if (!is_null($this->editingItemIndex) && isset($this->items[$this->editingItemIndex])) {
+            $this->items[$this->editingItemIndex] = $newItem;
+        } else {
+            $this->items[] = $newItem;
+        }
+
+        $this->closeModal();
     }
 
     public function removeItem($index)
     {
         unset($this->items[$index]);
         $this->items = array_values($this->items);
-    }
-
-    public function updatedItems($value, $key)
-    {
-        // $key like '0.product_id'
-        $parts = explode('.', $key);
-        $index = $parts[0];
-        $field = $parts[1];
-
-        if ($field === 'product_id') {
-            // Find product buy price inference (optional)
-            // For now, user manually enters price
-        }
-
-        if ($field === 'qty' || $field === 'unit_price') {
-            $qty = (int) ($this->items[$index]['qty'] ?? 0);
-            $price = (float) ($this->items[$index]['unit_price'] ?? 0);
-            $this->items[$index]['subtotal'] = $qty * $price;
-        }
     }
 
     public function save()
@@ -119,7 +289,10 @@ class PurchaseOrderForm extends Component
                 'product_id' => $item['product_id'],
                 'qty_ordered' => $item['qty'],
                 'unit_price' => $item['unit_price'],
+                'has_ppn' => $item['has_ppn'] ?? false,
                 'subtotal' => $item['subtotal'],
+                'unit_id' => $item['unit_id'] ?? null,
+                'conversion_factor' => $item['conversion_factor'] ?? 1,
             ]);
         }
 

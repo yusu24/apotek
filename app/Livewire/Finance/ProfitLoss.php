@@ -52,44 +52,80 @@ class ProfitLoss extends Component
     {
         $data = $this->calculateMetrics();
         
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf.profit-loss', array_merge($data, [
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
-        ]));
-        
-        return $pdf->download('Laporan_Laba_Rugi_' . $this->startDate . '_to_' . $this->endDate . '.pdf');
+        return response()->streamDownload(function () use ($data) {
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf.profit-loss', array_merge($data, [
+                'startDate' => $this->startDate,
+                'endDate' => $this->endDate,
+                'storeName' => \App\Models\Setting::get('store_name', 'Apotek'),
+                'storeAddress' => \App\Models\Setting::get('store_address', ''),
+            ]));
+            echo $pdf->output();
+        }, 'Laporan_Laba_Rugi_' . $this->startDate . '_to_' . $this->endDate . '.pdf');
     }
 
     private function calculateMetrics()
     {
-        // 1. Revenue (Pendapatan Bersih - Tanpa Pajak)
-        $revenue = Sale::whereDate('created_at', '>=', $this->startDate)
+        // 1. Sales Details (Gross, Discount, Tax)
+        $sales = Sale::whereDate('created_at', '>=', $this->startDate)
             ->whereDate('created_at', '<=', $this->endDate)
-            ->sum(DB::raw('grand_total - tax'));
+            ->with('saleItems')
+            ->get();
 
-        // 2. COGS (HPP) - Sum of (SaleItem Qty * Batch Buy Price)
-        $cogs = SaleItem::select(DB::raw('SUM(sale_items.quantity * batches.buy_price) as total_cogs'))
+        // Revenue (Net Sales) = Sum of Item Subtotals - Global Discount
+        // Note: SaleItem.subtotal is already (price - item_discount) * qty
+        $itemSubtotalSum = (float) $sales->sum(function($sale) {
+            return $sale->saleItems->sum('subtotal');
+        });
+        
+        $totalDiscount = (float) $sales->sum('discount'); // Global discount
+        $revenue = $itemSubtotalSum - $totalDiscount; 
+        
+        $totalTax = (float) $sales->sum('tax');
+        $grandTotal = (float) $sales->sum('grand_total');
+
+        // 2. COGS (HPP) - Detailed records for table
+        $cogsDetails = SaleItem::select(
+                'sale_items.*', 
+                'products.name as product_name', 
+                'batches.buy_price as cost_price',
+                'sales.created_at as sale_date'
+            )
             ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
             ->join('batches', 'sale_items.batch_id', '=', 'batches.id') 
+            ->join('products', 'sale_items.product_id', '=', 'products.id')
             ->whereDate('sales.created_at', '>=', $this->startDate)
             ->whereDate('sales.created_at', '<=', $this->endDate)
-            ->value('total_cogs') ?? 0;
+            ->orderBy('sales.created_at', 'desc')
+            ->get();
 
-        // 3. Expenses (Beban Operasional)
-        $expenses = Expense::whereDate('date', '>=', $this->startDate)
+        $cogs = (float) $cogsDetails->sum(function($item) {
+            return (float) $item->quantity * (float) $item->cost_price;
+        });
+
+        // 3. Expenses (Beban Operasional) - Detailed records for table
+        $expenseDetails = Expense::whereDate('date', '>=', $this->startDate)
             ->whereDate('date', '<=', $this->endDate)
-            ->sum('amount');
+            ->orderBy('date', 'desc')
+            ->get();
 
-        // 4. Calculations
+        $expenses = (float) $expenseDetails->sum('amount');
+
+        // 4. Final Calculations
         $grossProfit = $revenue - $cogs;
         $netProfit = $grossProfit - $expenses;
         
         return [
-            'revenue' => $revenue,
+            'revenue' => $revenue, // Net Sales
+            'totalTax' => $totalTax,
+            'totalDiscount' => $totalDiscount,
+            'grandTotal' => $grandTotal,
             'cogs' => $cogs,
             'expenses' => $expenses,
             'grossProfit' => $grossProfit,
             'netProfit' => $netProfit,
+            'salesDetails' => $sales,
+            'cogsDetails' => $cogsDetails,
+            'expenseDetails' => $expenseDetails,
         ];
     }
 

@@ -14,6 +14,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            [x-cloak] { display: none !important; }
+        </style>
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -21,31 +24,14 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
-
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('theme', {
-                on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
-
-                toggle() {
-                    this.on = !this.on;
-                    if (this.on) {
-                        document.documentElement.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
-                    }
-                }
-            });
-        });
     </script>
     </head>
     <body class="font-sans antialiased">
-        <div class="h-screen bg-milky-white dark:bg-gray-900 overflow-hidden flex flex-col">
+        <div x-data="{}" class="h-screen bg-milky-white dark:bg-gray-900 overflow-hidden overflow-x-hidden flex flex-col">
             <livewire:layout.navigation />
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col overflow-y-auto md:ml-64 relative">
+            <div class="flex-1 flex flex-col overflow-y-auto xl:ml-64 relative pt-16 xl:pt-0">
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">
@@ -60,7 +46,7 @@
                 
                 <!-- Page Heading -->
                 @if (isset($header))
-                    <header class="bg-white dark:bg-gray-800 shadow sticky top-0 z-10">
+                    <header>
                         <div class="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>
@@ -73,5 +59,33 @@
                 </main>
             </div>
         </div>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('theme', {
+                    on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+
+                    toggle() {
+                        this.on = !this.on;
+                        if (this.on) {
+                            document.documentElement.classList.add('dark');
+                            localStorage.setItem('theme', 'dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.setItem('theme', 'light');
+                        }
+                    }
+                });
+
+                Alpine.store('mobileNav', {
+                    open: false,
+                    toggle() {
+                        this.open = !this.open;
+                    },
+                    close() {
+                        this.open = false;
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

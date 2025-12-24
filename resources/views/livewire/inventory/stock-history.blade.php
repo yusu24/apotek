@@ -1,26 +1,25 @@
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-screen-2xl mx-auto">
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
-                <h2 class="text-xl font-semibold text-slate-900 leading-tight">
-                    Riwayat Stok: {{ $product->name }}
-                </h2>
-                <p class="text-sm text-gray-500 mt-1">
-                    Kategori: {{ $product->category->name ?? '-' }} | 
-                    Total Stok: <span class="font-bold">{{ $product->batches()->sum('stock_current') }} {{ $product->unit->name ?? 'pcs' }}</span>
-                </p>
-            </div>
-            <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
-                ← Kembali
-            </a>
+<div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">
+                Riwayat Stok: {{ $product->name }}
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">
+                Kategori: {{ $product->category->name ?? '-' }} | 
+                Total Stok: <span class="font-bold">{{ $product->batches()->sum('stock_current') }} {{ $product->unit->name ?? 'pcs' }}</span>
+            </p>
         </div>
-    </x-slot>
+        <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
+            ← Kembali
+        </a>
+    </div>
 
     <!-- Active Batches Section -->
     <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
         <div class="p-6 border-b bg-blue-50">
             <h3 class="text-lg font-bold text-gray-900">Daftar Batch Aktif</h3>
         </div>
+        <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -55,6 +54,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
     <!-- Transaction History Section -->

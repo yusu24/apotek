@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockMovement extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'product_id', 'batch_id', 'user_id', 'type', 'quantity', 
+        'doc_ref', 'description'
+    ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+    ];
 
     public function product()
     {

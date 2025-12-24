@@ -28,6 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/products', App\Livewire\Master\ProductIndex::class)->name('products.index');
     Route::get('/products/create', App\Livewire\Master\ProductForm::class)->name('products.create');
     Route::get('/products/{id}/edit', App\Livewire\Master\ProductForm::class)->name('products.edit');
+    Route::get('/master/categories', App\Livewire\Master\CategoryManagement::class)->name('master.categories');
+    Route::get('/master/product-units', App\Livewire\Master\ProductUnit::class)
+        ->name('master.product-units')
+        ->middleware('permission:manage product units');
+
 
     // Inventory
     Route::get('/stock', App\Livewire\Inventory\StockIndex::class)->name('inventory.index');
@@ -65,7 +70,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/leave-impersonation', [App\Http\Controllers\ImpersonationController::class, 'leave'])->name('admin.leave-impersonation');
 
     // User Guide
-    Route::view('/guide', 'guide.index')->name('guide.index');
+    Route::get('/guide', App\Livewire\Settings\UserGuide::class)->name('guide.index');
+    Route::get('/guide/detail/{slug}', App\Livewire\Settings\GuideDetail::class)->name('guide.detail');
+    Route::view('/guide/handbook', 'guide.index')->name('guide.handbook');
 });
 
 require __DIR__.'/auth.php';

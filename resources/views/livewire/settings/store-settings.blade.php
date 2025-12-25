@@ -33,32 +33,113 @@
                         <h3 class="text-lg font-medium text-gray-900 border-b pb-2 mb-4">Identitas Toko</h3>
                         <div class="space-y-4">
                              <!-- Logo Upload -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Logo Toko</label>
-                                <div class="flex items-center gap-4">
-                                    @if ($store_logo)
-                                        <img src="{{ $store_logo->temporaryUrl() }}" class="h-20 w-20 object-contain rounded border border-gray-200">
-                                    @elseif($logo_url)
-                                        <img src="{{ $logo_url }}" class="h-20 w-20 object-contain rounded border border-gray-200">
-                                    @else
-                                        <div class="h-20 w-20 bg-gray-100 rounded border border-gray-200 flex items-center justify-center text-gray-400">
-                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Struk/Invoice</label>
+                                    <div class="space-y-3">
+                                        <div class="h-24 w-full bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative group">
+                                            @if ($store_logo)
+                                                <img src="{{ $store_logo->temporaryUrl() }}" class="max-h-full max-w-full object-contain p-2">
+                                            @elseif($logo_url)
+                                                <img src="{{ $logo_url }}" class="max-h-full max-w-full object-contain p-2">
+                                            @else
+                                                <div class="text-gray-400 text-xs flex flex-col items-center gap-1">
+                                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    <span>Default Logo</span>
+                                                </div>
+                                            @endif
+
+                                            @if($logo_url || $store_logo)
+                                            <button type="button" wire:click="deleteLogo('store')" wire:confirm="Hapus logo ini?" 
+                                                class="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg shadow-lg hover:bg-red-700 transition-colors z-10"
+                                                title="Hapus Logo">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                            @endif
                                         </div>
-                                    @endif
-                                    
-                                    <div class="flex-1">
-                                        <input type="file" wire:model="store_logo" class="block w-full text-sm text-gray-500
-                                            file:mr-4 file:py-2 file:px-4
-                                            file:rounded-full file:border-0
-                                            file:text-sm file:font-semibold
+                                        
+                                        <input type="file" wire:model="store_logo" class="block w-full text-xs text-gray-500
+                                            file:mr-2 file:py-1.5 file:px-3
+                                            file:rounded-lg file:border-0
+                                            file:text-xs file:font-semibold
                                             file:bg-blue-50 file:text-blue-700
                                             hover:file:bg-blue-100
                                         "/>
-                                        <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 2MB. Logo akan muncul di struk/invoice.</p>
-                                        @error('store_logo') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                        @error('store_logo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Halaman Login</label>
+                                    <div class="space-y-3">
+                                        <div class="h-24 w-full bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative group">
+                                            @if ($login_logo)
+                                                <img src="{{ $login_logo->temporaryUrl() }}" class="max-h-full max-w-full object-contain p-2">
+                                            @elseif($login_logo_url)
+                                                <img src="{{ $login_logo_url }}" class="max-h-full max-w-full object-contain p-2">
+                                            @else
+                                                <div class="text-gray-400 text-xs flex flex-col items-center gap-1">
+                                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    <span>Default Logo</span>
+                                                </div>
+                                            @endif
+
+                                            @if($login_logo_url || $login_logo)
+                                            <button type="button" wire:click="deleteLogo('login')" wire:confirm="Hapus logo login?" 
+                                                class="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg shadow-lg hover:bg-red-700 transition-colors z-10"
+                                                title="Hapus Logo">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                            @endif
+                                        </div>
+                                        
+                                        <input type="file" wire:model="login_logo" class="block w-full text-xs text-gray-500
+                                            file:mr-2 file:py-1.5 file:px-3
+                                            file:rounded-lg file:border-0
+                                            file:text-xs file:font-semibold
+                                            file:bg-blue-50 file:text-blue-700
+                                            hover:file:bg-blue-100
+                                        "/>
+                                        @error('login_logo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Sidebar</label>
+                                    <div class="space-y-3">
+                                        <div class="h-24 w-full bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative group">
+                                            @if ($sidebar_logo)
+                                                <img src="{{ $sidebar_logo->temporaryUrl() }}" class="max-h-full max-w-full object-contain p-2">
+                                            @elseif($sidebar_logo_url)
+                                                <img src="{{ $sidebar_logo_url }}" class="max-h-full max-w-full object-contain p-2">
+                                            @else
+                                                <div class="text-gray-400 text-xs flex flex-col items-center gap-1">
+                                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    <span>Default Logo</span>
+                                                </div>
+                                            @endif
+
+                                            @if($sidebar_logo_url || $sidebar_logo)
+                                            <button type="button" wire:click="deleteLogo('sidebar')" wire:confirm="Hapus logo sidebar?" 
+                                                class="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg shadow-lg hover:bg-red-700 transition-colors z-10"
+                                                title="Hapus Logo">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                            @endif
+                                        </div>
+                                        
+                                        <input type="file" wire:model="sidebar_logo" class="block w-full text-xs text-gray-500
+                                            file:mr-2 file:py-1.5 file:px-3
+                                            file:rounded-lg file:border-0
+                                            file:text-xs file:font-semibold
+                                            file:bg-blue-50 file:text-blue-700
+                                            hover:file:bg-blue-100
+                                        "/>
+                                        @error('sidebar_logo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>
+                            <p class="mt-2 text-xs text-gray-500 italic">Format: PNG, JPG, GIF max 2MB. Logo struk akan muncul di hasil cetak. Klik tombol sampah di pojok logo untuk menghapus.</p>
 
                             <!-- Store Name -->
                             <div>

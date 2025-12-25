@@ -71,6 +71,7 @@ class RoleSeeder extends Seeder
             // Finance
             'manage finance',
             'view finance',
+            'manage expense categories',
             
             // Settings & Configuration
             'manage settings',

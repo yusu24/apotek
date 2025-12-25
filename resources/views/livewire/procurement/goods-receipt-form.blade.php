@@ -80,11 +80,8 @@
             <!-- Items -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Barang Diterima</h3>
-                        <button type="button" wire:click="addItem" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
-                            + Tambah Item
-                        </button>
                     </div>
 
                     @error('items') <div class="text-red-500 text-sm mb-2">{{ $message }}</div> @enderror

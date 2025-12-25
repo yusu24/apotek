@@ -49,47 +49,75 @@
                         Centang menu yang ingin diberikan akses khusus kepada user ini, terlepas dari rolenya.
                     </p>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.view dashboard" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Dashboard</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.view products" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Obat (Data Obat)</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.manage product units" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Satuan Produk</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.view stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Stok (Inventory)</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.adjust stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Penyesuaian Stok</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.access pos" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Kasir (POS)</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.view reports" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Laporan</span>
-                        </label>
-                         <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.view finance" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Finance (Laba Rugi & Pengeluaran)</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.manage settings" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Pengaturan Toko</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="menu_permissions.manage users" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-700">Kelola User</span>
-                        </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Dashboard & Laporan -->
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-gray-700 text-sm border-b pb-1">Dashboard & Laporan</h4>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.view dashboard" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Dashboard</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.view reports" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Laporan</span>
+                            </label>
+                        </div>
+
+                        <!-- Master Data -->
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-gray-700 text-sm border-b pb-1">Master Data</h4>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.view products" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Obat (Data Obat)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.manage product units" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Satuan Produk</span>
+                            </label>
+                        </div>
+
+                        <!-- Inventory -->
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-gray-700 text-sm border-b pb-1">Inventory (Stok)</h4>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.view stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Lihat Stok</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.adjust stock" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Penyesuaian Stok</span>
+                            </label>
+                        </div>
+
+                        <!-- Finance -->
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-gray-700 text-sm border-b pb-1">Keuangan (Finance)</h4>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.view finance" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Kelola Pengeluaran</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.manage expense categories" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Kelola Kategori Pengeluaran</span>
+                            </label>
+                        </div>
+
+                        <!-- POS & System -->
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-gray-700 text-sm border-b pb-1">POS & Sistem</h4>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.access pos" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Akses Kasir (POS)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.manage settings" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Pengaturan Toko</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="menu_permissions.manage users" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-700">Kelola User</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 

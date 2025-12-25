@@ -25,8 +25,6 @@
 
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <input type="text" wire:model.live="search" placeholder="Cari Produk..." class="w-full md:w-1/3 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-            
             <div class="flex gap-2">
                 <a href="{{ route('inventory.index', ['filter_status' => 'all']) }}" wire:navigate 
                     class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-gray-800 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
@@ -37,6 +35,8 @@
                     Stok Menipis
                 </a>
             </div>
+
+            <input type="text" wire:model.live="search" placeholder="Cari Produk..." class="w-full md:w-1/3 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -73,8 +73,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <!-- Detail / History Icon -->
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                                     <a href="{{ route('inventory.history', $product->id) }}" wire:navigate
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Detail / History">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,10 +82,8 @@
                                         </svg>
                                     </a>
                                     
-                                    <!-- Penyesuaian Icon -->
                                     @can('adjust stock')
                                         @php
-                                            // Get any batch (prefer active ones, but allow any batch)
                                             $anyBatch = $product->batches->first() ?? \App\Models\Batch::where('product_id', $product->id)->first();
                                         @endphp
                                         @if($anyBatch)

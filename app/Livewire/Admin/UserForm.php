@@ -23,11 +23,11 @@ class UserForm extends Component
         'view products' => false, // Obat
         'manage product units' => false, // Satuan Produk
         'view stock' => false,    // Stok
-        'view stock' => false,    // Stok
         'adjust stock' => false,  // Penyesuaian Stok
         'access pos' => false,    // Kasir
         'view reports' => false,  // Laporan
         'view finance' => false,  // Finance
+        'manage expense categories' => false, // Kelola Kategori Pengeluaran
         'manage settings' => false, // Pengaturan
         'manage users' => false,  // Kelola User
     ];

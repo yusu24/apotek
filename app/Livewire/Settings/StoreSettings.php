@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout('layouts.app')]
 class StoreSettings extends Component
@@ -21,6 +22,10 @@ class StoreSettings extends Component
     // Logo
     public $store_logo;
     public $logo_url;
+    public $login_logo;
+    public $login_logo_url;
+    public $sidebar_logo;
+    public $sidebar_logo_url;
 
     // Social Media
     public $store_website;
@@ -48,7 +53,8 @@ class StoreSettings extends Component
         // Load current settings
         $settings = Setting::getMultiple([
             'store_name', 'store_address', 'store_phone', 'store_email', 'store_tax_id',
-            'store_logo_path', 'store_website', 'store_facebook', 'store_instagram', 'store_tiktok',
+            'store_logo_path', 'store_login_logo_path', 'store_sidebar_logo_path',
+            'store_website', 'store_facebook', 'store_instagram', 'store_tiktok',
             'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note'
         ]);
 
@@ -59,6 +65,8 @@ class StoreSettings extends Component
         $this->store_tax_id = $settings['store_tax_id'] ?? '';
         
         $this->logo_url = $settings['store_logo_path'] ? asset('storage/' . $settings['store_logo_path']) : null;
+        $this->login_logo_url = $settings['store_login_logo_path'] ? asset('storage/' . $settings['store_login_logo_path']) : null;
+        $this->sidebar_logo_url = $settings['store_sidebar_logo_path'] ? asset('storage/' . $settings['store_sidebar_logo_path']) : null;
         
         $this->store_website = $settings['store_website'] ?? '';
         $this->store_facebook = $settings['store_facebook'] ?? '';
@@ -81,6 +89,8 @@ class StoreSettings extends Component
             'store_email' => 'nullable|email|max:255',
             'store_tax_id' => 'nullable|string|max:100',
             'store_logo' => 'nullable|image|max:2048', // 2MB Max
+            'login_logo' => 'nullable|image|max:2048', // 2MB Max
+            'sidebar_logo' => 'nullable|image|max:2048', // 2MB Max
             'store_website' => 'nullable|url|max:255',
             'store_facebook' => 'nullable|string|max:255',
             'store_instagram' => 'nullable|string|max:255',
@@ -95,6 +105,18 @@ class StoreSettings extends Component
             $path = $this->store_logo->store('settings', 'public');
             Setting::set('store_logo_path', $path);
             $this->logo_url = asset('storage/' . $path);
+        }
+
+        if ($this->login_logo) {
+            $path = $this->login_logo->store('settings', 'public');
+            Setting::set('store_login_logo_path', $path);
+            $this->login_logo_url = asset('storage/' . $path);
+        }
+
+        if ($this->sidebar_logo) {
+            $path = $this->sidebar_logo->store('settings', 'public');
+            Setting::set('store_sidebar_logo_path', $path);
+            $this->sidebar_logo_url = asset('storage/' . $path);
         }
 
         Setting::set('store_name', $this->store_name);
@@ -115,6 +137,39 @@ class StoreSettings extends Component
         Setting::set('store_footer_note', $this->store_footer_note);
 
         $this->success_message = 'Pengaturan toko berhasil disimpan!';
+    }
+
+    public function deleteLogo($type)
+    {
+        $settingKey = match($type) {
+            'store' => 'store_logo_path',
+            'login' => 'store_login_logo_path',
+            'sidebar' => 'store_sidebar_logo_path',
+            default => null
+        };
+
+        if (!$settingKey) return;
+
+        $currentPath = Setting::get($settingKey);
+        if ($currentPath) {
+            Storage::disk('public')->delete($currentPath);
+        }
+
+        Setting::set($settingKey, null);
+
+        // Reset local state
+        if ($type === 'store') {
+            $this->store_logo = null;
+            $this->logo_url = null;
+        } elseif ($type === 'login') {
+            $this->login_logo = null;
+            $this->login_logo_url = null;
+        } elseif ($type === 'sidebar') {
+            $this->sidebar_logo = null;
+            $this->sidebar_logo_url = null;
+        }
+
+        $this->success_message = 'Logo berhasil hapus dan dikembalikan ke default!';
     }
 
     public function render()

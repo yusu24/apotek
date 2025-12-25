@@ -74,20 +74,25 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm font-medium space-x-2">
-                                 @if($po->status !== 'cancelled' && $po->status !== 'received')
-                                    <a href="{{ route('procurement.purchase-orders.edit', $po->id) }}" wire:navigate class="text-blue-600 hover:text-blue-900" title="Edit">
-                                        <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                                    @if($po->status !== 'cancelled' && $po->status !== 'received')
+                                        <a href="{{ route('procurement.purchase-orders.edit', $po->id) }}" wire:navigate 
+                                            class="text-blue-600 hover:text-blue-900" title="Edit">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                        </a>
+                                    @endif
+                                    <a href="{{ route('procurement.purchase-orders.print', $po->id) }}" target="_blank"
+                                        class="text-gray-600 hover:text-gray-900" title="Cetak PO">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                     </a>
-                                 @endif
-                                 <a href="{{ route('procurement.purchase-orders.print', $po->id) }}" class="text-gray-600 hover:text-gray-900" target="_blank" title="Cetak PO">
-                                    <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                 </a>
-                                 @if($po->goodsReceipts->count() == 0)
-                                    <button wire:click="delete({{ $po->id }})" wire:confirm="Hapus PO ini?" class="text-red-600 hover:text-red-900" title="Hapus">
-                                        <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                 @endif
+                                    @if($po->goodsReceipts->count() == 0)
+                                        <button wire:click="delete({{ $po->id }})" wire:confirm="Hapus PO ini?"
+                                            class="text-red-600 hover:text-red-900" title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

@@ -25,9 +25,15 @@
     </style>
 
     <div class="header text-center">
-        <div class="shop-name">{{ config('app.name', 'Apotek') }}</div>
-        <div>Jl. Raya Apotek No. 123</div>
-        <div>Telp: 0812-3456-7890</div>
+        @if($logoPath = \App\Models\Setting::get('store_logo_path'))
+            <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: 40mm; max-height: 20mm; margin-bottom: 5px;" alt="Logo">
+        @endif
+        <div class="shop-name">{{ \App\Models\Setting::get('store_name', config('app.name', 'Apotek')) }}</div>
+        <div>{{ \App\Models\Setting::get('store_address', 'Jl. Raya Apotek No. 123') }}</div>
+        <div>Telp: {{ \App\Models\Setting::get('store_phone', '0812-3456-7890') }}</div>
+        @if($taxId = \App\Models\Setting::get('store_tax_id'))
+            <div style="font-size: 10px;">NPWP: {{ $taxId }}</div>
+        @endif
     </div>
 
     <div class="meta border-b">
@@ -99,9 +105,8 @@
         </table>
     </div>
 
-    <div class="border-t text-center" style="margin-top: 10px; font-size: 10px;">
-        Terima Kasih atas Kunjungan Anda<br>
-        Semoga Lekas Sembuh
+    <div class="border-t text-center" style="margin-top: 10px; font-size: 10px; white-space: pre-line;">
+        {{ \App\Models\Setting::get('store_footer_note', "Terima Kasih atas Kunjungan Anda\nSemoga Lekas Sembuh") }}
     </div>
 
     <div class="no-print" style="margin-top: 20px; text-center">

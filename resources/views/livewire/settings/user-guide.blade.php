@@ -25,7 +25,6 @@
                             <h3 class="text-gray-900 font-bold text-2xl leading-snug mb-3 group-hover:text-blue-700 transition-colors">{{ $guide['title'] }}</h3>
                             
                             <div class="flex items-center text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100 uppercase tracking-wide font-medium">
-                                <svg class="w-1 h-1 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <span>Updated {{ $guide['updated_at'] }}</span>
                             </div>
                         </div>

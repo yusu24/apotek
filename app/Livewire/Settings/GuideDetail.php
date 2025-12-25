@@ -24,12 +24,9 @@ class GuideDetail extends Component
         $data = [
             'dashboard' => [
                 'title' => 'Dashboard & Statistik',
-                'image' => 'dashboard.png',
-                'description' => 'Pusat kendali visual real-time untuk memantau performa apotek. Dashboard menyajikan data agregat transaksi dan pergerakan stok secara instan.',
-                'screenshots' => [
-                    ['src' => 'guide_dashboard_ui_1766530015722.png', 'caption' => 'Tampilan Utama Dashboard dengan Grafik Penjualan'],
-                    ['src' => 'report.png', 'caption' => 'Widget Laporan Ringkas Harian']
-                ],
+                'image' => 'full_dashboard.png',
+                'description' => 'Pusat kendali visual real-time untuk memantau performa apotek. Dashboard menyajikan data agregat transaksi, tren penjualan harian, dan ringkasan stok secara instan.',
+                'screenshots' => [],
                 'golden_rules' => [
                     'Pantau widget **Stok Kritis** setiap pagi.',
                     'Gunakan **Filter Tanggal** untuk melihat tren berkala.',
@@ -60,12 +57,9 @@ class GuideDetail extends Component
             ],
             'master' => [
                 'title' => 'Manajemen Produk (Master)',
-                'image' => 'product.png',
-                'description' => 'Modul pusat pengelola katalog produk. Definisikan identitas obat, standar harga, dan skema konversi satuan di sini.',
-                'screenshots' => [
-                    ['src' => 'guide_product_ui_1766530091924.png', 'caption' => 'Form Input Produk Baru'],
-                    ['src' => 'stock.png', 'caption' => 'Ilustrasi Manajemen Stok Produk']
-                ],
+                'image' => 'full_master.png',
+                'description' => 'Modul pusat pengelola katalog produk. Definisikan identitas obat, barcode, harga jual, dan skema konversi satuan di sini.',
+                'screenshots' => [],
                 'golden_rules' => [
                     'Barcode harus **unik** untuk setiap produk.',
                     'Input **Satuan Terkecil** terlebih dahulu.',
@@ -100,12 +94,9 @@ class GuideDetail extends Component
             ],
             'pos' => [
                 'title' => 'Transaksi Kasir (POS)',
-                'image' => 'pos.png',
-                'description' => 'Antarmuka penjualan cepat. Mendukung Barcode Scanner, Layar Sentuh, dan multi-metode pembayaran.',
-                'screenshots' => [
-                    ['src' => 'guide_pos_ui_1766530034081.png', 'caption' => 'Halaman Kasir (Point of Sale)'],
-                    ['src' => 'finance.png', 'caption' => 'Ilustrasi Pembayaran & Keuangan']
-                ],
+                'image' => 'full_pos.png',
+                'description' => 'Antarmuka penjualan cepat (Point of Sale). Mendukung Barcode Scanner, multi-satuan produk, dan kalkulasi PPN otomatis.',
+                'screenshots' => [],
                 'golden_rules' => [
                     'Selalu gunakan **Barcode Scanner** untuk kecepatan.',
                     'Cek **Struk Terakhir** jika printer macet.',
@@ -139,12 +130,9 @@ class GuideDetail extends Component
             ],
             'stock' => [
                 'title' => 'Stok & Inventori',
-                'image' => 'stock.png',
+                'image' => 'full_stock.png',
                 'description' => 'Kelola fisik barang dengan akurat. Mendukung sistem FEFO untuk meminimalisir obat kadaluarsa.',
-                'screenshots' => [
-                    ['src' => 'stock.png', 'caption' => 'Manajemen Stok & Opname'],
-                    ['src' => 'archive-box.png', 'caption' => 'Ilustrasi Gudang']
-                ],
+                'screenshots' => [],
                 'golden_rules' => [
                     'Update **Nomor Batch** setiap barang datang.',
                     'Prioritaskan stok dengan **Expired Terdekat**.',
@@ -176,12 +164,9 @@ class GuideDetail extends Component
             ],
             'procurement' => [
                 'title' => 'Pengadaan (Procurement)',
-                'image' => 'procurement.png',
-                'description' => 'Siklus pembelian ke PBF. Pastikan modal (HPP) tercatat benar untuk laporan laba rugi.',
-                'screenshots' => [
-                    ['src' => 'procurement.png', 'caption' => 'Alur Pengadaan Barang'],
-                    ['src' => 'po.png', 'caption' => 'Ilustrasi Purchase Order']
-                ],
+                'image' => 'full_procurement.png',
+                'description' => 'Siklus pembelian dan penerimaan barang. Hubungkan dengan Purchase Order (PO) atau input manual dengan kalkulasi total otomatis.',
+                'screenshots' => [],
                 'golden_rules' => [
                     'Sesuaikan **Nomor Faktur** dengan fisik kertas.',
                     'Pastikan **Diskon Supplier** terinput.',
@@ -189,7 +174,7 @@ class GuideDetail extends Component
                 ],
                 'sub_menus' => [
                     ['name' => 'Purchase Order (PO)', 'func' => 'Surat pesanan pembelian resmi kepada supplier untuk request stok.'],
-                    ['name' => 'Penerimaan (GR)', 'func' => 'Goods Receipt. Halaman input barang datang berdasarkan PO yang sudah dibuat.'],
+                    ['name' => 'Penerimaan (GR)', 'func' => 'Penerimaan barang dengan fitur kalkulasi total waktu nyata dan tambah barang manual.'],
                     ['name' => 'Hutang (AP)', 'func' => 'Accounts Payable. Daftar tagihan supplier yang belum lunas jatuh tempo.'],
                     ['name' => 'Supplier', 'func' => 'Database vendor/PBF lengkap dengan kontak sales dan alamat.']
                 ],
@@ -212,12 +197,9 @@ class GuideDetail extends Component
             ],
             'reports' => [
                 'title' => 'Laporan & Keuangan',
-                'image' => 'report.png',
+                'image' => 'full_reports.png',
                 'description' => 'Dashboard audit finansial. Lihat Laba Rugi, Rekap Pajak, dan Biaya Operasional secara akurat.',
-                'screenshots' => [
-                    ['src' => 'report.png', 'caption' => 'Laporan Keuangan'],
-                    ['src' => 'finance.png', 'caption' => 'Analisa Profit & Loss']
-                ],
+                'screenshots' => [],
                 'golden_rules' => [
                     'Lakukan **Tutup Buku** setiap shift berakhir.',
                     'Input semua **Pengeluaran** (Gaji, Listrik).',
@@ -250,11 +232,9 @@ class GuideDetail extends Component
             ],
             'profile' => [
                 'title' => 'Pengaturan Profil',
-                'image' => 'profile.png',
+                'image' => 'full_profile.png',
                 'description' => 'Keamanan dan identitas user. Kelola password dan preferensi tampilan aplikasi.',
-                'screenshots' => [
-                    ['src' => 'profile.png', 'caption' => 'Halaman Profil User']
-                ],
+                'screenshots' => [],
                 'golden_rules' => [
                     'Ganti **Password** tiap 3 bulan sekali.',
                     'Pastikan **Email** aktif untuk recovery.',
@@ -282,11 +262,9 @@ class GuideDetail extends Component
             ],
             'settings' => [
                 'title' => 'Manajemen Sistem',
-                'image' => 'settings.png',
+                'image' => 'full_settings.png',
                 'description' => 'Pengaturan Global. Kelola data outlet, hak akses karyawan, dan backup sistem.',
-                'screenshots' => [
-                    ['src' => 'settings.png', 'caption' => 'Pengaturan Toko & Sistem']
-                ],
+                'screenshots' => [],
                 'golden_rules' => [
                     'Download **Backup Data** setiap minggu.',
                     'Batasi **Hak Akses** sesuai tugas staff.',

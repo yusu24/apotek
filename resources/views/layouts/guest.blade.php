@@ -19,9 +19,9 @@
             <div>
                 <a href="/" wire:navigate>
                     @if($logoPath = \App\Models\Setting::get('store_login_logo_path'))
-                        <img src="{{ asset('storage/' . $logoPath) }}" class="w-40 h-24 object-contain mx-auto" alt="Logo">
+                        <img src="{{ asset('storage/' . $logoPath) }}" class="max-w-[120px] md:max-w-[150px] h-auto object-contain mx-auto" alt="Logo">
                     @else
-                        <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                        <x-application-logo class="w-16 h-16 md:w-20 md:h-20 fill-current text-gray-500" />
                     @endif
                 </a>
             </div>

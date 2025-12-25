@@ -102,21 +102,33 @@ class StoreSettings extends Component
         ]);
 
         if ($this->store_logo) {
+            $oldPath = Setting::get('store_logo_path');
+            if ($oldPath) Storage::disk('public')->delete($oldPath);
+            
             $path = $this->store_logo->store('settings', 'public');
             Setting::set('store_logo_path', $path);
             $this->logo_url = asset('storage/' . $path);
+            $this->store_logo = null;
         }
 
         if ($this->login_logo) {
+            $oldPath = Setting::get('store_login_logo_path');
+            if ($oldPath) Storage::disk('public')->delete($oldPath);
+
             $path = $this->login_logo->store('settings', 'public');
             Setting::set('store_login_logo_path', $path);
             $this->login_logo_url = asset('storage/' . $path);
+            $this->login_logo = null;
         }
 
         if ($this->sidebar_logo) {
+            $oldPath = Setting::get('store_sidebar_logo_path');
+            if ($oldPath) Storage::disk('public')->delete($oldPath);
+
             $path = $this->sidebar_logo->store('settings', 'public');
             Setting::set('store_sidebar_logo_path', $path);
             $this->sidebar_logo_url = asset('storage/' . $path);
+            $this->sidebar_logo = null;
         }
 
         Setting::set('store_name', $this->store_name);

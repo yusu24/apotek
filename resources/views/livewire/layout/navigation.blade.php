@@ -26,7 +26,7 @@ new class extends Component
         <div class="h-16 flex items-center justify-between px-6 bg-gray-950/50 border-b border-gray-800">
             <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2 font-bold text-xl tracking-tight">
                 @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
-                    <img src="{{ asset('storage/' . $logoPath) }}" class="h-8 w-12 object-contain" alt="Logo">
+                    <img src="{{ asset('storage/' . $logoPath) }}" class="max-h-10 w-auto object-contain" alt="Logo">
                 @else
                     <x-application-logo class="block h-8 w-auto fill-current text-blue-500" />
                 @endif
@@ -201,7 +201,7 @@ new class extends Component
     <div class="xl:hidden bg-gray-900 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">
         <div class="flex items-center gap-2">
             @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
-                <img src="{{ asset('storage/' . $logoPath) }}" class="h-6 w-10 object-contain" alt="Logo">
+                <img src="{{ asset('storage/' . $logoPath) }}" class="max-h-8 w-auto object-contain" alt="Logo">
             @else
                 <x-application-logo class="block h-6 w-auto fill-current text-blue-500" />
             @endif

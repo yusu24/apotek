@@ -62,6 +62,57 @@
         <div class="p-6 border-b bg-gray-50">
             <h3 class="text-lg font-bold text-gray-900">Riwayat Transaksi (100 Terakhir)</h3>
         </div>
+        
+        <!-- Filter Section -->
+        <div class="p-6 bg-gray-50/50 border-b">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Search -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Pencarian</label>
+                    <input type="text" 
+                        wire:model.live.debounce.300ms="searchTerm" 
+                        placeholder="Cari batch, referensi, keterangan..."
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Type Filter -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Tipe Transaksi</label>
+                    <select wire:model.live="filterType" 
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="all">Semua Tipe</option>
+                        <option value="in">Masuk</option>
+                        <option value="out">Keluar</option>
+                        <option value="sale">Penjualan</option>
+                        <option value="adjustment">Opname</option>
+                    </select>
+                </div>
+
+                <!-- Start Date -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                    <input type="date" 
+                        wire:model.live="startDate" 
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- End Date -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                    <input type="date" 
+                        wire:model.live="endDate" 
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="mt-4 flex justify-end">
+                <button wire:click="resetFilters" 
+                    class="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
+                    Reset Filter
+                </button>
+            </div>
+        </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -76,7 +127,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($stockMovements as $movement)
+                    @forelse($this->stockMovements as $movement)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                             {{ $movement->created_at->format('d/m/Y H:i') }}
@@ -114,8 +165,8 @@
             <h4 class="font-bold text-gray-700 mb-2">Ringkasan Pergerakan Stok</h4>
             <div class="grid grid-cols-3 gap-4">
                 @php
-                    $totalIn = $stockMovements->where('quantity', '>', 0)->sum('quantity');
-                    $totalOut = abs($stockMovements->where('quantity', '<', 0)->sum('quantity'));
+                    $totalIn = $this->stockMovements->where('quantity', '>', 0)->sum('quantity');
+                    $totalOut = abs($this->stockMovements->where('quantity', '<', 0)->sum('quantity'));
                     $netChange = $totalIn - $totalOut;
                 @endphp
                 <div class="text-center">

@@ -77,6 +77,23 @@
             <div class="h-64">
                 <canvas id="topSellingChart"></canvas>
             </div>
+            
+            <!-- Chart Description -->
+            <div class="mt-4 p-4 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-800">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="text-sm">
+                        <p class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Tentang Diagram Ini</p>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Diagram ini menampilkan <strong>5 produk dengan penjualan tertinggi</strong> dalam periode yang dipilih. 
+                            Produk dengan batang tertinggi adalah produk yang paling banyak terjual. Gunakan informasi ini untuk 
+                            memastikan stok produk populer selalu tersedia dan merencanakan strategi penjualan yang lebih baik.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -94,6 +111,23 @@
         <div class="p-6">
             <div class="h-64">
                 <canvas id="slowMovingChart"></canvas>
+            </div>
+            
+            <!-- Chart Description -->
+            <div class="mt-4 p-4 bg-rose-50/50 dark:bg-rose-900/10 rounded-lg border border-rose-100 dark:border-rose-800">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-rose-600 dark:text-rose-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <div class="text-sm">
+                        <p class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Tentang Diagram Ini</p>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Diagram ini menampilkan <strong>5 produk dengan penjualan terendah</strong> yang masih memiliki riwayat transaksi. 
+                            Produk dengan batang terendah adalah produk yang paling lambat terjual. Pertimbangkan untuk 
+                            mengurangi stok produk ini, mengadakan promosi khusus, atau evaluasi kelayakan produk untuk tetap dijual.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

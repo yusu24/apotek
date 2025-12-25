@@ -14,7 +14,12 @@ class StockHistory extends Component
     public $productId;
     public $product;
     public $productBatches = [];
-    public $stockMovements = [];
+    
+    // Filter properties
+    public $searchTerm = '';
+    public $filterType = 'all';
+    public $startDate = '';
+    public $endDate = '';
 
     public function mount($productId)
     {
@@ -25,12 +30,46 @@ class StockHistory extends Component
             ->where('stock_current', '>', 0)
             ->orderBy('expired_date')
             ->get();
+    }
 
-        $this->stockMovements = StockMovement::where('product_id', $productId)
-            ->with(['batch', 'user'])
-            ->latest()
-            ->limit(100)
-            ->get();
+    public function getStockMovementsProperty()
+    {
+        $query = StockMovement::where('product_id', $this->productId)
+            ->with(['batch', 'user']);
+
+        // Filter by transaction type
+        if ($this->filterType !== 'all') {
+            $query->where('type', $this->filterType);
+        }
+
+        // Filter by date range
+        if ($this->startDate) {
+            $query->whereDate('created_at', '>=', $this->startDate);
+        }
+        if ($this->endDate) {
+            $query->whereDate('created_at', '<=', $this->endDate);
+        }
+
+        // Search by batch number, reference, or description
+        if ($this->searchTerm) {
+            $query->where(function($q) {
+                $q->whereHas('batch', function($batchQuery) {
+                    $batchQuery->where('batch_no', 'like', '%' . $this->searchTerm . '%');
+                })
+                ->orWhere('doc_ref', 'like', '%' . $this->searchTerm . '%')
+                ->orWhere('description', 'like', '%' . $this->searchTerm . '%');
+            });
+        }
+
+        return $query->latest()->limit(100)->get();
+    }
+
+    public function resetFilters()
+    {
+        $this->searchTerm = '';
+        $this->filterType = 'all';
+        $this->startDate = '';
+        $this->endDate = '';
     }
 
     public function render()

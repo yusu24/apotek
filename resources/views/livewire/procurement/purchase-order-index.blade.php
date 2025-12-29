@@ -55,7 +55,7 @@
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -70,12 +70,18 @@
                                     {{ $po->status === 'received' ? 'bg-green-100 text-green-800' : 
                                        ($po->status === 'cancelled' ? 'bg-red-100 text-red-800' : 
                                        ($po->status === 'partial' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800')) }}">
-                                    {{ ucfirst($po->status) }}
+                                    {{ [
+                                        'draft' => 'Draf',
+                                        'ordered' => 'Dipesan',
+                                        'partial' => 'Sebagian',
+                                        'received' => 'Diterima',
+                                        'cancelled' => 'Dibatalkan'
+                                    ][$po->status] ?? ucfirst($po->status) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm font-medium">
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                            <td class="px-6 py-4 text-sm font-medium text-center">
+                                <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
                                     @if($po->status !== 'cancelled' && $po->status !== 'received')
                                         <a href="{{ route('procurement.purchase-orders.edit', $po->id) }}" wire:navigate 
                                             class="text-blue-600 hover:text-blue-900" title="Edit">

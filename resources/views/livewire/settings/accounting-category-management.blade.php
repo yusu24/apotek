@@ -47,7 +47,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr wire:key="category-{{ $category->id }}">
-                            <td class="px-6 py-4 text-sm font-mono font-bold text-gray-900">{{ $category->code }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $category->code }}</td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $category->name }}</td>
                             <td class="px-6 py-4 text-sm">
                                 @if($category->type === 'income')

@@ -98,7 +98,7 @@
                         </div>
                         <div class="space-y-4">
                             <div>
-                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">Supplier</span>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] block mb-1">Supplier</span>
                                 <div class="flex flex-col">
                                     <span class="font-black text-gray-900 leading-tight">{{ $selectedReceipt->purchaseOrder->supplier->name ?? 'Direct Receipt' }}</span>
                                 </div>
@@ -113,7 +113,7 @@
                     <!-- Items Table Container -->
                     <div class="mb-4 flex items-center gap-2">
                         <div class="h-4 w-1 bg-blue-600 rounded-full"></div>
-                        <h4 class="text-sm font-black text-gray-900 uppercase tracking-widest">Daftar Barang yang Diterima</h4>
+                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest">Daftar Barang yang Diterima</h4>
                     </div>
 
                     <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">

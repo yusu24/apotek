@@ -5,8 +5,8 @@
             color: #000 !important;
         }
         body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
+            font-family: sans-serif;
+            font-size: 11px;
             width: 58mm;
             margin: 0;
             padding: 5px;
@@ -26,7 +26,7 @@
 
     <div class="header text-center">
         @if($logoPath = \App\Models\Setting::get('store_logo_path'))
-            <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: 40mm; max-height: 20mm; margin-bottom: 5px;" alt="Logo">
+            <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: 40mm; max-height: 20mm; margin-bottom: 5px; margin-left: auto; margin-right: auto; display: block;" alt="Logo">
         @endif
         <div class="shop-name">{{ \App\Models\Setting::get('store_name', config('app.name', 'Apotek')) }}</div>
         <div>{{ \App\Models\Setting::get('store_address', 'Jl. Raya Apotek No. 123') }}</div>
@@ -104,6 +104,14 @@
             </tr>
         </table>
     </div>
+
+    @if($bankAccount = \App\Models\Setting::get('store_bank_account'))
+        <div class="border-t text-center" style="margin-top: 5px;">
+            <div>Bank: {{ \App\Models\Setting::get('store_bank_name', '-') }}</div>
+            <div style="font-weight: bold;">No. Rek: {{ $bankAccount }}</div>
+            <div>A/n: {{ \App\Models\Setting::get('store_bank_holder', '-') }}</div>
+        </div>
+    @endif
 
     <div class="border-t text-center" style="margin-top: 10px; font-size: 10px; white-space: pre-line;">
         {{ \App\Models\Setting::get('store_footer_note', "Terima Kasih atas Kunjungan Anda\nSemoga Lekas Sembuh") }}

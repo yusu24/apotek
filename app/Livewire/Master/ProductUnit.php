@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Product;
 use App\Models\Unit;
+use App\Models\Category;
 use App\Models\UnitConversion;
 use Illuminate\Validation\Rule;
 
@@ -14,6 +15,7 @@ class ProductUnit extends Component
     use WithPagination;
 
     public $search = '';
+    public $category_id = '';
     
     // Modal State
     public $showModal = false;
@@ -32,12 +34,16 @@ class ProductUnit extends Component
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('barcode', 'like', '%' . $this->search . '%');
             })
+            ->when($this->category_id, function($q) {
+                $q->where('category_id', $this->category_id);
+            })
             ->orderBy('name')
             ->paginate(10);
 
         return view('livewire.master.product-unit', [
             'products' => $products,
             'units' => Unit::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
         ])->layout('layouts.app');
     }
 

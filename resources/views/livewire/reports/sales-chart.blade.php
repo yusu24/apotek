@@ -88,31 +88,50 @@
                         }
                         
                         const ctx = this.$refs.canvas.getContext('2d');
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
+                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+                        // Ensure data is numeric
+                        const numericData = this.data.map(Number);
+
                         this.chart = new Chart(ctx, {
                             type: 'line',
                             data: {
                                 labels: this.labels,
                                 datasets: [{
                                     label: 'Total Penjualan',
-                                    data: this.data,
-                                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                                    borderColor: 'rgba(59, 130, 246, 1)',
+                                    data: numericData,
+                                    backgroundColor: gradient,
+                                    borderColor: '#3b82f6',
                                     borderWidth: 3,
                                     tension: 0.4,
                                     fill: true,
                                     pointBackgroundColor: '#fff',
-                                    pointBorderColor: 'rgba(59, 130, 246, 1)',
+                                    pointBorderColor: '#3b82f6',
                                     pointBorderWidth: 2,
-                                    pointRadius: 5,
-                                    pointHoverRadius: 7,
-                                    pointHoverBackgroundColor: 'rgba(59, 130, 246, 1)',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    pointHoverBackgroundColor: '#3b82f6',
                                     pointHoverBorderColor: '#fff',
-                                    pointHoverBorderWidth: 3
+                                    pointHoverBorderWidth: 2,
+                                    pointHitRadius: 10
                                 }]
                             },
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
+                                animation: {
+                                    duration: 1000,
+                                    easing: 'easeOutQuart',
+                                    delay: (context) => {
+                                        let delay = 0;
+                                        if (context.type === 'data' && context.mode === 'default') {
+                                            delay = context.dataIndex * 50;
+                                        }
+                                        return delay;
+                                    }
+                                },
                                 interaction: {
                                     mode: 'index',
                                     intersect: false,
@@ -120,10 +139,11 @@
                                 plugins: {
                                     legend: { display: false },
                                     tooltip: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
                                         padding: 12,
                                         titleFont: { size: 14, weight: 'bold' },
                                         bodyFont: { size: 13 },
+                                        cornerRadius: 8,
                                         callbacks: {
                                             label: function(context) {
                                                 let label = context.dataset.label || '';
@@ -141,8 +161,9 @@
                                 scales: {
                                     y: {
                                         beginAtZero: true,
-                                        grid: { color: '#e5e7eb' },
+                                        grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
                                         ticks: {
+                                             color: '#64748b',
                                              callback: function(value, index, values) {
                                                  return 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact', compactDisplay: 'short' }).format(value);
                                              }
@@ -151,8 +172,10 @@
                                     x: {
                                         grid: { display: false },
                                         ticks: {
+                                            color: '#64748b',
                                             maxRotation: 45,
-                                            minRotation: 45
+                                            minRotation: 45,
+                                            font: { weight: '600' }
                                         }
                                     }
                                 }
@@ -166,16 +189,16 @@
                     this.initChart();
                 }
              }"
-             x-init="updateChart()"
+             x-init="setTimeout(() => updateChart(), 400)"
              @chart-data-updated.window="updateChart()"
-             wire:key="sales-chart-{{ $period }}"
+             wire:key="sales-chart-{{ $period }}-{{ $startDate }}-{{ $endDate }}"
         >
             <canvas x-ref="canvas"></canvas>
         </div>
         
         <div class="mt-8">
             <h3 class="font-bold text-lg mb-4 text-gray-800">Rincian Data Penjualan</h3>
-            <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-lg">
+            <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>

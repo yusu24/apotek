@@ -29,20 +29,47 @@ class GoodsReceiptForm extends Component
     public function updatedPurchaseOrderId($value)
     {
         if ($value) {
-            $po = \App\Models\PurchaseOrder::with('items.product')->find($value);
+            $po = \App\Models\PurchaseOrder::with(['items', 'goodsReceipts.items', 'items.product'])->find($value);
             if ($po) {
                 $this->items = [];
+                $hasItems = false;
+                
                 foreach ($po->items as $poItem) {
-                    $this->items[] = [
-                        'product_id' => $poItem->product_id,
-                        'product_name' => $poItem->product->name ?? '-',
-                        'batch_no' => $this->generateNextBatchNo(),
-                        'expired_date' => '',
-                        'qty_received' => $poItem->qty_ordered, // Default to ordered qty
-                        'buy_price' => $poItem->unit_price,
-                        'unit_id' => $poItem->unit_id,
-                        'conversion_factor' => $poItem->conversion_factor,
-                    ];
+                    // Calculate total previously received for this product from this PO
+                    $totalReceivedBase = 0;
+                    foreach ($po->goodsReceipts as $gr) {
+                        foreach ($gr->items as $grItem) {
+                            if ($grItem->product_id == $poItem->product_id) {
+                                $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                            }
+                        }
+                    }
+
+                    $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
+                    $remainingBase = $totalOrderedBase - $totalReceivedBase;
+
+                    // Convert remaining base back to PO Unit
+                    $poItemFactor = $poItem->conversion_factor ?? 1;
+                    
+                    // Use tolerance for float comparison
+                    if ($remainingBase > 0.001) {
+                         $remainingQty = $remainingBase / $poItemFactor;
+                         $this->items[] = [
+                            'product_id' => $poItem->product_id,
+                            'product_name' => $poItem->product->name ?? '-',
+                            'batch_no' => $this->generateNextBatchNo(),
+                            'expired_date' => '',
+                            'qty_received' => $remainingQty, 
+                            'buy_price' => $poItem->unit_price,
+                            'unit_id' => $poItem->unit_id,
+                            'conversion_factor' => $poItem->conversion_factor,
+                        ];
+                        $hasItems = true;
+                    }
+                }
+                
+                if (!$hasItems) {
+                    session()->flash('message', 'Semua item dalam PO ini sudah diterima sepenuhnya.');
                 }
             }
         }
@@ -228,10 +255,29 @@ class GoodsReceiptForm extends Component
 
             // 6. Update PO Status
             if ($this->purchase_order_id) {
-                $po = \App\Models\PurchaseOrder::find($this->purchase_order_id);
-                // Simple logic: Mark received. Complex logic would check if all items received.
-                // For now, mark received.
-                $po->update(['status' => 'received']);
+                $po = \App\Models\PurchaseOrder::with(['items', 'goodsReceipts.items'])->find($this->purchase_order_id);
+                
+                $allReceived = true;
+                foreach ($po->items as $poItem) {
+                    $totalReceivedBase = 0;
+                    foreach ($po->goodsReceipts as $gr) {
+                         foreach ($gr->items as $grItem) {
+                            if ($grItem->product_id == $poItem->product_id) {
+                                $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                            }
+                        }
+                    }
+                    
+                    $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
+                    
+                    // If received is less than ordered (with small float tolerance)
+                    if (($totalOrderedBase - $totalReceivedBase) > 0.001) {
+                        $allReceived = false;
+                        break;
+                    }
+                }
+
+                $po->update(['status' => $allReceived ? 'received' : 'partial']);
             }
         });
 

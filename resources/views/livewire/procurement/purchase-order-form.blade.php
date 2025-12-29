@@ -19,7 +19,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">No. PO <span class="text-red-500">*</span></label>
-                            <input type="text" wire:model="po_number" class="mt-1 block w-full rounded-lg border-gray-300 bg-gray-100" readonly>
+                            <input type="text" wire:model="po_number" class="mt-1 block w-full rounded-lg border-gray-300 bg-gray-100" readonly placeholder="Auto Generated">
                         </div>
                         
                         <div>
@@ -42,18 +42,21 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Status</label>
                             <select wire:model="status" class="mt-1 block w-full rounded-lg border-gray-300">
-                                <option value="draft">Draft</option>
-                                <option value="ordered">Ordered</option>
-                                <option value="cancelled">Cancelled</option>
+                                <option value="draft">Draf</option>
+                                <option value="ordered">Dipesan</option>
+                                <option value="cancelled">Dibatalkan</option>
                                 @if($purchaseOrder && $purchaseOrder->status == 'received')
-                                    <option value="received" disabled>Received</option>
+                                    <option value="received" disabled>Diterima</option>
+                                @endif
+                                @if($purchaseOrder && $purchaseOrder->status == 'partial')
+                                    <option value="partial" disabled>Sebagian</option>
                                 @endif
                             </select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Catatan</label>
-                            <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300"></textarea>
+                            <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300" placeholder="Catatan tambahan..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -270,7 +273,7 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-gray-50 p-2 rounded-lg border border-gray-200">
                                 <label class="block text-[10px] font-semibold text-gray-500 uppercase">Kode</label>
-                                <div class="font-mono text-xs text-gray-800">{{ $modalProductCode ?: '-' }}</div>
+                                <div class="font-semibold text-xs text-gray-800">{{ $modalProductCode ?: '-' }}</div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Satuan <span class="text-red-500">*</span></label>

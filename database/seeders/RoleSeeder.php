@@ -36,6 +36,7 @@ class RoleSeeder extends Seeder
             'view suppliers',
             'manage suppliers',
             'manage product units',
+            'upload product images',
             
             // Inventory & Stock
             'manage inventory',

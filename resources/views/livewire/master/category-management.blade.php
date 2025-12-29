@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">
-            Manajemen Kategori Obat
+            Manajemen Kategori Produk
         </h2>
     </div>
 

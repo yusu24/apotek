@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\AccountingService;
 
 class Sale extends Model
 {
@@ -25,6 +27,21 @@ class Sale extends Model
         'change_amount' => 'float',
         'date' => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($sale) {
+            // Auto-post journal entry for completed sales
+            if ($sale->status === 'completed') {
+                try {
+                    $accountingService = new AccountingService();
+                    $accountingService->postSaleJournal($sale->id);
+                } catch (\Exception $e) {
+                    \Log::error('Failed to post sale journal: ' . $e->getMessage());
+                }
+            }
+        });
+    }
 
     public function saleItems()
     {

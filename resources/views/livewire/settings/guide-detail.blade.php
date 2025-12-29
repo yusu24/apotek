@@ -1,8 +1,15 @@
 <div class="p-6 text-gray-800 font-sans">
-    <div class="grid grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <!-- Mobile Back Button -->
+        <div class="md:hidden col-span-1 mb-4">
+            <a href="{{ route('guide.index') }}" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span class="font-medium">Kembali</span>
+            </a>
+        </div>
             
             <!-- Sidebar Navigation -->
-            <div class="col-span-3">
+            <div class="md:col-span-3 hidden md:block">
                 <div class="sticky top-6">
                     <a href="{{ route('guide.index') }}" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -31,7 +38,7 @@
             </div>
 
             <!-- Main Content (Single Card) -->
-            <div class="col-span-9">
+            <div class="md:col-span-9 col-span-1">
                 <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                     
                     <!-- Title & Actions -->
@@ -40,8 +47,8 @@
                             <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider border border-blue-100 mb-3">
                                 {{ $guide['category'] ?? 'Panduan' }}
                             </span>
-                            <h1 class="text-3xl font-bold text-gray-900">{{ $guide['title'] }}</h1>
-                            <p class="text-gray-500 mt-2 text-lg">{{ $guide['description'] }}</p>
+                            <h1 class="text-xl md:text-3xl font-bold text-gray-900">{{ $guide['title'] }}</h1>
+                            <p class="text-gray-500 mt-2 text-sm md:text-lg">{{ $guide['description'] }}</p>
                         </div>
                         <button onclick="window.print()" 
                                 class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2">
@@ -154,7 +161,7 @@
                     @if(!empty($guide['form_fields']))
                     <div id="forms">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Penjelasan Formulir</h3>
-                        <div class="overflow-hidden border border-gray-200 rounded-xl">
+                        <div class="overflow-x-auto border border-gray-200 rounded-xl">
                             <table class="w-full text-sm text-left">
                                 <thead class="bg-gray-50 border-b border-gray-200">
                                     <tr>

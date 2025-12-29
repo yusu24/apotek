@@ -16,6 +16,13 @@
         }
     </style>
 
+    <!-- Dynamic Settings -->
+    @php
+        $store_name = \App\Models\Setting::get('store_name', config('app.name', 'Apotek'));
+        $store_address = \App\Models\Setting::get('store_address', 'Alamat Toko Belum Diatur');
+        $store_phone = \App\Models\Setting::get('store_phone', '-');
+    @endphp
+
     <!-- Header -->
     <div class="flex justify-between items-start border-b border-gray-800 pb-6 mb-8">
         <div>
@@ -23,11 +30,10 @@
             <p class="text-gray-600 font-bold text-lg">{{ $po->po_number }}</p>
         </div>
         <div class="text-right">
-            <h2 class="text-xl font-bold text-gray-800">{{ config('app.name', 'Apotek') }}</h2>
+            <h2 class="text-xl font-bold text-gray-800">{{ $store_name }}</h2>
             <p class="text-gray-600 text-sm max-w-xs ml-auto">
-                Jl. Raya Apotek No. 123<br>
-                Kota Sehat, Indonesia<br>
-                Telp: (021) 1234-5678
+                {{ $store_address }}<br>
+                Telp: {{ $store_phone }}
             </p>
         </div>
     </div>
@@ -51,7 +57,16 @@
                 </div>
                 <div class="flex justify-end gap-4">
                     <span class="text-gray-600">Status:</span>
-                    <span class="font-bold uppercase {{ $po->status == 'completed' ? 'text-green-600' : 'text-amber-600' }}">{{ $po->status }}</span>
+                    <span class="font-bold uppercase {{ in_array($po->status, ['received', 'completed']) ? 'text-green-600' : 'text-amber-600' }}">
+                        {{ [
+                            'draft' => 'Draf',
+                            'ordered' => 'Dipesan',
+                            'partial' => 'Sebagian',
+                            'received' => 'Diterima',
+                            'completed' => 'Selesai',
+                            'cancelled' => 'Dibatalkan'
+                        ][$po->status] ?? $po->status }}
+                    </span>
                 </div>
                 <div class="flex justify-end gap-4">
                     <span class="text-gray-600">Dibuat Oleh:</span>
@@ -79,7 +94,7 @@
                     <div class="font-bold text-gray-900">{{ $item->product->name }}</div>
                     <div class="text-xs text-gray-500">Kode: {{ $item->product->barcode ?? '-' }}</div>
                 </td>
-                <td class="py-3 px-4 text-center font-bold">{{ $item->quantity }}</td>
+                <td class="py-3 px-4 text-center font-bold">{{ $item->qty_ordered }}</td>
                 <td class="py-3 px-4 text-center text-gray-600">{{ $item->product->unit->name ?? 'pcs' }}</td>
                 <td class="py-3 px-4 text-right">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 text-right font-bold">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>

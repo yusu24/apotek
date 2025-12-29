@@ -27,12 +27,6 @@ class StoreSettings extends Component
     public $sidebar_logo;
     public $sidebar_logo_url;
 
-    // Social Media
-    public $store_website;
-    public $store_facebook;
-    public $store_instagram;
-    public $store_tiktok;
-
     // Bank Details
     public $store_bank_name;
     public $store_bank_account;
@@ -40,6 +34,10 @@ class StoreSettings extends Component
 
     // Footer
     public $store_footer_note;
+
+    // QRIS Payment
+    public $store_qris_image;
+    public $qris_image_url;
 
     public $success_message = '';
 
@@ -54,8 +52,8 @@ class StoreSettings extends Component
         $settings = Setting::getMultiple([
             'store_name', 'store_address', 'store_phone', 'store_email', 'store_tax_id',
             'store_logo_path', 'store_login_logo_path', 'store_sidebar_logo_path',
-            'store_website', 'store_facebook', 'store_instagram', 'store_tiktok',
-            'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note'
+            'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note',
+            'store_qris_path'
         ]);
 
         $this->store_name = $settings['store_name'] ?? '';
@@ -68,14 +66,11 @@ class StoreSettings extends Component
         $this->login_logo_url = $settings['store_login_logo_path'] ? asset('storage/' . $settings['store_login_logo_path']) : null;
         $this->sidebar_logo_url = $settings['store_sidebar_logo_path'] ? asset('storage/' . $settings['store_sidebar_logo_path']) : null;
         
-        $this->store_website = $settings['store_website'] ?? '';
-        $this->store_facebook = $settings['store_facebook'] ?? '';
-        $this->store_instagram = $settings['store_instagram'] ?? '';
-        $this->store_tiktok = $settings['store_tiktok'] ?? '';
-
         $this->store_bank_name = $settings['store_bank_name'] ?? '';
         $this->store_bank_account = $settings['store_bank_account'] ?? '';
         $this->store_bank_holder = $settings['store_bank_holder'] ?? '';
+        
+        $this->qris_image_url = $settings['store_qris_path'] ? asset('storage/' . $settings['store_qris_path']) : null;
         
         $this->store_footer_note = $settings['store_footer_note'] ?? '';
     }
@@ -91,14 +86,11 @@ class StoreSettings extends Component
             'store_logo' => 'nullable|image|max:2048', // 2MB Max
             'login_logo' => 'nullable|image|max:2048', // 2MB Max
             'sidebar_logo' => 'nullable|image|max:2048', // 2MB Max
-            'store_website' => 'nullable|url|max:255',
-            'store_facebook' => 'nullable|string|max:255',
-            'store_instagram' => 'nullable|string|max:255',
-            'store_tiktok' => 'nullable|string|max:255',
             'store_bank_name' => 'nullable|string|max:100',
             'store_bank_account' => 'nullable|string|max:100',
             'store_bank_holder' => 'nullable|string|max:100',
             'store_footer_note' => 'nullable|string|max:500',
+            'store_qris_image' => 'nullable|image|max:2048',
         ]);
 
         if ($this->store_logo) {
@@ -137,14 +129,19 @@ class StoreSettings extends Component
         Setting::set('store_email', $this->store_email);
         Setting::set('store_tax_id', $this->store_tax_id);
 
-        Setting::set('store_website', $this->store_website);
-        Setting::set('store_facebook', $this->store_facebook);
-        Setting::set('store_instagram', $this->store_instagram);
-        Setting::set('store_tiktok', $this->store_tiktok);
-
         Setting::set('store_bank_name', $this->store_bank_name);
         Setting::set('store_bank_account', $this->store_bank_account);
         Setting::set('store_bank_holder', $this->store_bank_holder);
+        
+        if ($this->store_qris_image) {
+            $oldPath = Setting::get('store_qris_path');
+            if ($oldPath) Storage::disk('public')->delete($oldPath);
+            
+            $path = $this->store_qris_image->store('settings', 'public');
+            Setting::set('store_qris_path', $path);
+            $this->qris_image_url = asset('storage/' . $path);
+            $this->store_qris_image = null;
+        }
         
         Setting::set('store_footer_note', $this->store_footer_note);
 
@@ -182,6 +179,21 @@ class StoreSettings extends Component
         }
 
         $this->success_message = 'Logo berhasil hapus dan dikembalikan ke default!';
+    }
+
+    public function deleteQris()
+    {
+        $currentPath = Setting::get('store_qris_path');
+        if ($currentPath) {
+            Storage::disk('public')->delete($currentPath);
+        }
+
+        Setting::set('store_qris_path', null);
+
+        $this->store_qris_image = null;
+        $this->qris_image_url = null;
+
+        $this->success_message = 'QRIS berhasil dihapus!';
     }
 
     public function render()

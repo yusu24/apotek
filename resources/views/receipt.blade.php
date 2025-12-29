@@ -6,8 +6,8 @@
     <title>Struk Transaksi</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
+            font-family: sans-serif;
+            font-size: 11px;
             width: 58mm;
             margin: 0 auto;
             padding: 10px;

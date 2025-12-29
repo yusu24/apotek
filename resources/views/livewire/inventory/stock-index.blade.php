@@ -27,11 +27,11 @@
         <div class="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex gap-2">
                 <a href="{{ route('inventory.index', ['filter_status' => 'all']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-gray-800 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
+                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Semua
                 </a>
                 <a href="{{ route('inventory.index', ['filter_status' => 'low_stock']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'low_stock' ? 'bg-yellow-500 text-white shadow-md' : 'bg-white border border-gray-300 text-yellow-600 hover:bg-yellow-50' }}">
+                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'low_stock' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Stok Menipis
                 </a>
             </div>

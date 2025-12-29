@@ -14,6 +14,34 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('theme', {
+                    on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+
+                    toggle() {
+                        this.on = !this.on;
+                        if (this.on) {
+                            document.documentElement.classList.add('dark');
+                            localStorage.setItem('theme', 'dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.setItem('theme', 'light');
+                        }
+                    }
+                });
+
+                Alpine.store('mobileNav', {
+                    open: false,
+                    toggle() {
+                        this.open = !this.open;
+                    },
+                    close() {
+                        this.open = false;
+                    }
+                });
+            });
+        </script>
         <style>
             [x-cloak] { display: none !important; }
         </style>
@@ -59,33 +87,5 @@
                 </main>
             </div>
         </div>
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.store('theme', {
-                    on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
-
-                    toggle() {
-                        this.on = !this.on;
-                        if (this.on) {
-                            document.documentElement.classList.add('dark');
-                            localStorage.setItem('theme', 'dark');
-                        } else {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.setItem('theme', 'light');
-                        }
-                    }
-                });
-
-                Alpine.store('mobileNav', {
-                    open: false,
-                    toggle() {
-                        this.open = !this.open;
-                    },
-                    close() {
-                        this.open = false;
-                    }
-                });
-            });
-        </script>
     </body>
 </html>

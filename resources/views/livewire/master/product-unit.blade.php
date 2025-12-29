@@ -6,13 +6,24 @@
         </div>
     </div>
 
-    <div class="mb-6 w-full md:w-72">
-        <input type="text" wire:model.live.debounce.300ms="search" 
-               class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-               placeholder="Cari produk...">
-    </div>
+
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                 <input type="text" wire:model.live.debounce.300ms="search" 
+                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Cari produk...">
+            </div>
+            <div class="w-full md:w-64">
+                <select wire:model.live="category_id" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
         <!-- Mobile-friendly table wrapper -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">

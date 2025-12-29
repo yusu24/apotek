@@ -50,6 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/finance/expenses', App\Livewire\Finance\ExpenseManager::class)->name('finance.expenses');
     Route::get('/finance/profit-loss', App\Livewire\Finance\ProfitLoss::class)->name('finance.profit-loss');
     
+    // Accounting Reports
+    Route::get('/finance/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('finance.balance-sheet');
+    Route::get('/finance/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('finance.income-statement');
+    Route::get('/finance/journals', App\Livewire\Accounting\JournalIndex::class)->name('finance.journals');
+    
     // Procurement
     Route::get('/procurement/purchase-orders', App\Livewire\Procurement\PurchaseOrderIndex::class)->name('procurement.purchase-orders.index');
     Route::get('/procurement/purchase-orders/create', App\Livewire\Procurement\PurchaseOrderForm::class)->name('procurement.purchase-orders.create');

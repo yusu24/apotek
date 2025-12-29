@@ -17,9 +17,8 @@
     @endif
 
     <form wire:submit="save">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-6">
             <!-- Identitas Toko -->
-            <div class="space-y-6">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-bold text-gray-800 mb-6 border-b pb-2">Identitas Toko</h3>
                     
@@ -183,6 +182,55 @@
                             </div>
                         </div>
 
+                        <!-- QRIS Code Upload -->
+                        <div class="pt-6 border-t border-gray-200">
+                            <label class="block text-sm font-bold text-gray-700 mb-3">QRIS Code (Pembayaran QRIS)</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- QRIS Upload Area -->
+                                <div class="space-y-2" wire:key="qris-image">
+                                    <div class="group relative h-48">
+                                        <label class="border-2 border-dashed border-gray-200 rounded-xl p-4 h-full flex flex-col items-center justify-center bg-gray-50/50 transition-all hover:bg-gray-50 hover:border-blue-300 cursor-pointer overflow-hidden z-0">
+                                            <input type="file" wire:model="store_qris_image" class="hidden">
+                                            @if($store_qris_image)
+                                                <img src="{{ $store_qris_image->temporaryUrl() }}" class="max-w-full max-h-full object-contain">
+                                            @elseif($qris_image_url)
+                                                <img src="{{ $qris_image_url }}" class="max-w-full max-h-full object-contain">
+                                            @else
+                                                <div class="flex flex-col items-center text-gray-400">
+                                                    <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12v4.01M16 20h1M16 12h1m-4-8h1m-1 4h1m-2 0h1m4-4h1m-1 4h1m-9 8h1"></path></svg>
+                                                    <span class="text-xs font-medium">Upload QRIS</span>
+                                                </div>
+                                            @endif
+                                        </label>
+                                        
+                                        @if($qris_image_url || $store_qris_image)
+                                            <button type="button" 
+                                                    wire:click.prevent.stop="deleteQris" 
+                                                    class="absolute top-2 right-2 p-1.5 bg-white text-red-500 rounded-lg shadow-lg hover:bg-red-50 transition-all z-50 border border-gray-100" 
+                                                    title="Hapus QRIS">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            </button>
+                                        @endif
+                                    </div>
+                                    <div class="flex justify-center">
+                                        <span class="text-[10px] text-gray-500 truncate max-w-full px-1">{{ $store_qris_image ? $store_qris_image->getClientOriginalName() : 'Choose File' }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- QRIS Info -->
+                                <div class="bg-blue-50 rounded-xl p-4 space-y-2">
+                                    <div class="flex items-start gap-2">
+                                        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <div class="text-xs text-blue-900">
+                                            <p class="font-bold mb-1">Tentang QRIS</p>
+                                            <p class="mb-2">Upload gambar QR Code QRIS toko Anda. QR Code ini akan ditampilkan saat customer memilih metode pembayaran QRIS di kasir.</p>
+                                            <p class="text-[10px] text-blue-700">Format: PNG, JPG, GIF (Max 2MB)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Catatan Footer (Struk/Invoice)</label>
                             <textarea wire:model="store_footer_note" rows="2" placeholder="Contoh: Barang yang sudah dibeli tidak dapat dikembalikan." class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
@@ -190,57 +238,20 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Right Column: Social Media & Action -->
-            <div class="space-y-8">
-                    <!-- Social Media -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="mb-4 border-b pb-2">
-                        <h3 class="text-lg font-bold text-gray-800">Media Sosial</h3>
-                    </div>
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Website</label>
-                            <div class="relative rounded-lg shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 sm:text-sm">https://</span>
-                                </div>
-                                <input type="text" wire:model="store_website" class="block w-full pl-16 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="www.example.com">
-                            </div>
-                            @error('store_website') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Facebook</label>
-                            <input type="text" wire:model="store_facebook" placeholder="Username / URL" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Instagram</label>
-                            <input type="text" wire:model="store_instagram" placeholder="@username" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                            <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">TikTok</label>
-                            <input type="text" wire:model="store_tiktok" placeholder="@username" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                    </div>
+            <!-- Save Button Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status: Aktif</span>
+                    <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                 </div>
-
-                <!-- Save Action -->
-                <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status: Aktif</span>
-                        <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-                    </div>
-                    <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-xl font-bold transition duration-200 flex items-center justify-center gap-2">
-                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        Simpan Perubahan
-                    </button>
-                    <p class="mt-4 text-center text-xs text-gray-400">
-                        Perubahan akan langsung diterapkan ke seluruh sistem.
-                    </p>
-                </div>
+                <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-xl font-bold transition duration-200 flex items-center justify-center gap-2">
+                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Simpan Perubahan
+                </button>
+                <p class="mt-4 text-center text-xs text-gray-400">
+                    Perubahan akan langsung diterapkan ke seluruh sistem.
+                </p>
             </div>
         </div>
     </form>

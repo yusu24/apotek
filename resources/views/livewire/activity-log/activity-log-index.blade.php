@@ -1,0 +1,381 @@
+{{-- Updated: 2025-12-29 20:19 --}}
+<div class="p-6">
+    <!-- Header -->
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Riwayat Aktivitas User
+        </h2>
+        <p class="text-sm text-gray-500 mt-1">Tracking semua aktivitas user di sistem</p>
+    </div>
+
+    <!-- Statistics Cards (Forced Style V2) -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+        <!-- Card 1: Blue -->
+        <div style="background-color: #1d4ed8; color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div class="flex items-center gap-3 mb-2">
+                <div style="background-color: rgba(255, 255, 255, 0.25); padding: 0.5rem; border-radius: 0.5rem;">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p style="color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">HARI INI</p>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ number_format($stats['total_today']) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Green -->
+        <div style="background-color: #15803d; color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div class="flex items-center gap-3 mb-2">
+                <div style="background-color: rgba(255, 255, 255, 0.25); padding: 0.5rem; border-radius: 0.5rem;">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                    <p style="color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">MINGGU INI</p>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ number_format($stats['total_week']) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Purple -->
+        <div style="background-color: #7e22ce; color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div class="flex items-center gap-3 mb-2">
+                <div style="background-color: rgba(255, 255, 255, 0.25); padding: 0.5rem; border-radius: 0.5rem;">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <div>
+                    <p style="color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">BULAN INI</p>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ number_format($stats['total_month']) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Red -->
+        <div style="background-color: #b91c1c; color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div class="flex items-center gap-3 mb-2">
+                <div style="background-color: rgba(255, 255, 255, 0.25); padding: 0.5rem; border-radius: 0.5rem;">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <div>
+                    <p style="color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">USER AKTIF</p>
+                    <p style="font-size: 1.5rem; font-weight: 700;">{{ number_format($stats['unique_users_today']) }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            <!-- Search -->
+            <div class="lg:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+                <div class="relative">
+                    <input type="text" wire:model.live.debounce.300ms="search" 
+                        placeholder="Cari deskripsi atau modul..." 
+                        class="w-full pl-10 pr-4 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </div>
+
+            <!-- Filter User -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">User</label>
+                <select wire:model.live="filterUser" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">Semua User</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Filter Module -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Modul</label>
+                <select wire:model.live="filterModule" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">Semua Modul</option>
+                    @foreach($modules as $module)
+                        <option value="{{ $module }}">{{ ucfirst($module) }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Filter Action -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Aksi</label>
+                <select wire:model.live="filterAction" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">Semua Aksi</option>
+                    @foreach($actions as $action)
+                        <option value="{{ $action }}">{{ ucfirst($action) }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="flex items-end">
+                <button wire:click="clearFilters" 
+                    class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Date Range -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
+                <input type="date" wire:model.live="filterDateFrom" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
+                <input type="date" wire:model.live="filterDateTo" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Timeline Aktivitas
+        </h3>
+
+        <div class="space-y-4">
+            @forelse($logs as $log)
+                <div class="relative pl-8 pb-4 border-l-2 
+                    @if($log->action_color === 'green') border-green-500
+                    @elseif($log->action_color === 'yellow') border-yellow-500
+                    @elseif($log->action_color === 'red') border-red-500
+                    @elseif($log->action_color === 'blue') border-blue-500
+                    @elseif($log->action_color === 'purple') border-purple-500
+                    @else border-gray-500
+                    @endif
+                    last:border-0 last:pb-0">
+                    
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-3 top-0 w-6 h-6 rounded-full flex items-center justify-center text-xs
+                        @if($log->action_color === 'green') bg-green-500
+                        @elseif($log->action_color === 'yellow') bg-yellow-500
+                        @elseif($log->action_color === 'red') bg-red-500
+                        @elseif($log->action_color === 'blue') bg-blue-500
+                        @elseif($log->action_color === 'purple') bg-purple-500
+                        @else bg-gray-500
+                        @endif
+                        text-white shadow-lg">
+                        {{ $log->action_icon }}
+                    </div>
+
+                    <!-- Activity Card -->
+                    <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex-1">
+                                <!-- Header -->
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="px-2 py-1 rounded-full text-xs font-bold
+                                        @if($log->action_color === 'green') bg-green-100 text-green-800
+                                        @elseif($log->action_color === 'yellow') bg-yellow-100 text-yellow-800
+                                        @elseif($log->action_color === 'red') bg-red-100 text-red-800
+                                        @elseif($log->action_color === 'blue') bg-blue-100 text-blue-800
+                                        @elseif($log->action_color === 'purple') bg-purple-100 text-purple-800
+                                        @else bg-gray-100 text-gray-800
+                                        @endif">
+                                        {{ strtoupper($log->action) }}
+                                    </span>
+                                    <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-semibold">
+                                        {{ ucfirst($log->module) }}
+                                    </span>
+                                    <span class="text-xs text-gray-500">
+                                        {{ $log->created_at->diffForHumans() }}
+                                    </span>
+                                </div>
+
+                                <!-- User Info -->
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                        {{ substr($log->user->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-900 text-sm">{{ $log->user->name }}</p>
+                                        <p class="text-xs text-gray-500">{{ $log->user->email }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <p class="text-sm text-gray-700 mb-2">{{ $log->description }}</p>
+
+                                <!-- Meta Info -->
+                                <div class="flex flex-wrap gap-3 text-xs text-gray-500">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        {{ $log->created_at->format('d/m/Y H:i:s') }}
+                                    </span>
+                                    @if($log->ip_address)
+                                        <span class="flex items-center gap-1">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                                            {{ $log->ip_address }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Action Button -->
+                            @if($log->old_values || $log->new_values)
+                                <button wire:click="viewDetails({{ $log->id }})" 
+                                    class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition flex items-center gap-1 whitespace-nowrap">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Detail
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <p class="text-gray-500 font-medium">Tidak ada aktivitas ditemukan</p>
+                    <p class="text-sm text-gray-400 mt-1">Coba ubah filter pencarian Anda</p>
+                </div>
+            @endforelse
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-6">
+            @include('components.custom-pagination', ['items' => $logs])
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    @if($showDetailModal && $selectedLog)
+        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="closeModal"></div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+                
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Detail Aktivitas
+                            </h3>
+                            <button wire:click="closeModal" class="text-white hover:text-gray-200 transition">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="px-6 py-4 max-h-[70vh] overflow-y-auto">
+                        <!-- Basic Info -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">User</label>
+                                <p class="text-sm font-medium text-gray-900">{{ $selectedLog->user->name }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Aksi</label>
+                                <span class="px-2 py-1 rounded-full text-xs font-bold
+                                    @if($selectedLog->action_color === 'green') bg-green-100 text-green-800
+                                    @elseif($selectedLog->action_color === 'yellow') bg-yellow-100 text-yellow-800
+                                    @elseif($selectedLog->action_color === 'red') bg-red-100 text-red-800
+                                    @elseif($selectedLog->action_color === 'blue') bg-blue-100 text-blue-800
+                                    @elseif($selectedLog->action_color === 'purple') bg-purple-100 text-purple-800
+                                    @else bg-gray-100 text-gray-800
+                                    @endif">
+                                    {{ strtoupper($selectedLog->action) }}
+                                </span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Modul</label>
+                                <p class="text-sm font-medium text-gray-900">{{ ucfirst($selectedLog->module) }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Waktu</label>
+                                <p class="text-sm font-medium text-gray-900">{{ $selectedLog->created_at->format('d/m/Y H:i:s') }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">IP Address</label>
+                                <p class="text-sm font-medium text-gray-900">{{ $selectedLog->ip_address ?? '-' }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">URL</label>
+                                <p class="text-sm font-medium text-gray-900 truncate" title="{{ $selectedLog->url }}">{{ $selectedLog->url ?? '-' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Deskripsi</label>
+                            <p class="text-sm text-gray-900">{{ $selectedLog->description }}</p>
+                        </div>
+
+                        <!-- Changes Comparison -->
+                        @if($selectedLog->old_values || $selectedLog->new_values)
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                    Perubahan Data
+                                </h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Old Values -->
+                                    @if($selectedLog->old_values)
+                                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                            <h5 class="font-semibold text-red-800 mb-2 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                Data Lama
+                                            </h5>
+                                            <div class="space-y-1 text-xs">
+                                                @foreach($selectedLog->old_values as $key => $value)
+                                                    <div class="flex justify-between">
+                                                        <span class="font-medium text-gray-600">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span>
+                                                        <span class="text-gray-900 font-mono">{{ is_array($value) ? json_encode($value) : $value }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <!-- New Values -->
+                                    @if($selectedLog->new_values)
+                                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                            <h5 class="font-semibold text-green-800 mb-2 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Data Baru
+                                            </h5>
+                                            <div class="space-y-1 text-xs">
+                                                @foreach($selectedLog->new_values as $key => $value)
+                                                    <div class="flex justify-between">
+                                                        <span class="font-medium text-gray-600">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span>
+                                                        <span class="text-gray-900 font-mono">{{ is_array($value) ? json_encode($value) : $value }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- User Agent -->
+                        @if($selectedLog->user_agent)
+                            <div class="border-t pt-4 mt-4">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Browser / Device</label>
+                                <p class="text-xs text-gray-600 font-mono bg-gray-50 p-2 rounded">{{ $selectedLog->user_agent }}</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-50 px-6 py-3 flex justify-end">
+                        <button wire:click="closeModal" 
+                            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition text-sm">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>

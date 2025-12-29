@@ -57,7 +57,7 @@
                             <span class="text-xs text-red-600 font-normal">(Hanya Super Admin)</span>
                         @endif
                     </label>
-                    <input type="number" wire:model="min_stock" placeholder="Contoh: 10"
+                    <input type="number" wire:model="min_stock" placeholder="0"
                         {{ !$canEditPrice ? 'disabled' : '' }}
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ !$canEditPrice ? 'bg-gray-100 cursor-not-allowed' : '' }}">
                     @error('min_stock') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
@@ -71,7 +71,7 @@
                             <span class="text-xs text-red-600 font-normal">(Hanya Super Admin)</span>
                         @endif
                     </label>
-                    <input type="number" wire:model="sell_price" placeholder="Contoh: 1.000"
+                    <input type="number" wire:model="sell_price" placeholder="0"
                         {{ !$canEditPrice ? 'disabled' : '' }}
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ !$canEditPrice ? 'bg-gray-100 cursor-not-allowed' : '' }}">
                     @error('sell_price') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror

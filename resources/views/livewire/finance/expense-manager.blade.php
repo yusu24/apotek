@@ -88,7 +88,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Jumlah (Rp)</label>
-                                        <input type="number" wire:model="amount" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <input type="number" wire:model="amount" placeholder="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                         @error('amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>

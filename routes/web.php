@@ -76,10 +76,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Settings (Super Admin only)
     Route::get('/settings/store', App\Livewire\Settings\StoreSettings::class)->name('settings.store');
 
-    // User Management (Super Admin only)
     Route::get('/admin/users', App\Livewire\Admin\UserManagement::class)->name('admin.users.index');
     Route::get('/admin/users/create', App\Livewire\Admin\UserForm::class)->name('admin.users.create');
     Route::get('/admin/users/{id}/edit', App\Livewire\Admin\UserForm::class)->name('admin.users.edit');
+    
+    // Activity Log (Super Admin only)
+    Route::get('/admin/activity-log', App\Livewire\ActivityLog\ActivityLogIndex::class)->name('admin.activity-log');
     
     Route::get('/admin/leave-impersonation', [App\Http\Controllers\ImpersonationController::class, 'leave'])->name('admin.leave-impersonation');
 

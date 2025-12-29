@@ -431,7 +431,7 @@
                         <h3 class="text-xl font-bold text-gray-900">Proses Pembayaran</h3>
                         <p class="text-sm text-gray-500 mt-1">Selesaikan transaksi</p>
                     </div>
-                    <button wire:click="$set('showPaymentModal', false)" class="text-gray-400 hover:text-gray-600">
+                    <button type="button" wire:click="$set('showPaymentModal', false)" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
@@ -453,11 +453,11 @@
 
                     <!-- Payment Method -->
                     <div class="grid grid-cols-2 gap-3">
-                        <button wire:click="$set('payment_method', 'cash')" 
+                        <button type="button" wire:click="$set('payment_method', 'cash')" 
                             class="p-4 border-2 rounded-xl font-semibold transition-all {{ $payment_method == 'cash' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
                             💵 Tunai
                         </button>
-                        <button wire:click="$set('payment_method', 'qris')" 
+                        <button type="button" wire:click="$set('payment_method', 'qris')" 
                             class="p-4 border-2 rounded-xl font-semibold transition-all {{ $payment_method == 'qris' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
                             📱 QRIS
                         </button>
@@ -472,7 +472,7 @@
                                 <span class="text-2xl font-bold text-gray-400 mr-2">Rp</span>
                                 <input type="number" wire:model.live="cash_amount" 
                                     class="flex-1 text-3xl font-bold border-0 bg-transparent p-0 focus:ring-0" 
-                                    placeholder="1000" autofocus>
+                                    placeholder="0" autofocus>
                             </div>
                             @error('cash_amount') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
@@ -544,7 +544,7 @@
                         @if($payment_method == 'qris' && !\App\Models\Setting::get('store_qris_path')) disabled @endif>
                         {{ $payment_method == 'qris' ? 'Konfirmasi Pembayaran QRIS' : 'Cetak Struk Transaksi' }}
                     </button>
-                    <button wire:click="$set('showPaymentModal', false)" 
+                    <button type="button" wire:click="$set('showPaymentModal', false)" 
                         class="w-full py-3 text-gray-600 hover:text-gray-900 font-semibold">
                         Kembali
                     </button>

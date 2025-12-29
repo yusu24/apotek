@@ -14,6 +14,10 @@ class BalanceSheet extends Component
 
     public function mount()
     {
+        if (!auth()->user()->can('view balance sheet')) {
+            abort(403, 'Unauthorized');
+        }
+
         // Default to current month
         $this->startDate = now()->startOfMonth()->format('Y-m-d');
         $this->endDate = now()->endOfMonth()->format('Y-m-d');

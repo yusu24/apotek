@@ -19,7 +19,7 @@ class SalesChart extends Component
 
     public function mount()
     {
-        if (!auth()->user()->can('view reports')) {
+        if (!auth()->user()->can('view sales reports')) {
             abort(403, 'Unauthorized action.');
         }
         $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');

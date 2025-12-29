@@ -17,6 +17,10 @@ class JournalIndex extends Component
 
     public function mount()
     {
+        if (!auth()->user()->can('view journals')) {
+            abort(403, 'Unauthorized');
+        }
+
         $this->startDate = now()->startOfMonth()->format('Y-m-d');
         $this->endDate = now()->endOfMonth()->format('Y-m-d');
     }

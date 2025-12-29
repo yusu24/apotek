@@ -19,6 +19,13 @@ class CategoryManagement extends Component
 
     protected $updatesQueryString = ['search'];
 
+    public function mount()
+    {
+        if (!auth()->user()->can('manage categories')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function updatingSearch()
     {
         $this->resetPage();

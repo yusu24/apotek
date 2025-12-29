@@ -16,6 +16,13 @@ class ProductIndex extends Component
     public $search = '';
     public $category_id = '';
 
+    public function mount()
+    {
+        if (!auth()->user()->can('view products')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $products = Product::with(['category', 'unit'])
@@ -38,6 +45,11 @@ class ProductIndex extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->can('delete products')) {
+            session()->flash('error', 'Anda tidak memiliki akses untuk menghapus produk.');
+            return;
+        }
+
         try {
             Product::find($id)->delete();
             session()->flash('message', 'Product deleted successfully.');

@@ -25,6 +25,13 @@ class ProductUnit extends Component
     public $base_unit_id;
     public $conversions = []; // Array of ['id' => null, 'from_unit_id' => '', 'to_unit_id' => '', 'conversion_factor' => '']
 
+    public function mount()
+    {
+        if (!auth()->user()->can('manage product units')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $products = Product::query()

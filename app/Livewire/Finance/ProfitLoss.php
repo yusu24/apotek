@@ -21,7 +21,7 @@ class ProfitLoss extends Component
     {
         // Permission check
         // Permission check
-        if (!auth()->user()->can('view finance') && !auth()->user()->can('manage finance')) {
+        if (!auth()->user()->can('view profit loss')) {
              abort(403, 'Unauthorized');
         }
 

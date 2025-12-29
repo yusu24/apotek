@@ -8,6 +8,13 @@ class UserGuide extends Component
 {
     public $search = '';
 
+    public function mount()
+    {
+        if (!auth()->user()->can('view guide')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $allGuides = [

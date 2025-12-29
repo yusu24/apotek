@@ -12,6 +12,13 @@ class GoodsReceiptIndex extends Component
     public $showDetailModal = false;
     public $selectedId = null;
 
+    public function mount()
+    {
+        if (!auth()->user()->can('view goods receipts')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function showDetail($id)
     {
         $this->selectedId = $id;

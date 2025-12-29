@@ -31,7 +31,7 @@ class ExpenseManager extends Component
     public function mount()
     {
         // Simple permission check
-        if (!auth()->user()->can('view finance') && !auth()->user()->can('manage finance')) {
+        if (!auth()->user()->can('view expenses')) {
              abort(403, 'Unauthorized');
         }
         

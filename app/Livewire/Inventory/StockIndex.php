@@ -20,6 +20,13 @@ class StockIndex extends Component
     #[Url]
     public $filter_status = 'all'; // all, low_stock
 
+    public function mount()
+    {
+        if (!auth()->user()->can('view stock')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $products = Product::query()

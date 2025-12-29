@@ -20,16 +20,23 @@ class UserForm extends Component
     // Granular Menu Access
     public $menu_permissions = [
         'view dashboard' => false,
-        'view products' => false, // Obat
-        'manage product units' => false, // Satuan Produk
-        'view stock' => false,    // Stok
-        'adjust stock' => false,  // Penyesuaian Stok
-        'access pos' => false,    // Kasir
-        'view reports' => false,  // Laporan
-        'view finance' => false,  // Finance
-        'manage expense categories' => false, // Kelola Kategori Pengeluaran
-        'manage settings' => false, // Pengaturan
-        'manage users' => false,  // Kelola User
+        'view products' => false,
+        'manage categories' => false,
+        'manage product units' => false,
+        'view stock' => false,
+        'adjust stock' => false,
+        'view purchase orders' => false,
+        'view goods receipts' => false,
+        'access pos' => false,
+        'view sales reports' => false,
+        'view expenses' => false,
+        'view profit loss' => false,
+        'view balance sheet' => false,
+        'view journals' => false,
+        'manage expense categories' => false,
+        'manage settings' => false,
+        'manage users' => false,
+        'view guide' => false,
     ];
 
     public function mount($id = null)

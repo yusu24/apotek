@@ -66,6 +66,16 @@ class ProductForm extends Component
 
     public function mount($id = null)
     {
+        if ($id) {
+            if (!auth()->user()->can('edit products')) {
+                abort(403, 'Unauthorized');
+            }
+        } else {
+            if (!auth()->user()->can('create products')) {
+                abort(403, 'Unauthorized');
+            }
+        }
+
         // Check if user can edit price (Super Admin only)
         $this->canEditPrice = auth()->user()->hasRole('super-admin');
         

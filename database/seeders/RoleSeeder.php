@@ -21,6 +21,10 @@ class RoleSeeder extends Seeder
             // Dashboard & Reports
             'view dashboard',
             'view reports',
+            'view sales reports',
+            'view profit loss',
+            'view balance sheet',
+            'view journals',
             'export reports',
             
             // Master Data
@@ -45,8 +49,10 @@ class RoleSeeder extends Seeder
             'view stock movements',
             'manage expired products',
             
-            // Purchasing
+            // Purchasing / Procurement
             'manage purchasing',
+            'view purchase orders',
+            'view goods receipts',
             'create purchase',
             'approve purchase',
             'receive stock',
@@ -72,12 +78,14 @@ class RoleSeeder extends Seeder
             // Finance
             'manage finance',
             'view finance',
+            'view expenses',
             'manage expense categories',
             
             // Settings & Configuration
             'manage settings',
             'view settings',
             'edit store profile',
+            'view guide',
             
             // Audit & Security
             'view audit log',

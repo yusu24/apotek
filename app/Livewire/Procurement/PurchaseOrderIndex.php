@@ -10,6 +10,13 @@ class PurchaseOrderIndex extends Component
 
     public $search = '';
 
+    public function mount()
+    {
+        if (!auth()->user()->can('view purchase orders')) {
+            abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $orders = \App\Models\PurchaseOrder::with('supplier', 'user')

@@ -13,6 +13,13 @@ class ActivityLogIndex extends Component
 
     public $search = '';
     public $filterUser = '';
+
+    public function mount()
+    {
+        if (!auth()->user()->can('view activity logs')) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
     public $filterModule = '';
     public $filterAction = '';
     public $filterDateFrom = '';

@@ -1,5 +1,5 @@
 {{-- Updated: 2025-12-29 20:19 --}}
-<div class="p-6">
+<div class="p-6" wire:poll.5s>
     <!-- Header -->
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">

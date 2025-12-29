@@ -4,6 +4,7 @@ namespace App\Livewire\Inventory;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Models\ActivityLog;
 use App\Models\Batch;
 use App\Models\Product;
 use App\Models\StockMovement;
@@ -77,6 +78,21 @@ class StockAdjustment extends Component
             ]);
 
             DB::commit();
+
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'stock',
+                'description' => "Penyesuaian stok ({$this->adjustment_type}) untuk {$this->product_name} (Batch: {$this->batch_no}): {$this->quantity} unit.",
+                'new_values' => [
+                    'product_id' => $this->product_id,
+                    'batch_id' => $this->batch_id,
+                    'type' => $this->adjustment_type,
+                    'quantity' => $this->quantity,
+                    'old_stock' => $this->current_stock,
+                    'new_stock' => $newStock,
+                    'description' => $this->description
+                ]
+            ]);
 
             $this->success_message = 'Stok berhasil disesuaikan!';
             $this->current_stock = $newStock;

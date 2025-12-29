@@ -24,6 +24,7 @@ class RoleSeeder extends Seeder
             'view sales reports',
             'view profit loss',
             'view balance sheet',
+            'view income statement',
             'view journals',
             'export reports',
             
@@ -80,6 +81,7 @@ class RoleSeeder extends Seeder
             'view finance',
             'view expenses',
             'manage expense categories',
+            'manage opening balances',
 
             // Accounting
             'view accounts',
@@ -95,7 +97,7 @@ class RoleSeeder extends Seeder
             
             // Audit & Security
             'view audit log',
-            'view activity log',
+            'view activity logs',
             'manage security',
             
             // System Maintenance

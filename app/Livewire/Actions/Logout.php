@@ -12,6 +12,12 @@ class Logout
      */
     public function __invoke(): void
     {
+        \App\Models\ActivityLog::log([
+            'action' => 'logout',
+            'module' => 'users',
+            'description' => 'User berhasil logout dari sistem'
+        ]);
+
         Auth::guard('web')->logout();
 
         Session::invalidate();

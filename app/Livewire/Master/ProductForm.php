@@ -7,6 +7,7 @@ use Livewire\Attributes\Layout;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Unit;
+use App\Models\ActivityLog;
 use Illuminate\Support\Str;
 
 use Livewire\WithFileUploads;
@@ -150,17 +151,29 @@ class ProductForm extends Component
         }
 
         if ($this->product_id) {
-            // If we are updating but not uploading new image/deleting, do not overwrite image_path with null unless explicit delete
-            // (Wait, update usually only updates keys present in data. Above logic sets data[image_path] only if valid.)
+            $product = Product::find($this->product_id);
+            $oldData = $product->toArray();
+            $product->update($data);
             
-            // Actually, if delete_image is true, we set image_path = null.
-            // If uploading image, we set image_path = new path.
-            // If neither, we simply DON'T include image_path in $data, so it persists.
-            
-            Product::find($this->product_id)->update($data);
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'products',
+                'description' => "Memperbarui obat: {$this->name}",
+                'old_values' => $oldData,
+                'new_values' => $data
+            ]);
+
             session()->flash('message', 'Obat berhasil diperbarui.');
         } else {
-            Product::create($data);
+            $product = Product::create($data);
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'products',
+                'description' => "Menambah obat baru: {$this->name}",
+                'new_values' => $data
+            ]);
+
             session()->flash('message', 'Obat berhasil ditambahkan.');
         }
 

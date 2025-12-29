@@ -5,6 +5,7 @@ namespace App\Livewire\Finance;
 use Livewire\Attributes\Layout;
 use Livewire\WithPagination;
 use Livewire\Component;
+use App\Models\ActivityLog;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Carbon\Carbon;
@@ -68,19 +69,35 @@ class ExpenseManager extends Component
 
         if ($this->isEditing) {
             $expense = Expense::findOrFail($this->editId);
+            $oldData = $expense->toArray();
             $expense->update([
                 'date' => $this->date,
                 'description' => $this->description,
                 'amount' => $this->amount,
                 'category' => $this->category,
             ]);
+
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'expenses',
+                'description' => "Memperbarui pengeluaran: {$this->description}",
+                'old_values' => $oldData,
+                'new_values' => $expense->fresh()->toArray()
+            ]);
         } else {
-            Expense::create([
+            $expense = Expense::create([
                 'date' => $this->date,
                 'description' => $this->description,
                 'amount' => $this->amount,
                 'category' => $this->category,
                 'user_id' => auth()->id(),
+            ]);
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'expenses',
+                'description' => "Menambah pengeluaran baru: {$this->description}",
+                'new_values' => $expense->toArray()
             ]);
         }
 
@@ -91,7 +108,17 @@ class ExpenseManager extends Component
 
     public function delete($id)
     {
-        Expense::findOrFail($id)->delete();
+        $expense = Expense::findOrFail($id);
+        $oldData = $expense->toArray();
+        $expense->delete();
+
+        ActivityLog::log([
+            'action' => 'deleted',
+            'module' => 'expenses',
+            'description' => "Menghapus pengeluaran: {$oldData['description']}",
+            'old_values' => $oldData
+        ]);
+
         session()->flash('message', 'Data pengeluaran dihapus.');
     }
 

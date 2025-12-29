@@ -5,6 +5,7 @@ namespace App\Livewire\Master;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\Category;
 
@@ -62,7 +63,15 @@ class ProductIndex extends Component
             }
 
             $product = Product::findOrFail($id);
+            $oldData = $product->toArray();
             $product->delete();
+
+            ActivityLog::log([
+                'action' => 'deleted',
+                'module' => 'products',
+                'description' => "Menghapus obat: {$oldData['name']}",
+                'old_values' => $oldData
+            ]);
             
             session()->flash('message', 'Produk berhasil dihapus.');
         } catch (\Exception $e) {

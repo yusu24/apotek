@@ -82,7 +82,40 @@ class ActivityLog extends Model
             'printed' => '🖨️',
             'login' => '🔓',
             'logout' => '🔒',
-            default => '📝',
         };
+    }
+
+    /**
+     * Get meaningful changes (diff) between old and new values
+     */
+    public function getChangesAttribute(): array
+    {
+        $old = $this->old_values ?: [];
+        $new = $this->new_values ?: [];
+        
+        $allKeys = array_unique(array_merge(array_keys($old), array_keys($new)));
+        $changes = [];
+        
+        $ignore = [
+            'id', 'created_at', 'updated_at', 'user_id', 'deleted_at', 
+            'email_verified_at', 'remember_token', 'slug', 'password'
+        ];
+        
+        foreach ($allKeys as $key) {
+            if (in_array($key, $ignore)) continue;
+            
+            $oldVal = $old[$key] ?? null;
+            $newVal = $new[$key] ?? null;
+            
+            // Only add if value actually changed
+            if ($oldVal != $newVal) {
+                $changes[$key] = [
+                    'from' => $oldVal,
+                    'to' => $newVal
+                ];
+            }
+        }
+        
+        return $changes;
     }
 }

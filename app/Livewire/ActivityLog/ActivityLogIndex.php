@@ -22,6 +22,7 @@ class ActivityLogIndex extends Component
     }
     public $filterModule = '';
     public $filterAction = '';
+    public $lastUpdated = '';
     public $filterDateFrom = '';
     public $filterDateTo = '';
     
@@ -33,6 +34,8 @@ class ActivityLogIndex extends Component
         'filterUser' => ['except' => ''],
         'filterModule' => ['except' => ''],
         'filterAction' => ['except' => ''],
+        'filterDateFrom' => ['except' => ''],
+        'filterDateTo' => ['except' => ''],
     ];
 
     public function updatingSearch()
@@ -109,6 +112,8 @@ class ActivityLogIndex extends Component
             'total_month' => ActivityLog::whereMonth('created_at', now()->month)->count(),
             'unique_users_today' => ActivityLog::whereDate('created_at', today())->distinct('user_id')->count('user_id'),
         ];
+
+        $this->lastUpdated = now()->format('H:i:s');
 
         return view('livewire.activity-log.activity-log-index', [
             'logs' => $query,

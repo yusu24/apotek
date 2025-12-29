@@ -7,6 +7,7 @@ use Livewire\Attributes\Layout;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use App\Models\ActivityLog;
 
 #[Layout('layouts.app')]
 class UserForm extends Component
@@ -29,13 +30,19 @@ class UserForm extends Component
         'view goods receipts' => false,
         'access pos' => false,
         'view sales reports' => false,
-        'view expenses' => false,
         'view profit loss' => false,
         'view balance sheet' => false,
+        'view income statement' => false,
+        'view general ledger' => false,
         'view journals' => false,
+        'create journal' => false,
+        'view accounts' => false,
+        'manage accounts' => false,
+        'view expenses' => false,
         'manage expense categories' => false,
         'manage settings' => false,
         'manage users' => false,
+        'view activity logs' => false,
         'view guide' => false,
         'manage suppliers' => false,
     ];
@@ -79,6 +86,7 @@ class UserForm extends Component
 
         if ($this->user_id) {
             $user = User::findOrFail($this->user_id);
+            $oldData = $user->toArray();
             $user->update([
                 'name' => $this->name,
                 'email' => $this->email,
@@ -87,11 +95,26 @@ class UserForm extends Component
             if ($this->password) {
                 $user->update(['password' => Hash::make($this->password)]);
             }
+
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'users',
+                'description' => "Memperbarui user: {$this->name}",
+                'old_values' => $oldData,
+                'new_values' => $user->fresh()->toArray()
+            ]);
         } else {
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
+            ]);
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'users',
+                'description' => "Menambah user baru: {$this->name}",
+                'new_values' => $user->toArray()
             ]);
         }
 

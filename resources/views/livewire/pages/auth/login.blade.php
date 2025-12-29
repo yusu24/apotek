@@ -19,6 +19,12 @@ new #[Layout('layouts.guest')] class extends Component
 
         $this->form->authenticate();
 
+        \App\Models\ActivityLog::log([
+            'action' => 'login',
+            'module' => 'users',
+            'description' => 'User berhasil login ke sistem'
+        ]);
+
         Session::regenerate();
 
         $this->redirectIntended(default: RouteServiceProvider::HOME, navigate: true);

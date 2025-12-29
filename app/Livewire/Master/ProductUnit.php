@@ -4,6 +4,7 @@ namespace App\Livewire\Master;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\Category;
@@ -132,14 +133,32 @@ class ProductUnit extends Component
         }
 
         $this->showModal = false;
+
+        ActivityLog::log([
+            'action' => 'updated',
+            'module' => 'products',
+            'description' => "Memperbarui pengaturan satuan/konversi untuk obat: {$this->editingProduct->name}",
+            'new_values' => [
+                'base_unit_id' => $this->base_unit_id,
+                'conversions' => $this->conversions
+            ]
+        ]);
+
         $this->dispatch('notify', 'Pengaturan satuan berhasil disimpan.');
     }
 
     public function delete($productId)
     {
+        $product = Product::findOrFail($productId);
         // Delete all conversions
         UnitConversion::where('product_id', $productId)->delete();
         
+        ActivityLog::log([
+            'action' => 'updated',
+            'module' => 'products',
+            'description' => "Mereset pengaturan konversi satuan untuk obat: {$product->name}",
+        ]);
+
         $this->dispatch('notify', 'Pengaturan konversi satuan berhasil direset.');
     }
 }

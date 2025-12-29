@@ -129,39 +129,36 @@ new class extends Component
             </x-sidebar-link>
             @endcan
 
-            @can('view sales reports')
-            <x-sidebar-link :href="route('reports.sales')" :active="request()->routeIs('reports.*')" icon="chart-bar">
-                {{ __('Laporan Penjualan') }}
-            </x-sidebar-link>
-            @endcan
-
-            <!-- Keuangan Group -->
-            @canany(['view expenses', 'view profit loss', 'view balance sheet', 'view journals'])
-            <div x-data="{ expanded: {{ request()->routeIs('finance.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs('finance.*') ? 'text-white' : 'text-gray-400' }}">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Keuangan</span>
-                    </div>
-                    <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                </button>
-                <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
-            <!-- Group: Laporan & Keuangan -->
-            @canany(['view accounts', 'create journal', 'view general ledger', 'view profit loss', 'view balance sheet', 'manage expenses', 'manage expense categories'])
-            <div x-data="{ expanded: {{ request()->routeIs(['finance.*', 'accounting.*']) ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs(['finance.*', 'accounting.*']) ? 'text-white' : 'text-gray-400' }}">
+            <!-- Group: Keuangan & Administrasi -->
+            @canany(['view sales reports', 'view profit loss', 'view balance sheet', 'view income statement', 'view general ledger', 'create journal', 'view journals', 'view accounts', 'manage expenses'])
+            <div x-data="{ expanded: {{ request()->routeIs(['reports.*', 'finance.*', 'accounting.*']) ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs(['reports.*', 'finance.*', 'accounting.*']) ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <span>Laporan & Keuangan</span>
+                        <span>Keuangan & Administrasi</span>
                     </div>
                     <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     
+                    @can('view sales reports')
+                    <a href="{{ route('reports.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('reports.sales') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Laporan Penjualan
+                    </a>
+                    @endcan
+
                     @can('view profit loss')
                     <a href="{{ route('finance.profit-loss') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.profit-loss') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
                         Laba Rugi
+                    </a>
+                    @endcan
+
+                    @can('view income statement')
+                    <a href="{{ route('finance.income-statement') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.income-statement') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Arus Kas
                     </a>
                     @endcan
 
@@ -172,13 +169,13 @@ new class extends Component
                     </a>
                     @endcan
 
-                    @can('view income statement')
-                    <a href="{{ route('finance.income-statement') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.income-statement') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        Arus Kas
+                    @can('manage opening balances')
+                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Neraca Awal
                     </a>
                     @endcan
-                    
+
                     @can('view general ledger')
                     <a href="{{ route('accounting.ledger') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.ledger') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -186,7 +183,7 @@ new class extends Component
                     </a>
                     @endcan
 
-                    @can('create journal')
+                    @can('view journals')
                     <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         Jurnal Umum

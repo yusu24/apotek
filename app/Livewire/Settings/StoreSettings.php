@@ -5,6 +5,7 @@ namespace App\Livewire\Settings;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
+use App\Models\ActivityLog;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 
@@ -144,6 +145,12 @@ class StoreSettings extends Component
         }
         
         Setting::set('store_footer_note', $this->store_footer_note);
+
+        ActivityLog::log([
+            'action' => 'updated',
+            'module' => 'settings',
+            'description' => 'Memperbarui pengaturan toko',
+        ]);
 
         $this->success_message = 'Pengaturan toko berhasil disimpan!';
     }

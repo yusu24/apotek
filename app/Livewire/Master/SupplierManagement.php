@@ -4,6 +4,7 @@ namespace App\Livewire\Master;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\ActivityLog;
 use App\Models\Supplier;
 use Livewire\Attributes\Layout;
 
@@ -69,11 +70,18 @@ class SupplierManagement extends Component
     {
         $this->validate();
 
-        Supplier::create([
+        $supplier = Supplier::create([
             'name' => $this->name,
             'contact_person' => $this->contact_person,
             'phone' => $this->phone,
             'address' => $this->address,
+        ]);
+
+        ActivityLog::log([
+            'action' => 'created',
+            'module' => 'suppliers',
+            'description' => "Menambah pemasok baru: {$this->name}",
+            'new_values' => $supplier->toArray()
         ]);
 
         session()->flash('message', 'Pemasok berhasil ditambahkan.');
@@ -100,11 +108,20 @@ class SupplierManagement extends Component
 
         if ($this->supplierId) {
             $supplier = Supplier::findOrFail($this->supplierId);
+            $oldData = $supplier->toArray();
             $supplier->update([
                 'name' => $this->name,
                 'contact_person' => $this->contact_person,
                 'phone' => $this->phone,
                 'address' => $this->address,
+            ]);
+
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'suppliers',
+                'description' => "Memperbarui pemasok: {$this->name}",
+                'old_values' => $oldData,
+                'new_values' => $supplier->fresh()->toArray()
             ]);
 
             session()->flash('message', 'Pemasok berhasil diperbarui.');
@@ -115,7 +132,17 @@ class SupplierManagement extends Component
 
     public function delete($id)
     {
-        Supplier::findOrFail($id)->delete();
+        $supplier = Supplier::findOrFail($id);
+        $oldData = $supplier->toArray();
+        $supplier->delete();
+
+        ActivityLog::log([
+            'action' => 'deleted',
+            'module' => 'suppliers',
+            'description' => "Menghapus pemasok: {$oldData['name']}",
+            'old_values' => $oldData
+        ]);
+
         session()->flash('message', 'Pemasok berhasil dihapus.');
     }
 }

@@ -41,21 +41,21 @@
                     @error('role_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                <!-- Special Access -->
-                <!-- Special Access -->
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h3 class="font-bold text-gray-800 mb-2 uppercase tracking-wider text-xs flex items-center gap-2">
-                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                        Hak Akses Menu (Custom)
-                    </h3>
-                    <p class="text-xs text-gray-500 mb-6">
-                        Berikan izin akses khusus ke menu tertentu untuk user ini.
-                    </p>
+                <div class="p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 bg-blue-600 rounded-lg text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800 uppercase tracking-wider text-xs">Hak Akses Menu (Custom)</h3>
+                            <p class="text-[10px] text-gray-500">Berikan izin akses khusus ke menu tertentu untuk user ini.</p>
+                        </div>
+                    </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Dashboard & Panduan -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+                        <!-- 1. Utama -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-blue-500 pl-2">Utama</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-blue-500 pl-2">1. Utama</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view dashboard" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -68,9 +68,9 @@
                             </div>
                         </div>
 
-                        <!-- Produk -->
+                        <!-- 2. Master Data -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-green-500 pl-2">Pengaturan Produk</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-green-500 pl-2">2. Master Data</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view products" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -91,9 +91,9 @@
                             </div>
                         </div>
 
-                        <!-- Inventory & Pengadaan -->
+                        <!-- 3. Stok & Inventori -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-orange-500 pl-2">Stok & Pengadaan</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-orange-500 pl-2">3. Stok & Inventori</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view stock" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -103,6 +103,13 @@
                                     <input type="checkbox" wire:model="menu_permissions.adjust stock" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Penyesuaian Stok</span>
                                 </label>
+                            </div>
+                        </div>
+
+                        <!-- 4. Pengadaan -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-yellow-500 pl-2">4. Pengadaan</h4>
+                            <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view purchase orders" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Pesanan Pembelian (PO)</span>
@@ -114,9 +121,9 @@
                             </div>
                         </div>
 
-                        <!-- POS & Sales -->
+                        <!-- 5. Penjualan -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-purple-500 pl-2">Transaksi</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-purple-500 pl-2">5. Penjualan</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.access pos" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -129,36 +136,36 @@
                             </div>
                         </div>
 
-                        <!-- Keuangan -->
+                        <!-- 6. Keuangan -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-red-500 pl-2">Keuangan</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-red-500 pl-2">6. Keuangan</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view expenses" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Pengeluaran</span>
                                 </label>
                                 <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.manage expense categories" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Kategori Pengeluaran</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view profit loss" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Laba Rugi</span>
                                 </label>
                                 <label class="flex items-center group cursor-pointer">
-                                    <input type="checkbox" wire:model="menu_permissions.view balance sheet" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
-                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Neraca</span>
+                                    <input type="checkbox" wire:model="menu_permissions.manage opening balances" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Neraca Awal</span>
                                 </label>
                                 <label class="flex items-center group cursor-pointer">
-                                    <input type="checkbox" wire:model="menu_permissions.view journals" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
-                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Jurnal Umum</span>
-                                </label>
-                                <label class="flex items-center group cursor-pointer">
-                                    <input type="checkbox" wire:model="menu_permissions.manage expense categories" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
-                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Kategori Pengeluaran</span>
+                                    <input type="checkbox" wire:model="menu_permissions.view income statement" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Arus Kas</span>
                                 </label>
                             </div>
                         </div>
 
-                        <!-- Akuntansi -->
+                        <!-- 7. Akuntansi -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-indigo-500 pl-2">Akuntansi</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-indigo-500 pl-2">7. Akuntansi</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view accounts" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -170,18 +177,26 @@
                                 </label>
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.create journal" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
-                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Buat Jurnal Manual</span>
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Jurnal Manual</span>
                                 </label>
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.view general ledger" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Buku Besar</span>
                                 </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.view balance sheet" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Neraca</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.view journals" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Riwayat Jurnal</span>
+                                </label>
                             </div>
                         </div>
 
-                        <!-- Sistem -->
+                        <!-- 8. Pengaturan Sistem -->
                         <div class="space-y-4">
-                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-gray-500 pl-2">Sistem</h4>
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-gray-500 pl-2">8. Sistem</h4>
                             <div class="space-y-2">
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.manage settings" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
@@ -190,6 +205,10 @@
                                 <label class="flex items-center group cursor-pointer">
                                     <input type="checkbox" wire:model="menu_permissions.manage users" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Kelola User</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.view activity logs" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Riwayat Aktivitas</span>
                                 </label>
                             </div>
                         </div>

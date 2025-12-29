@@ -54,6 +54,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Accounting Reports
     Route::get('/finance/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('finance.balance-sheet');
     Route::get('/finance/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('finance.income-statement');
+    Route::get('/finance/opening-balance', App\Livewire\Finance\OpeningBalanceManager::class)
+        ->name('finance.opening-balance')
+        ->middleware('permission:manage opening balances');
     // Accounting
     Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
     Route::get('/accounting/journals', App\Livewire\Accounting\JournalIndex::class)->name('accounting.journals.index');

@@ -4,6 +4,7 @@ namespace App\Livewire\Finance;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\ActivityLog;
 use App\Models\ExpenseCategory;
 use Livewire\Attributes\Layout;
 
@@ -60,13 +61,31 @@ class ExpenseCategoryIndex extends Component
 
         if ($this->isEditMode) {
             $category = ExpenseCategory::findOrFail($this->categoryId);
+            $oldData = $category->toArray();
             $category->update(['name' => $this->name]);
+            
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'expenses',
+                'description' => "Memperbarui kategori pengeluaran: {$this->name}",
+                'old_values' => $oldData,
+                'new_values' => $category->fresh()->toArray()
+            ]);
+
             session()->flash('message', 'Kategori berhasil diperbarui.');
         } else {
-            ExpenseCategory::create([
+            $category = ExpenseCategory::create([
                 'name' => $this->name,
                 'is_active' => true
             ]);
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'expenses',
+                'description' => "Menambah kategori pengeluaran baru: {$this->name}",
+                'new_values' => $category->toArray()
+            ]);
+
             session()->flash('message', 'Kategori berhasil ditambahkan.');
         }
 
@@ -77,7 +96,17 @@ class ExpenseCategoryIndex extends Component
     public function delete($id)
     {
         try {
-            ExpenseCategory::findOrFail($id)->delete();
+            $category = ExpenseCategory::findOrFail($id);
+            $oldData = $category->toArray();
+            $category->delete();
+
+            ActivityLog::log([
+                'action' => 'deleted',
+                'module' => 'expenses',
+                'description' => "Menghapus kategori pengeluaran: {$oldData['name']}",
+                'old_values' => $oldData
+            ]);
+
             session()->flash('message', 'Kategori berhasil dihapus.');
         } catch (\Exception $e) {
             session()->flash('error', 'Gagal menghapus kategori. Mungkin sedang digunakan dalam transaksi.');

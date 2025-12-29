@@ -3,6 +3,7 @@
 namespace App\Livewire\Master;
 
 use App\Models\Category;
+use App\Models\ActivityLog;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
@@ -61,16 +62,34 @@ class CategoryManagement extends Component
 
         if ($this->editMode) {
             $category = Category::find($this->categoryId);
+            $oldData = $category->toArray();
             $category->update([
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
             ]);
+
+            ActivityLog::log([
+                'action' => 'updated',
+                'module' => 'categories',
+                'description' => "Memperbarui kategori: {$this->name}",
+                'old_values' => $oldData,
+                'new_values' => $category->fresh()->toArray()
+            ]);
+
             $this->dispatch('notify', 'Kategori berhasil diperbarui.');
         } else {
-            Category::create([
+            $category = Category::create([
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
             ]);
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'categories',
+                'description' => "Menambah kategori baru: {$this->name}",
+                'new_values' => $category->toArray()
+            ]);
+
             $this->dispatch('notify', 'Kategori baru berhasil ditambahkan.');
         }
 
@@ -96,7 +115,16 @@ class CategoryManagement extends Component
             return;
         }
 
+        $oldData = $category->toArray();
         $category->delete();
+
+        ActivityLog::log([
+            'action' => 'deleted',
+            'module' => 'categories',
+            'description' => "Menghapus kategori: {$oldData['name']}",
+            'old_values' => $oldData
+        ]);
+
         $this->dispatch('notify', 'Kategori berhasil dihapus.');
     }
 

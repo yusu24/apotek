@@ -11,6 +11,7 @@ use App\Models\Batch;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLog;
 
 #[Layout('layouts.app')]
 class Cashier extends Component
@@ -459,6 +460,14 @@ class Cashier extends Component
             }
 
             DB::commit();
+
+            ActivityLog::log([
+                'action' => 'created',
+                'module' => 'sales',
+                'description' => "Transaksi penjualan baru: {$sale->invoice_no}",
+                'new_values' => $sale->toArray()
+            ]);
+
             $this->showPaymentModal = false;
             $this->cart = [];
             $this->calculateTotal();

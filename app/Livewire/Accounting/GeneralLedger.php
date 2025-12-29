@@ -63,7 +63,6 @@ class GeneralLedger extends Component
             ->where('account_id', $this->accountId)
             ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
             ->orderBy('journal_entries.date')
-            ->orderBy('journal_entries.time', 'asc') // Assuming time exists or just use ID
             ->orderBy('journal_entries.id')
             ->select('journal_entry_lines.*')
             ->get();

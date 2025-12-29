@@ -84,6 +84,10 @@
                                     <input type="checkbox" wire:model="menu_permissions.manage product units" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Satuan Produk</span>
                                 </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.manage suppliers" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Pemasok</span>
+                                </label>
                             </div>
                         </div>
 

@@ -25,6 +25,54 @@
             <div x-init="showAlertFn('{{ session('success') }}')" class="hidden"></div>
         @endif
 
+    <!-- Zoom Image Modal -->
+    <div x-data="{ 
+        zoomImage: null,
+        openZoom(img) {
+            this.zoomImage = img;
+        },
+        closeZoom() {
+            this.zoomImage = null;
+        }
+    }" 
+    @open-zoom.window="openZoom($event.detail)"
+    class="h-full">
+        
+        <!-- Modal Backdrop & Content -->
+        <div x-show="zoomImage" 
+             style="display: none;"
+             class="fixed inset-0 z-[60] overflow-y-auto" 
+             role="dialog" aria-modal="true">
+            
+            <div class="flex items-center justify-center min-h-screen p-4 text-center">
+                <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" 
+                     @click="closeZoom"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"></div>
+
+                <div class="relative inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-3xl sm:w-full"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95">
+                    
+                    <button @click="closeZoom" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 bg-white/50 hover:bg-white rounded-full p-2 transition-all z-10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+
+                    <div class="p-2 sm:p-4 bg-white flex justify-center items-center min-h-[300px]">
+                        <img :src="zoomImage" alt="Zoomed Product" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- MAIN POS CONTAINER (Responsive: Stack on mobile, Side-by-side on desktop) -->
         <div class="absolute inset-x-0 bottom-0 top-16 xl:top-0 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
             
@@ -110,9 +158,9 @@
                                 <td class="px-2 py-3 text-center align-top">
                                     <div class="w-16 mx-auto">
                                         <input type="number" 
-                                               wire:model.live.debounce.300ms="cart.{{ $id }}.qty"
-                                               class="w-full px-1 py-1 text-center text-sm font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                                               min="1">
+                                                wire:model.live.debounce.300ms="cart.{{ $id }}.qty"
+                                                class="w-full px-1 py-1 text-center text-sm font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                                                min="1">
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-right align-top font-bold text-gray-900">
@@ -150,9 +198,9 @@
                             <tr>
                                 <td colspan="4" class="py-20 text-center text-gray-400">
                                     <div class="flex flex-col items-center">
-                                         <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
                                             <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                         </div>
+                                            </div>
                                         <p class="text-sm font-medium">Keranjang Kosong</p>
                                         <p class="text-xs text-gray-400 mt-1">Pilih produk di sebelah kanan</p>
                                     </div>
@@ -230,7 +278,7 @@
                     <!-- Search Bar -->
                     <!-- Search Bar with Dropdown -->
                     <div class="relative" 
-                         x-data="{ 
+                            x-data="{ 
                             open: false, 
                             highlightedIndex: 0,
                             search: @entangle('search').live,
@@ -242,8 +290,8 @@
                                     this.$refs.searchInput.blur();
                                 }
                             }
-                         }"
-                         @click.outside="open = false; highlightedIndex = 0">
+                            }"
+                            @click.outside="open = false; highlightedIndex = 0">
                         
                         <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -271,17 +319,17 @@
 
                         <!-- Dropdown Results -->
                         <div x-show="open && search.length > 0" 
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 scale-95"
-                             x-transition:enter-end="opacity-100 scale-100"
-                             class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
                             
                             @forelse($products->take(10) as $index => $product)
                                 <div id="dropdown-item-{{ $index }}"
-                                     x-ref="dropdown-item-{{ $index }}"
-                                     @click="selectItem({{ $product->id }})"
-                                     class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 hover:bg-blue-50 transition-colors"
-                                     :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
+                                        x-ref="dropdown-item-{{ $index }}"
+                                        @click="selectItem({{ $product->id }})"
+                                        class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 hover:bg-blue-50 transition-colors"
+                                        :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
                                     <div class="flex-1 min-w-0 mr-3">
                                         <div class="font-bold text-gray-900 truncate">{{ $product->name }}</div>
                                         <div class="text-xs text-gray-500">Stok: {{ $product->total_stock }}</div>
@@ -319,11 +367,10 @@
                 <div class="flex-1 p-3 md:p-6 overflow-y-auto">
                     <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
                         @forelse($products as $product)
-                        <div wire:click="addToCart({{ $product->id }})" 
-                             class="bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg cursor-pointer transition-all group relative">
+                        <div class="bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg transition-all group relative">
                             
                             <!-- Stock Badge (Top Right Corner) -->
-                            <div class="absolute top-2 right-2 z-10">
+                            <div class="absolute top-2 right-2 z-10 pointer-events-none">
                                 @if($product->total_stock <= 0)
                                     <span class="text-xs bg-red-600 text-white px-2 py-1 rounded-full font-bold shadow-md">Habis</span>
                                 @elseif($product->total_stock <= 5)
@@ -335,8 +382,11 @@
                                 @endif
                             </div>
 
-                            <!-- Product Icon / Image -->
-                            <div class="h-24 bg-gray-50 rounded-lg mb-3 flex items-center justify-center group-hover:bg-blue-50 transition-colors overflow-hidden">
+                            <!-- Product Icon / Image - Click to Zoom -->
+                            <div class="h-24 bg-gray-50 rounded-lg mb-3 flex items-center justify-center group-hover:bg-blue-50 transition-colors overflow-hidden cursor-zoom-in"
+                                 @if($product->image_path)
+                                     @click.stop="openZoom('{{ asset('storage/' . $product->image_path) }}')"
+                                 @endif>
                                 @if($product->image_path)
                                     <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                                 @else
@@ -344,15 +394,14 @@
                                 @endif
                             </div>
                             
-                            <!-- Product Info -->
-                            <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis">{{ $product->name }}</h4>
-                            <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
+                            <!-- Product Info - Click to Add -->
+                            <div class="cursor-pointer" wire:click="addToCart({{ $product->id }})">
+                                <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis hover:text-blue-600">{{ $product->name }}</h4>
+                                <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
+                            </div>
                             
-                            <!-- Stock Info Text -->
-
-                            
-                            <!-- Add Button -->
-                            <button class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
+                            <!-- Add Button - Click to Add -->
+                            <button wire:click="addToCart({{ $product->id }})" class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
                                 + Tambah
                             </button>
                         </div>
@@ -366,6 +415,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- PAYMENT MODAL -->

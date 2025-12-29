@@ -37,6 +37,7 @@ class UserForm extends Component
         'manage settings' => false,
         'manage users' => false,
         'view guide' => false,
+        'manage suppliers' => false,
     ];
 
     public function mount($id = null)

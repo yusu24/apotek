@@ -24,9 +24,7 @@ class ExpenseManager extends Component
     public $editId;
 
     // Category Management
-    public $showCategoryModal = false;
-    public $categoryName;
-    public $categoryEditId = null;
+    // Removed to separate component
 
     public function mount()
     {
@@ -97,74 +95,8 @@ class ExpenseManager extends Component
         session()->flash('message', 'Data pengeluaran dihapus.');
     }
 
-    // Category Management Methods
-    public function openCategoryManager()
-    {
-        if (!auth()->user()->hasRole('super-admin') && !auth()->user()->can('manage expense categories')) {
-            abort(403, 'Unauthorized');
-        }
-        
-        $this->reset(['categoryName', 'categoryEditId']);
-        $this->showCategoryModal = true;
-    }
-
-    public function editCategory($id)
-    {
-        if (!auth()->user()->hasRole('super-admin') && !auth()->user()->can('manage expense categories')) {
-            abort(403, 'Unauthorized');
-        }
-
-        $category = ExpenseCategory::findOrFail($id);
-        $this->categoryEditId = $category->id;
-        $this->categoryName = $category->name;
-    }
-
-    public function saveCategory()
-    {
-        if (!auth()->user()->hasRole('super-admin') && !auth()->user()->can('manage expense categories')) {
-            abort(403, 'Unauthorized');
-        }
-
-        $this->validate([
-            'categoryName' => 'required|string|max:255|unique:expense_categories,name,' . $this->categoryEditId,
-        ], [
-            'categoryName.required' => 'Nama kategori harus diisi.',
-            'categoryName.unique' => 'Nama kategori sudah ada.',
-        ]);
-
-        if ($this->categoryEditId) {
-            $category = ExpenseCategory::findOrFail($this->categoryEditId);
-            $category->update(['name' => $this->categoryName]);
-            session()->flash('categoryMessage', 'Kategori berhasil diperbarui.');
-        } else {
-            ExpenseCategory::create([
-                'name' => $this->categoryName,
-                'is_active' => true
-            ]);
-            session()->flash('categoryMessage', 'Kategori berhasil ditambahkan.');
-        }
-
-        $this->reset(['categoryName', 'categoryEditId']);
-    }
-
-    public function deleteCategory($id)
-    {
-        if (!auth()->user()->hasRole('super-admin') && !auth()->user()->can('manage expense categories')) {
-            abort(403, 'Unauthorized');
-        }
-
-        try {
-            ExpenseCategory::findOrFail($id)->delete();
-            session()->flash('categoryMessage', 'Kategori berhasil dihapus.');
-        } catch (\Exception $e) {
-            session()->flash('categoryError', 'Gagal menghapus kategori. Mungkin sedang digunakan.');
-        }
-    }
-
-    public function cancelEditCategory()
-    {
-        $this->reset(['categoryName', 'categoryEditId']);
-    }
+    // Category Management
+    // Removed to separate component
 
     public function render()
     {
@@ -175,12 +107,10 @@ class ExpenseManager extends Component
             ->onEachSide(2);
         
         $categories = ExpenseCategory::active()->orderBy('name')->get();
-        $allCategories = ExpenseCategory::orderBy('name')->get(); // For management modal
             
         return view('livewire.finance.expense-manager', [
             'expenses' => $expenses,
             'categories' => $categories,
-            'allCategories' => $allCategories,
         ]);
     }
 }

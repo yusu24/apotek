@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/master/product-units', App\Livewire\Master\ProductUnit::class)
         ->name('master.product-units')
         ->middleware('permission:manage product units');
+    Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)->name('master.suppliers');
 
 
     // Inventory
@@ -54,6 +55,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/finance/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('finance.balance-sheet');
     Route::get('/finance/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('finance.income-statement');
     Route::get('/finance/journals', App\Livewire\Accounting\JournalIndex::class)->name('finance.journals');
+    
+    Route::get('/finance/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)
+        ->name('finance.expense-categories')
+        ->middleware('permission:manage expense categories');
     
     // Procurement
     Route::get('/procurement/purchase-orders', App\Livewire\Procurement\PurchaseOrderIndex::class)->name('procurement.purchase-orders.index');

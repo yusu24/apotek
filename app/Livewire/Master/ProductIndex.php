@@ -43,7 +43,7 @@ class ProductIndex extends Component
         ]);
     }
 
-    public function delete($id)
+    public function deleteProduct($id)
     {
         if (!auth()->user()->can('delete products')) {
             session()->flash('error', 'Anda tidak memiliki akses untuk menghapus produk.');
@@ -51,10 +51,22 @@ class ProductIndex extends Component
         }
 
         try {
-            Product::find($id)->delete();
-            session()->flash('message', 'Product deleted successfully.');
+            // Check for related stock movements
+            // Stock movements represent critical transaction history (sales, adjustments, etc.)
+            // and should not be orphaned.
+            $hasMovements = \App\Models\StockMovement::where('product_id', $id)->exists();
+            
+            if ($hasMovements) {
+                session()->flash('error', 'Produk tidak dapat dihapus karena sudah memiliki riwayat transaksi (stock movements).');
+                return;
+            }
+
+            $product = Product::findOrFail($id);
+            $product->delete();
+            
+            session()->flash('message', 'Produk berhasil dihapus.');
         } catch (\Exception $e) {
-            session()->flash('error', 'Cannot delete product: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghapus produk: ' . $e->getMessage());
         }
     }
 }

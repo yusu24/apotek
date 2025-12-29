@@ -31,7 +31,7 @@ class UserGuide extends Component
                 'title' => 'Manajemen Produk',
                 'slug' => 'master',
                 'description' => 'Cara menambah obat baru, mengatur kategori, serta mengelola satuan dan konversi.',
-                'updated_at' => '23 Dec 2025',
+                'updated_at' => '29 Dec 2025',
                 'icon' => 'beaker',
                 'color' => 'indigo',
                 'category' => 'Master Data'
@@ -67,7 +67,7 @@ class UserGuide extends Component
                 'title' => 'Laporan Keuangan',
                 'slug' => 'reports',
                 'description' => 'Analisis laba rugi, laporan pengeluaran operasional, dan rekapitulasi pajak (PPN).',
-                'updated_at' => '24 Dec 2025',
+                'updated_at' => '29 Dec 2025',
                 'icon' => 'document-text',
                 'color' => 'rose',
                 'category' => 'Laporan'

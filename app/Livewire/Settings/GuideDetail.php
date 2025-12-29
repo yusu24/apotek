@@ -67,12 +67,14 @@ class GuideDetail extends Component
                 ],
                 'sub_menus' => [
                     ['name' => 'Katalog Obat', 'func' => 'Tabel utama berisi seluruh database produk aktif dan non-aktif.'],
+                    ['name' => 'Pemasok', 'func' => 'Manajemen data supplier/pemasok obat lengkap dengan kontak dan alamat.'],
                     ['name' => 'Aturan Harga', 'func' => 'Setting harga beli (HPP), margin keuntungan, dan harga jual final.'],
                     ['name' => 'Satuan & Konversi', 'func' => 'Konfigurasi multi-satuan (1 Box = 10 Strip = 100 Tablet).'],
                     ['name' => 'Kategori', 'func' => 'Pengelompokan produk (Obat Bebas, Keras, Alkes) untuk kemudahan laporan.']
                 ],
                 'buttons' => [
                     ['label' => '+ Tambah Produk', 'func' => 'Membuka formulir kosong untuk mendaftarkan SKU/Item baru ke database.'],
+                    ['label' => '+ Tambah Pemasok', 'func' => 'Mendaftarkan supplier baru agar bisa dipilih saat pembelian barang.'],
                     ['label' => 'Sync Barcode', 'func' => 'Fitur untuk menghubungkan Scanner Barcode agar siap digunakan saat input.'],
                     ['label' => 'Kelola Konversi', 'func' => 'Tombol aksi di baris produk untuk mengatur pecahan satuan (Box ke Pcs).'],
                     ['label' => 'Import Excel', 'func' => 'Fitur upload massal untuk memasukkan ratusan data obat sekaligus dari file .xlsx.'],
@@ -80,6 +82,8 @@ class GuideDetail extends Component
                 ],
                 'procedures' => [
                     ['title' => 'Input Obat Baru', 'desc' => 'Klik "+ Tambah Produk". Isi Nama, Kategori, dan Barcode. Simpan untuk lanjut ke harga.'],
+                    ['title' => 'Input Pemasok', 'desc' => 'Masuk menu Pemasok. Klik Tambah. Isi nama PT dan kontak sales. Simpan.'],
+                    ['title' => 'Hapus Produk', 'desc' => 'Klik tombol Hapus (Tong Sampah). Produk bisa dihapus JIKA tidak memiliki riwayat transaksi.'],
                     ['title' => 'Atur Konversi', 'desc' => 'Buka tab Satuan. Masukkan Satuan Besar (Box) dan tentukan Isinya (Misal: 100 Tablet).'],
                     ['title' => 'Update Harga Beli', 'desc' => 'Jika ada kenaikan, update di Master agar HPP dan margin tetap akurat di laporan.']
                 ],
@@ -209,20 +213,20 @@ class GuideDetail extends Component
                     ['name' => 'Laporan Penjualan', 'func' => 'Detail omset per-transaksi, per-kasir, atau per-produk.'],
                     ['name' => 'Laba Rugi (P&L)', 'func' => 'Laporan profit bersih (Net Income) = Pendapatan - (HPP + Biaya Operasional).'],
                     ['name' => 'Pengeluaran (Biaya)', 'func' => 'Buku kas keluar untuk biaya operasional toko (Listrik, Air, Gaji, ATK).'],
-                    ['name' => 'Pajak PPN', 'func' => 'Rekapitulasi PPN Masukan (Beli) dan PPN Keluaran (Jual) untuk pelaporan pajak.'],
-                    ['name' => 'Kelola Kategori', 'func' => 'Manajemen master data kategori biaya untuk pengelompokan laporan.']
+                    ['name' => 'Kategori Pengeluaran', 'func' => 'Manajemen master data grup biaya (misal: "Gaji", "Sewa", "Marketing").'],
+                    ['name' => 'Pajak PPN', 'func' => 'Rekapitulasi PPN Masukan (Beli) dan PPN Keluaran (Jual) untuk pelaporan pajak.']
                 ],
                 'buttons' => [
                     ['label' => 'Download PDF', 'func' => 'Mengunduh laporan dalam format dokumen resmi siap cetak.'],
                     ['label' => 'Export Excel', 'func' => 'Mengunduh data mentah ke .xlsx untuk diolah lebih lanjut.'],
                     ['label' => 'Print Thermal', 'func' => 'Mencetak ringkasan laporan singkat di printer struk kasir.'],
                     ['label' => '+ Pengeluaran', 'func' => 'Tombol untuk mencatat biaya operasional baru hari ini.'],
-                    ['label' => 'Kelola Kategori', 'func' => 'Tombol khusus admin untuk menambah/edit kategori pengeluaran.']
+                    ['label' => '+ Kategori', 'func' => 'Tombol di menu Kategori Pengeluaran untuk menambah jenis biaya baru.']
                 ],
                 'procedures' => [
                     ['title' => 'Analisa Laba Rugi', 'desc' => 'Pilih Periode Bulan. Klik Analisa. Pastikan HPP sudah terisi semua agar profit akurat.'],
                     ['title' => 'Input Biaya Toko', 'desc' => 'Buka Buku Pengeluaran. Klik "+ Pengeluaran". Pilih Kategori, input Jumlah, dan Simpan.'],
-                    ['title' => 'Tambah Kategori Biaya', 'desc' => 'Klik tombol "Kelola Kategori". Tambahkan nama kategori baru (misal: "Keamanan") lalu Simpan.']
+                    ['title' => 'Tambah Kategori Biaya', 'desc' => 'Masuk menu Kategori Pengeluaran. Klik Tambah. Input nama kategori baru (misal: "Keamanan") lalu Simpan.']
                 ],
                 'form_fields' => [
                     ['name' => 'Periode', 'description' => 'Rentang tanggal Awal dan Akhir laporan yang ingin dilihat.', 'required' => true],

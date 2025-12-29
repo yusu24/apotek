@@ -58,7 +58,7 @@
             </table>
         </div>
         <div class="mt-4">
-            {{ $expenses->links() }}
+            @include('components.custom-pagination', ['items' => $expenses])
         </div>
     </div>
 

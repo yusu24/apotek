@@ -54,8 +54,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Accounting Reports
     Route::get('/finance/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('finance.balance-sheet');
     Route::get('/finance/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('finance.income-statement');
-    Route::get('/finance/journals', App\Livewire\Accounting\JournalIndex::class)->name('finance.journals');
-    
+    // Accounting
+    Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
+    Route::get('/accounting/journals', App\Livewire\Accounting\JournalIndex::class)->name('accounting.journals.index');
+    Route::get('/accounting/journals/create', App\Livewire\Accounting\JournalEntryForm::class)->name('accounting.journals.create');
+    Route::get('/accounting/ledger', App\Livewire\Accounting\GeneralLedger::class)->name('accounting.ledger');
+
     Route::get('/finance/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)
         ->name('finance.expense-categories')
         ->middleware('permission:manage expense categories');

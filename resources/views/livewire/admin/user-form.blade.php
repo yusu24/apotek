@@ -156,6 +156,29 @@
                             </div>
                         </div>
 
+                        <!-- Akuntansi -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-indigo-500 pl-2">Akuntansi</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.view accounts" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Daftar Akun (COA)</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.manage accounts" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Kelola Akun</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.create journal" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Buat Jurnal Manual</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer">
+                                    <input type="checkbox" wire:model="menu_permissions.view general ledger" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer">
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition">Buku Besar</span>
+                                </label>
+                            </div>
+                        </div>
+
                         <!-- Sistem -->
                         <div class="space-y-4">
                             <h4 class="font-bold text-gray-700 text-[10px] uppercase tracking-widest border-l-2 border-gray-500 pl-2">Sistem</h4>

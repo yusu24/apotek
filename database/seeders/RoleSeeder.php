@@ -80,6 +80,12 @@ class RoleSeeder extends Seeder
             'view finance',
             'view expenses',
             'manage expense categories',
+
+            // Accounting
+            'view accounts',
+            'manage accounts',
+            'create journal',
+            'view general ledger',
             
             // Settings & Configuration
             'manage settings',

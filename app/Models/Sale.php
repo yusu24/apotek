@@ -41,6 +41,18 @@ class Sale extends Model
                 }
             }
         });
+
+        static::updated(function ($sale) {
+            // Auto-post journal entry when status changes to completed
+            if ($sale->isDirty('status') && $sale->status === 'completed') {
+                try {
+                    $accountingService = new AccountingService();
+                    $accountingService->postSaleJournal($sale->id);
+                } catch (\Exception $e) {
+                    \Log::error('Failed to post sale journal: ' . $e->getMessage());
+                }
+            }
+        });
     }
 
     public function saleItems()
@@ -51,5 +63,10 @@ class Sale extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
+    }
+    
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'sale')->where('source_id', $this->id);
     }
 }

@@ -37,7 +37,7 @@ class GoodsReceiptForm extends Component
             $po = \App\Models\PurchaseOrder::with('supplier')->find($this->po_id);
             if ($po) {
                 \Log::info('PO Found: ' . $po->po_number);
-                $this->delivery_note_number = 'SJ-' . $po->po_number;
+                $this->delivery_note_number = ''; // User must input manually
                 $this->notes = 'Penerimaan dari PO: ' . $po->po_number . ' - ' . ($po->supplier->name ?? '');
             } else {
                 \Log::warning('PO not found for ID: ' . $this->po_id);
@@ -81,17 +81,20 @@ class GoodsReceiptForm extends Component
                          
                          $infoLabel = ($totalReceivedBase > 0) ? 'Sisa Order: ' : 'Total Order: ';
 
-                         $this->items[] = [
-                            'product_id' => $poItem->product_id,
-                            'product_name' => $poItem->product->name ?? '-',
-                            'batch_no' => $this->generateNextBatchNo(),
-                            'expired_date' => '',
-                            'qty_received' => (float)$remainingQty, 
-                            'buy_price' => $poItem->unit_price,
-                            'unit_id' => $poItem->unit_id,
-                            'conversion_factor' => $poItem->conversion_factor,
-                            'po_info' => $infoLabel . (float)$remainingQty . ' ' . ($poItem->unit->name ?? 'Unit'),
-                        ];
+                             $this->items[] = [
+                                'product_id' => $poItem->product_id,
+                                'product_name' => $poItem->product->name ?? '-',
+                                'batch_no' => $this->generateNextBatchNo(),
+                                'expired_date' => '',
+                                'qty_received' => (float)$remainingQty, 
+                                'buy_price' => $poItem->unit_price,
+                                'unit_id' => $poItem->unit_id,
+                                'po_unit_id' => $poItem->unit_id, // Store for comparison
+                                'po_unit_name' => $poItem->unit->name ?? 'Unit',
+                                'conversion_factor' => $poItem->conversion_factor,
+                                'po_info' => $infoLabel . (float)$remainingQty . ' ' . ($poItem->unit->name ?? 'Unit'),
+                                'max_qty_allowed' => (float)$remainingQty, // Store for validation
+                            ];
                         $hasItems = true;
                     }
                 }
@@ -202,6 +205,49 @@ class GoodsReceiptForm extends Component
             'items.*.expired_date.required' => 'Tanggal kadaluarsa wajib diisi',
             'items.*.buy_price.required' => 'Harga beli wajib diisi',
         ]);
+
+        // Custom validation: Check if Qty Received > PO Qty (if applicable)
+        if ($this->purchase_order_id) {
+            foreach ($this->items as $index => $item) {
+                // 1. Qty validation
+                if (isset($item['max_qty_allowed'])) {
+                    $baseReceivedQty = $item['qty_received'] * ($item['conversion_factor'] ?? 1);
+                    $poItem = \App\Models\PurchaseOrderItem::where('purchase_order_id', $this->purchase_order_id)
+                        ->where('product_id', $item['product_id'])
+                        ->first();
+                    
+                    if ($poItem) {
+                        $poFactor = $poItem->conversion_factor ?? 1;
+                        $maxBaseQty = $item['max_qty_allowed'] * $poFactor;
+
+                        if ($baseReceivedQty > ($maxBaseQty + 0.001)) {
+                            $this->addError("items.{$index}.qty_received", "Gagal: Jumlah terima (" . $item['qty_received'] . ") melebihi sisa sisa pesanan di PO (" . $item['max_qty_allowed'] . " " . $item['po_unit_name'] . ")");
+                            return;
+                        }
+                    }
+                }
+
+                // 2. Unit validation
+                if (isset($item['po_unit_id']) && $item['unit_id'] != $item['po_unit_id']) {
+                    // Check if conversion exists
+                    $product = \App\Models\Product::with('unitConversions')->find($item['product_id']);
+                    $hasConversion = false;
+                    
+                    if ($product) {
+                        if ($item['unit_id'] == $product->unit_id) {
+                            $hasConversion = true;
+                        } else {
+                            $hasConversion = $product->unitConversions->where('from_unit_id', $item['unit_id'])->isNotEmpty();
+                        }
+                    }
+
+                    if (!$hasConversion) {
+                        $this->addError("items.{$index}.unit_id", "Gagal: Satuan '" . (\App\Models\Unit::find($item['unit_id'])->name ?? '?') . "' tidak sesuai dengan PO (" . $item['po_unit_name'] . ") dan tidak memiliki pengaturan konversi.");
+                        return;
+                    }
+                }
+            }
+        }
 
         // Validate due_date_weeks if payment method is due_date
         if ($this->payment_method === 'due_date') {

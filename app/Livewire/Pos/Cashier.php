@@ -39,13 +39,140 @@ class Cashier extends Component
     
     // Payment
     public $payment_method = 'cash';
-    public $cash_amount = 0;
+    public $cash_amount = null;
     public $change_amount = 0;
     public $success_message = '';
     public $showPaymentModal = false;
+    public $showPendingModal = false;
+    public $pendingOrders = [];
 
+    public function loadPendingOrders()
+    {
+        $this->pendingOrders = Sale::where('status', 'pending')
+            ->where('user_id', Auth::id()) // Optional: only own pending orders
+            ->latest()
+            ->get();
+        
+        $this->showPendingModal = true;
+    }
 
+    public function restorePendingOrder($saleId)
+    {
+        $sale = Sale::with(['saleItems.product', 'saleItems.batch'])->find($saleId);
+        
+        if (!$sale) {
+            $this->dispatch('cart-error', message: 'Pesanan tidak ditemukan');
+            return;
+        }
 
+        // Restore Invoice No
+        $this->invoice_no = $sale->invoice_no;
+        
+        // Restore Cart
+        $this->cart = [];
+        foreach ($sale->saleItems as $item) {
+            // Calculate discount percent from price and subtotal if needed, 
+            // OR just use what we have. 
+            // Current DB structure might not save discount_percent.
+            // Let's infer or default to 0. 
+            
+            // Logic: $item->subtotal = ($price - discount) * qty
+            // discount_per_unit = $price - ($subtotal / qty)
+            // discount_percent = (discount_per_unit / $price) * 100
+            
+            $price = $item->sell_price;
+            $qty = $item->quantity;
+            $subtotal = $item->subtotal;
+            
+            $discount_percent = 0;
+            if ($qty > 0 && $price > 0) {
+                $actual_total = $subtotal;
+                $expected_total = $price * $qty;
+                if ($expected_total > $actual_total) {
+                    $discount_amount = ($expected_total - $actual_total) / $qty;
+                    $discount_percent = ($discount_amount / $price) * 100;
+                }
+            }
+
+            $this->cart[$item->product_id] = [
+                'id' => $item->product_id,
+                'name' => $item->product->name ?? 'Unknown',
+                'price' => (float)$item->sell_price,
+                'qty' => $item->quantity,
+                'unit' => $item->product->unit->name ?? 'pcs',
+                'discount_percent' => round($discount_percent, 2),
+                'notes' => '', // Notes might be lost if not saved in SaleItem. Feature limitation for now.
+                'has_ppn' => false,
+            ];
+        }
+
+        // Restore Global Settings
+        $this->global_notes = $sale->notes;
+        $this->global_discount = $sale->discount;
+        $this->payment_method = $sale->payment_method ?? 'cash';
+
+        // Delete the pending record (it is now "live" in session)
+        // Also revert stock movements? 
+        // processPayment created StockMovements. We MUST delete them to "Release" stock back to system, 
+        // because "saveOrder" (processPayment) deducted stock.
+        
+        // Delete Stock Movements
+        StockMovement::where('doc_ref', $sale->invoice_no)->delete();
+        
+        // Restore stock to batches
+        foreach ($sale->saleItems as $item) {
+           if ($item->batch_id) {
+               $batch = Batch::find($item->batch_id);
+               if ($batch) {
+                   $batch->increment('stock_current', $item->quantity);
+               }
+           }
+        }
+        
+        // Delete Sale Items and Sale
+        $sale->saleItems()->delete();
+        $sale->delete();
+
+        $this->calculateTotal();
+        $this->showPendingModal = false;
+        $this->dispatch('cart-updated', message: 'Pesanan berhasil dipulihkan');
+    }
+
+    public function deletePendingOrder($saleId)
+    {
+        $sale = Sale::with(['saleItems.product', 'saleItems.batch'])->find($saleId);
+
+        if (!$sale) {
+            $this->dispatch('cart-error', message: 'Pesanan tidak ditemukan');
+            return;
+        }
+
+        // Restore stock to batches
+        foreach ($sale->saleItems as $item) {
+            if ($item->batch_id) {
+                $batch = Batch::find($item->batch_id);
+                if ($batch) {
+                    $batch->increment('stock_current', $item->quantity);
+                }
+            }
+        }
+
+        // Delete Stock Movements
+        StockMovement::where('doc_ref', $sale->invoice_no)->delete();
+
+        // Delete Sale Items and Sale
+        $sale->saleItems()->delete();
+        $sale->delete();
+
+        if ($this->showPendingModal) {
+            $this->pendingOrders = Sale::where('status', 'pending')
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+        }
+
+        $this->dispatch('cart-updated', message: 'Pesanan tertunda berhasil dihapus dan stok dikembalikan');
+    }
     public function mount()
     {
         // Check permission
@@ -185,6 +312,8 @@ class Cashier extends Component
         $this->subtotal = 0;
         $total_item_discount = 0;
         $this->tax = 0; // Reset text
+        
+        $ppn_rate = (float)\App\Models\Setting::get('pos_ppn_rate', 11) / 100;
 
         foreach ($this->cart as $key => $item) {
             $line_total_gross = $item['price'] * $item['qty'];
@@ -203,7 +332,7 @@ class Cashier extends Component
             
             // Calculate Item PPN
             if (isset($item['has_ppn']) && $item['has_ppn']) {
-                $item_tax = $net_item_total * 0.12;
+                $item_tax = $net_item_total * $ppn_rate;
                 $this->tax += $item_tax;
                 $net_item_total += $item_tax; 
             }
@@ -222,18 +351,12 @@ class Cashier extends Component
         // Base Grand Total (Net + Service Charge)
         $net_amount = $net_before_sc + $this->service_charge_amount;
 
-        // Add PPN (Global logic merged with Item logic - if Item PPN is used, Global PPN might be double counting if enabled. 
-        // Assuming Item PPN takes precedence or is additive. For now, strictly additive to Item PPN calculated above)
-        
-        // Ensure global tax logic doesn't double count if we want mixed mode. 
-        // For simplicity, if item tax is present, we add it. 
-        // Existing logic for ppn_mode:
+        // Add PPN (Global logic merged with Item logic)
         if ($this->ppn_mode === 'inclusive') {
-             // ... existing logic ...
-             // Converting inclusive is hard with mixed items. 
-             // Let's assume PPN Mode 'off' is default when using Item PPN.
+             // Inclusive calculation typically: Total / (1 + rate)
+             // However, for simplicity and alignment with existing logic:
         } elseif ($this->ppn_mode === 'exclusive') {
-             $this->tax += $net_amount * 0.12; 
+             $this->tax += $net_amount * $ppn_rate; 
         }
         
         $this->dpp = $net_amount; 
@@ -471,6 +594,13 @@ class Cashier extends Component
             $this->showPaymentModal = false;
             $this->cart = [];
             $this->calculateTotal();
+            $this->generateInvoiceNo(); // Generate new invoice for next order
+
+            if ($status === 'pending') {
+                 $this->dispatch('cart-updated', message: 'Pesanan berhasil disimpan ke Pending list.');
+                 return;
+            }
+
             return $this->redirect(route('pos.receipt', ['id' => $sale->id]));
 
         } catch (\Exception $e) {

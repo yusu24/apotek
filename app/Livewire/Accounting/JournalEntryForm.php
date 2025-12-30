@@ -37,8 +37,8 @@ class JournalEntryForm extends Component
     {
         $this->lines[] = [
             'account_id' => '',
-            'debit' => 0,
-            'credit' => 0,
+            'debit' => null,
+            'credit' => null,
             'notes' => '',
         ];
     }

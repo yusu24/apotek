@@ -11,6 +11,7 @@ class Receipt extends Component
 {
     public $sale;
     public $saleId;
+    public $paperSize;
 
     public function mount($id)
     {
@@ -19,6 +20,8 @@ class Receipt extends Component
         if (!$this->sale) {
             abort(404);
         }
+
+        $this->paperSize = \App\Models\Setting::get('pos_paper_size', '58mm');
     }
 
     public function render()

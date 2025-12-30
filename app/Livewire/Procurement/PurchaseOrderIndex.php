@@ -9,6 +9,7 @@ class PurchaseOrderIndex extends Component
     use \Livewire\WithPagination;
 
     public $search = '';
+    public $status = '';
 
     public function mount()
     {
@@ -20,9 +21,14 @@ class PurchaseOrderIndex extends Component
     public function render()
     {
         $orders = \App\Models\PurchaseOrder::with('supplier', 'user')
-            ->where('po_number', 'like', '%' . $this->search . '%')
-            ->orWhereHas('supplier', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
+            ->when($this->status, function ($query) {
+                $query->where('status', $this->status);
+            })
+            ->where(function($query) {
+                $query->where('po_number', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('supplier', function ($q) {
+                        $q->where('name', 'like', '%' . $this->search . '%');
+                    });
             })
             ->latest()
             ->paginate(10)

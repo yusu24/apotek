@@ -24,13 +24,13 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Tanggal <span class="text-red-500">*</span></label>
-                            <input type="date" wire:model="date" class="mt-1 block w-full rounded-lg border-gray-300">
+                            <input type="date" wire:model="date" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'readonly' : '' }}>
                             @error('date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Supplier <span class="text-red-500">*</span></label>
-                            <select wire:model="supplier_id" class="mt-1 block w-full rounded-lg border-gray-300">
+                            <select wire:model="supplier_id" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'disabled' : '' }}>
                                 <option value="">-- Pilih Supplier --</option>
                                 @foreach($suppliers as $sup)
                                     <option value="{{ $sup->id }}">{{ $sup->name }}</option>
@@ -41,7 +41,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Status</label>
-                            <select wire:model="status" class="mt-1 block w-full rounded-lg border-gray-300">
+                            <select wire:model="status" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'disabled' : '' }}>
                                 <option value="draft">Draf</option>
                                 <option value="ordered">Dipesan</option>
                                 <option value="cancelled">Dibatalkan</option>
@@ -56,7 +56,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Catatan</label>
-                            <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300" placeholder="Catatan tambahan..."></textarea>
+                            <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" placeholder="Catatan tambahan..." {{ $isReadOnly ? 'readonly' : '' }}></textarea>
                         </div>
                     </div>
                 </div>
@@ -67,9 +67,11 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Item Pesanan</h3>
+                        @if(!$isReadOnly)
                         <button type="button" wire:click="openModal" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium transition">
                             + Tambah Barang
                         </button>
+                        @endif
                     </div>
 
                     @error('items') <div class="text-red-500 text-sm mb-2">{{ $message }}</div> @enderror
@@ -130,6 +132,7 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 text-center">
+                                            @if(!$isReadOnly)
                                             <div class="flex items-center justify-center gap-2">
                                                 <button type="button" wire:click="openModal({{ $index }})" class="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded transition">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
@@ -138,6 +141,7 @@
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                 </button>
                                             </div>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
@@ -161,13 +165,93 @@
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-end">
+                <div class="mt-6 flex justify-end gap-3">
+                    @if(!$isReadOnly)
                     <button type="submit" class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-bold shadow-lg">
                         Simpan Pesanan
                     </button>
+                    @endif
+
+                    @if($status === 'ordered' || $status === 'partial')
+                    <a href="{{ route('procurement.goods-receipts.create', ['po_id' => $purchaseOrder->id]) }}"
+                       class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold shadow-lg flex items-center gap-2 transition duration-200 transform hover:scale-105">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        Proses Penerimaan
+                    </a>
+                    @endif
+
+                    @if($status === 'partial')
+                    <button type="button" wire:click="markAsDone" wire:confirm="Yakin ingin menyelesaikan PO ini? Item yang belum diterima akan dianggap batal."
+                       class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-lg flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Selesaikan PO
+                    </button>
+                    @endif
                 </div>
             </div>
         </div>
+        
+        {{-- Goods Receipts History --}}
+        @if($purchaseOrder && in_array($status, ['partial', 'received']))
+        <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-green-100">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Riwayat Penerimaan Barang
+                </h3>
+                <p class="text-sm text-gray-600 mt-1">Daftar surat jalan dan penerimaan untuk PO ini</p>
+            </div>
+            
+            <div class="p-6">
+                @php
+                    $receipts = $purchaseOrder->goodsReceipts()->with('user')->latest()->get();
+                @endphp
+                
+                @if($receipts->count() > 0)
+                    <div class="space-y-3">
+                        @foreach($receipts as $index => $receipt)
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50/30 transition">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold text-sm">
+                                            {{ $index + 1 }}
+                                        </span>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">{{ $receipt->delivery_note_number }}</h4>
+                                            <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d M Y') }} • oleh {{ $receipt->user->name ?? '-' }}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($receipt->notes)
+                                    <p class="text-sm text-gray-600 ml-11 mb-2">{{ $receipt->notes }}</p>
+                                    @endif
+                                    
+                                    <div class="ml-11 text-sm">
+                                        <span class="text-gray-500">Jumlah Item:</span>
+                                        <span class="font-semibold text-gray-900">{{ $receipt->items->count() }} produk</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-right">
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        Diterima
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-8 text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                        <p class="font-medium">Belum ada penerimaan barang</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+        @endif
     </form>
 
     <!-- Modal Item moved outside main form -->
@@ -304,11 +388,11 @@
                             
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Harga Beli Satuan <span class="text-red-500">*</span></label>
-                                <div class="relative rounded-lg shadow-sm h-9">
+                                <div class="relative rounded-lg shadow-sm h-9" x-data="money($wire.entangle('modalPrice').live)">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <span class="text-gray-500 text-xs">Rp</span>
                                     </div>
-                                    <input type="number" wire:model.live="modalPrice" class="block w-full pl-8 pr-3 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right font-bold text-sm" placeholder="0">
+                                    <input type="text" x-bind="input" class="block w-full pl-8 pr-3 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right font-bold text-sm" placeholder="0">
                                 </div>
                             </div>
                         </div>

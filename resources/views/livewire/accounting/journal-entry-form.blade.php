@@ -63,10 +63,14 @@
                                     @error("lines.{$index}.account_id") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-4 py-2">
-                                    <input type="number" wire:model.live.debounce.300ms="lines.{{ $index }}.debit" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono" min="0">
+                                    <div x-data="money($wire.entangle('lines.{{ $index }}.debit').live)">
+                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono">
+                                    </div>
                                 </td>
                                 <td class="px-4 py-2">
-                                    <input type="number" wire:model.live.debounce.300ms="lines.{{ $index }}.credit" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono" min="0">
+                                    <div x-data="money($wire.entangle('lines.{{ $index }}.credit').live)">
+                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono">
+                                    </div>
                                 </td>
                                 <td class="px-4 py-2">
                                     <input type="text" wire:model="lines.{{ $index }}.notes" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="Opsional">

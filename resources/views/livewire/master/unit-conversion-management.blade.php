@@ -17,8 +17,8 @@
                 <h3 class="text-lg font-bold text-gray-800">Daftar Konversi Satuan</h3>
                 <p class="text-sm text-gray-600 mt-1">Kelola konversi antar satuan untuk setiap produk (contoh: 1 Box = 10 Strip)</p>
             </div>
-            <button wire:click="openModal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
-                + Tambah Konversi
+            <button wire:click="openModal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center gap-2">
+                <span>+</span> <span class="hidden md:inline">Tambah Konversi</span>
             </button>
         </div>
 

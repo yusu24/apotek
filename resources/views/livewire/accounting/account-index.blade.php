@@ -25,23 +25,25 @@
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <!-- Filter Actions Bar -->
-        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center">
-            @can('manage accounts')
-            <button wire:click="create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap w-full md:w-auto justify-center">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                Tambah Akun
-            </button>
-            @endcan
-            
-            <div class="w-full md:w-auto min-w-[200px]">
-                <select wire:model.live="typeFilter" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    <option value="">Semua Tipe</option>
-                    <option value="asset">Aset</option>
-                    <option value="liability">Kewajiban</option>
-                    <option value="equity">Ekuitas</option>
-                    <option value="revenue">Pendapatan</option>
-                    <option value="expense">Beban</option>
-                </select>
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="flex flex-row gap-4 w-full md:w-auto items-center">
+                @can('manage accounts')
+                <button wire:click="create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <span class="hidden sm:inline">Tambah Akun</span>
+                </button>
+                @endcan
+                
+                <div class="flex-1 md:w-auto md:min-w-[200px]">
+                    <select wire:model.live="typeFilter" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="">Semua Tipe</option>
+                        <option value="asset">Aset</option>
+                        <option value="liability">Kewajiban</option>
+                        <option value="equity">Ekuitas</option>
+                        <option value="revenue">Pendapatan</option>
+                        <option value="expense">Beban</option>
+                    </select>
+                </div>
             </div>
 
             <div class="w-full md:flex-1 relative">
@@ -64,7 +66,7 @@
                         <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kategori</th>
                         <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Saldo</th>
                         <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -96,8 +98,8 @@
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Non-Aktif</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                            <div class="flex justify-center items-center gap-3">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end items-center gap-3">
                                 @can('manage accounts')
                                     <button wire:click="edit({{ $account->id }})" class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit Akun">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

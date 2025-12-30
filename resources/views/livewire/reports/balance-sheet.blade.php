@@ -1,37 +1,38 @@
-<div class="p-6">
+<div class="p-4 sm:p-6">
     {{-- Header --}}
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Neraca (Balance Sheet)</h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Posisi Keuangan</p>
         </div>
-        <div class="flex items-center gap-3">
-            <button wire:click="setThisMonth" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <button wire:click="setThisMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
                 Bulan Ini
             </button>
-            <button wire:click="setLastMonth" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+            <button wire:click="setLastMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
                 Bulan Lalu
             </button>
-            <button wire:click="setThisYear" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+            <button wire:click="setThisYear" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
                 Tahun Ini
             </button>
         </div>
     </div>
 
     {{-- Period Filter --}}
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div class="grid grid-cols-3 gap-4">
+    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Dari Tanggal</label>
-                <input type="date" wire:model="startDate" class="w-full border-gray-300 rounded-lg">
+                <input type="date" wire:model="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg">
+                <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="flex items-end">
-                <button wire:click="generateReport" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition">
-                    Generate Laporan
+                <button wire:click="generateReport" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition flex items-center justify-center gap-2 text-sm h-[42px]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span>Generate Laporan</span>
                 </button>
             </div>
         </div>
@@ -40,10 +41,12 @@
     @if(!empty($reportData))
     {{-- Balance Check Alert --}}
     @if(!$reportData['balance_check'])
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-            <p class="font-bold text-red-700">Perhatian: Neraca tidak balance! Total Aset ≠ Liabilitas + Ekuitas</p>
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+            </div>
+            <p class="ml-3 text-sm font-bold text-red-700">Perhatian: Neraca tidak balance! Total Aset ≠ Liabilitas + Ekuitas</p>
         </div>
     </div>
     @endif
@@ -85,7 +88,7 @@
     </div>
 
     {{-- Balance Sheet Table --}}
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- ASET (LEFT SIDE) --}}
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">

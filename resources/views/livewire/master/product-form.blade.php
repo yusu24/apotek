@@ -71,9 +71,11 @@
                             <span class="text-xs text-red-600 font-normal">(Hanya Super Admin)</span>
                         @endif
                     </label>
-                    <input type="number" wire:model="sell_price" placeholder="0"
+                    <div x-data="money($wire.entangle('sell_price'))">
+                    <input type="text" x-bind="input" placeholder="0"
                         {{ !$canEditPrice ? 'disabled' : '' }}
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ !$canEditPrice ? 'bg-gray-100 cursor-not-allowed' : '' }}">
+                    </div>
                     @error('sell_price') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
                 </div>
                 

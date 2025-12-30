@@ -21,9 +21,9 @@ class SupplierManagement extends Component
 
     protected $rules = [
         'name' => 'required|string|max:255',
-        'contact_person' => 'nullable|string|max:255',
-        'phone' => 'nullable|string|max:20',
-        'address' => 'nullable|string',
+        'contact_person' => 'required|string|max:255',
+        'phone' => 'required|string|max:20',
+        'address' => 'required|string',
     ];
 
     public function mount()
@@ -48,9 +48,9 @@ class SupplierManagement extends Component
     public function resetFields()
     {
         $this->name = '';
-        $this->contact_person = '';
-        $this->phone = '';
-        $this->address = '';
+        $this->contact_person = '-';
+        $this->phone = '-';
+        $this->address = '-';
         $this->supplierId = null;
         $this->isEditMode = false;
     }

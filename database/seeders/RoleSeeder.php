@@ -93,6 +93,7 @@ class RoleSeeder extends Seeder
             'manage settings',
             'view settings',
             'edit store profile',
+            'manage pos settings',
             'view guide',
             
             // Audit & Security

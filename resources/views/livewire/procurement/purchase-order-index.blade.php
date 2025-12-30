@@ -35,14 +35,26 @@
     @endif
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="mb-4 flex gap-4">
+        <div class="mb-4 flex flex-col sm:flex-row gap-4">
             <a href="{{ route('procurement.purchase-orders.create') }}" wire:navigate
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap">
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0 w-full sm:w-auto">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Buat PO
+                <span class="inline">Buat PO</span>
             </a>
-            <input type="text" wire:model.live="search" placeholder="Cari No PO / Supplier..." 
-                class="w-full md:w-1/3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            
+            <div class="flex-1 flex gap-4">
+                <select wire:model.live="status" class="w-full sm:w-48 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="">Semua Status</option>
+                    <option value="draft">Draf</option>
+                    <option value="ordered">Dipesan</option>
+                    <option value="partial">Sebagian</option>
+                    <option value="received">Diterima</option>
+                    <option value="cancelled">Dibatalkan</option>
+                </select>
+
+                <input type="text" wire:model.live="search" placeholder="Cari No PO / Supplier..." 
+                    class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -55,7 +67,7 @@
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -80,21 +92,24 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-center">
-                                <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
-                                    @if($po->status !== 'cancelled' && $po->status !== 'received')
-                                        <a href="{{ route('procurement.purchase-orders.edit', $po->id) }}" wire:navigate 
-                                            class="text-blue-600 hover:text-blue-900" title="Edit">
+                            <td class="px-6 py-4 text-sm font-medium text-right">
+                                <div class="flex items-center justify-end gap-3">
+                                    <a href="{{ $po->status === 'draft' ? route('procurement.purchase-orders.edit', $po->id) : route('procurement.purchase-orders.view', $po->id) }}" wire:navigate 
+                                        class="{{ $po->status === 'draft' ? 'text-blue-600 hover:text-blue-900' : 'text-gray-600 hover:text-gray-900' }} transition-colors" 
+                                        title="{{ $po->status === 'draft' ? 'Edit' : 'Lihat Detail' }}">
+                                        @if($po->status === 'draft')
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                        </a>
-                                    @endif
+                                        @else
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        @endif
+                                    </a>
                                     <a href="{{ route('procurement.purchase-orders.print', $po->id) }}" target="_blank"
-                                        class="text-gray-600 hover:text-gray-900" title="Cetak PO">
+                                        class="text-gray-600 hover:text-gray-900 transition-colors" title="Cetak PO">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                     </a>
                                     @if($po->goodsReceipts->count() == 0)
                                         <button wire:click="delete({{ $po->id }})" wire:confirm="Hapus PO ini?"
-                                            class="text-red-600 hover:text-red-900" title="Hapus">
+                                            class="text-red-600 hover:text-red-900 transition-colors" title="Hapus">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     @endif

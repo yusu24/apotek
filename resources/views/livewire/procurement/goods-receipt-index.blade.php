@@ -10,10 +10,10 @@
             <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
                 class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Penerimaan
+                <span class="hidden sm:inline">Penerimaan</span>
             </a>
             <input type="text" wire:model.live="search" placeholder="Cari No Surat Jalan / Supplier..." 
-                class="w-full md:w-1/3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div class="overflow-x-auto">

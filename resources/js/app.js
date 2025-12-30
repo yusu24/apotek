@@ -1,7 +1,3 @@
 import './bootstrap';
 
-// import Alpine from 'alpinejs';
-
-// window.Alpine = Alpine;
-
-// Alpine.start(); // Livewire 3 starts Alpine automatically
+// Alpine.data('money', ...); // Moved to layouts/app.blade.php directly to avoid build issues

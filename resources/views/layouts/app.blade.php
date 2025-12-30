@@ -40,6 +40,61 @@
                         this.open = false;
                     }
                 });
+
+                Alpine.data('money', (model) => ({
+                    displayValue: '',
+                    value: model,
+
+                    init() {
+                        // Watch for external changes to the bound value
+                        this.$watch('value', (newValue) => {
+                            if (newValue !== this.unformat(this.displayValue)) {
+                                this.formatDisplay();
+                            }
+                        });
+                        
+                        // Initial format if value exists
+                        if (this.value !== null && this.value !== undefined) {
+                            this.formatDisplay();
+                        }
+                    },
+
+                    formatDisplay() {
+                        if (this.value === null || this.value === '' || this.value === undefined) {
+                            this.displayValue = '';
+                            return;
+                        }
+                        this.displayValue = new Intl.NumberFormat('id-ID', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                        }).format(this.value);
+                    },
+
+                    unformat(val) {
+                        if (!val) return null;
+                        return parseInt(val.replace(/\./g, '')) || 0;
+                    },
+
+                    input: {
+                        ['@input']($event) {
+                            let raw = $event.target.value.replace(/[^0-9]/g, '');
+                            if (raw === '') {
+                                this.displayValue = '';
+                                this.value = null; // Update Livewire model
+                                return;
+                            }
+                            let number = parseInt(raw, 10);
+                            this.value = number; // Update Livewire model
+                            
+                            let formatted = new Intl.NumberFormat('id-ID').format(number);
+                            this.displayValue = formatted;
+                            $event.target.value = formatted;
+                        },
+                        ['x-model']: 'displayValue',
+                        ['inputmode']: 'numeric',
+                        ['placeholder']: '0',
+                    }
+                }));
             });
         </script>
         <style>

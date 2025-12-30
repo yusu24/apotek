@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\DB;
 class OpeningBalanceManager extends Component
 {
     public $openingBalanceId;
-    public $cash_amount = 0;
-    public $bank_amount = 0;
-    public $capital_amount = 0;
+    public $cash_amount = null;
+    public $bank_amount = null;
+    public $capital_amount = null;
     
     public $assets = [];
     public $debts = [];
@@ -60,7 +60,7 @@ class OpeningBalanceManager extends Component
 
     public function addAsset()
     {
-        $this->assets[] = ['asset_name' => '', 'amount' => 0, 'acquisition_date' => null];
+        $this->assets[] = ['asset_name' => '', 'amount' => null, 'acquisition_date' => null];
     }
 
     public function removeAsset($index)
@@ -72,7 +72,7 @@ class OpeningBalanceManager extends Component
 
     public function addDebt()
     {
-        $this->debts[] = ['debt_name' => '', 'debt_type' => 'supplier', 'amount' => 0];
+        $this->debts[] = ['debt_name' => '', 'debt_type' => 'supplier', 'amount' => null];
     }
 
     public function removeDebt($index)

@@ -16,14 +16,38 @@ class GoodsReceiptForm extends Component
 
     public $purchaseOrders = [];
     public $products = [];
+    
+    public $po_id; // For query string
+    
+    protected $queryString = ['po_id'];
 
     public function mount()
     {
+        \Log::info('GoodsReceiptForm mount called with po_id: ' . $this->po_id);
+        
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
         $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'unit_id')->get();
         
-        $this->addItem(); // Start with 1 empty item
+        if ($this->po_id) {
+            \Log::info('Processing PO ID: ' . $this->po_id);
+            $this->purchase_order_id = $this->po_id;
+            
+            // Auto-fill info from PO
+            $po = \App\Models\PurchaseOrder::with('supplier')->find($this->po_id);
+            if ($po) {
+                \Log::info('PO Found: ' . $po->po_number);
+                $this->delivery_note_number = 'SJ-' . $po->po_number;
+                $this->notes = 'Penerimaan dari PO: ' . $po->po_number . ' - ' . ($po->supplier->name ?? '');
+            } else {
+                \Log::warning('PO not found for ID: ' . $this->po_id);
+            }
+            
+            $this->updatedPurchaseOrderId($this->po_id);
+        } else {
+            \Log::info('No PO ID provided, adding empty item');
+            $this->addItem(); // Only add empty item if no PO selected
+        }
     }
 
     public function updatedPurchaseOrderId($value)
@@ -48,21 +72,25 @@ class GoodsReceiptForm extends Component
                     $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
                     $remainingBase = $totalOrderedBase - $totalReceivedBase;
 
-                    // Convert remaining base back to PO Unit
+                     // Convert remaining base back to PO Unit
                     $poItemFactor = $poItem->conversion_factor ?? 1;
                     
                     // Use tolerance for float comparison
                     if ($remainingBase > 0.001) {
                          $remainingQty = $remainingBase / $poItemFactor;
+                         
+                         $infoLabel = ($totalReceivedBase > 0) ? 'Sisa Order: ' : 'Total Order: ';
+
                          $this->items[] = [
                             'product_id' => $poItem->product_id,
                             'product_name' => $poItem->product->name ?? '-',
                             'batch_no' => $this->generateNextBatchNo(),
                             'expired_date' => '',
-                            'qty_received' => $remainingQty, 
+                            'qty_received' => (float)$remainingQty, 
                             'buy_price' => $poItem->unit_price,
                             'unit_id' => $poItem->unit_id,
                             'conversion_factor' => $poItem->conversion_factor,
+                            'po_info' => $infoLabel . (float)$remainingQty . ' ' . ($poItem->unit->name ?? 'Unit'),
                         ];
                         $hasItems = true;
                     }

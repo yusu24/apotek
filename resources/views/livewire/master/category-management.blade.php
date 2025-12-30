@@ -6,14 +6,14 @@
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="mb-4 flex flex-col md:flex-row gap-4">
+        <div class="mb-4 flex flex-row gap-4">
             <button wire:click="openModal"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit">
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Tambah Kategori
+                <span class="hidden sm:inline">Tambah Kategori</span>
             </button>
             <input type="text" wire:model.live="search" placeholder="Cari kategori..." 
-                class="w-full md:w-1/3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div class="overflow-x-auto">

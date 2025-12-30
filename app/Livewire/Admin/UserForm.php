@@ -43,8 +43,9 @@ class UserForm extends Component
         'manage settings' => false,
         'manage users' => false,
         'view activity logs' => false,
-        'view guide' => false,
         'manage suppliers' => false,
+        'manage pos settings' => false,
+        'manage opening balances' => false,
     ];
 
     public function mount($id = null)
@@ -122,12 +123,17 @@ class UserForm extends Component
         $user->syncRoles([$this->role_name]);
 
         // Manage Direct Permissions
-        foreach ($this->menu_permissions as $perm => $enabled) {
-            if ($enabled) {
-                $user->givePermissionTo($perm);
-            } else {
-                $user->revokePermissionTo($perm);
+        if ($this->role_name !== 'super-admin') {
+            foreach ($this->menu_permissions as $perm => $enabled) {
+                if ($enabled) {
+                    $user->givePermissionTo($perm);
+                } else {
+                    $user->revokePermissionTo($perm);
+                }
             }
+        } else {
+            // Clear direct permissions for super-admin to keep it clean
+            $user->syncPermissions([]);
         }
 
         session()->flash('message', 'User berhasil disimpan.');

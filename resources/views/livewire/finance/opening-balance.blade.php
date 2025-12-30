@@ -21,7 +21,7 @@
     @endif
 
     <!-- Summary Analysis Cards -->
-    <div class="grid grid-cols-4 gap-6 mb-8" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Aset</p>
             <p class="text-2xl font-black text-gray-800">Rp {{ number_format($summary['total_assets'], 0, ',', '.') }}</p>
@@ -68,18 +68,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Awal Kas (Tunai)</label>
-                            <div class="relative group">
+                            <div class="relative group" x-data="money($wire.entangle('cash_amount').live)">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
-                                <input type="number" wire:model.live="cash_amount" step="0.01"
+                                <input type="text" x-bind="input" placeholder="0"
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3">
                             </div>
                             @error('cash_amount') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Awal Bank</label>
-                            <div class="relative group">
+                            <div class="relative group" x-data="money($wire.entangle('bank_amount').live)">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
-                                <input type="number" wire:model.live="bank_amount" step="0.01"
+                                <input type="text" x-bind="input" placeholder="0"
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3">
                             </div>
                             @error('bank_amount') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -103,7 +103,7 @@
                     
                     <div class="space-y-4">
                         @foreach($assets as $index => $asset)
-                            <div class="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 items-end">
+                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 items-end">
                                 <div class="md:col-span-2">
                                     <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Nama Aset (Contoh: Peralatan Toko, Etalase)</label>
                                     <input type="text" wire:model.live="assets.{{ $index }}.asset_name" 
@@ -111,8 +111,10 @@
                                 </div>
                                 <div>
                                     <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Nilai Aset (Rp)</label>
-                                    <input type="number" wire:model.live="assets.{{ $index }}.amount" step="0.01"
+                                    <div x-data="money($wire.entangle('assets.{{ $index }}.amount').live)">
+                                    <input type="text" x-bind="input" placeholder="0"
                                         class="w-full rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold">
+                                    </div>
                                 </div>
                                 <div class="flex gap-2">
                                     <div class="flex-1">
@@ -146,7 +148,7 @@
                     
                     <div class="space-y-4">
                         @foreach($debts as $index => $debt)
-                            <div class="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 items-end">
+                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 items-end">
                                 <div class="md:col-span-1">
                                     <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Jenis Utang</label>
                                     <select wire:model.live="debts.{{ $index }}.debt_type" 
@@ -164,8 +166,10 @@
                                 <div class="flex gap-2">
                                     <div class="flex-1">
                                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Nominal (Rp)</label>
-                                        <input type="number" wire:model.live="debts.{{ $index }}.amount" step="0.01"
+                                        <div x-data="money($wire.entangle('debts.{{ $index }}.amount').live)">
+                                        <input type="text" x-bind="input" placeholder="0"
                                             class="w-full rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold">
+                                        </div>
                                     </div>
                                     <button type="button" wire:click="removeDebt({{ $index }})" 
                                         class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition mb-1">
@@ -185,9 +189,9 @@
                     </h3>
                     <div class="max-w-md">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Modal Awal Pemilik</label>
-                        <div class="relative group">
+                        <div class="relative group" x-data="money($wire.entangle('capital_amount').live)">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-purple-500 transition-colors">Rp</span>
-                            <input type="number" wire:model.live="capital_amount" step="0.01"
+                            <input type="text" x-bind="input" placeholder="0"
                                 class="w-full pl-12 rounded-lg border-gray-200 focus:ring-purple-500 focus:border-purple-500 transition-all font-bold text-xl py-3 border-2 border-purple-100 bg-purple-50/10">
                         </div>
                         <p class="text-[10px] text-gray-500 mt-2 italic font-medium">Saldo ini akan dicatat sebagai Modal Awal pada sisi Pasiva.</p>

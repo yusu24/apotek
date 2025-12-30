@@ -1,28 +1,28 @@
-<div class="p-6">
+<div class="p-4 sm:p-6">
     {{-- Header --}}
-    <div class="flex justify-between items-start mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">
                 Laporan Arus Kas
             </h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Aliran Kas Masuk & Keluar • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
-        <div class="flex items-center gap-3">
-            <button wire:click="setThisMonth" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
+            <button wire:click="setThisMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
                 Bulan Ini
             </button>
-            <button wire:click="setLastMonth" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition">
+            <button wire:click="setLastMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
                 Bulan Lalu
             </button>
-            <button wire:click="setThisYear" class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition">
+            <button wire:click="setThisYear" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
                 Tahun Ini
             </button>
         </div>
     </div>
 
     {{-- Period Filter --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 items-end">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[10px]">Mulai Tanggal</label>
                 <input type="date" wire:model="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
@@ -32,9 +32,9 @@
                 <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
             <div>
-                <button wire:click="generateReport" class="w-full px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-black font-bold transition shadow-lg flex items-center justify-center gap-2">
+                <button wire:click="generateReport" class="w-full px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-black font-bold transition shadow-lg flex items-center justify-center gap-2 text-sm h-[42px]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    Tampilkan Laporan
+                    <span>Tampilkan Laporan</span>
                 </button>
             </div>
         </div>
@@ -191,10 +191,10 @@
             @endif
 
             {{-- NET INCOME --}}
-            <div class="bg-gradient-to-r from-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-50 to-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-100 p-6 rounded-lg border-2 border-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-300">
-                <div class="flex justify-between items-center">
-                    <span class="text-2xl font-bold text-gray-900">{{ $reportData['net_income'] >= 0 ? 'ARUS KAS BERSIH (SURPLUS)' : 'ARUS KAS BERSIH (DEFISIT)' }}</span>
-                    <span class="text-3xl font-bold text-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-700">
+            <div class="bg-gradient-to-r from-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-50 to-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-100 p-4 sm:p-6 rounded-lg border-2 border-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-300">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <span class="text-xl sm:text-2xl font-bold text-gray-900 text-center sm:text-left">{{ $reportData['net_income'] >= 0 ? 'ARUS KAS BERSIH (SURPLUS)' : 'ARUS KAS BERSIH (DEFISIT)' }}</span>
+                    <span class="text-2xl sm:text-3xl font-bold text-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-700">
                         Rp {{ number_format(abs($reportData['net_income']), 0, ',', '.') }}
                     </span>
                 </div>

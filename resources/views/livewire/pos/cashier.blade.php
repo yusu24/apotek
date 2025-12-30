@@ -1,14 +1,18 @@
-<div class="h-full bg-gray-50 font-sans">
-    <!-- Notification -->
-    <div x-data="{ 
+<div class="h-full bg-gray-50 font-sans" 
+     x-data="{ 
         showAlert: false, 
+        mobileCartOpen: false,
         alertMsg: '',
         showAlertFn(msg) {
             this.alertMsg = msg;
             this.showAlert = true;
             setTimeout(() => this.showAlert = false, 3000);
         }
-     }" @cart-error.window="showAlertFn($event.detail.message)">
+     }" 
+     @cart-error.window="showAlertFn($event.detail.message)"
+     @cart-updated.window="showAlertFn($event.detail.message)">
+    <!-- Notification -->
+    <div>
         
         <div x-show="showAlert" 
              x-transition:enter="transition ease-out duration-300"
@@ -76,8 +80,8 @@
         <!-- MAIN POS CONTAINER (Responsive: Stack on mobile, Side-by-side on desktop) -->
         <div class="absolute inset-x-0 bottom-0 top-16 xl:top-0 flex flex-col md:flex-row gap-4 p-4 overflow-hidden">
             
-            <!-- LEFT/TOP: Keranjang/Order (Fixed on desktop, scrollable on mobile) -->
-            <div class="w-full md:w-[350px] lg:w-[380px] md:shrink-0 bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200 z-10 h-1/2 md:h-full">
+            <!-- LEFT/TOP: Keranjang/Order (Fixed on desktop, Hidden on mobile) -->
+            <div class="hidden md:flex md:w-[350px] lg:w-[380px] md:shrink-0 bg-white rounded-2xl shadow-xl flex-col overflow-hidden border border-gray-200 z-10 h-full">
                 
                 <!-- Cart Header -->
                 <div class="p-4 md:p-6 border-b border-gray-100">
@@ -169,18 +173,18 @@
                                 <td class="px-2 py-3 text-center align-top">
                                     <div class="flex items-center justify-center gap-1">
                                         <!-- Discount Toggle -->
-                                        <button @click="openDisc = !openDisc; $nextTick(() => $refs.discInput_{{ $id }}.focus())" 
-                                                class="p-1.5 rounded-lg transition"
-                                                :class="openDisc || {{ ($item['discount_percent'] ?? 0) > 0 ? 'true' : 'false' }} ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
-                                                title="Diskon (%)">
+                                         <button @click="openDisc = !openDisc; $nextTick(() => $refs.discInput_{{ $id }}.focus())" 
+                                                 class="p-1.5 rounded-lg transition"
+                                                 :class="openDisc || {{ ($item['discount_percent'] ?? 0) > 0 ? 'true' : 'false' }} ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                 title="Diskon (%)">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
                                         </button>
 
                                         <!-- Note Toggle -->
-                                        <button @click="openNote = !openNote; $nextTick(() => $refs.noteInput_{{ $id }}.focus())" 
-                                                class="p-1.5 rounded-lg transition"
-                                                :class="openNote || '{{ $item['notes'] }}'.length > 0 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
-                                                title="Catatan">
+                                         <button @click="openNote = !openNote; $nextTick(() => $refs.noteInput_{{ $id }}.focus())" 
+                                                 class="p-1.5 rounded-lg transition"
+                                                 :class="openNote || '{{ addslashes($item['notes']) }}'.length > 0 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                 title="Catatan">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </button>
 
@@ -270,16 +274,17 @@
                 </div>
             </div>
 
-            <!-- RIGHT/BOTTOM: Katalog Produk (Flexible, scrollable on mobile) -->
-            <div class="flex-1 min-w-0 bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden border border-gray-100 h-1/2 md:h-full">
+            <!-- RIGHT/BOTTOM: Katalog Produk (Full width on mobile, Flexible on desktop) -->
+            <div class="flex-1 min-w-0 bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden border border-gray-100 h-full md:h-full pb-20 md:pb-0">
                 
                 <!-- Search & Filter Header -->
                 <div class="p-3 md:p-6 border-b border-gray-100 space-y-3 md:space-y-4">
-                    <!-- Search Bar -->
-                    <!-- Search Bar with Dropdown -->
-                    <div class="relative" 
-                            x-data="{ 
-                            open: false, 
+                    <!-- Search Bar & Pending Button -->
+                    <div class="flex gap-2 items-start">
+                         <!-- Search Bar -->
+                        <div class="relative flex-1" 
+                                x-data="{ 
+                                open: false, 
                             highlightedIndex: 0,
                             search: @entangle('search').live,
                             selectItem(id) {
@@ -344,6 +349,12 @@
                                 </div>
                             @endforelse
                         </div>
+                    </div>
+
+                    <!-- Pending Orders Button -->
+                    <button wire:click="loadPendingOrders" class="shrink-0 p-3 bg-white border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all h-[50px] w-[50px] flex items-center justify-center" title="Daftar Transaksi Pending">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
                     </div>
 
                     <!-- Category Filter -->
@@ -414,13 +425,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
 
     <!-- PAYMENT MODAL -->
     @if($showPaymentModal)
-    <div class="fixed inset-0 z-50 overflow-y-auto">
+    <div class="fixed inset-0 z-[60] overflow-y-auto">
         <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
         <div class="flex min-h-full items-center justify-center p-4">
             <form wire:submit.prevent="processPayment" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
@@ -468,9 +476,9 @@
                     <div class="space-y-4">
                         <div class="bg-gray-50 p-4 rounded-xl">
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Uang Tunai</label>
-                            <div class="flex items-center">
+                            <div class="flex items-center" x-data="money($wire.entangle('cash_amount').live)">
                                 <span class="text-2xl font-bold text-gray-400 mr-2">Rp</span>
-                                <input type="number" wire:model.live="cash_amount" 
+                                <input type="text" x-bind="input" 
                                     class="flex-1 text-3xl font-bold border-0 bg-transparent p-0 focus:ring-0" 
                                     placeholder="0" autofocus>
                             </div>
@@ -554,6 +562,286 @@
     </div>
     @endif
 
+    <!-- MOBILE: Sticky Bottom Bar -->
+    <div class="md:hidden fixed bottom-0 inset-x-0 bg-gray-900 text-white p-4 pb-6 z-40 shadow-2xl flex justify-between items-center rounded-t-2xl"
+         x-show="!mobileCartOpen">
+        <div>
+            <p class="text-xs text-gray-400 font-medium">{{ count($cart) }} Items di Keranjang</p>
+            <p class="text-lg font-bold">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
+        </div>
+        <button @click="mobileCartOpen = true" 
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-lg flex items-center gap-2 transform active:scale-95 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            Lihat Keranjang
+        </button>
+    </div>
+
+    <!-- MOBILE: Full Screen Cart Modal -->
+    <div x-show="mobileCartOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="translate-y-full"
+         x-transition:enter-end="translate-y-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="translate-y-0"
+         x-transition:leave-end="translate-y-full"
+         style="display: none;"
+         class="md:hidden fixed inset-0 z-50 bg-white flex flex-col h-[100dvh]">
+        
+        <!-- Mobile Cart Header -->
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-white shadow-sm shrink-0">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900">Keranjang Belanja</h2>
+                <p class="text-xs text-gray-500">{{ count($cart) }} Item dipilih</p>
+            </div>
+            <button @click="mobileCartOpen = false" class="p-2 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Cart Items (Scrollable) -->
+        <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-3">
+             @forelse($cart as $id => $item)
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative">
+                     <div class="flex justify-between items-start mb-2">
+                        <div>
+                             <h4 class="font-bold text-gray-800 line-clamp-1">{{ $item['name'] }}</h4>
+                             <p class="text-xs text-gray-500">
+                                 Rp {{ number_format($item['price'], 0, ',', '.') }} x {{ $item['qty'] }}
+                             </p>
+                        </div>
+                        <div class="text-right">
+                             <p class="font-bold text-blue-600">
+                                 Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}
+                             </p>
+                             @if(($item['discount_percent'] ?? 0) > 0)
+                                 <span class="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded">
+                                     Disc {{ $item['discount_percent'] }}%
+                                 </span>
+                             @endif
+                        </div>
+                     </div>
+                     
+                     <!-- Controls -->
+                     <div class="flex items-center justify-between mt-3 pt-3 border-t border-dashed border-gray-200">
+                         <!-- Qty Control -->
+                         <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                             <button wire:click="updateQty({{ $id }}, {{ $item['qty'] - 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600 disabled:opacity-50" {{ $item['qty'] <= 1 ? 'disabled' : '' }}>
+                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                             </button>
+                             <input type="number" 
+                                    value="{{ $item['qty'] }}"
+                                    class="w-8 text-center bg-transparent border-none text-sm font-bold p-0 focus:ring-0" 
+                                    readonly>
+                             <button wire:click="updateQty({{ $id }}, {{ $item['qty'] + 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600">
+                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                             </button>
+                         </div>
+
+                         <!-- Actions -->
+                         <div class="flex gap-2">
+                            <!-- Mobile Note Toggle -->
+                            <div x-data="{ openMobNote: false }" class="relative">
+                                <button @click="openMobNote = !openMobNote" 
+                                        class="p-2 rounded-lg bg-blue-50 text-blue-600 transition"
+                                        :class="'{{ strlen($item['notes']) > 0 ? 'bg-blue-100 ring-2 ring-blue-400' : '' }}'">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </button>
+                                <div x-show="openMobNote" @click.outside="openMobNote = false" class="absolute bottom-full right-0 mb-2 w-64 bg-white p-3 rounded-xl shadow-xl border border-gray-100 z-10">
+                                    <label class="text-xs font-bold mb-1 block">Catatan Item:</label>
+                                    <input type="text" wire:model.blur="cart.{{ $id }}.notes" placeholder="Contoh: Bungkus kado..." class="w-full text-sm border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+
+                            <!-- Mobile Discount Toggle -->
+                            <div x-data="{ openMobDisc: false }" class="relative">
+                                <button @click="openMobDisc = !openMobDisc" 
+                                        class="p-2 rounded-lg bg-amber-50 text-amber-600 transition"
+                                        :class="'{{ ($item['discount_percent'] ?? 0) > 0 ? 'bg-amber-100 ring-2 ring-amber-400' : '' }}'">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
+                                </button>
+                                <div x-show="openMobDisc" @click.outside="openMobDisc = false" class="absolute bottom-full right-0 mb-2 w-48 bg-white p-3 rounded-xl shadow-xl border border-gray-100 z-10">
+                                    <label class="text-xs font-bold mb-1 block">Diskon Item (%):</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" 
+                                               wire:change="updateItemDiscount({{ $id }}, $event.target.value)"
+                                               value="{{ $item['discount_percent'] ?? '' }}"
+                                               placeholder="0" 
+                                               class="w-full text-sm border-gray-300 rounded-lg text-center font-bold">
+                                        <span class="text-gray-500 font-bold">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <button wire:click="removeFromCart({{ $id }})" class="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100">
+                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                             </button>
+                         </div>
+                     </div>
+                </div>
+             @empty
+                <div class="flex flex-col items-center justify-center h-64 text-gray-400">
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    </div>
+                    <p class="font-bold">Keranjang Kosong</p>
+                    <button @click="mobileCartOpen = false" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Mulai Belanja</button>
+                </div>
+             @endforelse
+        </div>
+
+        <!-- Mobile Cart Footer (Calculations & Checkout) -->
+        <div class="bg-white border-t border-gray-200 p-4 space-y-3 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+             <div class="flex justify-between text-sm">
+                 <span class="text-gray-600">Subtotal</span>
+                 <span class="font-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+             </div>
+             @if($global_discount > 0)
+             <div class="flex justify-between text-sm text-red-600">
+                 <span>Diskon Global</span>
+                 <span>- Rp {{ number_format($global_discount, 0, ',', '.') }}</span>
+             </div>
+             @endif
+             <div class="flex justify-between items-center pt-2">
+                 <span class="font-bold text-gray-800 text-lg">Total Bayar</span>
+                 <span class="font-bold text-blue-600 text-xl">Rp {{ number_format($grand_total, 0, ',', '.') }}</span>
+             </div>
+             
+             <div class="grid grid-cols-2 gap-3 pt-2">
+                 <button wire:click="saveOrder" class="w-full py-3 bg-gray-800 text-white rounded-xl font-bold">Simpan</button>
+                 <button wire:click="openPayment" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold {{ count($cart) == 0 ? 'opacity-50' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>
+                     Bayar Sekarang
+                 </button>
+             </div>
+        </div>
+    </div>
+
+    <!-- PENDING ORDERS MODAL -->
+    @if($showPendingModal)
+    <div class="fixed inset-0 z-[100] overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[99]" wire:click="$set('showPendingModal', false)"></div>
+
+             <div class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-4xl sm:w-full z-[101]">
+                <!-- Header -->
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 flex justify-between items-center border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                        Daftar Transaksi Tertunda (Pending)
+                    </h3>
+                    <button wire:click="$set('showPendingModal', false)" class="text-gray-400 hover:text-gray-500">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="px-4 py-4 sm:px-6">
+                    @if(count($pendingOrders) > 0)
+                    <!-- Desktop Table View (hidden on mobile) -->
+                    <div class="hidden sm:block overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Invoice</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($pendingOrders as $order)
+                                <tr wire:key="pending-desktop-{{ $order->id }}">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {{ $order->invoice_no }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $order->created_at->format('d/m/Y H:i') }}
+                                        <br>
+                                        <span class="text-xs">{{ $order->created_at->diffForHumans() }}</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
+                                        Rp {{ number_format($order->grand_total, 0, ',', '.') }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                                        {{ $order->notes ?: '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-2">
+                                        <button wire:click="restorePendingOrder({{ $order->id }})" 
+                                                class="p-2 text-blue-600 hover:text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
+                                                title="Lanjutkan">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        </button>
+                                        
+                                        <button wire:click="deletePendingOrder({{ $order->id }})" 
+                                                wire:confirm="Hapus transaksi tertunda ini? Stok akan dikembalikan."
+                                                class="p-2 text-red-600 hover:text-red-900 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                                                title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile Card View (visible only on mobile) -->
+                    <div class="sm:hidden space-y-3">
+                        @foreach($pendingOrders as $order)
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm" wire:key="pending-mobile-{{ $order->id }}">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">No Invoice</p>
+                                    <p class="font-bold text-gray-900">{{ $order->invoice_no }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-gray-500 mb-1">Total</p>
+                                    <p class="font-bold text-blue-600">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 pb-3 border-b border-gray-100">
+                                <p class="text-xs text-gray-500 mb-1">Tanggal</p>
+                                <p class="text-sm text-gray-700">{{ $order->created_at->format('d/m/Y H:i') }}</p>
+                                <p class="text-xs text-gray-500">{{ $order->created_at->diffForHumans() }}</p>
+                            </div>
+
+                            @if($order->notes)
+                            <div class="mb-3">
+                                <p class="text-xs text-gray-500 mb-1">Catatan</p>
+                                <p class="text-sm text-gray-700">{{ $order->notes }}</p>
+                            </div>
+                            @endif
+
+                            <div class="flex gap-2 pt-2">
+                                <button wire:click="restorePendingOrder({{ $order->id }})" 
+                                        class="flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Lanjutkan
+                                </button>
+                                
+                                <button wire:click="deletePendingOrder({{ $order->id }})"
+                                        wire:confirm="Hapus transaksi tertunda ini? Stok akan dikembalikan."
+                                        class="flex-1 py-2.5 px-4 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 rounded-lg font-medium text-sm transition flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-12">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">Tidak ada transaksi tertunda</h3>
+                        <p class="mt-1 text-sm text-gray-500">Simpan transaksi dengan menekan tombol Simpan saat checkout.</p>
+                    </div>
+                    @endif
+                </div>
+             </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Keyboard Shortcuts -->
     <script>
         document.addEventListener('keydown', function(event) {
@@ -578,4 +866,6 @@
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
+        </div>
+    </div>
 </div>

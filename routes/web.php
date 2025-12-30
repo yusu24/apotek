@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Procurement
     Route::get('/procurement/purchase-orders', App\Livewire\Procurement\PurchaseOrderIndex::class)->name('procurement.purchase-orders.index');
     Route::get('/procurement/purchase-orders/create', App\Livewire\Procurement\PurchaseOrderForm::class)->name('procurement.purchase-orders.create');
+    Route::get('/procurement/purchase-orders/{id}/view', App\Livewire\Procurement\PurchaseOrderForm::class)->name('procurement.purchase-orders.view');
     Route::get('/procurement/purchase-orders/{id}/edit', App\Livewire\Procurement\PurchaseOrderForm::class)->name('procurement.purchase-orders.edit');
     Route::get('/procurement/purchase-orders/{id}/print', App\Livewire\Procurement\PurchaseOrderPrint::class)->name('procurement.purchase-orders.print');
     
@@ -78,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Settings (Super Admin only)
     Route::get('/settings/store', App\Livewire\Settings\StoreSettings::class)->name('settings.store');
+    Route::get('/settings/pos', App\Livewire\Settings\PosSettings::class)->name('settings.pos');
 
     Route::get('/admin/users', App\Livewire\Admin\UserManagement::class)->name('admin.users.index');
     Route::get('/admin/users/create', App\Livewire\Admin\UserForm::class)->name('admin.users.create');

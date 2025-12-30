@@ -16,6 +16,8 @@ class PurchaseOrderForm extends Component
     public $suppliers = [];
     public $products = [];
 
+    public $isReadOnly = false;
+
     // Modal Properties
     public $showModal = false;
     public $editingItemIndex = null;
@@ -24,7 +26,7 @@ class PurchaseOrderForm extends Component
     public $modalProductCode = '';
     public $modalQty = 1;
     public $modalUnit = '';
-    public $modalPrice = 0;
+    public $modalPrice = null;
     public $modalSubtotal = 0;
     public $modalNotes = '';
     public $modalPpn = false;
@@ -57,6 +59,10 @@ class PurchaseOrderForm extends Component
                     'unit_id' => $item->unit_id,
                     'conversion_factor' => $item->conversion_factor,
                 ];
+            }
+            
+            if ($this->status !== 'draft') {
+                $this->isReadOnly = true;
             }
         } else {
             $this->date = date('Y-m-d');
@@ -109,7 +115,7 @@ class PurchaseOrderForm extends Component
         $this->modalProductCode = '';
         $this->modalQty = 1;
         $this->modalUnit = '';
-        $this->modalPrice = 0;
+        $this->modalPrice = null;
         $this->modalSubtotal = 0;
         $this->modalNotes = '';
         $this->modalPpn = false;
@@ -245,6 +251,15 @@ class PurchaseOrderForm extends Component
     {
         unset($this->items[$index]);
         $this->items = array_values($this->items);
+    }
+
+    public function markAsDone()
+    {
+        if ($this->purchaseOrder && $this->purchaseOrder->status === 'partial') {
+            $this->purchaseOrder->update(['status' => 'received']);
+            session()->flash('message', 'PO status berhasil diubah menjadi Diterima (Selesai).');
+            $this->redirect(route('procurement.purchase-orders.index'), navigate: true);
+        }
     }
 
     public function save()

@@ -123,6 +123,9 @@
                                                 @if($selectedProduct && $selectedProduct->barcode)
                                                     <div class="text-[10px] text-gray-400 font-semibold">{{ $selectedProduct->barcode }}</div>
                                                 @endif
+                                                @if(!empty($item['po_info']))
+                                                    <div class="text-[10px] text-blue-600 font-bold bg-blue-50 inline-block px-1 rounded mt-1">{{ $item['po_info'] }}</div>
+                                                @endif
                                                 <input type="hidden" wire:model="items.{{ $index }}.product_id">
                                             @else
                                                 <select wire:model="items.{{ $index }}.product_id" 

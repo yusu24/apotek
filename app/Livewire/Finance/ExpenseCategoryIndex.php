@@ -13,9 +13,11 @@ class ExpenseCategoryIndex extends Component
 {
     use WithPagination;
 
-    public $showModal = false;
+    public $isOpen = false;
+    public $search = '';
     public $categoryId;
     public $name;
+    public $description;
     public $isEditMode = false;
 
     public function mount()
@@ -25,9 +27,17 @@ class ExpenseCategoryIndex extends Component
         }
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $categories = ExpenseCategory::orderBy('name')
+        $categories = ExpenseCategory::when($this->search, function($q) {
+                $q->where('name', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('name')
             ->paginate(10);
 
         return view('livewire.finance.expense-category-index', [
@@ -37,8 +47,8 @@ class ExpenseCategoryIndex extends Component
 
     public function create()
     {
-        $this->reset(['name', 'categoryId', 'isEditMode']);
-        $this->showModal = true;
+        $this->reset(['name', 'description', 'categoryId', 'isEditMode']);
+        $this->isOpen = true;
     }
 
     public function edit($id)
@@ -46,8 +56,9 @@ class ExpenseCategoryIndex extends Component
         $category = ExpenseCategory::findOrFail($id);
         $this->categoryId = $category->id;
         $this->name = $category->name;
+        $this->description = $category->description ?? '';
         $this->isEditMode = true;
-        $this->showModal = true;
+        $this->isOpen = true;
     }
 
     public function save()
@@ -62,7 +73,10 @@ class ExpenseCategoryIndex extends Component
         if ($this->isEditMode) {
             $category = ExpenseCategory::findOrFail($this->categoryId);
             $oldData = $category->toArray();
-            $category->update(['name' => $this->name]);
+            $category->update([
+                'name' => $this->name,
+                'description' => $this->description
+            ]);
             
             ActivityLog::log([
                 'action' => 'updated',
@@ -76,6 +90,7 @@ class ExpenseCategoryIndex extends Component
         } else {
             $category = ExpenseCategory::create([
                 'name' => $this->name,
+                'description' => $this->description,
                 'is_active' => true
             ]);
 
@@ -89,8 +104,8 @@ class ExpenseCategoryIndex extends Component
             session()->flash('message', 'Kategori berhasil ditambahkan.');
         }
 
-        $this->showModal = false;
-        $this->reset(['name', 'categoryId', 'isEditMode']);
+        $this->isOpen = false;
+        $this->reset(['name', 'description', 'categoryId', 'isEditMode']);
     }
 
     public function delete($id)
@@ -115,7 +130,7 @@ class ExpenseCategoryIndex extends Component
 
     public function closeModal()
     {
-        $this->showModal = false;
-        $this->reset(['name', 'categoryId', 'isEditMode']);
+        $this->isOpen = false;
+        $this->reset(['name', 'description', 'categoryId', 'isEditMode']);
     }
 }

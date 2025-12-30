@@ -17,15 +17,15 @@
     @endif
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-        <div class="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex flex-col md:flex-row gap-4 items-center">
-            <button wire:click="openModal" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit">
+        <div class="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex flex-row gap-4 items-center">
+            <button wire:click="openModal" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Tambah Pemasok
+                <span class="hidden sm:inline">Tambah Pemasok</span>
             </button>
 
-            <div class="w-full md:w-1/3 relative">
+            <div class="flex-1 md:flex-none md:w-1/3 relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
@@ -42,7 +42,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kontak</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Telepon</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Alamat</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -60,8 +60,8 @@
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-600 dark:text-gray-300 max-w-xs truncate">{{ $supplier->address ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                                <div class="flex justify-center items-center gap-3">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                                <div class="flex justify-end items-center gap-3">
                                     <button wire:click="edit({{ $supplier->id }})" class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </button>
@@ -109,20 +109,20 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Kontak Person</label>
-                                <input type="text" wire:model="contact_person" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Nama PIC">
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Kontak Person <span class="text-red-500">*</span></label>
+                                <input type="text" wire:model="contact_person" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Nama PIC" required>
                                 @error('contact_person') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Nomor Telepon</label>
-                                <input type="text" wire:model="phone" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="0812xxxxxx">
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Nomor Telepon <span class="text-red-500">*</span></label>
+                                <input type="text" wire:model="phone" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="0812xxxxxx" required>
                                 @error('phone') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Alamat</label>
-                                <textarea wire:model="address" rows="3" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat lengkap pemasok"></textarea>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Alamat <span class="text-red-500">*</span></label>
+                                <textarea wire:model="address" rows="3" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat lengkap pemasok" required></textarea>
                                 @error('address') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                         </div>

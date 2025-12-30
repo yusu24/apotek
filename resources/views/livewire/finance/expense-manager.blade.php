@@ -8,9 +8,9 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div class="flex gap-2">
-                <button wire:click="create" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center gap-2 transition duration-200 text-sm">
+                <button wire:click="create" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Tambah Pengeluaran
+                    <span class="hidden sm:inline">Tambah Pengeluaran</span>
                 </button>
                 
             </div>
@@ -88,7 +88,9 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Jumlah (Rp)</label>
-                                        <input type="number" wire:model="amount" placeholder="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <div x-data="money($wire.entangle('amount'))">
+                                            <input type="text" x-bind="input" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="0">
+                                        </div>
                                         @error('amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>

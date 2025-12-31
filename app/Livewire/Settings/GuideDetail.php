@@ -24,277 +24,252 @@ class GuideDetail extends Component
         $data = [
             'dashboard' => [
                 'title' => 'Dashboard & Statistik',
-                'image' => 'full_dashboard.png',
-                'description' => 'Pusat kendali visual real-time untuk memantau performa apotek. Dashboard menyajikan data agregat transaksi, tren penjualan harian, dan ringkasan stok secara instan.',
+                'image' => 'guide_dashboard.png',
+                'description' => 'Dashboard adalah pusat informasi visual yang memberikan ringkasan performa apotek secara real-time. Di sini Anda dapat memantau kesehatan bisnis melalui angka omset, jumlah transaksi, dan peringatan stok secara instan.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Pantau widget **Stok Kritis** setiap pagi.',
-                    'Gunakan **Filter Tanggal** untuk melihat tren berkala.',
-                    'Periksa **Produk Terlaris** untuk strategi stok.'
+                    'Pantau **Widget Pendapatan** untuk melihat tren penjualan harian.',
+                    'Periksa **Stok Kritis** setiap pagi untuk merencanakan pengiriman barang.',
+                    'Gunakan **Filter Tanggal** untuk membandingkan performa bulanan.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Ringkasan Omset', 'func' => 'Menampilkan total pendapatan kotor hari ini dibandingkan dengan kemarin (persentase kenaikan/penurunan).'],
-                    ['name' => 'Grafik Penjualan', 'func' => 'Visualisasi tren penjualan dalam format grafik garis untuk melihat pola jam/hari sibuk.'],
-                    ['name' => 'Stok Kritis', 'func' => 'Tabel peringatan dini untuk barang yang jumlahnya di bawah batas minimum.'],
-                    ['name' => 'Produk Terlaris', 'func' => 'Daftar top 5 produk yang paling banyak terjual dalam periode terpilih.'],
-                    ['name' => 'Log Aktivitas', 'func' => 'Rekam jejak audit trail (siapa melakukan apa) untuk keamanan sistem.']
+                    ['name' => 'Ringkasan Omset', 'func' => 'Menampilkan grafik pendapatan kotor harian dan total omset dalam periode tertentu.'],
+                    ['name' => 'Stok Menipis', 'func' => 'Daftar produk yang sudah mencapai batas minimal stok dan perlu segera dipesan.'],
+                    ['name' => 'Produk Terlaris', 'func' => 'Informasi 5 produk dengan volume penjualan tertinggi untuk optimasi stok.'],
+                    ['name' => 'Aktivitas Terakhir', 'func' => 'Log audit yang mencatat transaksi atau perubahan data terbaru oleh staf.']
                 ],
                 'buttons' => [
-                    ['label' => 'Filter Tanggal', 'func' => 'Tombol di pojok kanan atas untuk mengubah rentang waktu data dashboard (Hari Ini, 7 Hari, 30 Hari, atau Custom).'],
-                    ['label' => 'Refresh Data', 'func' => 'Memuat ulang angka-angka di widget tanpa perlu refresh satu halaman penuh.'],
-                    ['label' => 'Export Widget', 'func' => 'Mengunduh data tabel spesifik (misal: Stok Kritis) ke dalam format Excel/PDF.'],
-                    ['label' => 'View All (Stok)', 'func' => 'Shortcut cepat untuk melompat ke halaman Inventori lengkap dengan filter stok menipis otomatis aktif.']
+                    ['label' => 'Filter Periode', 'func' => 'Tombol kalender di pojok kanan untuk memilih rentang waktu data (Hari ini, Bulan ini, atau Custom).'],
+                    ['label' => 'Detail Stok', 'func' => 'Klik pada widget stok menipis untuk langsung menuju halaman inventori dengan filter aktif.'],
+                    ['label' => 'Refresh', 'func' => 'Ikon putar untuk memperbarui data dashboard secara manual tanpa memuat ulang seluruh halaman.']
                 ],
                 'procedures' => [
-                    ['title' => 'Cek Performa Pagi', 'desc' => 'Buka Dashboard, lihat widget Omset. Jika ada penurunan drastis, periksa riwayat transaksi.'],
-                    ['title' => 'Order Barang Urgent', 'desc' => 'Klik "View All" pada widget Stok Kritis. Segera hubungi supplier untuk barang bertanda merah.'],
-                    ['title' => 'Audit User', 'desc' => 'Scroll ke bawah ke Log Aktivitas. Pastikan tidak ada transaksi mencurigakan di jam tutup toko.']
+                    ['title' => 'Memantau Penjualan Harian', 'desc' => 'Buka Dashboard, lihat grafik utama. Arahkan kursor ke titik grafik untuk melihat detail nominal transaksi pada jam tertentu.'],
+                    ['title' => 'Mengecek Stok yang Harus Dipesan', 'desc' => 'Scroll ke widget "Stok Menipis". Produk dengan warna merah menandakan stok kritis. Klik "Lihat Semua" untuk membuat PO.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Rentang Tanggal', 'description' => 'Filter data berdasarkan periode (Contoh: 01/12/2025 - 31/12/2025).', 'required' => false],
-                    ['name' => 'Kategori Dashboard', 'description' => 'Spesialisasi data pada grup produk tertentu.', 'required' => false]
+                    ['name' => 'Rentang Tanggal', 'description' => 'Pilihan tanggal awal dan akhir untuk memfilter seluruh data dashboard.', 'required' => false]
                 ]
             ],
             'master' => [
                 'title' => 'Manajemen Produk (Master)',
-                'image' => 'full_master.png',
-                'description' => 'Modul pusat pengelola katalog produk. Definisikan identitas obat, barcode, harga jual, dan skema konversi satuan di sini.',
+                'image' => 'guide_products.png',
+                'description' => 'Modul Master Data adalah jantung dari sistem ini. Di sini Anda mengelola database produk, kategori, satuan, hingga pemasok. Konsistensi data di modul ini sangat penting untuk akurasi laporan keuangan dan stok.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Barcode harus **unik** untuk setiap produk.',
-                    'Input **Satuan Terkecil** terlebih dahulu.',
-                    'Pastikan **Lokasi Rak** diisi agar mudah dicari.'
+                    'Pastikan **Barcode** unik dan sesuai dengan fisik produk.',
+                    'Gunakan **Kategori** yang konsisten untuk kemudahan pelaporan.',
+                    'Atur **Stok Minimal** agar sistem dapat memberi peringatan restock.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Katalog Obat', 'func' => 'Tabel utama berisi seluruh database produk aktif dan non-aktif.'],
-                    ['name' => 'Pemasok', 'func' => 'Manajemen data supplier/pemasok obat lengkap dengan kontak dan alamat.'],
-                    ['name' => 'Aturan Harga', 'func' => 'Setting harga beli (HPP), margin keuntungan, dan harga jual final.'],
-                    ['name' => 'Satuan & Konversi', 'func' => 'Konfigurasi multi-satuan (1 Box = 10 Strip = 100 Tablet).'],
-                    ['name' => 'Kategori', 'func' => 'Pengelompokan produk (Obat Bebas, Keras, Alkes) untuk kemudahan laporan.']
+                    ['name' => 'Daftar Produk', 'func' => 'Halaman utama untuk melihat, mencari, menambah, dan mengubah data obat/barang.'],
+                    ['name' => 'Kategori Produk', 'func' => 'Mengelompokkan produk berdasarkan jenis (misal: Obat Bebas, Obat Keras, Alat Kesehatan).'],
+                    ['name' => 'Satuan & Konversi', 'func' => 'Mengatur unit jual (Pcs, Box, Strip) dan hubungan antar satuan tersebut.'],
+                    ['name' => 'Manajemen Pemasok', 'func' => 'Daftar supplier atau PBF tempat apotek melakukan pengadaan barang.']
                 ],
                 'buttons' => [
-                    ['label' => '+ Tambah Produk', 'func' => 'Membuka formulir kosong untuk mendaftarkan SKU/Item baru ke database.'],
-                    ['label' => '+ Tambah Pemasok', 'func' => 'Mendaftarkan supplier baru agar bisa dipilih saat pembelian barang.'],
-                    ['label' => 'Sync Barcode', 'func' => 'Fitur untuk menghubungkan Scanner Barcode agar siap digunakan saat input.'],
-                    ['label' => 'Kelola Konversi', 'func' => 'Tombol aksi di baris produk untuk mengatur pecahan satuan (Box ke Pcs).'],
-                    ['label' => 'Import Excel', 'func' => 'Fitur upload massal untuk memasukkan ratusan data obat sekaligus dari file .xlsx.'],
-                    ['label' => 'Cetak Label', 'func' => 'Membuat PDF berisi Barcode dan Harga untuk ditempel di rak display toko.']
+                    ['label' => 'Tambah Produk', 'func' => 'Tombol biru di kanan atas untuk membuka form input produk baru.'],
+                    ['label' => 'Edit (Ikon Pensil)', 'func' => 'Mengubah informasi produk yang sudah ada (Nama, Harga, Kategori, dll).'],
+                    ['label' => 'Hapus (Ikon Sampah)', 'func' => 'Menghapus produk dari sistem. Catatan: Produk dengan riwayat transaksi tidak dapat dihapus.'],
+                    ['label' => 'Kelola Satuan', 'func' => 'Tombol di baris produk untuk mengatur konversi (Isi 1 Box berapa Pcs).'],
+                    ['label' => 'Cari (Search Bar)', 'func' => 'Mengetik nama produk atau scan barcode untuk menemukan item secara instan.'],
+                    ['label' => 'Filter Kategori', 'func' => 'Dropdown untuk menampilkan produk hanya pada kategori tertentu saja.']
                 ],
                 'procedures' => [
-                    ['title' => 'Input Obat Baru', 'desc' => 'Klik "+ Tambah Produk". Isi Nama, Kategori, dan Barcode. Simpan untuk lanjut ke harga.'],
-                    ['title' => 'Input Pemasok', 'desc' => 'Masuk menu Pemasok. Klik Tambah. Isi nama PT dan kontak sales. Simpan.'],
-                    ['title' => 'Hapus Produk', 'desc' => 'Klik tombol Hapus (Tong Sampah). Produk bisa dihapus JIKA tidak memiliki riwayat transaksi.'],
-                    ['title' => 'Atur Konversi', 'desc' => 'Buka tab Satuan. Masukkan Satuan Besar (Box) dan tentukan Isinya (Misal: 100 Tablet).'],
-                    ['title' => 'Update Harga Beli', 'desc' => 'Jika ada kenaikan, update di Master agar HPP dan margin tetap akurat di laporan.']
+                    ['title' => 'Menambah Produk Baru', 'desc' => '1. Klik "Tambah Produk".\n2. Isi Nama Obat, Kategori, dan Satuan Dasar.\n3. Masukkan Barcode (atau biarkan otomatis).\n4. Tentukan Stok Minimal dan Harga Jual.\n5. Klik Simpan.'],
+                    ['title' => 'Mengatur Konversi Satuan', 'desc' => '1. Cari produk di Katalog.\n2. Klik tombol "Atur Satuan".\n3. Tambah satuan baru (Misal: Box).\n4. Masukkan jumlah isi terhadap satuan terkecil (Misal: 100).\n5. Simpan.'],
+                    ['title' => 'Menambahkan Pemasok (Supplier)', 'desc' => '1. Masuk menu Pemasok.\n2. Klik "Tambah Pemasok".\n3. Isi Nama Perusahaan, No HP Sales, dan Alamat.\n4. Klik Simpan agar dapat dipilih di modul Pengadaan.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Nama Produk', 'description' => 'Nama merk/generik lengkap (Contoh: Amoxicillin 500mg).', 'required' => true],
-                    ['name' => 'Barcode / SKU', 'description' => 'Kode unik identifikasi produk. Scan barcode fisik di sini.', 'required' => false],
-                    ['name' => 'Kategori', 'description' => 'Grup obat (Bebas, Keras, Psikotropika).', 'required' => true],
-                    ['name' => 'Satuan Terkecil', 'description' => 'Unit dasar stok yang dijual eceran (Tablet, Pcs).', 'required' => true],
-                    ['name' => 'Harga Jual', 'description' => 'Nilai jual akhir per satuan terkecil ke pelanggan.', 'required' => true],
-                    ['name' => 'Stok Minimal', 'description' => 'Batas jumlah stok sebelum sistem memberikan peringatan restock.', 'required' => true]
+                    ['name' => 'Nama Produk', 'description' => 'Nama lengkap obat beserta dosisnya (Contoh: Paracetamol 500mg).', 'required' => true],
+                    ['name' => 'Barcode', 'description' => 'Kode unik produk. Bisa di-scan atau diisi manual untuk identifikasi cepat.', 'required' => true],
+                    ['name' => 'Kategori', 'description' => 'Grup obat untuk pengelompokan laporan.', 'required' => true],
+                    ['name' => 'Satuan Terkecil', 'description' => 'Unit paling dasar (eceran) produk, misal: Tablet atau Pcs.', 'required' => true],
+                    ['name' => 'Harga Jual', 'description' => 'Harga yang dikenakan kepada pelanggan per satuan terkecil.', 'required' => true],
+                    ['name' => 'Stok Minimal', 'description' => 'Angka batas bawah agar produk muncul di peringatan stok menipis.', 'required' => true]
                 ]
             ],
             'pos' => [
                 'title' => 'Transaksi Kasir (POS)',
-                'image' => 'full_pos.png',
-                'description' => 'Antarmuka penjualan cepat (Point of Sale). Mendukung Barcode Scanner, multi-satuan produk, dan kalkulasi PPN otomatis.',
+                'image' => 'guide_cashier.png',
+                'description' => 'Modul POS digunakan untuk melayani penjualan pelanggan dengan cepat. Antarmuka ini dirancang untuk kemudahan input menggunakan keyboard maupun barcode scanner.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Selalu gunakan **Barcode Scanner** untuk kecepatan.',
-                    'Cek **Struk Terakhir** jika printer macet.',
-                    'Input **Nominal Bayar** dengan teliti.'
+                    'Selalu gunakan **Barcode Scanner** untuk meminimalkan kesalahan input.',
+                    'Pastikan **Metode Pembayaran** dipilih dengan benar (Tunai/Non-Tunai).',
+                    'Cek kembali **Uang Kembali** sebelum menyelesaikan transaksi.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Order Grid', 'func' => 'Area pemilihan produk (kiri) menampilkan katalog dengan gambar/icon.'],
-                    ['name' => 'Cart Panel', 'func' => 'Area keranjang belanja (kanan) menampilkan item terpilih dan subtotal.'],
-                    ['name' => 'Payment Modal', 'func' => 'Jendela popup akhir untuk memilih metode bayar dan input uang tunai.'],
-                    ['name' => 'History', 'func' => 'Daftar riwayat transaksi hari ini untuk keperluan reprint atau pembatalan.']
+                    ['name' => 'Layar Penjualan', 'func' => 'Area utama mencari produk dan memasukkannya ke keranjang belanja.'],
+                    ['name' => 'Keranjang (Cart)', 'func' => 'Daftar item yang akan dibeli, lengkap dengan pengaturan qty dan diskon per item.'],
+                    ['name' => 'Pembayaran', 'func' => 'Layar final untuk input uang diterima dan cetak struk.']
                 ],
                 'buttons' => [
-                    ['label' => 'Cari (F1)', 'func' => 'Shortcut keyboard F1 untuk langsung mengetik nama obat di kolom pencarian.'],
-                    ['label' => 'Diskon Global', 'func' => 'Memberikan potongan harga (%) atau nominal (Rp) untuk TOTAL belanjaan.'],
-                    ['label' => 'Bayar (Space)', 'func' => 'Tombol besar hijau untuk menyelesaikan belanja & membuka layar pembayaran.'],
-                    ['label' => 'Hold / Simpan', 'func' => 'Menyimpan antrian belanja sementara jika pelanggan ingin menambah barang lagi.'],
-                    ['label' => 'Print Last', 'func' => 'Mencetak ulang struk transaksi terakhir tanpa perlu masuk history.'],
-                    ['label' => 'Hapus Item (x)', 'func' => 'Menghapus satu baris produk dari keranjang belanja.']
+                    ['label' => 'Bayar Sekarang', 'func' => 'Membuka modal pembayaran untuk menyelesaikan transaksi.'],
+                    ['label' => '+ (Tambah Qty)', 'func' => 'Menambah jumlah barang yang dibeli secara cepat.'],
+                    ['label' => 'Hapus (Ikon Silang)', 'func' => 'Mengeluarkan item dari keranjang belanja.'],
+                    ['label' => 'Reset Cart', 'func' => 'Membersihkan seluruh isi keranjang untuk memulai transaksi baru.'],
+                    ['label' => 'Cetak Struk', 'func' => 'Mencetak bukti transaksi ke printer thermal setelah pembayaran sukses.']
                 ],
                 'procedures' => [
-                    ['title' => 'Penjualan Kilat', 'desc' => 'Scan Barcode produk. Barang otomatis masuk keranjang. Tekan Space untuk bayar.'],
-                    ['title' => 'Beri Diskon', 'desc' => 'Klik nominal harga di baris item untuk diskon satuan, atau tombol bawah untuk diskon total.'],
-                    ['title' => 'Bayar Tunai', 'desc' => 'Masukkan uang dari pelanggan. Tekan Enter. Struk akan keluar dan laci kasir terbuka.']
+                    ['title' => 'Melayani Penjualan', 'desc' => '1. Scan barcode produk atau ketik nama di bar pencarian.\n2. Sesuaikan jumlah (Qty) jika perlu.\n3. Masukkan catatan per item (misal: "Aturan pakai 3x1") jika dibutuhkan.\n4. Klik "Bayar Sekarang".\n5. Masukkan nominal uang yang diterima.\n6. Klik "Selesai & Cetak Struk".'],
+                    ['title' => 'Memberikan Diskon', 'desc' => 'Klik pada kolom diskon di baris item, masukkan persentase atau nominal potongan harga. Total akan terhitung otomatis.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Cari Produk', 'description' => 'Ketik Nama atau Scan Barcode di sini untuk menambah item.', 'required' => false],
-                    ['name' => 'Qty', 'description' => 'Jumlah barang. Tekan + atau - di keyboard/layar.', 'required' => true],
-                    ['name' => 'Nominal Bayar', 'description' => 'Uang tunai yang diterima (Misal: 100.000).', 'required' => true],
-                    ['name' => 'Catatan', 'description' => 'Keterangan tambahan (misal: "Resep Dr. Budi") di struk.', 'required' => false]
+                    ['name' => 'Pencarian Produk', 'description' => 'Scan barcode atau ketik nama untuk memasukkan barang ke keranjang.', 'required' => false],
+                    ['name' => 'Uang Diterima', 'description' => 'Nominal tunai yang diberikan pelanggan untuk menghitung kembalian.', 'required' => true],
+                    ['name' => 'Catatan Item', 'description' => 'Keterangan tambahan yang akan muncul di bawah nama produk pada struk.', 'required' => false]
                 ]
             ],
             'stock' => [
                 'title' => 'Stok & Inventori',
-                'image' => 'full_stock.png',
-                'description' => 'Kelola fisik barang dengan akurat. Mendukung sistem FEFO untuk meminimalisir obat kadaluarsa.',
+                'image' => 'guide_stock.png',
+                'description' => 'Kelola persediaan barang dengan sistem batch dan expired date. Modul ini memastikan Anda menjual produk dengan prinsip FEFO (First Expired First Out).',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Update **Nomor Batch** setiap barang datang.',
-                    'Prioritaskan stok dengan **Expired Terdekat**.',
-                    'Lakukan **Stok Opname** minimal sebulan sekali.'
+                    'Jangan biarkan produk **Expired** tetap berada di rak display.',
+                    'Lakukan **Stok Opname** rutin untuk mencocokkan fisik dengan sistem.',
+                    'Gunakan **Log Stok** untuk melacak setiap perpindahan barang.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Batch & Exp', 'func' => 'Monitoring detail setiap batch produksi dan tanggal kadaluarsanya.'],
-                    ['name' => 'Stok Opname', 'func' => 'Halaman audit untuk mencocokkan stok fisik di rak dengan stok di sistem komputer.'],
-                    ['name' => 'Mutasi Stok', 'func' => 'Pencatatan perpindahan barang (Masuk/Keluar) di luar penjualan, misal: Barang Rusak/Hilang.'],
-                    ['name' => 'Kartu Stok', 'func' => 'Laporan detail pergerakan satu item (History in/out) untuk investigasi selisih.']
+                    ['name' => 'Stok Per Batch', 'func' => 'Melihat detail stok setiap barang berdasarkan nomor batch dan tanggal kadaluarsa.'],
+                    ['name' => 'Penyesuaian (Adjustment)', 'func' => 'Fitur untuk mengoreksi jumlah stok jika ada barang rusak atau hilang.'],
+                    ['name' => 'Riwayat Stok', 'func' => 'Audit trail lengkap pergerakan stok masuk dan keluar per produk.']
                 ],
                 'buttons' => [
-                    ['label' => '+ Adjustment', 'func' => 'Membuat penyesuaian stok manual (menambah/mengurangi) karena alasan khusus.'],
-                    ['label' => 'Filter Expired', 'func' => 'Menyaring daftar obat yang akan kadaluarsa dalam < 3 bulan atau < 6 bulan.'],
-                    ['label' => 'Print Log', 'func' => 'Mencetak riwayat pergerakan stok ke PDF untuk arsip gudang.'],
-                    ['label' => 'Fix Stock', 'func' => 'Tombol utility untuk sinkronisasi ulang total stok jika ada ketidakcocokan saldo database.']
+                    ['label' => 'Sesuaikan Stok', 'func' => 'Tombol untuk menambah atau mengurangi stok secara manual dengan alasan tertentu.'],
+                    ['label' => 'Filter Kadaluarsa', 'func' => 'Menampilkan hanya produk yang akan expired dalam waktu dekat (misal 3-6 bulan).'],
+                    ['label' => 'Cetak Kartu Stok', 'func' => 'Mengunduh laporan pergerakan stok untuk arsip fisik.']
                 ],
                 'procedures' => [
-                    ['title' => 'Audit Stok Opname', 'desc' => 'Pilih Rak. Hitung fisik barang. Masukkan angka ke kolom Real. Sistem setuju selisihnya.'],
-                    ['title' => 'Cek Obat Expired', 'desc' => 'Gunakan Filter Soon Expired. Pindahkan barang tersebut ke etalase promo depan.'],
-                    ['title' => 'Koreksi Stok Rusak', 'desc' => 'Klik Adjustment. Pilih "Rusak", kurangi jumlah stok, beri alasan di catatan.']
+                    ['title' => 'Melakukan Stok Opname', 'desc' => '1. Cetak daftar stok saat ini.\n2. Hitung jumlah fisik di rak.\n3. Jika ada selisih, gunakan tombol "Sesuaikan Stok".\n4. Masukkan angka baru dan beri alasan (misal: "Selisih Opname").'],
+                    ['title' => 'Mengecek Barang Expired', 'desc' => 'Gunakan filter "Kadaluarsa" pada daftar stok. Identifikasi batch yang mendekati tanggal EXP untuk segera diretur atau dipromosikan.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Nomor Batch', 'description' => 'Kode unik produksi dari manufaktur untuk tracking.', 'required' => true],
-                    ['name' => 'Tgl Expired', 'description' => 'Tanggal batas aman penggunaan obat.', 'required' => true],
-                    ['name' => 'Alasan Koreksi', 'description' => 'Keterangan kenapa stok diubah (Hilang, Pecah, Rusak, dll).', 'required' => true],
-                    ['name' => 'Qty Real', 'description' => 'Jumlah fisik yang ditemukan saat melakukan audit.', 'required' => true]
+                    ['name' => 'No. Batch', 'description' => 'Kode produksi dari pabrik untuk pelacakan satu kelompok barang.', 'required' => true],
+                    ['name' => 'Expired Date', 'description' => 'Tanggal kadaluarsa produk. Sangat kritis untuk dipantau.', 'required' => true],
+                    ['name' => 'Qty Penyesuaian', 'description' => 'Jumlah unit yang ingin ditambah (+) atau dikurangi (-).', 'required' => true],
+                    ['name' => 'Alasan', 'description' => 'Keterangan mengapa melakukan koreksi stok (Rusak, Hilang, Salah Input).', 'required' => true]
                 ]
             ],
             'procurement' => [
                 'title' => 'Pengadaan (Procurement)',
-                'image' => 'full_procurement.png',
-                'description' => 'Siklus pembelian dan penerimaan barang. Hubungkan dengan Purchase Order (PO) atau input manual dengan kalkulasi total otomatis.',
+                'image' => 'guide_procurement.png',
+                'description' => 'Modul untuk mengatur pembelian barang ke supplier (Purchase Order) hingga penerimaan barang di gudang (Goods Receipt).',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Sesuaikan **Nomor Faktur** dengan fisik kertas.',
-                    'Pastikan **Diskon Supplier** terinput.',
-                    'Cek **Ketelitian Batch** saat penerimaan.'
+                    'Sesuaikan **Harga Beli** di sistem dengan faktur fisik PBF.',
+                    'Pastikan **No. Batch** yang terinput sama dengan yang tertera di box produk.',
+                    'Gunakan **PO** agar pesanan Anda dapat dilacak statusnya.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Purchase Order (PO)', 'func' => 'Surat pesanan pembelian resmi kepada supplier untuk request stok.'],
-                    ['name' => 'Penerimaan (GR)', 'func' => 'Penerimaan barang dengan fitur kalkulasi total waktu nyata dan tambah barang manual.'],
-                    ['name' => 'Hutang (AP)', 'func' => 'Accounts Payable. Daftar tagihan supplier yang belum lunas jatuh tempo.'],
-                    ['name' => 'Supplier', 'func' => 'Database vendor/PBF lengkap dengan kontak sales dan alamat.']
+                    ['name' => 'Purchase Order (PO)', 'func' => 'Membuat surat pesanan resmi kepada supplier.'],
+                    ['name' => 'Penerimaan Barang', 'func' => 'Mencatat kedatangan barang dan memasukkannya ke stok aktif.'],
+                    ['name' => 'Daftar Hutang', 'func' => 'Memantau faktur pembelian yang belum dibayar lunas ke supplier.']
                 ],
                 'buttons' => [
-                    ['label' => '+ Buat PO', 'func' => 'Memulai form pesanan pembelian baru.'],
-                    ['label' => 'Terima Barang', 'func' => 'Tombol aksi di daftar PO untuk memproses kedatangan barang (mengubah status jadi Received).'],
-                    ['label' => 'Bayar Hutang', 'func' => 'Mencatat pembayaran keluar ke supplier untuk melunasi faktur.'],
-                    ['label' => 'Cek Riwayat', 'func' => 'Melihat arsip pembelian yang sudah selesai (Lunas & Diterima).']
+                    ['label' => 'Buat PO Baru', 'func' => 'Membuka form pesanan pembelian.'],
+                    ['label' => 'Proses Terima', 'func' => 'Tombol pada baris PO untuk mengkonfirmasi bahwa barang telah sampai.'],
+                    ['label' => 'Print PO', 'func' => 'Mencetak dokumen pesanan untuk dikirim ke sales supplier.']
                 ],
                 'procedures' => [
-                    ['title' => 'Pesan Barang (PO)', 'desc' => 'Pilih Supplier. Klik barang yang stoknya kritis. Masukkan jumlah yang mau dibeli. Simpan.'],
-                    ['title' => 'Terima Barang (GR)', 'desc' => 'Buka GR. Cari No PO tadi. Cocokkan jumlah fisik yang datang. Isi Batch & Expired sesuai fisik box.'],
-                    ['title' => 'Bayar Tagihan', 'desc' => 'Buka menu Hutang. Pilih faktur yang mau dicicil/lunas. Pilih metode bayar. Selesai.']
+                    ['title' => 'Alur Pembelian Barang', 'desc' => '1. Masuk menu PO, klik "Buat PO Baru".\n2. Pilih Supplier dan tambah produk yang ingin dipesan.\n3. Kirim PO ke Supplier.\n4. Saat barang datang, buka menu Penerimaan Barang.\n5. Pilih PO terkait, masukkan No. Faktur dari Supplier.\n6. Cek jumlah fisik, input Batch & Expired, lalu Simpan.'],
+                    ['title' => 'Mencatat Pembayaran Hutang', 'desc' => 'Cek menu "Daftar Hutang", pilih faktur yang jatuh tempo, lalu masukkan nominal pembayaran sesuai bukti transfer/cash.']
                 ],
                 'form_fields' => [
-                    ['name' => 'No Faktur', 'description' => 'Nomor referensi dari surat jalan/faktur supplier.', 'required' => true],
-                    ['name' => 'Harga Beli', 'description' => 'Harga per satuan dari supplier (Neto setelah pajak).', 'required' => true],
-                    ['name' => 'Termin Pembayaran', 'description' => 'Jangka waktu pembayaran (Cash, Tempo 7 Hari, 30 Hari).', 'required' => true]
+                    ['name' => 'Nomor Faktur', 'description' => 'Nomor referensi dari dokumen fisik yang dibawa supplier.', 'required' => true],
+                    ['name' => 'Harga Beli (Neto)', 'description' => 'Harga modal per unit setelah diskon tapi sebelum PPN.', 'required' => true],
+                    ['name' => 'Tenor/Termin', 'description' => 'Jangka waktu pembayaran (Cash atau Kredit 30 hari).', 'required' => true]
                 ]
             ],
             'reports' => [
-                'title' => 'Laporan & Keuangan',
-                'image' => 'full_reports.png',
-                'description' => 'Dashboard audit finansial. Lihat Laba Rugi, Rekap Pajak, dan Biaya Operasional secara akurat.',
+                'title' => 'Laporan Keuangan',
+                'image' => 'guide_finance.png',
+                'description' => 'Menyediakan data akurat untuk pengambilan keputusan bisnis. Mencakup laporan laba rugi, rekap penjualan, dan biaya operasional.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Lakukan **Tutup Buku** setiap shift berakhir.',
-                    'Input semua **Pengeluaran** (Gaji, Listrik).',
-                    'Andalkan **Laporan PPN** untuk setoran pajak.'
+                    'Pastikan semua **Biaya Operasional** (listrik, gaji) terinput.',
+                    'Gunakan **Laporan Laba Rugi** untuk evaluasi bulanan.',
+                    'Export data ke **Excel** jika butuh analisa lebih mendalam.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Laporan Penjualan', 'func' => 'Detail omset per-transaksi, per-kasir, atau per-produk.'],
-                    ['name' => 'Laba Rugi (P&L)', 'func' => 'Laporan profit bersih (Net Income) = Pendapatan - (HPP + Biaya Operasional).'],
-                    ['name' => 'Pengeluaran (Biaya)', 'func' => 'Buku kas keluar untuk biaya operasional toko (Listrik, Air, Gaji, ATK).'],
-                    ['name' => 'Kategori Pengeluaran', 'func' => 'Manajemen master data grup biaya (misal: "Gaji", "Sewa", "Marketing").'],
-                    ['name' => 'Pajak PPN', 'func' => 'Rekapitulasi PPN Masukan (Beli) dan PPN Keluaran (Jual) untuk pelaporan pajak.']
+                    ['name' => 'Rekap Penjualan', 'func' => 'Daftar transaksi harian, per-kasir, atau per-shift.'],
+                    ['name' => 'Laba Rugi', 'func' => 'Menghitung Pendapatan dikurangi HPP dan Biaya Operasional.'],
+                    ['name' => 'Buku Biaya', 'func' => 'Catatan pengeluaran uang kas untuk kebutuhan operasional apotek.'],
+                    ['name' => 'Laporan Pajak', 'func' => 'Rekapitulasi PPN masukan dan keluaran.']
                 ],
                 'buttons' => [
-                    ['label' => 'Download PDF', 'func' => 'Mengunduh laporan dalam format dokumen resmi siap cetak.'],
-                    ['label' => 'Export Excel', 'func' => 'Mengunduh data mentah ke .xlsx untuk diolah lebih lanjut.'],
-                    ['label' => 'Print Thermal', 'func' => 'Mencetak ringkasan laporan singkat di printer struk kasir.'],
-                    ['label' => '+ Pengeluaran', 'func' => 'Tombol untuk mencatat biaya operasional baru hari ini.'],
-                    ['label' => '+ Kategori', 'func' => 'Tombol di menu Kategori Pengeluaran untuk menambah jenis biaya baru.']
+                    ['label' => 'Filter Tanggal', 'func' => 'Menentukan periode laporan yang ingin dibaca.'],
+                    ['label' => 'Export PDF/Excel', 'func' => 'Mengunduh laporan dalam format file dokumen.'],
+                    ['label' => 'Tampilkan Grafik', 'func' => 'Visualisasi tren data dalam bentuk bar atau line chart.']
                 ],
                 'procedures' => [
-                    ['title' => 'Analisa Laba Rugi', 'desc' => 'Pilih Periode Bulan. Klik Analisa. Pastikan HPP sudah terisi semua agar profit akurat.'],
-                    ['title' => 'Input Biaya Toko', 'desc' => 'Buka Buku Pengeluaran. Klik "+ Pengeluaran". Pilih Kategori, input Jumlah, dan Simpan.'],
-                    ['title' => 'Tambah Kategori Biaya', 'desc' => 'Masuk menu Kategori Pengeluaran. Klik Tambah. Input nama kategori baru (misal: "Keamanan") lalu Simpan.']
+                    ['title' => 'Melihat Laba Bersih', 'desc' => '1. Buka menu Laba Rugi.\n2. Pilih periode (Misal: Bulan Desember).\n3. Sistem akan menghitung otomatis total penjualan dikurangi modal dan biaya pengeluaran.'],
+                    ['title' => 'Mendownload Laporan Penjualan', 'desc' => 'Filter tanggal yang diinginkan, cari tombol "Export PDF" di bagian atas tabel. Simpan file untuk arsip.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Periode', 'description' => 'Rentang tanggal Awal dan Akhir laporan yang ingin dilihat.', 'required' => true],
-                    ['name' => 'Kategori Biaya', 'description' => 'Jenis pengeluaran (Operasional, Gaji, Marketing, Maintenance).', 'required' => true],
-                    ['name' => 'User ID', 'description' => 'Filter laporan berdasarkan kinerja karyawan tertentu.', 'required' => false]
+                    ['name' => 'Kategori Biaya', 'description' => 'Jenis pengeluaran (Gaji, ATK, Listrik, Kebersihan).', 'required' => true],
+                    ['name' => 'Nominal', 'description' => 'Jumlah uang yang dikeluarkan atau diterima.', 'required' => true]
                 ]
             ],
             'profile' => [
                 'title' => 'Pengaturan Profil',
-                'image' => 'full_profile.png',
-                'description' => 'Keamanan dan identitas user. Kelola password dan preferensi tampilan aplikasi.',
+                'image' => 'guide_profile.png',
+                'description' => 'Kelola informasi pribadi, update password, dan sesuaikan tampilan aplikasi agar lebih nyaman digunakan.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Ganti **Password** tiap 3 bulan sekali.',
-                    'Pastikan **Email** aktif untuk recovery.',
-                    'Gunakan **Foto Profil** asli untuk audit.'
+                    'Gunakan **Password Kuat** (minimal 8 karakter dengan angka).',
+                    'Jangan bagikan **Akun** Anda kepada staf lain.',
+                    'Ganti **Foto Profil** untuk memudahkan identifikasi di sistem.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Identitas', 'func' => 'Halaman edit Nama Lengkap, Email, dan Foto Profil.'],
-                    ['name' => 'Keamanan', 'func' => 'Formulir ganti password dan manajemen sesi login aktif.'],
-                    ['name' => 'Preferences', 'func' => 'Pengaturan personalisasi tampilan (Tema Gelap/Terang).']
+                    ['name' => 'Data Diri', 'func' => 'Halaman untuk merubah Nama, Email, dan unggah Foto Profil.'],
+                    ['name' => 'Keamanan', 'func' => 'Menu khusus untuk mengganti password secara berkala.'],
+                    ['name' => 'Tampilan', 'func' => 'Pengaturan teknis seperti Mode Gelap/Terang.']
                 ],
                 'buttons' => [
-                    ['label' => 'Simpan Perubahan', 'func' => 'Menyimpan update data diri ke database.'],
-                    ['label' => 'Logout Sesi Lain', 'func' => 'Memaksa keluar akun anda di perangkat lain yang tertinggal.'],
-                    ['label' => 'Update Password', 'func' => 'Mengganti kata sandi lama dengan yang baru.'],
-                    ['label' => 'Upload Foto', 'func' => 'Mengunggah file gambar untuk foto profil.']
+                    ['label' => 'Simpan', 'func' => 'Menerapkan perubahan data profil ke database.'],
+                    ['label' => 'Ganti Password', 'func' => 'Tombol aksi untuk memperbarui kata sandi lama.'],
+                    ['label' => 'Logout', 'func' => 'Keluar dari aplikasi dengan aman.']
                 ],
                 'procedures' => [
-                    ['title' => 'Amankan Akun', 'desc' => 'Buka Keamanan. Masukkan Password Lama, lalu buat Password Baru yang rumit. Simpan.'],
-                    ['title' => 'Atur Mode Gelap', 'desc' => 'Buka Preferences. Klik Switch Dark Mode. Sistem akan berubah warna lebih nyaman dimata.']
+                    ['title' => 'Mengganti Password', 'desc' => '1. Masuk ke halaman Profil.\n2. Pilih tab Keamanan.\n3. Masukkan password lama, lalu ketik password baru dua kali sebagai konfirmasi.\n4. Klik Perbarui.'],
+                    ['title' => 'Mengaktifkan Mode Gelap', 'desc' => 'Cari switch "Dark Mode" di halaman profil. Klik untuk mengubah tema aplikasi menjadi warna gelap yang lebih nyaman di mata.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Password Baru', 'description' => 'Kata sandi baru minimal 8 karakter kombinasi huruf & angka.', 'required' => true],
-                    ['name' => 'Email Akun', 'description' => 'Alamat email yang digunakan untuk login masuk.', 'required' => true]
+                    ['name' => 'Password Lama', 'description' => 'Sandi saat ini untuk verifikasi keamanan.', 'required' => true],
+                    ['name' => 'Password Baru', 'description' => 'Minimal 8 karakter kombinasi huruf dan angka.', 'required' => true]
                 ]
             ],
             'settings' => [
                 'title' => 'Manajemen Sistem',
-                'image' => 'full_settings.png',
-                'description' => 'Pengaturan Global. Kelola data outlet, hak akses karyawan, dan backup sistem.',
+                'image' => 'guide_settings.png',
+                'description' => 'Khusus Super Admin. Digunakan untuk mengatur parameter global aplikasi, hak akses user, dan info outlet.',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Download **Backup Data** setiap minggu.',
-                    'Batasi **Hak Akses** sesuai tugas staff.',
-                    'Lengkapi **Info Toko** untuk header struk.'
+                    'Lakukan **Backup Database** secara rutin (minimal seminggu sekali).',
+                    'Berikan **Hak Akses** sesuai dengan porsi kerja masing-masing staf.',
+                    'Pastikan **Nama & Alamat Toko** sudah benar karena akan muncul di struk.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Info Toko', 'func' => 'Setting identitas outlet (Nama, Alamat, Telepon, Logo).'],
-                    ['name' => 'User & Role', 'func' => 'Manajemen akun karyawan, pembuatan user baru, dan assignment role.'],
-                    ['name' => 'Environment', 'func' => 'Konfigurasi teknis (Pajak Default, Timezone, Format Invoice).'],
-                    ['name' => 'Database', 'func' => 'Maintenance data, optimasi, dan fitur backup/restore.']
+                    ['name' => 'Identitas Apotek', 'func' => 'Mengatur Nama, Alamat, No. Telp, dan Logo yang tercetak di struk.'],
+                    ['name' => 'Manajemen User', 'func' => 'Membuat akun untuk staf (Admin, Kasir, Gudang) dan mengatur izinnya.'],
+                    ['name' => 'Konfigurasi POS', 'func' => 'Setting teknis seperti PPN default dan pesan tambahan di bawah struk.'],
+                    ['name' => 'Backup & Restore', 'func' => 'Fitur keamanan data untuk mengunduh salinan database.']
                 ],
                 'buttons' => [
-                    ['label' => '+ Tambah User', 'func' => 'Mendaftarkan akun baru untuk karyawan.'],
-                    ['label' => 'Atur Permission', 'func' => 'Menentukan menu apa saja yang boleh dibuka oleh role tertentu.'],
-                    ['label' => 'Generate Backup', 'func' => 'Membuat file cadangan database .sql untuk diunduh.'],
-                    ['label' => 'Update Logo', 'func' => 'Mengganti gambar logo yang muncul di header struk kasir.']
+                    ['label' => 'Tambah User', 'func' => 'Mendaftarkan staf baru ke dalam sistem.'],
+                    ['label' => 'Atur Izin (Permissions)', 'func' => 'Memberi atau mencabut akses ke menu tertentu pada level user.'],
+                    ['label' => 'Unduh Backup', 'func' => 'Menghasilkan file .sql sebagai cadangan data jika server bermasalah.'],
+                    ['label' => 'Update Logo', 'func' => 'Mengganti gambar logo apotek dengan file baru dari komputer.']
                 ],
                 'procedures' => [
-                    ['title' => 'Tambah Staff Baru', 'desc' => 'Buka User & Role. Klik Tambah. Isi Nama & Password. Pilih Role (Kasir/Admin). Kirim login ke staff.'],
-                    ['title' => 'Lengkapi Alamat Toko', 'desc' => 'Buka Info Toko. Masukkan Alamat Lengkap & No WhatsApp. Info ini akan muncul di Struk Penjualan.'],
-                    ['title' => 'Amankan Data', 'desc' => 'Masuk menu Database. Klik "Generate Backup". Simpan file di Google Drive atau Flashdisk eksternal.']
+                    ['title' => 'Menambah Staf Kasir Baru', 'desc' => '1. Buka Manajemen User.\n2. Klik "Tambah User".\n3. Isi Nama, Email, dan Password.\n4. Pilih Role "Kasir".\n5. Klik Simpan. Staf sekarang bisa login dengan akun tersebut.'],
+                    ['title' => 'Mengubah Info di Struk', 'desc' => '1. Masuk ke Identitas Apotek.\n2. Update Nama Toko atau Catatan Kaki (Footnote) Struk.\n3. Klik Simpan. Perubahan langsung berlaku pada transaksi berikutnya di kasir.']
                 ],
                 'form_fields' => [
-                    ['name' => 'Nama Toko', 'description' => 'Teks judul utama yang tercetak di struk belanja.', 'required' => true],
-                    ['name' => 'Role', 'description' => 'Level otoritas user (Super Admin, Admin, Kasir, Gudang).', 'required' => true],
-                    ['name' => 'Default PPN', 'description' => 'Persentase pajak pertambahan nilai standar (misal: 11%).', 'required' => true]
+                    ['name' => 'Role/Peran', 'description' => 'Level akses (Super Admin, Admin, Kasir, Bagian Gudang).', 'required' => true],
+                    ['name' => 'PPN (%)', 'description' => 'Besaran pajak default yang berlaku di toko.', 'required' => true]
                 ]
             ],
         ];

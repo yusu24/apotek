@@ -19,7 +19,7 @@ new class extends Component
 <div class="contents">
     <!-- Sidebar Navigation -->
     <nav id="sidebar" 
-         class="fixed inset-y-0 left-0 z-[60] w-64 bg-gray-900 border-r border-gray-800 text-gray-100 flex flex-col transition-all duration-300 xl:translate-x-0"
+         class="fixed inset-y-0 left-0 z-[60] w-64 bg-gray-900 border-r border-gray-800 text-gray-100 flex flex-col transition-all duration-300 xl:translate-x-0 -translate-x-full"
          :class="$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'">
         
         <!-- Sidebar Header -->
@@ -33,7 +33,7 @@ new class extends Component
                 <span>Apotek<span class="text-blue-500">.POS</span></span>
             </a>
             <!-- Close button for mobile -->
-            <button @click="$store.mobileNav.close()" class="md:hidden text-gray-400 hover:text-white transition-colors">
+            <button @click="$store.mobileNav.close()" class="xl:hidden text-gray-400 hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>

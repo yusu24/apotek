@@ -52,13 +52,25 @@ class ProductPerformance extends Component
         return [
             'topSellingChart' => [
                 'labels' => $topSelling->pluck('product.name')->toArray(),
+                'abbreviations' => $topSelling->map(function($item) {
+                    return collect(explode(' ', $item->product->name))
+                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                        ->take(3)
+                        ->join('');
+                })->toArray(),
                 'data' => $topSelling->pluck('total_qty')->toArray(),
             ],
             'slowMovingChart' => [
                 'labels' => $slowMoving->pluck('product.name')->toArray(),
+                'abbreviations' => $slowMoving->map(function($item) {
+                    return collect(explode(' ', $item->product->name))
+                        ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+                        ->take(3)
+                        ->join('');
+                })->toArray(),
                 'data' => $slowMoving->pluck('total_qty')->toArray(),
             ],
-            'period' => $this->period // Pass period to trigger updates if needed
+            'period' => $this->period
         ];
     }
 

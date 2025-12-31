@@ -15,7 +15,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            document.addEventListener('alpine:init', () => {
+            function initAlpineStores() {
+                if (window.AlpineInitialized) return;
+                
                 Alpine.store('theme', {
                     on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
 
@@ -46,14 +48,12 @@
                     value: model,
 
                     init() {
-                        // Watch for external changes to the bound value
                         this.$watch('value', (newValue) => {
                             if (newValue !== this.unformat(this.displayValue)) {
                                 this.formatDisplay();
                             }
                         });
                         
-                        // Initial format if value exists
                         if (this.value !== null && this.value !== undefined) {
                             this.formatDisplay();
                         }
@@ -80,11 +80,11 @@
                             let raw = $event.target.value.replace(/[^0-9]/g, '');
                             if (raw === '') {
                                 this.displayValue = '';
-                                this.value = null; // Update Livewire model
+                                this.value = null;
                                 return;
                             }
                             let number = parseInt(raw, 10);
-                            this.value = number; // Update Livewire model
+                            this.value = number;
                             
                             let formatted = new Intl.NumberFormat('id-ID').format(number);
                             this.displayValue = formatted;
@@ -95,6 +95,17 @@
                         ['placeholder']: '0',
                     }
                 }));
+
+                window.AlpineInitialized = true;
+            }
+
+            document.addEventListener('alpine:init', initAlpineStores);
+            
+            // Re-initialize if navigating with Livewire
+            document.addEventListener('livewire:navigated', () => {
+                if (window.Alpine) {
+                    initAlpineStores();
+                }
             });
         </script>
         <style>

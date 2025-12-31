@@ -3,6 +3,10 @@
         // Ensure data is numeric
         const topData = @js($topSellingChart['data']).map(Number);
         const slowData = @js($slowMovingChart['data']).map(Number);
+        
+        const isMobile = window.innerWidth < 768;
+        const topLabels = isMobile ? @js($topSellingChart['abbreviations']) : @js($topSellingChart['labels']);
+        const slowLabels = isMobile ? @js($slowMovingChart['abbreviations']) : @js($slowMovingChart['labels']);
 
         // Top Selling Chart
         const topCanvas = document.getElementById('topSellingChart');
@@ -16,7 +20,7 @@
         this.topChart = new Chart(topCtx, {
             type: 'bar',
             data: {
-                labels: @js($topSellingChart['labels']),
+                labels: topLabels,
                 datasets: [{
                     label: 'Unit Terjual',
                     data: topData,
@@ -78,7 +82,7 @@
         this.slowChart = new Chart(slowCtx, {
             type: 'bar',
             data: {
-                labels: @js($slowMovingChart['labels']),
+                labels: slowLabels,
                 datasets: [{
                     label: 'Unit Terjual',
                     data: slowData,
@@ -130,7 +134,8 @@
     },
     topChart: null,
     slowChart: null
-}" x-init="setTimeout(() => initCharts(), 400); Livewire.on('chart-update', () => { setTimeout(() => initCharts(), 100) })">
+}"
+ x-init="setTimeout(() => initCharts(), 400); Livewire.on('chart-update', () => { setTimeout(() => initCharts(), 100) })">
     <!-- Top Selling Products -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-slate-100 dark:border-gray-700 overflow-hidden">
         <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
@@ -152,7 +157,17 @@
                 <canvas id="topSellingChart"></canvas>
             </div>
             
-            <!-- Description Removed -->
+            <div class="mt-6 md:hidden">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Legenda Produk</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    @foreach($topSellingChart['abbreviations'] as $i => $abbr)
+                        <div class="flex items-center gap-2 text-[11px] text-gray-600 dark:text-gray-400">
+                            <span class="font-bold text-blue-600 dark:text-blue-400 w-6">{{ $abbr }}</span>
+                            <span class="truncate">{{ $topSellingChart['labels'][$i] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 
@@ -172,7 +187,17 @@
                 <canvas id="slowMovingChart"></canvas>
             </div>
             
-            <!-- Description Removed -->
+            <div class="mt-6 md:hidden">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Legenda Produk</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    @foreach($slowMovingChart['abbreviations'] as $i => $abbr)
+                        <div class="flex items-center gap-2 text-[11px] text-gray-600 dark:text-gray-400">
+                            <span class="font-bold text-rose-600 dark:text-rose-400 w-6">{{ $abbr }}</span>
+                            <span class="truncate">{{ $slowMovingChart['labels'][$i] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 </div>

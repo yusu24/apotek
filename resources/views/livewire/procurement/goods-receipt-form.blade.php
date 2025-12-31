@@ -174,19 +174,6 @@
                                                    class="w-full text-sm rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-bold text-gray-800" min="1">
                                             @error("items.{$index}.qty_received") <span class="text-red-500 text-[10px] mt-1 block text-center font-semibold leading-tight">{{ $message }}</span> @enderror
                                             
-                                            @if($purchase_order_id && isset($item['max_qty_allowed']))
-                                                @if($item['qty_received'] < $item['max_qty_allowed'])
-                                                    <div class="mt-1 flex items-center justify-center gap-1 bg-yellow-50 text-yellow-700 text-[10px] font-bold p-1 rounded border border-yellow-200 uppercase tracking-tight">
-                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                                        Kuantitas Kurang
-                                                    </div>
-                                                @elseif($item['qty_received'] > $item['max_qty_allowed'])
-                                                    <div class="mt-1 flex items-center justify-center gap-1 bg-red-50 text-red-700 text-[10px] font-bold p-1 rounded border border-red-200 uppercase tracking-tight">
-                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-                                                        Kuantitas Berlebih
-                                                    </div>
-                                                @endif
-                                            @endif
                                         </td>
                                         <td class="px-3 py-3 align-middle">
                                             @php
@@ -195,15 +182,15 @@
                                             @if($selectedProduct)
                                                 <select wire:model.live="items.{{ $index }}.unit_id" 
                                                         class="w-full text-xs rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-semibold text-gray-700">
-                                                    @if($selectedProduct->unit)
+                                                    @if($selectedProduct->unit_id)
                                                         <option value="{{ $selectedProduct->unit_id }}">
-                                                            {{ $selectedProduct->unit->name ?? 'N/A' }}
+                                                            {{ $selectedProduct->unit?->name ?? 'N/A' }}
                                                         </option>
                                                     @endif
                                                     @foreach($selectedProduct->unitConversions as $conversion)
                                                         @if($conversion->to_unit_id == $selectedProduct->unit_id)
                                                             <option value="{{ $conversion->from_unit_id }}">
-                                                                {{ $conversion->fromUnit->name ?? 'N/A' }}
+                                                                {{ $conversion->fromUnit?->name ?? 'N/A' }}
                                                             </option>
                                                         @endif
                                                     @endforeach

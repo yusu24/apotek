@@ -11,7 +11,7 @@ class PurchaseOrderForm extends Component
     public $supplier_id;
     public $date;
     public $notes;
-    public $status = 'ordered';
+    public $status = 'draft';
     public $items = []; 
     public $suppliers = [];
     public $products = [];
@@ -152,7 +152,7 @@ class PurchaseOrderForm extends Component
                 if ($conversion->to_unit_id == $product->unit_id) {
                     $this->availableUnits[] = [
                         'id' => $conversion->from_unit_id,
-                        'name' => $conversion->fromUnit->name ?? 'Unknown',
+                        'name' => $conversion->fromUnit?->name ?? 'Unknown',
                         'factor' => $conversion->conversion_factor,
                     ];
                 }

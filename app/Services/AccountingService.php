@@ -64,7 +64,7 @@ class AccountingService
      */
     public function postSaleJournal(int $saleId): ?JournalEntry
     {
-        $sale = Sale::with('items.batch')->findOrFail($saleId);
+        $sale = Sale::with('saleItems.batch')->findOrFail($saleId);
         
         // Check if journal already exists
         if (JournalEntry::where('source', 'sale')->where('source_id', $saleId)->exists()) {
@@ -90,10 +90,10 @@ class AccountingService
             }
 
             // Calculate COGS (cost of goods sold)
-            $cogstotal = 0;
-            foreach ($sale->items as $item) {
+            $cogsTotal = 0;
+            foreach ($sale->saleItems as $item) {
                 if ($item->batch) {
-                    $cogsTotal += $item->qty * $item->batch->buy_price;
+                    $cogsTotal += $item->quantity * $item->batch->buy_price;
                 }
             }
 

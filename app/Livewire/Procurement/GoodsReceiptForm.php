@@ -242,7 +242,7 @@ class GoodsReceiptForm extends Component
                     }
 
                     if (!$hasConversion) {
-                        $this->addError("items.{$index}.unit_id", "Gagal: Satuan '" . (\App\Models\Unit::find($item['unit_id'])->name ?? '?') . "' tidak sesuai dengan PO (" . $item['po_unit_name'] . ") dan tidak memiliki pengaturan konversi.");
+                        $this->addError("items.{$index}.unit_id", "Gagal: Satuan '" . (\App\Models\Unit::find($item['unit_id'])?->name ?? '?') . "' tidak sesuai dengan PO (" . $item['po_unit_name'] . ") dan tidak memiliki pengaturan konversi.");
                         return;
                     }
                 }
@@ -321,7 +321,7 @@ class GoodsReceiptForm extends Component
                     'batch_id' => $batch->id,
                     'type' => 'in',
                     'quantity' => $baseQty,
-                    'doc_ref' => 'GR-' . $gr->id . ' (SJ: ' . $this->delivery_note_number . ')',
+                    'doc_ref' => 'GR-' . ($gr->id ?? '?') . ' (SJ: ' . ($this->delivery_note_number ?? '-') . ')',
                     'description' => 'Penerimaan Barang dari ' . ($gr->purchaseOrder?->supplier?->name ?? 'Direct'),
                     'user_id' => auth()->id(),
                 ]);
@@ -331,27 +331,29 @@ class GoodsReceiptForm extends Component
             if ($this->purchase_order_id) {
                 $po = \App\Models\PurchaseOrder::with(['items', 'goodsReceipts.items'])->find($this->purchase_order_id);
                 
-                $allReceived = true;
-                foreach ($po->items as $poItem) {
-                    $totalReceivedBase = 0;
-                    foreach ($po->goodsReceipts as $gr) {
-                         foreach ($gr->items as $grItem) {
-                            if ($grItem->product_id == $poItem->product_id) {
-                                $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                if ($po) {
+                    $allReceived = true;
+                    foreach ($po->items as $poItem) {
+                        $totalReceivedBase = 0;
+                        foreach ($po->goodsReceipts as $gr) {
+                             foreach ($gr->items as $grItem) {
+                                if ($grItem->product_id == $poItem->product_id) {
+                                    $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                                }
                             }
                         }
+                        
+                        $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
+                        
+                        // If received is less than ordered (with small float tolerance)
+                        if (($totalOrderedBase - $totalReceivedBase) > 0.001) {
+                            $allReceived = false;
+                            break;
+                        }
                     }
-                    
-                    $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
-                    
-                    // If received is less than ordered (with small float tolerance)
-                    if (($totalOrderedBase - $totalReceivedBase) > 0.001) {
-                        $allReceived = false;
-                        break;
-                    }
-                }
 
-                $po->update(['status' => $allReceived ? 'received' : 'partial']);
+                    $po->update(['status' => $allReceived ? 'received' : 'partial']);
+                }
             }
         });
 

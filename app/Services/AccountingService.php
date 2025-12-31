@@ -79,6 +79,16 @@ class AccountingService
             $cogsAccount = Account::where('code', '5-1000')->first(); // COGS
             $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
 
+            if (!$cashAccount || !$salesAccount || !$cogsAccount || !$inventoryAccount) {
+                $missing = [];
+                if (!$cashAccount) $missing[] = "Kas (1-1100)";
+                if (!$salesAccount) $missing[] = "Penjualan (4-1000)";
+                if (!$cogsAccount) $missing[] = "COGS (5-1000)";
+                if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
+                
+                throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing) . ". Silakan jalankan 'php artisan db:seed --class=AccountSeeder'.");
+            }
+
             // Calculate COGS (cost of goods sold)
             $cogstotal = 0;
             foreach ($sale->items as $item) {
@@ -176,6 +186,14 @@ class AccountingService
                 'due_date' => Account::where('code', '2-1200')->first(), // Utang Jatuh Tempo
                 default => Account::where('code', '1-1100')->first(),
             };
+
+            if (!$inventoryAccount || !$paymentAccount) {
+                $missing = [];
+                if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
+                if (!$paymentAccount) $missing[] = "Akun Pembayaran (" . ($goodsReceipt->payment_method ?? 'cash') . ")";
+                
+                throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing) . ". Silakan jalankan 'php artisan db:seed --class=AccountSeeder'.");
+            }
 
             // Calculate total purchase
             $totalPurchase = $goodsReceipt->items->sum(function($item) {

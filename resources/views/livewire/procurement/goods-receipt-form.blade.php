@@ -197,13 +197,13 @@
                                                         class="w-full text-xs rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-semibold text-gray-700">
                                                     @if($selectedProduct->unit)
                                                         <option value="{{ $selectedProduct->unit_id }}">
-                                                            {{ $selectedProduct->unit->name }}
+                                                            {{ $selectedProduct->unit->name ?? 'N/A' }}
                                                         </option>
                                                     @endif
                                                     @foreach($selectedProduct->unitConversions as $conversion)
                                                         @if($conversion->to_unit_id == $selectedProduct->unit_id)
                                                             <option value="{{ $conversion->from_unit_id }}">
-                                                                {{ $conversion->fromUnit->name }}
+                                                                {{ $conversion->fromUnit->name ?? 'N/A' }}
                                                             </option>
                                                         @endif
                                                     @endforeach

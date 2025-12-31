@@ -202,14 +202,12 @@
                                             @endif
                                         </td>
                                         <td class="px-3 py-3 align-middle text-right">
-                                            <div class="relative">
+                                            <div class="relative" x-data="money($wire.entangle('items.{{ $index }}.buy_price'))">
                                                 <span class="absolute left-2 top-2 text-[10px] text-gray-400 font-bold">Rp</span>
                                                 <input type="text" 
-                                                       wire:model.live="items.{{ $index }}.buy_price" 
+                                                       x-bind="input"
                                                        class="w-full text-sm rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-2 pl-7 py-1.5 font-bold text-gray-700" 
-                                                       placeholder="0"
-                                                       x-data="{ formatNumber(value) { return Number(value || 0).toLocaleString('id-ID'); } }"
-                                                       x-on:blur="$el.value = formatNumber($el.value.replace(/\./g, ''))">
+                                                       placeholder="0">
                                             </div>
                                             @error("items.{$index}.buy_price") <span class="text-red-500 text-[10px] mt-1 block font-semibold">{{ $message }}</span> @enderror
                                         </td>

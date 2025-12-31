@@ -16,7 +16,9 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             function initAlpineStores() {
-                if (window.AlpineInitialized) return;
+                // Register stores. We don't use a guard here to ensure 
+                // that stores are correctly re-bound if Alpine re-initializes
+                // during a Livewire navigation event.
                 
                 Alpine.store('theme', {
                     on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
@@ -34,7 +36,7 @@
                 });
 
                 Alpine.store('mobileNav', {
-                    open: false,
+                    open: false, // Ensure it's always false on initial load/nav
                     toggle() {
                         this.open = !this.open;
                     },
@@ -95,8 +97,6 @@
                         ['placeholder']: '0',
                     }
                 }));
-
-                window.AlpineInitialized = true;
             }
 
             document.addEventListener('alpine:init', initAlpineStores);

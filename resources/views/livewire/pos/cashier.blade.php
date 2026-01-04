@@ -109,13 +109,39 @@
                                 <td class="px-2 md:px-4 py-2 md:py-3 align-top">
                                     <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs md:text-sm">{{ $item['name'] }}</div>
                                     
-                                    <!-- Price Display -->
-                                    <div class="text-[10px] md:text-xs text-gray-500 flex items-center gap-1" x-show="!openDisc && !openNote">
-                                        <span>@ {{ number_format($item['price'], 0, ',', '.') }}</span>
+                                    <!-- Price & Unit Display/Selector -->
+                                    <div class="flex flex-wrap items-center gap-2 mt-1">
+                                        <div class="flex items-center gap-1">
+                                            <span class="text-[10px] font-bold text-gray-400">@</span>
+                                            <span class="text-xs font-bold text-blue-700">{{ number_format($item['price'], 0, ',', '.') }}</span>
+                                        </div>
+                                        
+                                        <!-- Unit Selector -->
+                                        <select 
+                                            wire:change="updateItemUnit({{ $id }}, $event.target.value)"
+                                            class="text-[10px] py-0.5 px-1 bg-gray-50 border-gray-200 rounded text-gray-600 focus:ring-0 focus:border-blue-400 cursor-pointer">
+                                            @foreach($item['available_units'] as $uId => $uData)
+                                                <option value="{{ $uId }}" {{ $item['unit_id'] == $uId ? 'selected' : '' }}>
+                                                    {{ $uData['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
                                         @if(($item['discount_percent'] ?? 0) > 0)
-                                            <span class="text-amber-600 font-bold">
-                                                (-{{ $item['discount_percent'] }}%)
+                                            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1 rounded uppercase">
+                                                -{{ $item['discount_percent'] }}%
                                             </span>
+                                        @endif
+
+                                        @php
+                                            $isWholesale = false;
+                                            if ($item['unit_id'] != $item['id']) { // Check if not base unit
+                                                $uData = $item['available_units'][$item['unit_id']] ?? null;
+                                                if ($uData && $uData['wholesale_price']) $isWholesale = true;
+                                            }
+                                        @endphp
+                                        @if($isWholesale)
+                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-bold uppercase tracking-tighter">Grosir</span>
                                         @endif
                                     </div>
 

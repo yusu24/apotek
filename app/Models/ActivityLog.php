@@ -17,6 +17,8 @@ class ActivityLog extends Model
         'old_values',
         'new_values',
         'url',
+        'subject_type', // added
+        'subject_id', // added
     ];
 
     protected $casts = [
@@ -31,6 +33,14 @@ class ActivityLog extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the subject of the activity
+     */
+    public function subject()
+    {
+        return $this->morphTo();
     }
 
     /**
@@ -50,6 +60,8 @@ class ActivityLog extends Model
             'old_values' => $data['old_values'] ?? null,
             'new_values' => $data['new_values'] ?? null,
             'url' => $request->fullUrl(),
+            'subject_id' => $data['subject_id'] ?? null,
+            'subject_type' => $data['subject_type'] ?? null,
         ]);
     }
 

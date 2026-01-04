@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">
-            {{ $purchaseOrder ? 'Edit Pesanan' : 'Buat Pesanan Baru' }}
+            {{ $purchaseOrder ? 'Edit Pesanan' : 'Surat Pesanan Baru' }}
         </h2>
         <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -393,6 +393,23 @@
                                         <span class="text-gray-500 text-xs">Rp</span>
                                     </div>
                                     <input type="text" x-bind="input" class="block w-full pl-8 pr-3 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right font-bold text-sm" placeholder="0">
+                                </div>
+                                
+                                <!-- Margin Info -->
+                                <div class="mt-2 bg-gray-50 p-2 rounded border border-gray-200 text-xs space-y-1">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-gray-500">Harga Jual (Est):</span>
+                                        <span class="font-medium text-gray-800">Rp {{ number_format($modalSellPrice, 0, ',', '.') }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center border-t border-gray-200 pt-1">
+                                        <span class="text-gray-500">Margin / Profit:</span>
+                                        <span class="{{ $modalMargin >= 0 ? 'text-green-600' : 'text-red-500' }} font-bold">
+                                            Rp {{ number_format($modalMargin, 0, ',', '.') }} 
+                                            <span class="text-[10px] ml-1 bg-{{ $modalMargin >= 0 ? 'green' : 'red' }}-100 px-1 rounded">
+                                                {{ number_format($modalMarginPercentage, 1) }}%
+                                            </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

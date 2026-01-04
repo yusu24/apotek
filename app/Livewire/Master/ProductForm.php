@@ -33,6 +33,9 @@ class ProductForm extends Component
     public $canEditPrice = false;
     public $canUploadImage = false;
 
+    // Wholesale pricing per unit
+    public $unitPrices = []; // ['unit_conversion_id' => ['unit_name' => 'Box', 'calculated_price' => 100000, 'wholesale_price' => 90000]]
+
     // Hook to generate barcode when dependencies change
     public function updatedCategoryId() { $this->generateBarcode(); }
     public function updatedUnitId() { $this->generateBarcode(); }
@@ -94,7 +97,31 @@ class ProductForm extends Component
             $this->sell_price = $product->sell_price;
             $this->description = $product->description;
             $this->current_image_path = $product->image_path;
+
+            // Load unit conversions and their wholesale prices
+            $this->loadUnitPrices();
         }
+    }
+
+    public function loadUnitPrices()
+    {
+        if (!$this->product_id) {
+            $this->unitPrices = [];
+            return;
+        }
+
+        $product = Product::with(['unitConversions.fromUnit'])->find($this->product_id);
+        
+        $this->unitPrices = $product->unitConversions->mapWithKeys(function ($conversion) use ($product) {
+            $calculatedPrice = $product->sell_price * $conversion->conversion_factor;
+            
+            return [$conversion->id => [
+                'unit_name' => $conversion->fromUnit->name ?? '-',
+                'conversion_factor' => $conversion->conversion_factor,
+                'calculated_price' => $calculatedPrice,
+                'wholesale_price' => $conversion->wholesale_price ?? null,
+            ]];
+        })->toArray();
     }
 
     public function rules()
@@ -160,7 +187,9 @@ class ProductForm extends Component
                 'module' => 'products',
                 'description' => "Memperbarui obat: {$this->name}",
                 'old_values' => $oldData,
-                'new_values' => $data
+                'new_values' => $data,
+                'subject_id' => $product->id,
+                'subject_type' => Product::class,
             ]);
 
             session()->flash('message', 'Obat berhasil diperbarui.');
@@ -171,10 +200,20 @@ class ProductForm extends Component
                 'action' => 'created',
                 'module' => 'products',
                 'description' => "Menambah obat baru: {$this->name}",
-                'new_values' => $data
+                'new_values' => $data,
+                'subject_id' => $product->id,
+                'subject_type' => Product::class,
             ]);
 
             session()->flash('message', 'Obat berhasil ditambahkan.');
+        }
+
+        // Sync wholesale prices to unit_conversions (only for existing product)
+        if ($this->product_id && $this->canEditPrice) {
+            foreach ($this->unitPrices as $conversionId => $priceData) {
+                \App\Models\UnitConversion::where('id', $conversionId)
+                    ->update(['wholesale_price' => $priceData['wholesale_price'] ?? null]);
+            }
         }
 
         return redirect()->route('products.index');

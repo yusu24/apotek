@@ -14,10 +14,12 @@ class UnitConversion extends Model
         'from_unit_id',
         'to_unit_id',
         'conversion_factor',
+        'wholesale_price',
     ];
 
     protected $casts = [
         'conversion_factor' => 'float',
+        'wholesale_price' => 'float',
     ];
 
     // Relationships

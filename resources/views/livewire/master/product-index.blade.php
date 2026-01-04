@@ -88,6 +88,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                             <div class="flex justify-center items-center gap-3">
+                                <button wire:click="viewHistory({{ $product->id }})" 
+                                    class="text-green-600 hover:text-green-900 transition duration-150" title="Riwayat Harga">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </button>
                                 <a href="{{ route('products.edit', $product->id) }}" 
                                     class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit Obat">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -113,4 +117,113 @@
             {{ $products->links() }}
         </div>
     </div>
+
+    <!-- History Modal -->
+    @if($showHistoryModal)
+    <div class="fixed inset-0 z-[100] overflow-y-auto" x-data x-cloak>
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" wire:click="closeHistoryModal"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all my-8">
+                <!-- Header -->
+                <!-- Header -->
+                <div class="bg-blue-900 px-6 py-4 flex justify-between items-center border-b border-blue-800">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="truncate">Riwayat Harga: {{ $historyProduct->name }}</span>
+                    </h3>
+                    <button wire:click="closeHistoryModal" class="text-blue-200 hover:text-white transition shrink-0 ml-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <div class="p-6 overflow-y-auto max-h-[80vh]">
+                    <div class="space-y-6">
+                        <!-- Sell Price History -->
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                                <span class="bg-green-100 text-green-800 p-1 rounded">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                                </span>
+                                Riwayat Harga Jual
+                            </h4>
+                            <div class="overflow-x-auto border rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Update</th>
+                                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Harga Jual</th>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Oleh</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        @forelse($sellPriceHistory as $history)
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-3 py-2 text-xs text-gray-900">
+                                                    {{ $history['date']->format('d M Y H:i') }}
+                                                    <div class="text-[10px] text-gray-500 uppercase">{{ $history['action'] }}</div>
+                                                </td>
+                                                <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
+                                                    Rp {{ number_format($history['new_price'], 0, ',', '.') }}
+                                                    @if($history['action'] == 'updated')
+                                                        <div class="text-gray-400 text-[10px] line-through">Rp {{ number_format($history['old_price'], 0, ',', '.') }}</div>
+                                                    @endif
+                                                </td>
+                                                <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]" title="{{ $history['user'] }}">
+                                                    {{ $history['user'] }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500 italic">Belum ada perubahan harga jual.</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Buy Price History -->
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-bold text-gray-800 border-b pb-2 flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 p-1 rounded">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                </span>
+                                Riwayat Harga Beli (PO)
+                            </h4>
+                            <div class="overflow-x-auto border rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tgl PO</th>
+                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Supplier</th>
+                                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Harga Beli</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        @forelse($buyPriceHistory as $history)
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-3 py-2 text-xs text-gray-900">
+                                                    {{ \Carbon\Carbon::parse($history['date'])->format('d M Y') }}
+                                                    <div class="text-[10px] text-blue-600">{{ $history['po_number'] }}</div>
+                                                    <div class="text-[10px] text-gray-400">by {{ $history['user'] }}</div>
+                                                </td>
+                                                <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[120px]" title="{{ $history['supplier'] }}">
+                                                    {{ $history['supplier'] }}
+                                                </td>
+                                                <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
+                                                    Rp {{ number_format($history['price'], 0, ',', '.') }}
+                                                    <div class="text-[10px] text-gray-500">/ {{ $history['unit'] }}</div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500 italic">Belum ada riwayat pembelian.</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

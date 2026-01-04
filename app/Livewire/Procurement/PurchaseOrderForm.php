@@ -33,7 +33,9 @@ class PurchaseOrderForm extends Component
     public $modalUnitId = null;
     public $modalConversionFactor = 1;
     public $availableUnits = [];
-    
+    public $modalSellPrice = 0;
+    public $modalMargin = 0;
+    public $modalMarginPercentage = 0;
 
 
     public function mount($id = null)
@@ -122,6 +124,9 @@ class PurchaseOrderForm extends Component
         $this->modalUnitId = null;
         $this->modalConversionFactor = 1;
         $this->availableUnits = [];
+        $this->modalSellPrice = 0;
+        $this->modalMargin = 0;
+        $this->modalMarginPercentage = 0;
     }
 
     public function updatedModalProductId($value)
@@ -163,6 +168,9 @@ class PurchaseOrderForm extends Component
             $this->modalUnitId = $product->unit_id;
             $this->updatedModalUnitId($this->modalUnitId);
 
+            // Set basic sell price from product (for base unit)
+            // Actual comparison depends on the selected unit factor
+            // updateModalUnitId will trigger calculateMargin via update
         } else {
             $this->modalProductName = '';
             $this->modalProductCode = '';
@@ -182,6 +190,7 @@ class PurchaseOrderForm extends Component
             $this->modalUnit = '-';
             $this->modalConversionFactor = 1;
         }
+        $this->calculateMargin();
     }
 
     public function updatedModalQty()
@@ -192,6 +201,7 @@ class PurchaseOrderForm extends Component
     public function updatedModalPrice()
     {
         $this->calculateModalTotal();
+        $this->calculateMargin();
     }
     
     public function updatedModalPpn()
@@ -218,6 +228,31 @@ class PurchaseOrderForm extends Component
             $total = $total * 1.12; // Add 12% PPN
         }
         $this->modalSubtotal = $total;
+    }
+
+    public function calculateMargin()
+    {
+        if (!$this->modalProductId) return;
+
+        $product = $this->products->firstWhere('id', $this->modalProductId);
+        if (!$product) return;
+
+        // Calculate Sell Price for the selected unit
+        // Base Sell Price * Conversion Factor
+        $baseSellPrice = (float) $product->sell_price;
+        $configuredSellPrice = $baseSellPrice * (float) $this->modalConversionFactor;
+        
+        $this->modalSellPrice = $configuredSellPrice;
+
+        $buyPrice = (float) $this->modalPrice;
+
+        if ($buyPrice > 0) {
+            $this->modalMargin = $configuredSellPrice - $buyPrice;
+            $this->modalMarginPercentage = ($this->modalMargin / $buyPrice) * 100;
+        } else {
+            $this->modalMargin = 0;
+            $this->modalMarginPercentage = 0;
+        }
     }
 
     public function saveItem()

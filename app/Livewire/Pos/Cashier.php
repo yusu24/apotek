@@ -56,6 +56,123 @@ class Cashier extends Component
         $this->showPendingModal = true;
     }
 
+    public function mount($id = null)
+    {
+        // Check permission
+        if (!auth()->user()->can('access pos')) {
+            abort(403, 'Unauthorized');
+        }
+
+        if ($id) {
+            $sale = Sale::with(['saleItems.product', 'saleItems.unit', 'user', 'saleItems.batch'])->find($id);
+            
+            if (!$sale) {
+                $this->dispatch('cart-error', message: 'Pesanan tidak ditemukan');
+                return;
+            }
+
+            // Restore Invoice No
+            $this->invoice_no = $sale->invoice_no;
+            
+            // Restore Cart
+            $this->cart = [];
+            foreach ($sale->saleItems as $item) {
+                $price = $item->sell_price;
+                $qty = $item->quantity;
+                $subtotal = $item->subtotal;
+                
+                $discount_percent = 0;
+                if ($qty > 0 && $price > 0) {
+                    $actual_total = $subtotal;
+                    $expected_total = $price * $qty;
+                    if ($expected_total > $actual_total) {
+                        $discount_amount = ($expected_total - $actual_total) / $qty;
+                        $discount_percent = ($discount_amount / $price) * 100;
+                    }
+                }
+
+                $unitId = $item->unit_id ?? $item->product->unit_id;
+                $unitFactor = 1;
+
+                // Re-populate available units and find factor
+                $product = $item->product;
+                $availableUnits = [];
+                if ($product) {
+                    $availableUnits[$product->unit_id] = [
+                        'name' => $product->unit->name ?? 'unit',
+                        'factor' => 1,
+                        'wholesale_price' => null
+                    ];
+
+                    if ($unitId == $product->unit_id) $unitFactor = 1;
+
+                    foreach ($product->unitConversions as $conv) {
+                        $availableUnits[$conv->from_unit_id] = [
+                            'name' => $conv->fromUnit->name ?? '-',
+                            'factor' => (float)$conv->conversion_factor,
+                            'wholesale_price' => (float)$conv->wholesale_price ?: null
+                        ];
+                        if ($unitId == $conv->from_unit_id) {
+                            $unitFactor = (float)$conv->conversion_factor;
+                        }
+                    }
+                }
+
+                $this->cart[$item->product_id] = [
+                    'id' => $item->product_id,
+                    'name' => $item->product->name ?? 'Unknown',
+                    'price' => (float)$item->sell_price,
+                    'qty' => (float)$item->quantity,
+                    'unit_id' => $unitId,
+                    'unit_name' => $item->unit->name ?? ($item->product->unit->name ?? 'pcs'),
+                    'unit_factor' => $unitFactor,
+                    'available_units' => $availableUnits,
+                    'discount_percent' => round($discount_percent, 2),
+                    'notes' => '', 
+                    'has_ppn' => false,
+                ];
+            }
+            // Restore Global Settings
+            $this->global_notes = $sale->notes;
+            $this->global_discount = $sale->discount;
+            $this->payment_method = $sale->payment_method ?? 'cash';
+
+            // Delete the pending record (it is now "live" in session)
+            // Also revert stock movements? 
+            // processPayment created StockMovements. We MUST delete them to "Release" stock back to system, 
+            // because "saveOrder" (processPayment) deducted stock.
+            
+            // Delete Stock Movements
+            StockMovement::where('doc_ref', $sale->invoice_no)->delete();
+            
+            // Restore stock to batches
+            foreach ($sale->saleItems as $item) {
+               if ($item->batch_id) {
+                   $batch = Batch::find($item->batch_id);
+                   if ($batch) {
+                       $product = Product::find($item->product_id);
+                       $factor = 1;
+                       if ($product && $item->unit_id != $product->unit_id) {
+                           $conv = $product->unitConversions()->where('from_unit_id', $item->unit_id)->first();
+                           if ($conv) $factor = (float)$conv->conversion_factor;
+                       }
+                       $batch->increment('stock_current', $item->quantity * $factor);
+                   }
+               }
+            }
+            
+            // Delete Sale Items and Sale
+            $sale->saleItems()->delete();
+            $sale->delete();
+
+            $this->calculateTotal();
+            $this->showPendingModal = false;
+            $this->dispatch('cart-updated', message: 'Pesanan berhasil dipulihkan');
+        } else {
+            $this->generateInvoiceNo();
+        }
+    }
+
     public function restorePendingOrder($saleId)
     {
         $sale = Sale::with(['saleItems.product', 'saleItems.batch'])->find($saleId);
@@ -99,11 +216,33 @@ class Cashier extends Component
                 'name' => $item->product->name ?? 'Unknown',
                 'price' => (float)$item->sell_price,
                 'qty' => $item->quantity,
-                'unit' => $item->product->unit->name ?? 'pcs',
+                'unit_id' => $item->unit_id ?? $item->product->unit_id,
+                'unit_name' => $item->unit->name ?? ($item->product->unit->name ?? 'pcs'),
+                'available_units' => [], // Will be populated below
                 'discount_percent' => round($discount_percent, 2),
-                'notes' => '', // Notes might be lost if not saved in SaleItem. Feature limitation for now.
+                'notes' => '', 
                 'has_ppn' => false,
             ];
+
+            // Re-populate available units for this product
+            $product = $item->product;
+            if ($product) {
+                $availableUnits = [];
+                $availableUnits[$product->unit_id] = [
+                    'name' => $product->unit->name ?? 'unit',
+                    'factor' => 1,
+                    'wholesale_price' => null
+                ];
+
+                foreach ($product->unitConversions as $conv) {
+                    $availableUnits[$conv->from_unit_id] = [
+                        'name' => $conv->fromUnit->name ?? '-',
+                        'factor' => (float)$conv->conversion_factor,
+                        'wholesale_price' => (float)$conv->wholesale_price ?: null
+                    ];
+                }
+                $this->cart[$item->product_id]['available_units'] = $availableUnits;
+            }
         }
 
         // Restore Global Settings
@@ -152,7 +291,13 @@ class Cashier extends Component
             if ($item->batch_id) {
                 $batch = Batch::find($item->batch_id);
                 if ($batch) {
-                    $batch->increment('stock_current', $item->quantity);
+                    $product = Product::find($item->product_id);
+                    $factor = 1;
+                    if ($product && $item->unit_id != $product->unit_id) {
+                        $conv = $product->unitConversions()->where('from_unit_id', $item->unit_id)->first();
+                        if ($conv) $factor = (float)$conv->conversion_factor;
+                    }
+                    $batch->increment('stock_current', $item->quantity * $factor);
                 }
             }
         }
@@ -173,15 +318,6 @@ class Cashier extends Component
 
         $this->dispatch('cart-updated', message: 'Pesanan tertunda berhasil dihapus dan stok dikembalikan');
     }
-    public function mount()
-    {
-        // Check permission
-        if (!auth()->user()->can('access pos')) {
-            abort(403, 'Unauthorized');
-        }
-        $this->generateInvoiceNo();
-    }
-
     public function generateInvoiceNo()
     {
         $this->invoice_no = 'INV/' . date('Ymd') . '/' . substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
@@ -214,12 +350,14 @@ class Cashier extends Component
                      
                      // Stock Validation
                      $product = Product::withSum('batches as total_stock', 'stock_current')->find($productId);
-                     if ($product && $qty > $product->total_stock) {
-                         $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $product->total_stock);
-                         $this->cart[$productId]['qty'] = $product->total_stock;
-                     } else {
-                         //$this->cart[$productId]['qty'] = $qty; // Already set by wire:model
-                     }
+                     $factor = $this->cart[$productId]['unit_factor'] ?? 1;
+                     $baseQtyNeeded = $qty * $factor;
+
+                     if ($product && $baseQtyNeeded > $product->total_stock) {
+                         $maxAllowedRaw = floor($product->total_stock / $factor);
+                         $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $maxAllowedRaw . ' ' . $this->cart[$productId]['unit_name']);
+                         $this->cart[$productId]['qty'] = $maxAllowedRaw;
+                     } 
                 }
             }
             
@@ -249,13 +387,32 @@ class Cashier extends Component
                 return;
             }
         } else {
+            // Get available units
+            $availableUnits = [];
+            $availableUnits[$product->unit_id] = [
+                'name' => $product->unit->name ?? 'unit',
+                'factor' => 1,
+                'wholesale_price' => null
+            ];
+
+            foreach ($product->unitConversions as $conv) {
+                $availableUnits[$conv->from_unit_id] = [
+                    'name' => $conv->fromUnit->name ?? '-',
+                    'factor' => (float)$conv->conversion_factor,
+                    'wholesale_price' => (float)$conv->wholesale_price ?: null
+                ];
+            }
+
             $this->cart[$productId] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => (float)$product->sell_price,
                 'qty' => 1,
-                'unit' => $product->unit->name ?? 'pcs',
-                'discount_percent' => null, // Default null so placeholder shows
+                'unit_id' => $product->unit_id,
+                'unit_name' => $product->unit->name ?? 'pcs',
+                'unit_factor' => 1, // Default factor for base unit
+                'available_units' => $availableUnits,
+                'discount_percent' => null, 
                 'notes' => '',
                 'has_ppn' => false,
             ];
@@ -278,12 +435,17 @@ class Cashier extends Component
 
         if ($qty <= 0) {
             $this->removeFromCart($productId);
-        } elseif ($product && $qty > $product->total_stock) {
-            $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $product->total_stock);
-            $this->cart[$productId]['qty'] = $product->total_stock;
-            $this->calculateTotal();
         } else {
-            $this->cart[$productId]['qty'] = $qty;
+            $factor = $this->cart[$productId]['unit_factor'] ?? 1;
+            $baseQtyNeeded = $qty * $factor;
+
+            if ($product && $baseQtyNeeded > $product->total_stock) {
+                $maxAllowedRaw = floor($product->total_stock / $factor);
+                $this->dispatch('cart-error', message: 'Stok terbatas. Maks: ' . $maxAllowedRaw . ' ' . $this->cart[$productId]['unit_name']);
+                $this->cart[$productId]['qty'] = max(1, $maxAllowedRaw);
+            } else {
+                $this->cart[$productId]['qty'] = $qty;
+            }
             $this->calculateTotal();
         }
     }
@@ -305,6 +467,49 @@ class Cashier extends Component
         if (isset($this->cart[$productId])) {
             $this->cart[$productId]['notes'] = $notes;
         }
+    }
+
+    public function updateItemUnit($productId, $unitId)
+    {
+        if (!isset($this->cart[$productId])) return;
+
+        $item = &$this->cart[$productId];
+        $product = Product::find($productId);
+        if (!$product) return;
+
+        $unitId = (int)$unitId;
+        
+        // Find the unit in available units
+        if (!isset($item['available_units'][$unitId])) return;
+
+        $unitData = $item['available_units'][$unitId];
+        $item['unit_id'] = $unitId;
+        $item['unit_name'] = $unitData['name'];
+        $item['unit_factor'] = $unitData['factor'];
+
+        // Determine Price
+        if ($unitId == $product->unit_id) {
+            $item['price'] = (float)$product->sell_price;
+        } else {
+            // Wholesale price logic
+            if ($unitData['wholesale_price']) {
+                $item['price'] = $unitData['wholesale_price'];
+            } else {
+                $item['price'] = (float)$product->sell_price * $unitData['factor'];
+            }
+        }
+
+        // Re-validate stock with new factor
+        $productStock = Product::withSum('batches as total_stock', 'stock_current')->find($productId);
+        $baseQtyNeeded = $item['qty'] * $item['unit_factor'];
+        
+        if ($productStock && $baseQtyNeeded > $productStock->total_stock) {
+            $maxAllowedRaw = floor($productStock->total_stock / $item['unit_factor']);
+            $this->dispatch('cart-error', message: 'Stok tidak mencukupi untuk unit ' . $item['unit_name'] . '. Menyesuaikan qty...');
+            $item['qty'] = max(1, $maxAllowedRaw);
+        }
+
+        $this->calculateTotal();
     }
 
     public function calculateTotal()
@@ -461,8 +666,11 @@ class Cashier extends Component
                 return false;
             }
 
-            if ($item['qty'] > $product->total_stock) {
-                $this->addError('checkout', "Stok {$item['name']} tidak mencukupi. Sisa: {$product->total_stock}, Diminta: {$item['qty']}");
+            $factor = $item['unit_factor'] ?? 1;
+            $baseQtyNeeded = $item['qty'] * $factor;
+
+            if ($baseQtyNeeded > $product->total_stock) {
+                $this->addError('checkout', "Stok {$item['name']} tidak mencukupi. Sisa: {$product->total_stock}, Diminta: {$baseQtyNeeded} (dasar)");
                 return false;
             }
         }
@@ -517,7 +725,9 @@ class Cashier extends Component
             ]);
 
             foreach ($this->cart as $item) {
-                $qtyNeeded = $item['qty'];
+                $factor = $item['unit_factor'] ?? 1;
+                $qtyNeeded = $item['qty'] * $factor;
+                
                 // Use calculated amount from loop
                 $discount_percent = $item['discount_percent'] ?? 0;
                 $itemDiscount = $item['price'] * ($discount_percent / 100);
@@ -539,13 +749,11 @@ class Cashier extends Component
                     SaleItem::create([
                         'sale_id' => $sale->id,
                         'product_id' => $item['id'],
+                        'unit_id' => $item['unit_id'] ?? null,
                         'batch_id' => $batch->id,
-                        'quantity' => $take,
+                        'quantity' => $take / $factor,
                         'sell_price' => $item['price'],
-                        // 'discount_amount' => $itemDiscount, // DB does not have this column in my check, only subtotal?
-                        // Checked migration: Only subtotal, sell_price, quantity. NO discount_amount column.
-                        // I will update subtotal correctly.
-                        'subtotal' => ($item['price'] - $itemDiscount) * $take,
+                        'subtotal' => ($item['price'] - $itemDiscount) * ($take / $factor),
                     ]);
 
                     StockMovement::create([
@@ -555,7 +763,7 @@ class Cashier extends Component
                         'type' => 'sale',
                         'quantity' => -$take,
                         'doc_ref' => $sale->invoice_no,
-                        'description' => 'Penjualan Kasir',
+                        'description' => 'Penjualan Kasir (' . $item['qty'] . ' ' . $item['unit_name'] . ')',
                     ]);
                     $qtyRemaining -= $take;
                 }
@@ -564,10 +772,11 @@ class Cashier extends Component
                      SaleItem::create([
                         'sale_id' => $sale->id,
                         'product_id' => $item['id'],
+                        'unit_id' => $item['unit_id'] ?? null,
                         'batch_id' => null,
-                        'quantity' => $qtyRemaining,
+                        'quantity' => $qtyRemaining / $factor,
                         'sell_price' => $item['price'],
-                        'subtotal' => ($item['price'] - $itemDiscount) * $qtyRemaining,
+                        'subtotal' => ($item['price'] - $itemDiscount) * ($qtyRemaining / $factor),
                     ]);
                     
                     StockMovement::create([

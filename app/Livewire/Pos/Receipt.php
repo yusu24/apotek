@@ -15,7 +15,7 @@ class Receipt extends Component
 
     public function mount($id)
     {
-        $this->sale = Sale::with(['saleItems.product', 'user'])->find($id);
+        $this->sale = Sale::with(['saleItems.product', 'saleItems.unit', 'user'])->find($id);
         
         if (!$this->sale) {
             abort(404);

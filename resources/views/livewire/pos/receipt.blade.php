@@ -98,7 +98,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>{{ $item->quantity }} x {{ number_format($item->sell_price, 0, ',', '.') }}</td>
+                            <td>{{ number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.') }} {{ $item->unit->name ?? '' }} x {{ number_format($item->sell_price, 0, ',', '.') }}</td>
                             <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         </tr>
                         @else
@@ -109,7 +109,7 @@
                                     <div style="font-size: 9px; color: #666;">(Note: {{ $item->notes }})</div>
                                 @endif
                             </td>
-                            <td class="text-center py-2">{{ $item->quantity }}</td>
+                            <td class="text-center py-2">{{ number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.') }} {{ $item->unit->name ?? '' }}</td>
                             <td class="text-right py-2">{{ number_format($item->sell_price, 0, ',', '.') }}</td>
                             <td class="text-right py-2">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                         </tr>

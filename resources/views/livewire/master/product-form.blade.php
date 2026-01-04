@@ -78,6 +78,59 @@
                     </div>
                     @error('sell_price') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
                 </div>
+
+                <!-- Wholesale Pricing Section (only shown if unit conversions exist) -->
+                @if($product_id && count($unitPrices) > 0)
+                <div class="col-span-1 md:col-span-2 border-t pt-4 mt-2">
+                    <h4 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Harga Grosir/Partai Per Satuan
+                        <span class="text-xs font-normal text-gray-500">(Opsional)</span>
+                    </h4>
+                    
+                    <div class="space-y-3">
+                        @foreach($unitPrices as $conversionId => $priceData)
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Satuan</label>
+                                    <div class="text-sm font-bold text-gray-900">{{ $priceData['unit_name'] }}</div>
+                                    <div class="text-xs text-gray-500">1 {{ $priceData['unit_name'] }} = {{ $priceData['conversion_factor'] }} {{ $units->find($unit_id)->name ?? 'unit' }}</div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Hitung Otomatis</label>
+                                    <div class="text-sm font-medium text-gray-700">Rp {{ number_format($priceData['calculated_price'], 0, ',', '.') }}</div>
+                                    <div class="text-xs text-gray-400">Berdasarkan harga dasar</div>
+                                </div>
+                               
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 mb-1">Harga Grosir Custom</label>
+                                    <div x-data="money($wire.entangle('unitPrices.{{ $conversionId }}.wholesale_price'))">
+                                        <input type="text" x-bind="input" placeholder="Kosongkan untuk hitung otomatis"
+                                            {{ !$canEditPrice ? 'disabled' : '' }}
+                                            class="block w-full text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 {{ !$canEditPrice ? 'bg-gray-100 cursor-not-allowed' : '' }}">
+                                    </div>
+                                    @if($priceData['wholesale_price'])
+                                        @php
+                                            $saving = $priceData['calculated_price'] - $priceData['wholesale_price'];
+                                            $savingPercent = $priceData['calculated_price'] > 0 ? ($saving / $priceData['calculated_price']) * 100 : 0;
+                                        @endphp
+                                        <div class="text-xs mt-1 {{ $saving > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                            {{ $saving > 0 ? 'Hemat' : 'Lebih mahal' }}: Rp {{ number_format(abs($saving), 0, ',', '.') }} ({{ number_format(abs($savingPercent), 1) }}%)
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-3 italic">
+                        💡 Tip: Kosongkan "Harga Grosir Custom" jika ingin sistem menghitung otomatis berdasarkan harga dasar.
+                    </p>
+                </div>
+                @endif
                 
                 <!-- Deskripsi -->
                 <div class="col-span-1 md:col-span-2">

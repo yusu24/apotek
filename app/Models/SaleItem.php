@@ -10,7 +10,7 @@ class SaleItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sale_id', 'product_id', 'batch_id', 'quantity', 'sell_price', 
+        'sale_id', 'product_id', 'unit_id', 'batch_id', 'quantity', 'sell_price', 
         'discount_amount', 'subtotal', 'notes'
     ];
 
@@ -18,7 +18,13 @@ class SaleItem extends Model
         'sell_price' => 'float',
         'subtotal' => 'float',
         'quantity' => 'integer',
+        'unit_id' => 'integer',
     ];
+
+    public function unit()
+    {
+        return $this->belongsTo(\App\Models\Unit::class);
+    }
 
     public function product()
     {

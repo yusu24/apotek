@@ -80,11 +80,11 @@ class SupplierManagement extends Component
         ActivityLog::log([
             'action' => 'created',
             'module' => 'suppliers',
-            'description' => "Menambah pemasok baru: {$this->name}",
+            'description' => "Menambah supplier baru: {$this->name}",
             'new_values' => $supplier->toArray()
         ]);
 
-        session()->flash('message', 'Pemasok berhasil ditambahkan.');
+        session()->flash('message', 'Supplier berhasil ditambahkan.');
         $this->closeModal();
         $this->resetFields();
     }
@@ -119,12 +119,12 @@ class SupplierManagement extends Component
             ActivityLog::log([
                 'action' => 'updated',
                 'module' => 'suppliers',
-                'description' => "Memperbarui pemasok: {$this->name}",
+                'description' => "Memperbarui supplier: {$this->name}",
                 'old_values' => $oldData,
                 'new_values' => $supplier->fresh()->toArray()
             ]);
 
-            session()->flash('message', 'Pemasok berhasil diperbarui.');
+            session()->flash('message', 'Supplier berhasil diperbarui.');
             $this->closeModal();
             $this->resetFields();
         }
@@ -139,10 +139,10 @@ class SupplierManagement extends Component
         ActivityLog::log([
             'action' => 'deleted',
             'module' => 'suppliers',
-            'description' => "Menghapus pemasok: {$oldData['name']}",
+            'description' => "Menghapus supplier: {$oldData['name']}",
             'old_values' => $oldData
         ]);
 
-        session()->flash('message', 'Pemasok berhasil dihapus.');
+        session()->flash('message', 'Supplier berhasil dihapus.');
     }
 }

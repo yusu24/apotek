@@ -23,17 +23,16 @@ new class extends Component
          :class="$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'">
         
         <!-- Sidebar Header -->
-        <div class="h-16 flex items-center justify-between px-6 bg-gray-950/50 border-b border-gray-800">
-            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2 font-bold text-xl tracking-tight">
+        <div class="h-16 flex items-center justify-center px-6 bg-gray-950/50 border-b border-gray-800 relative">
+            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center justify-center font-bold text-xl tracking-tight">
                 @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
                     <img src="{{ asset('storage/' . $logoPath) }}" class="max-h-10 w-auto object-contain" alt="Logo">
                 @else
                     <x-application-logo class="block h-8 w-auto fill-current text-blue-500" />
                 @endif
-                <span>Apotek<span class="text-blue-500">.POS</span></span>
             </a>
             <!-- Close button for mobile -->
-            <button @click="$store.mobileNav.close()" class="xl:hidden text-gray-400 hover:text-white transition-colors">
+            <button @click="$store.mobileNav.close()" class="xl:hidden absolute right-4 text-gray-400 hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -44,7 +43,7 @@ new class extends Component
         <div class="flex-1 overflow-y-auto py-4 space-y-1 px-3">
             @can('view dashboard')
             <x-sidebar-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" icon="home">
-                {{ __('Dashboard') }}
+                Dashboard
             </x-sidebar-link>
             @endcan
 
@@ -76,14 +75,21 @@ new class extends Component
                     @can('manage product units')
                     <a href="{{ route('master.product-units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('master.product-units') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
-                        Satuan Produk
+                        Konversi Satuan
+                    </a>
+                    @endcan
+
+                    @can('manage master data')
+                    <a href="{{ route('master.units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('master.units') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Master Satuan
                     </a>
                     @endcan
 
                     @can('manage suppliers')
                     <a href="{{ route('master.suppliers') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('master.suppliers') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        Pemasok
+                        Supplier
                     </a>
                     @endcan
                 </div>
@@ -125,28 +131,91 @@ new class extends Component
             </div>
             @endcanany
 
+            <!-- Returns Group -->
+            @canany(['manage sales returns', 'manage purchase returns'])
+            <div x-data="{ expanded: {{ request()->routeIs('inventory.returns.*') ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs('inventory.returns.*') ? 'text-white' : 'text-gray-400' }}">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2z"></path></svg>
+                        <span>Retur Barang</span>
+                    </div>
+                    <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
+                    @can('manage sales returns')
+                    <a href="{{ route('inventory.returns.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('inventory.returns.sales') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3"></path></svg>
+                        Retur Penjualan
+                    </a>
+                    @endcan
+
+                    @can('manage purchase returns')
+                    <a href="{{ route('inventory.returns.purchase') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('inventory.returns.purchase') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4 4m0 0l4-4m-4 4v8"></path></svg>
+                        Retur Pembelian
+                    </a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+
             @can('access pos')
             <x-sidebar-link :href="route('pos.cashier')" :active="request()->routeIs('pos.*')" icon="shopping-cart">
-                {{ __('Kasir (POS)') }}
+                Kasir (POS)
             </x-sidebar-link>
             @endcan
-
-            <!-- Group: Keuangan & Administrasi -->
-            @canany(['view sales reports', 'view profit loss', 'view balance sheet', 'view income statement', 'view general ledger', 'create journal', 'view journals', 'view accounts', 'view expenses', 'manage expense categories'])
-            <div x-data="{ expanded: {{ request()->routeIs(['reports.*', 'finance.*', 'accounting.*']) ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs(['reports.*', 'finance.*', 'accounting.*']) ? 'text-white' : 'text-gray-400' }}">
+ 
+            <!-- Group: Laporan -->
+            @canany(['view sales reports', 'view stock', 'view stock movements', 'view reports'])
+            <div x-data="{ expanded: {{ request()->routeIs('reports.*') ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs('reports.*') ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Laporan</span>
+                    </div>
+                    <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
+                    @can('view stock')
+                    <a href="{{ route('reports.stock') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('reports.stock') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        Laporan Stok
+                    </a>
+                    @endcan
+
+                    @can('view sales reports')
+                    <a href="{{ route('reports.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('reports.sales') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Laporan Penjualan
+                    </a>
+                    @endcan
+
+                    @can('view stock movements')
+                    <a href="{{ route('reports.transaction-history') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('reports.transaction-history') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Riwayat Transaksi Produk
+                    </a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+
+            <!-- Group: Keuangan & Administrasi -->
+            @canany(['view profit loss', 'view balance sheet', 'view income statement', 'view general ledger', 'create journal', 'view journals', 'view accounts', 'view expenses', 'manage expense categories'])
+            <div x-data="{ expanded: {{ request()->routeIs(['finance.*', 'accounting.*']) ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs(['finance.*', 'accounting.*']) ? 'text-white' : 'text-gray-400' }}">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span>Keuangan & Administrasi</span>
                     </div>
                     <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     
-                    @can('view sales reports')
-                    <a href="{{ route('reports.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('reports.sales') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        Laporan Penjualan
+                    @can('view reports')
+                    <a href="{{ route('finance.summary') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.summary') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                        Ringkasan Keuangan
                     </a>
                     @endcan
 
@@ -212,7 +281,6 @@ new class extends Component
                         Kategori Pengeluaran
                     </a>
                     @endcan
-
                 </div>
             </div>
             @endcanany
@@ -262,7 +330,7 @@ new class extends Component
 
             <!-- User Guide -->
             <x-sidebar-link :href="route('guide.index')" :active="request()->routeIs('guide.*')" icon="book-open">
-                {{ __('Panduan Aplikasi') }}
+                Panduan Aplikasi
             </x-sidebar-link>
         </div>
 
@@ -305,7 +373,6 @@ new class extends Component
             @else
                 <x-application-logo class="block h-6 w-auto fill-current text-blue-500" />
             @endif
-            <span class="font-bold">Apotek.POS</span>
         </div>
         <button @click="$store.mobileNav.toggle()" class="text-gray-300 hover:text-white transition-colors p-1">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

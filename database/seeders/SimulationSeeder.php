@@ -66,63 +66,83 @@ class SimulationSeeder extends Seeder
         $currentDate = $startDate->copy();
         
         try {
-            // Test with just first day
-            \Log::info("Processing: " . $currentDate->format('Y-m-d'));
+        while ($currentDate->lte($endDate)) {
+            $this->command->info("Processing: " . $currentDate->format('Y-m-d'));
             
-            // Force one purchase
-            \Log::info("Creating Purchase...");
-            $this->createPurchase($currentDate, $user, $products, $suppliers);
-            \Log::info("Purchase Created Successfully!");
+            // Randomly create purchase (restock)
+             if (rand(1, 100) <= 20) { // 20% chance
+                 $this->createPurchase($currentDate, $user, $products, $suppliers);
+             }
             
-            $this->command->info("Test Completed Successfully!");
+            // Randomly create sales - 5 to 15 transactions a day
+            $salesCount = rand(5, 15);
+            for ($i = 0; $i < $salesCount; $i++) {
+                $this->createSale($currentDate, $user, $products);
+            }
+
+            // Randomly create expenses - 10% chance
+             if (rand(1, 100) <= 10) { 
+                 $this->createExpense($currentDate, $user, $expenseAccounts);
+            }
+            
+            $currentDate->addDay();
+        }
+            
+        $this->command->info("Simulation Completed Successfully!");
 
         } catch (\Throwable $e) {
             \Log::error("Simulation Failed: " . $e->getMessage());
             \Log::error($e->getTraceAsString());
             $this->command->error("Simulation Failed: " . $e->getMessage());
-            $this->command->error($e->getTraceAsString());
+            // $this->command->error($e->getTraceAsString()); // Too verbose for console
         }
     }
 
     private function createPurchase($date, $user, $products, $suppliers)
     {
-        $supplier = $suppliers->random();
-        $itemsToBuy = $products->random(rand(3, 8));
-        
+        // Create GR first (no total, no supplier_id as per schema)
         $goodsReceipt = GoodsReceipt::create([
-            'supplier_id' => $supplier->id,
             'user_id' => $user->id,
             'delivery_note_number' => 'DO-' . $date->format('Ymd') . '-' . rand(100, 999),
             'received_date' => $date->format('Y-m-d'),
             'notes' => 'Simulated Restock',
-            'status' => 'completed',
             'payment_method' => 'cash',
+            'payment_status' => 'paid',
         ]);
 
-        foreach ($itemsToBuy as $product) {
+        $totalPurchase = 0;
+
+        foreach ($products->random(rand(3, 8)) as $product) {
             $qty = rand(50, 200); // Buy in bulk
             $buyPrice = $product->sell_price * 0.7; // Approx margin
+            $lineTotal = $qty * $buyPrice;
+            $totalPurchase += $lineTotal;
 
             // Create Batch
             $batch = Batch::create([
                 'product_id' => $product->id,
-                'batch_number' => 'BATCH-' . $date->format('ymd') . '-' . $product->id,
-                'expire_date' => $date->copy()->addYear(),
+                'batch_no' => 'BATCH-' . $date->format('ymd') . '-' . $product->id,
+                'expired_date' => $date->copy()->addYear(),
                 'stock_in' => $qty,
                 'stock_current' => $qty,
                 'buy_price' => $buyPrice,
-                'supplier_id' => $supplier->id,
             ]);
 
             GoodsReceiptItem::create([
                 'goods_receipt_id' => $goodsReceipt->id,
                 'product_id' => $product->id,
-                'batch_id' => $batch->id,
+                'batch_no' => $batch->batch_no,
                 'qty_received' => $qty,
                 'buy_price' => $buyPrice,
-                'expire_date' => $batch->expire_date,
+                'expired_date' => $batch->expired_date,
             ]);
         }
+
+        // Update Total and Paid Amount
+        $goodsReceipt->update([
+            'total_amount' => $totalPurchase,
+            'paid_amount' => $totalPurchase
+        ]);
 
         // Post Journal
         try {
@@ -134,6 +154,7 @@ class SimulationSeeder extends Seeder
             }
         } catch (\Exception $e) {
              // Ignore if fails, just simulation
+             \Log::warning("Purchase Journal Failed: " . $e->getMessage());
         }
     }
 
@@ -200,7 +221,7 @@ class SimulationSeeder extends Seeder
 
         foreach ($itemsToSell as $product) {
             // Get batch with stock
-            $batch = $product->batches()->where('stock_current', '>', 0)->orderBy('expire_date')->first();
+            $batch = $product->batches()->where('stock_current', '>', 0)->orderBy('expired_date')->first();
             if (!$batch) continue;
 
             $qty = rand(1, min(3, $batch->stock_current));

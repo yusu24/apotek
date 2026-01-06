@@ -137,6 +137,41 @@ class AccountIndex extends Component
         $this->accountId = null;
     }
 
+    public function getTotalCashBankProperty()
+    {
+        return Account::where('category', 'cash_bank')->sum('balance');
+    }
+
+    public function getTotalReceivableProperty()
+    {
+        // Assuming receivables are current assets excluding cash_bank
+        // Or strictly '1-1300' logic if category is generic
+        return Account::where('code', 'like', '1-13%')->sum('balance');
+    }
+
+    public function getTotalPayableProperty()
+    {
+        return Account::where('category', 'current_liability')->sum('balance');
+    }
+
+    public function createBankAccount()
+    {
+        $this->resetForm();
+        $this->isEditMode = false;
+        $this->type = 'asset';
+        $this->category = 'cash_bank';
+        // Auto-generate next code for bank (1-12XX)
+        $lastBank = Account::where('code', 'like', '1-12%')->orderByDesc('code')->first();
+        if ($lastBank) {
+            $lastNum = (int) substr($lastBank->code, 4);
+            $this->code = '1-' . ($lastNum + 100);
+        } else {
+            $this->code = '1-1201';
+        }
+        $this->name = 'Bank ';
+        $this->showModal = true;
+    }
+
     public function render()
     {
         $query = Account::query();

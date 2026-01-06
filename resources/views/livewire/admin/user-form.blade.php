@@ -89,7 +89,7 @@
                                         'view products' => 'Obat / Produk',
                                         'manage categories' => 'Kategori Produk',
                                         'manage product units' => 'Satuan Produk',
-                                        'manage suppliers' => 'Daftar Pemasok'
+                                        'manage suppliers' => 'Daftar Supplier'
                                     ];
                                 @endphp
                                 @foreach($productItems as $perm => $label)
@@ -201,6 +201,24 @@
                                 <label class="flex items-center group cursor-pointer {{ $role_name === 'super-admin' ? 'opacity-50' : '' }}">
                                     <input type="checkbox" wire:model="menu_permissions.manage expense categories" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer" {{ $role_name === 'super-admin' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition font-medium">Kategori Pengeluaran</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Retur Barang -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-gray-700 text-xs uppercase tracking-widest border-l-4 border-yellow-500 pl-3 flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2z"></path></svg>
+                                Retur Barang
+                            </h4>
+                            <div class="space-y-4">
+                                <label class="flex items-center group cursor-pointer {{ $role_name === 'super-admin' ? 'opacity-50' : '' }}">
+                                    <input type="checkbox" wire:model="menu_permissions.manage sales returns" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer" {{ $role_name === 'super-admin' ? 'checked' : '' }}>
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition font-medium">Retur Penjualan (Customer)</span>
+                                </label>
+                                <label class="flex items-center group cursor-pointer {{ $role_name === 'super-admin' ? 'opacity-50' : '' }}">
+                                    <input type="checkbox" wire:model="menu_permissions.manage purchase returns" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer" {{ $role_name === 'super-admin' ? 'checked' : '' }}>
+                                    <span class="ml-3 text-sm text-gray-700 group-hover:text-blue-600 transition font-medium">Retur Pembelian (Supplier)</span>
                                 </label>
                             </div>
                         </div>

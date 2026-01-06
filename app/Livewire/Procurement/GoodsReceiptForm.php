@@ -249,16 +249,22 @@ class GoodsReceiptForm extends Component
             }
         }
 
-        // Validate due_date_weeks if payment method is due_date
-        if ($this->payment_method === 'due_date') {
-            $this->validate([
-                'due_date_weeks' => 'required|in:1,2,3,4',
-            ], [
-                'due_date_weeks.required' => 'Jangka waktu jatuh tempo wajib dipilih',
-            ]);
+        $totalAmount = 0;
+        foreach ($this->items as $item) {
+            $totalAmount += ($item['qty_received'] * $item['buy_price']);
         }
 
-        \Illuminate\Support\Facades\DB::transaction(function () {
+        $paymentStatus = 'paid';
+        $paidAmount = $totalAmount;
+        $dueDate = null;
+
+        if ($this->payment_method === 'due_date') {
+            $paymentStatus = 'pending';
+            $paidAmount = 0;
+            $dueDate = \Carbon\Carbon::parse($this->received_date)->addWeeks((int)$this->due_date_weeks);
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($totalAmount, $paymentStatus, $paidAmount, $dueDate) {
             // 1. Create Goods Receipt
             $gr = \App\Models\GoodsReceipt::create([
                 'purchase_order_id' => $this->purchase_order_id ?: null,
@@ -268,6 +274,10 @@ class GoodsReceiptForm extends Component
                 'notes' => $this->notes,
                 'payment_method' => $this->payment_method,
                 'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
+                'total_amount' => $totalAmount,
+                'paid_amount' => $paidAmount,
+                'payment_status' => $paymentStatus,
+                'due_date' => $dueDate,
             ]);
 
             foreach ($this->items as $item) {

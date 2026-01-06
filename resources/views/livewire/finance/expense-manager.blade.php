@@ -23,6 +23,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sumber Dana</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah (Rp)</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -34,6 +35,15 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $expense->description }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @if($expense->account)
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-[10px] font-bold border border-gray-200 uppercase tracking-tighter">
+                                        {{ $expense->account->name }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400 italic">-</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->user->name ?? 'System' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -102,6 +112,17 @@
                                             @endforeach
                                         </select>
                                         @error('category') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Sumber Dana (Pilih untuk Jurnal Otomatis)</label>
+                                        <select wire:model="accountId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                            <option value="">-- Tetapkan Nanti --</option>
+                                            @foreach($accounts as $acc)
+                                                <option value="{{ $acc->id }}">[{{ $acc->code }}] {{ $acc->name }} (Saldo: Rp {{ number_format($acc->balance, 0, ',', '.') }})</option>
+                                            @endforeach
+                                        </select>
+                                        <p class="mt-1 text-[10px] text-gray-500">Jika dipilih, transaksi akan otomatis tercatat di Jurnal Akuntansi.</p>
+                                        @error('accountId') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>

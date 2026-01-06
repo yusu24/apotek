@@ -240,6 +240,142 @@ class AccountingService
     }
 
     /**
+     * Post supplier payment journal automatically
+     * 
+     * Journal Entry:
+     * Dr. Utang Jatuh Tempo [amount]
+     *    Cr. Kas/Bank            [amount]
+     */
+    public function postSupplierPaymentJournal(int $paymentId): ?JournalEntry
+    {
+        $payment = \App\Models\SupplierPayment::with('goodsReceipt')->findOrFail($paymentId);
+        
+        // Check if journal already exists
+        if (JournalEntry::where('source', 'supplier_payment')->where('source_id', $paymentId)->exists()) {
+            return null; // Already posted
+        }
+
+        DB::beginTransaction();
+        try {
+            // Get accounts
+            $payableAccount = Account::where('code', '2-1200')->first(); // Utang Jatuh Tempo
+            
+            $paymentAccount = match($payment->payment_method) {
+                'cash' => Account::where('code', '1-1100')->first(), // Kas
+                'transfer' => Account::where('code', '1-1200')->first(), // Bank
+                default => Account::where('code', '1-1100')->first(),
+            };
+
+            if (!$payableAccount || !$paymentAccount) {
+                $missing = [];
+                if (!$payableAccount) $missing[] = "Utang Jatuh Tempo (2-1200)";
+                if (!$paymentAccount) $missing[] = "Akun Pembayaran (" . ($payment->payment_method ?? 'cash') . ")";
+                
+                throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing));
+            }
+
+            // Create journal entry
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
+                'date' => $payment->payment_date,
+                'description' => 'Pelunasan Hutang - SJ: ' . ($payment->goodsReceipt->delivery_note_number ?? '-'),
+                'source' => 'supplier_payment',
+                'source_id' => $paymentId,
+                'user_id' => $payment->user_id ?? Auth::id(),
+            ]);
+
+            // Dr. Utang Jatuh Tempo
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $payableAccount->id,
+                'debit' => $payment->amount,
+                'credit' => 0,
+                'notes' => 'Pelunasan SJ: ' . $payment->goodsReceipt->delivery_note_number,
+            ]);
+
+            // Cr. Kas/Bank
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $paymentAccount->id,
+                'debit' => 0,
+                'credit' => $payment->amount,
+                'notes' => 'Pelunasan SJ: ' . $payment->goodsReceipt->delivery_note_number,
+            ]);
+
+            // Post journal
+            $entry->post();
+
+            DB::commit();
+            return $entry;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Post expense journal automatically
+     * 
+     * Journal Entry:
+     * Dr. Beban (Category Account) [amount]
+     *    Cr. Kas/Bank/Utang          [amount]
+     */
+    public function postExpenseJournal(int $expenseId, int $accountId): ?JournalEntry
+    {
+        $expense = \App\Models\Expense::findOrFail($expenseId);
+        $paymentAccount = Account::findOrFail($accountId);
+        
+        // Find expense account based on category or default to general expense
+        $expenseAccount = Account::where('name', 'like', '%' . $expense->category . '%')
+            ->where('type', 'expense')
+            ->first() ?? Account::where('code', '5-2300')->first(); // Default Beban Operasional Lainnya
+
+        if (!$expenseAccount) {
+            throw new \Exception("Akun Beban tidak ditemukan. Silakan buat akun beban terlebih dahulu.");
+        }
+
+        DB::beginTransaction();
+        try {
+            // Create journal entry
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
+                'date' => $expense->date,
+                'description' => 'Pengeluaran - ' . $expense->description,
+                'source' => 'expense',
+                'source_id' => $expenseId,
+                'user_id' => $expense->user_id ?? Auth::id(),
+            ]);
+
+            // Dr. Beban
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $expenseAccount->id,
+                'debit' => $expense->amount,
+                'credit' => 0,
+                'notes' => $expense->description,
+            ]);
+
+            // Cr. Kas/Bank/Utang
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $paymentAccount->id,
+                'debit' => 0,
+                'credit' => $expense->amount,
+                'notes' => 'Pembayaran: ' . $expense->description,
+            ]);
+
+            // Post journal
+            $entry->post();
+
+            DB::commit();
+            return $entry;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * Calculate and update inventory value (FIFO based on batches)
      */
     public function calculateInventoryValue(): float

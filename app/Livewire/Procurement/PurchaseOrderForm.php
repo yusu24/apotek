@@ -117,7 +117,7 @@ class PurchaseOrderForm extends Component
         $this->modalProductCode = '';
         $this->modalQty = 1;
         $this->modalUnit = '';
-        $this->modalPrice = null;
+        $this->modalPrice = 0;
         $this->modalSubtotal = 0;
         $this->modalNotes = '';
         $this->modalPpn = false;
@@ -260,8 +260,10 @@ class PurchaseOrderForm extends Component
         $this->validate([
             'modalProductId' => 'required',
             'modalQty' => 'required|numeric|min:1',
-            'modalPrice' => 'required|numeric|min:0',
         ]);
+
+        $this->modalPrice = 0; // Ensure it's 0 if hidden
+        $this->modalSubtotal = 0; // Ensure it's 0 if hidden
 
         $newItem = [
             'product_id' => $this->modalProductId,
@@ -306,7 +308,6 @@ class PurchaseOrderForm extends Component
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.qty' => 'required|numeric|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
         ]);
 
         $total_amount = collect($this->items)->sum('subtotal');

@@ -140,13 +140,21 @@
                                         
                                         <div class="pt-5 text-gray-400 font-bold">=</div>
 
-                                        <div class="w-32">
+                                        <div class="flex-1">
                                             <label class="text-xs text-gray-500 block mb-1">Jumlah</label>
-                                            <input type="number" step="any" wire:model="conversions.{{ $index }}.conversion_factor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" placeholder="10">
+                                            <input type="number" step="any" wire:model="conversions.{{ $index }}.input_factor" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" placeholder="10">
                                         </div>
 
-                                        <div class="pt-6 text-sm font-medium text-gray-700">
-                                            {{ $units->find($base_unit_id)?->name ?? '...' }}
+                                        <div class="flex-1">
+                                            <label class="text-xs text-gray-500 block mb-1">Ke Satuan</label>
+                                            <select wire:model="conversions.{{ $index }}.to_unit_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                                                <option value="{{ $base_unit_id }}">{{ $units->find($base_unit_id)?->name ?? 'Satuan Dasar' }}</option>
+                                                @foreach($conversions as $otherIndex => $otherConv)
+                                                    @if($index !== $otherIndex && !empty($otherConv['from_unit_id']))
+                                                        <option value="{{ $otherConv['from_unit_id'] }}">{{ $units->find($otherConv['from_unit_id'])?->name }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
                                         </div>
 
                                         <div class="pt-5">
@@ -158,6 +166,12 @@
                                     @error("conversions.{$index}.from_unit_id") <span class="text-red-600 text-xs block">{{ $message }}</span> @enderror
                                     @error("conversions.{$index}.conversion_factor") <span class="text-red-600 text-xs block">{{ $message }}</span> @enderror
                                     @endforeach
+                                </div>
+                                <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                    <p class="text-[11px] text-gray-500 leading-relaxed italic">
+                                        <span class="font-bold text-blue-600">Tips:</span> Untuk konversi bertingkat, pastikan satuan yang menjadi target sudah didefinisikan terlebih dahulu. 
+                                        Contoh: Set <b>1 Box = 12 Strip</b> dulu, baru set <b>1 Karton = 12 Box</b>.
+                                    </p>
                                 </div>
                                 @error('conversions') <span class="text-red-600 text-xs mt-2 block">{{ $message }}</span> @enderror
                             @endif

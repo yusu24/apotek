@@ -23,8 +23,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Terima</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Surat Jalan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier (PO)</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Item</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diterima Oleh</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Bayar</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -39,9 +39,27 @@
                                     <br><span class="text-xs text-gray-400">Ref: {{ $gr->purchaseOrder->po_number }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $gr->items->count() }} Jenis Produk</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $gr->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-6 py-4 text-sm">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-{{ $gr->payment_status_color }}-100 text-{{ $gr->payment_status_color }}-800">
+                                    {{ $gr->payment_status_label }}
+                                </span>
+                                @if($gr->payment_status !== 'paid' && $gr->due_date)
+                                    <br><span class="text-[10px] text-red-500 font-bold">Jatuh Tempo: {{ \Carbon\Carbon::parse($gr->due_date)->format('d/m/y') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm text-right font-black text-gray-900">
+                                Rp {{ number_format($gr->total_amount, 0, ',', '.') }}
+                                @if($gr->payment_status !== 'paid')
+                                    <br><span class="text-[10px] text-orange-600 font-bold">Sisa: Rp {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm text-right whitespace-nowrap">
+                                @if($gr->payment_status !== 'paid')
+                                    <button wire:click="openPaymentModal({{ $gr->id }})" 
+                                        class="text-green-600 hover:text-green-900 transition-colors duration-200 p-1 rounded-full hover:bg-green-50" title="Bayar">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    </button>
+                                @endif
                                 <button wire:click="showDetail({{ $gr->id }})" 
                                     class="text-blue-600 hover:text-blue-900 transition-colors duration-200 p-1 rounded-full hover:bg-blue-50" title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -96,16 +114,16 @@
                                 <span class="font-bold text-gray-700">{{ \Carbon\Carbon::parse($selectedReceipt->received_date)->format('d F Y') }}</span>
                             </div>
                         </div>
-                        <div class="space-y-4">
+                        <div class="space-y-4 text-right">
                             <div>
-                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] block mb-1">Supplier</span>
-                                <div class="flex flex-col">
-                                    <span class="font-black text-gray-900 leading-tight">{{ $selectedReceipt->purchaseOrder->supplier->name ?? 'Direct Receipt' }}</span>
-                                </div>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] block mb-1">Status Pembayaran</span>
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-black bg-{{ $selectedReceipt->payment_status_color }}-100 text-{{ $selectedReceipt->payment_status_color }}-800 uppercase tracking-widest">
+                                    {{ $selectedReceipt->payment_status_label }}
+                                </span>
                             </div>
                             <div>
-                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">Petugas Penerima</span>
-                                <span class="font-bold text-gray-700">{{ $selectedReceipt->user->name ?? '-' }}</span>
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">Total Pembelian</span>
+                                <span class="text-xl font-black text-blue-600">Rp {{ number_format($selectedReceipt->total_amount, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
@@ -163,6 +181,94 @@
                         Tutup
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Payment Modal -->
+    @if($showPaymentModal)
+    <div wire:key="payment-modal-{{ $selectedId }}" class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="payment-modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" wire:click="closePaymentModal"></div>
+
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-md sm:w-full border border-gray-100 animate-fade-in-up">
+                <!-- Modal Header -->
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="text-xl font-black text-gray-900" id="payment-modal-title">
+                        Catat Pembayaran Hutang
+                    </h3>
+                    <button wire:click="closePaymentModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <form wire:submit="savePayment">
+                    <div class="p-6 space-y-4">
+                        <!-- Debt Summary Card -->
+                        <div class="bg-blue-50/30 p-6 rounded-2xl border border-blue-100/50">
+                            <span class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] block mb-2">Sisa Hutang</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-sm font-black text-gray-500">Rp</span>
+                                <span class="text-3xl font-black text-gray-900">{{ number_format($remaining_debt, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Amount Field -->
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Jumlah Bayar</label>
+                            <div class="relative" x-data="money($wire.entangle('payment_amount'))">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span class="text-sm font-black text-gray-400">Rp</span>
+                                </div>
+                                <input type="text" x-bind="input"
+                                    class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-black text-gray-900 text-lg transition-all placeholder:text-gray-300"
+                                    placeholder="0">
+                            </div>
+                            @error('payment_amount') <span class="text-red-500 text-[10px] font-bold mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Date Field -->
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Tanggal</label>
+                                <input type="date" wire:model="payment_date" 
+                                    class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                @error('payment_date') <span class="text-red-500 text-[10px] font-bold mt-1 block">{{ $message }}</span> @enderror
+                            </div>
+                            <!-- Method Field -->
+                            <div>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Metode</label>
+                                <select wire:model="payment_method" 
+                                    class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900">
+                                    <option value="cash">CASH</option>
+                                    <option value="transfer">TRANSFER</option>
+                                </select>
+                                @error('payment_method') <span class="text-red-500 text-[10px] font-bold mt-1 block">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <!-- Notes Field -->
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Catatan (Opsional)</label>
+                            <textarea wire:model="payment_notes" rows="2" 
+                                class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                placeholder="Misal: Pelunasan tahap 1..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                        <button type="button" wire:click="closePaymentModal" 
+                            class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-black hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-xs uppercase tracking-widest transition-all shadow-sm">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-black hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-xs uppercase tracking-widest transition-all shadow-sm">
+                            Simpan Pembayaran
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -32,6 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/master/product-units', App\Livewire\Master\ProductUnit::class)
         ->name('master.product-units')
         ->middleware('permission:manage product units');
+    Route::get('/master/units', App\Livewire\Master\UnitManagement::class)
+        ->name('master.units')
+        ->middleware('permission:manage master data');
     Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)->name('master.suppliers');
 
 
@@ -39,6 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/stock', App\Livewire\Inventory\StockIndex::class)->name('inventory.index');
     Route::get('/stock/{productId}/history', App\Livewire\Inventory\StockHistory::class)->name('inventory.history');
     Route::get('/stock/adjust/{batchId}', App\Livewire\Inventory\StockAdjustment::class)->name('inventory.adjust');
+    Route::get('/inventory/returns/sales', App\Livewire\Inventory\SalesReturnList::class)->name('inventory.returns.sales');
+    Route::get('/inventory/returns/purchase', App\Livewire\Inventory\PurchaseReturnList::class)->name('inventory.returns.purchase');
 
     // POS
     Route::get('/cashier', App\Livewire\Pos\Cashier::class)->name('pos.cashier');
@@ -46,8 +51,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Reports
     Route::get('/reports/sales', App\Livewire\Reports\SalesChart::class)->name('reports.sales');
+    Route::get('/reports/sales-detail', App\Livewire\Reports\SalesReport::class)->name('reports.sales-detail');
+    Route::get('/reports/stock', App\Livewire\Reports\StockReport::class)->name('reports.stock');
+    Route::get('/reports/transaction-history', App\Livewire\Reports\TransactionHistory::class)->name('reports.transaction-history');
 
     // Finance (Super Admin & Admin)
+    Route::get('/finance/summary', App\Livewire\Finance\FinancialSummary::class)->name('finance.summary');
     Route::get('/finance/expenses', App\Livewire\Finance\ExpenseManager::class)->name('finance.expenses');
     Route::get('/finance/profit-loss', App\Livewire\Finance\ProfitLoss::class)->name('finance.profit-loss');
     

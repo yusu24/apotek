@@ -23,6 +23,59 @@
         </div>
     @endif
 
+    <!-- Financial Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Kas & Bank -->
+        <div class="bg-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-blue-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kas & Bank</p>
+                    <h3 class="text-3xl font-extrabold text-white">Rp {{ number_format($this->totalCashBank, 0, ',', '.') }}</h3>
+                </div>
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/20 flex gap-2">
+                <button wire:click="createBankAccount" class="text-xs bg-white text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-sm">
+                    + Tambah Akun Bank
+                </button>
+            </div>
+        </div>
+
+        <!-- Piutang Usaha -->
+        <div class="bg-orange-500 rounded-2xl p-6 text-white shadow-lg shadow-orange-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-white font-bold text-xs mb-1 uppercase tracking-wider opacity-90">Total Piutang Usaha</p>
+                    <h3 class="text-3xl font-extrabold text-white">Rp {{ number_format($this->totalReceivable, 0, ',', '.') }}</h3>
+                </div>
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/20">
+                <p class="text-xs text-white opacity-90">Estimasi tagihan masuk</p>
+            </div>
+        </div>
+
+        <!-- Utang Usaha -->
+        <div class="bg-red-600 rounded-2xl p-6 text-white shadow-lg shadow-red-200">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-red-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kewajiban Lancar</p>
+                    <h3 class="text-3xl font-extrabold text-white">Rp {{ number_format($this->totalPayable, 0, ',', '.') }}</h3>
+                </div>
+                <div class="bg-white/20 p-2.5 rounded-xl">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/20">
+                <p class="text-xs text-red-100">Kewajiban segera jatuh tempo</p>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <!-- Filter Actions Bar -->
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -185,7 +238,8 @@
                                 <label for="category" class="block text-sm font-bold text-gray-700">Kategori Detail</label>
                                 <select wire:model="category" id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                                     @if($type === 'asset')
-                                        <option value="current_asset">Aset Lancar (Kas/Bank/Piutang)</option>
+                                        <option value="cash_bank">Kas & Bank</option>
+                                        <option value="current_asset">Aset Lancar Lainnya (Piutang/Stok)</option>
                                         <option value="fixed_asset">Aset Tetap (Peralatan/Gedung)</option>
                                     @elseif($type === 'liability')
                                         <option value="current_liability">Kewajiban Lancar (< 1 Tahun)</option>

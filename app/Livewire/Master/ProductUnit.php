@@ -65,9 +65,21 @@ class ProductUnit extends Component
             return [
                 'id' => $c->id,
                 'from_unit_id' => $c->from_unit_id,
+                'to_unit_id' => $c->to_unit_id,
                 'conversion_factor' => (float)$c->conversion_factor,
+                'input_factor' => (float)$c->conversion_factor, // This will be adjusted in UI
             ];
         })->toArray();
+
+        // Adjust input_factor for hierarchical display
+        foreach ($this->conversions as &$conv) {
+            if ($conv['to_unit_id'] != $this->base_unit_id) {
+                $target = $this->editingProduct->unitConversions->where('from_unit_id', $conv['to_unit_id'])->first();
+                if ($target) {
+                    $conv['input_factor'] = $conv['conversion_factor'] / $target->conversion_factor;
+                }
+            }
+        }
 
         $this->showModal = true;
     }
@@ -77,7 +89,9 @@ class ProductUnit extends Component
         $this->conversions[] = [
             'id' => null,
             'from_unit_id' => '',
-            'conversion_factor' => '',
+            'to_unit_id' => $this->base_unit_id,
+            'input_factor' => '',
+            'conversion_factor' => '', // Calculated on save
         ];
     }
 
@@ -92,8 +106,22 @@ class ProductUnit extends Component
         $this->validate([
             'base_unit_id' => 'required|exists:units,id',
             'conversions.*.from_unit_id' => 'required|exists:units,id|different:base_unit_id',
-            'conversions.*.conversion_factor' => 'required|numeric|min:0.0001',
+            'conversions.*.to_unit_id' => 'required|exists:units,id',
+            'conversions.*.input_factor' => 'required|numeric|min:0.0001',
         ]);
+
+        // Validate circular dependencies and missing parents
+        $fromUnits = array_column($this->conversions, 'from_unit_id');
+        foreach ($this->conversions as $conv) {
+            if ($conv['to_unit_id'] != $this->base_unit_id && !in_array($conv['to_unit_id'], $fromUnits)) {
+                $this->addError('conversions', 'Satuan target harus berupa satuan dasar atau satuan yang sudah dikonversi.');
+                return;
+            }
+            if ($conv['from_unit_id'] == $conv['to_unit_id']) {
+                $this->addError('conversions', 'Satuan asal dan target tidak boleh sama.');
+                return;
+            }
+        }
 
         // Validate duplicates in conversions
         $fromUnits = array_column($this->conversions, 'from_unit_id');
@@ -118,7 +146,37 @@ class ProductUnit extends Component
             ->whereNotIn('id', $existingIds)
             ->delete();
 
-        foreach ($this->conversions as $conv) {
+        // Resolve factors iteratively (hierarchical resolution)
+        $resolvedConversions = [];
+        $remaining = $this->conversions;
+        
+        // Base case: Direct to base
+        foreach ($remaining as $key => $conv) {
+            if ($conv['to_unit_id'] == $this->base_unit_id) {
+                $conv['conversion_factor'] = $conv['input_factor'];
+                $resolvedConversions[$conv['from_unit_id']] = $conv;
+                unset($remaining[$key]);
+            }
+        }
+
+        // Recursive case: Multi-level (max 5 levels to prevent infinite loops)
+        for ($i = 0; $i < 5; $i++) {
+            if (empty($remaining)) break;
+            foreach ($remaining as $key => $conv) {
+                if (isset($resolvedConversions[$conv['to_unit_id']])) {
+                    $conv['conversion_factor'] = $conv['input_factor'] * $resolvedConversions[$conv['to_unit_id']]['conversion_factor'];
+                    $resolvedConversions[$conv['from_unit_id']] = $conv;
+                    unset($remaining[$key]);
+                }
+            }
+        }
+
+        if (!empty($remaining)) {
+            $this->addError('conversions', 'Gagal menyelesaikan hierarki satuan. Pastikan tidak ada dependensi melingkar.');
+            return;
+        }
+
+        foreach ($resolvedConversions as $conv) {
             UnitConversion::updateOrCreate(
                 [
                     'id' => $conv['id'],
@@ -126,7 +184,7 @@ class ProductUnit extends Component
                 ],
                 [
                     'from_unit_id' => $conv['from_unit_id'],
-                    'to_unit_id' => $this->base_unit_id, // Always map to base
+                    'to_unit_id' => $conv['to_unit_id'],
                     'conversion_factor' => $conv['conversion_factor'],
                 ]
             );

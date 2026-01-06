@@ -78,11 +78,11 @@ new class extends Component
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
+            Informasi Profil
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information.") }}
+            Perbarui informasi profil akun dan alamat email Anda.
         </p>
     </header>
 
@@ -102,7 +102,7 @@ new class extends Component
                                 reader.readAsDataURL($refs.photo.files[0]);
                         " />
 
-            <x-input-label for="photo" :value="__('Photo')" />
+            <x-input-label for="photo" value="Foto" />
 
             <!-- Current Profile Photo -->
             <div class="mt-2" x-show="! photoPreview">
@@ -123,29 +123,29 @@ new class extends Component
             </div>
 
             <x-secondary-button class="mt-2" type="button" x-on:click.prevent="$refs.photo.click()">
-                {{ __('Select A New Photo') }}
+                Pilih Foto Baru
             </x-secondary-button>
 
             <x-input-error :messages="$errors->get('photo')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" value="Nama" />
             <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" value="Email" />
             <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>Simpan</x-primary-button>
 
             <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+                Tersimpan.
             </x-action-message>
         </div>
     </form>

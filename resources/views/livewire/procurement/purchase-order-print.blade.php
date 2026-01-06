@@ -82,9 +82,7 @@
             <tr class="bg-gray-800 text-white text-sm uppercase">
                 <th class="py-3 px-4 text-left rounded-l-lg">Produk</th>
                 <th class="py-3 px-4 text-center">Qty</th>
-                <th class="py-3 px-4 text-center">Satuan</th>
-                <th class="py-3 px-4 text-right">Harga Satuan</th>
-                <th class="py-3 px-4 text-right rounded-r-lg">Total</th>
+                <th class="py-3 px-4 text-center rounded-r-lg">Satuan</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
@@ -96,15 +94,13 @@
                 </td>
                 <td class="py-3 px-4 text-center font-bold">{{ $item->qty_ordered }}</td>
                 <td class="py-3 px-4 text-center text-gray-600">{{ $item->product->unit->name ?? 'pcs' }}</td>
-                <td class="py-3 px-4 text-right">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
-                <td class="py-3 px-4 text-right font-bold">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot class="text-gray-900">
             <tr>
-                <td colspan="4" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Akhir</td>
-                <td class="py-4 px-4 text-right text-xl font-bold bg-gray-50 rounded-lg">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td>
+                <td colspan="2" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Item</td>
+                <td class="py-4 px-4 text-center text-xl font-bold bg-gray-50 rounded-lg">{{ $po->items->count() }} Produk</td>
             </tr>
         </tfoot>
     </table>

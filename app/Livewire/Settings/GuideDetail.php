@@ -54,7 +54,7 @@ class GuideDetail extends Component
             'master' => [
                 'title' => 'Manajemen Produk (Master)',
                 'image' => 'guide_products.png',
-                'description' => 'Modul Master Data adalah jantung dari sistem ini. Di sini Anda mengelola database produk, kategori, satuan, hingga pemasok. Konsistensi data di modul ini sangat penting untuk akurasi laporan keuangan dan stok.',
+                'description' => 'Modul Master Data adalah jantung dari sistem ini. Di sini Anda mengelola database produk, kategori, satuan, hingga supplier. Konsistensi data di modul ini sangat penting untuk akurasi laporan keuangan dan stok.',
                 'screenshots' => [],
                 'golden_rules' => [
                     'Pastikan **Barcode** unik dan sesuai dengan fisik produk.',
@@ -65,7 +65,7 @@ class GuideDetail extends Component
                     ['name' => 'Daftar Produk', 'func' => 'Halaman utama untuk melihat, mencari, menambah, dan mengubah data obat/barang.'],
                     ['name' => 'Kategori Produk', 'func' => 'Mengelompokkan produk berdasarkan jenis (misal: Obat Bebas, Obat Keras, Alat Kesehatan).'],
                     ['name' => 'Satuan & Konversi', 'func' => 'Mengatur unit jual (Pcs, Box, Strip) dan hubungan antar satuan tersebut.'],
-                    ['name' => 'Manajemen Pemasok', 'func' => 'Daftar supplier atau PBF tempat apotek melakukan pengadaan barang.']
+                    ['name' => 'Manajemen Supplier', 'func' => 'Daftar supplier atau PBF tempat apotek melakukan pengadaan barang.']
                 ],
                 'buttons' => [
                     ['label' => 'Tambah Produk', 'func' => 'Tombol biru di kanan atas untuk membuka form input produk baru.'],
@@ -78,7 +78,7 @@ class GuideDetail extends Component
                 'procedures' => [
                     ['title' => 'Menambah Produk Baru', 'desc' => '1. Klik "Tambah Produk".\n2. Isi Nama Obat, Kategori, dan Satuan Dasar.\n3. Masukkan Barcode (atau biarkan otomatis).\n4. Tentukan Stok Minimal dan Harga Jual.\n5. Klik Simpan.'],
                     ['title' => 'Mengatur Konversi Satuan', 'desc' => '1. Cari produk di Katalog.\n2. Klik tombol "Atur Satuan".\n3. Tambah satuan baru (Misal: Box).\n4. Masukkan jumlah isi terhadap satuan terkecil (Misal: 100).\n5. Simpan.'],
-                    ['title' => 'Menambahkan Pemasok (Supplier)', 'desc' => '1. Masuk menu Pemasok.\n2. Klik "Tambah Pemasok".\n3. Isi Nama Perusahaan, No HP Sales, dan Alamat.\n4. Klik Simpan agar dapat dipilih di modul Pengadaan.']
+                    ['title' => 'Menambahkan Supplier (Pemasok)', 'desc' => '1. Masuk menu Supplier.\n2. Klik "Tambah Supplier".\n3. Isi Nama Perusahaan, No HP Sales, dan Alamat.\n4. Klik Simpan agar dapat dipilih di modul Pengadaan.']
                 ],
                 'form_fields' => [
                     ['name' => 'Nama Produk', 'description' => 'Nama lengkap obat beserta dosisnya (Contoh: Paracetamol 500mg).', 'required' => true],

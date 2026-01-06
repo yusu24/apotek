@@ -64,7 +64,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. PO</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        {{-- <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th> --}}
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -76,7 +76,7 @@
                             <td class="px-6 py-4 text-sm font-bold text-gray-900 border-l-4 border-blue-500 pl-4">{{ $po->po_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900 text-right font-bold">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td>
+                            {{-- <td class="px-6 py-4 text-sm text-gray-900 text-right font-bold">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td> --}}
                             <td class="px-6 py-4 text-sm">
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full 
                                     {{ $po->status === 'received' ? 'bg-green-100 text-green-800' : 

@@ -1,8 +1,8 @@
-<div class="p-4 sm:p-6">
+<div class="p-6 space-y-6">
     {{-- Header --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">
+            <h2 class="text-2xl font-bold text-gray-900 leading-tight">
                 Laporan Arus Kas
             </h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Aliran Kas Masuk & Keluar • Terupdate: {{ now()->format('H:i:s') }}</p>
@@ -21,7 +21,7 @@
     </div>
 
     {{-- Period Filter --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 items-end">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[10px]">Mulai Tanggal</label>

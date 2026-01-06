@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
-            Kelola Pemasok
+            Kelola Supplier
         </h2>
     </div>
 
@@ -22,14 +22,14 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                <span class="hidden sm:inline">Tambah Pemasok</span>
+                <span class="hidden sm:inline">Tambah Supplier</span>
             </button>
 
             <div class="flex-1 md:flex-none md:w-1/3 relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
-                <input type="text" wire:model.live="search" placeholder="Cari pemasok..." 
+                <input type="text" wire:model.live="search" placeholder="Cari supplier..." 
                     class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm transition duration-150">
             </div>
         </div>
@@ -38,7 +38,7 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700/50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nama Pemasok</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nama Supplier</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kontak</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Telepon</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Alamat</th>
@@ -74,7 +74,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic">
-                                Data pemasok tidak ditemukan.
+                                Data supplier tidak ditemukan.
                             </td>
                         </tr>
                     @endforelse
@@ -98,12 +98,12 @@
                 <form wire:submit.prevent="{{ $isEditMode ? 'update' : 'store' }}">
                     <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                            {{ $isEditMode ? 'Edit Pemasok' : 'Tambah Pemasok Baru' }}
+                            {{ $isEditMode ? 'Edit Supplier' : 'Tambah Supplier Baru' }}
                         </h3>
                         
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Nama Pemasok <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Nama Supplier <span class="text-red-500">*</span></label>
                                 <input type="text" wire:model="name" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Contoh: PT. Kimia Farma">
                                 @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
@@ -122,14 +122,14 @@
 
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Alamat <span class="text-red-500">*</span></label>
-                                <textarea wire:model="address" rows="3" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat lengkap pemasok" required></textarea>
+                                <textarea wire:model="address" rows="3" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="Alamat lengkap supplier" required></textarea>
                                 @error('address') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
                         <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition duration-200">
-                            {{ $isEditMode ? 'Simpan Perubahan' : 'Simpan Pemasok' }}
+                            {{ $isEditMode ? 'Simpan Perubahan' : 'Simpan Supplier' }}
                         </button>
                         <button type="button" @click="$wire.closeModal()" class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm transition duration-200">
                             Batal

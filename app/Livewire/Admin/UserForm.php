@@ -33,6 +33,8 @@ class UserForm extends Component
         'view profit loss' => false,
         'view balance sheet' => false,
         'view income statement' => false,
+        'view ppn report' => false,
+        'view ap aging report' => false,
         'view general ledger' => false,
         'view journals' => false,
         'create journal' => false,

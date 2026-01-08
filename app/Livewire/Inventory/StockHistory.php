@@ -61,7 +61,21 @@ class StockHistory extends Component
             });
         }
 
-        return $query->latest()->limit(100)->get();
+        // Order chronologically for running balance calculation
+        $movements = $query->orderBy('created_at', 'asc')
+                          ->orderBy('id', 'asc')
+                          ->limit(100)
+                          ->get();
+
+        // Calculate running balance
+        $runningBalance = 0;
+        $movements->transform(function($movement) use (&$runningBalance) {
+            $runningBalance += $movement->quantity; // quantity is already +/-
+            $movement->running_balance = $runningBalance;
+            return $movement;
+        });
+
+        return $movements;
     }
 
     public function resetFilters()

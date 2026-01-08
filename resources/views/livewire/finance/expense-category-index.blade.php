@@ -9,7 +9,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col sm:flex-row justify-start items-center gap-4 mb-6">
             @can('manage expense categories')
-            <button wire:click="create" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0">
+            <button wire:click="create" class="btn btn-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>

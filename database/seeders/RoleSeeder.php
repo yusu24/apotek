@@ -25,6 +25,9 @@ class RoleSeeder extends Seeder
             'view profit loss',
             'view balance sheet',
             'view income statement',
+            'view ppn report',
+            'view product margin report',
+            'view ap aging report',
             'view journals',
             'export reports',
             
@@ -121,7 +124,13 @@ class RoleSeeder extends Seeder
         $roleAdmin->syncPermissions([]);
 
         $roleKasir = Role::firstOrCreate(['name' => 'kasir']);
-        $roleKasir->syncPermissions([]);
+        $roleKasir->syncPermissions([
+            'access pos',
+            'create sale',
+            'view stock',
+            'view sales history',
+            'view dashboard',
+        ]);
 
         $roleGudang = Role::firstOrCreate(['name' => 'gudang']);
         $roleGudang->syncPermissions([]);

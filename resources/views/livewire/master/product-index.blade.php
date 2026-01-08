@@ -30,11 +30,11 @@
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center">
-            <a href="{{ route('products.create') }}" wire:navigate class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('products.create') }}" wire:navigate class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                Tambah Produk
+                <span>Tambah Produk</span>
             </a>
 
             <div class="w-auto">
@@ -69,20 +69,20 @@
                 @forelse($products as $product)
                     <tr class="hover:bg-gray-50 transition duration-150">
                         <td class="px-6 py-4">
-                            <div class="text-sm font-bold text-gray-900">{{ $product->name }}</div>
+                            <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
                             <div class="text-xs text-gray-500 mt-1 uppercase">{{ $product->barcode }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-bold leading-5 rounded-full bg-blue-100 text-blue-800">
+                            <span class="px-2 py-1 text-xs font-medium leading-5 rounded-full bg-blue-100 text-blue-800">
                                 {{ $product->category->name ?? '-' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Rp {{ number_format($product->sell_price, 0, ',', '.') }}
                             <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-bold {{ $product->min_stock > 0 ? 'text-orange-600' : 'text-gray-500' }}">
+                            <div class="text-sm {{ $product->min_stock > 0 ? 'text-orange-600' : 'text-gray-500' }}">
                                 {{ $product->min_stock }}
                             </div>
                         </td>

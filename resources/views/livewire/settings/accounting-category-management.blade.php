@@ -112,7 +112,7 @@
             <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-100">
                 <!-- Modal Header -->
                 <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                    <h3 class="text-xl font-black text-gray-900">
+                    <h3 class="text-xl font-bold text-gray-900">
                         {{ $editMode ? 'Edit Kategori' : 'Tambah Kategori Baru' }}
                     </h3>
                     <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
@@ -169,7 +169,7 @@
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-black hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all text-xs uppercase tracking-widest flex items-center gap-2">
+                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all text-xs uppercase tracking-widest flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             {{ $editMode ? 'Update' : 'Simpan' }}
                         </button>

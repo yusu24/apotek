@@ -10,7 +10,7 @@ class GoodsReceiptForm extends Component
     public $delivery_note_number;
     public $received_date;
     public $notes;
-    public $payment_method = 'cash';
+    public $payment_method = '';
     public $due_date_weeks = null;
     public $items = []; // ['product_id', 'product_name', 'batch_no', 'expired_date', 'qty_received', 'buy_price']
 
@@ -189,21 +189,24 @@ class GoodsReceiptForm extends Component
         $this->validate([
             'delivery_note_number' => 'required',
             'received_date' => 'required|date',
+            'payment_method' => 'required',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.qty_received' => 'required|numeric|min:1',
             'items.*.batch_no' => 'required',
             'items.*.expired_date' => 'required|date',
-            'items.*.buy_price' => 'required|numeric|min:0',
+            'items.*.buy_price' => 'required|numeric|min:1',
         ], [
             'delivery_note_number.required' => 'Nomor Surat Jalan wajib diisi',
             'received_date.required' => 'Tanggal terima wajib diisi',
+            'payment_method.required' => 'Metode pembayaran wajib dipilih',
             'items.required' => 'Minimal harus ada 1 item',
             'items.*.product_id.required' => 'Produk wajib dipilih',
             'items.*.qty_received.required' => 'Jumlah terima wajib diisi',
             'items.*.batch_no.required' => 'Nomor Batch wajib diisi',
             'items.*.expired_date.required' => 'Tanggal kadaluarsa wajib diisi',
             'items.*.buy_price.required' => 'Harga beli wajib diisi',
+            'items.*.buy_price.min' => 'Harga beli harus lebih dari 0',
         ]);
 
         // Custom validation: Check if Qty Received > PO Qty (if applicable)

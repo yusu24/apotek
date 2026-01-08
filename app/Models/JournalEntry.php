@@ -155,4 +155,46 @@ class JournalEntry extends Model
     {
         return $this->lines()->sum('credit');
     }
+
+    /**
+     * Get the source transaction model dynamically
+     */
+    public function getSourceTransaction()
+    {
+        if (!$this->source_id) {
+            return null;
+        }
+
+        return match($this->source) {
+            'sale' => \App\Models\Sale::with(['saleItems.product', 'saleItems.unit'])->find($this->source_id),
+            'purchase' => \App\Models\GoodsReceipt::with(['items.product', 'items.unit', 'purchaseOrder.supplier'])->find($this->source_id),
+            'expense' => \App\Models\Expense::with('account', 'user')->find($this->source_id),
+            default => null,
+        };
+    }
+
+    /**
+     * Get URL for viewing source transaction
+     */
+    public function getSourceUrl(): ?string
+    {
+        if (!$this->source_id) {
+            return null;
+        }
+
+        return match($this->source) {
+            'sale' => route('reports.sales') . '?sale_id=' . $this->source_id,
+            'purchase' => route('procurement.goods-receipts.index'),
+            'expense' => route('finance.expenses'),
+            default => null,
+        };
+    }
+
+    /**
+     * Check if this journal entry has a viewable source
+     */
+    public function hasViewableSource(): bool
+    {
+        return $this->source_id && in_array($this->source, ['sale', 'purchase', 'expense']);
+    }
 }

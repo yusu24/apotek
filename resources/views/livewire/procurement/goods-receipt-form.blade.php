@@ -54,6 +54,7 @@
                         <div x-data="{ paymentMethod: @entangle('payment_method') }">
                             <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
                             <select wire:model.live="payment_method" class="mt-1 block w-full rounded-lg border-gray-300">
+                                <option value="">-- Pilih Metode Pembayaran --</option>
                                 <option value="cash">Cash</option>
                                 <option value="transfer">Transfer</option>
                                 <option value="due_date">Jatuh Tempo</option>
@@ -101,13 +102,13 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Produk</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-32">No. Batch</th>
-                                    <th class="px-3 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-36">Exp Date</th>
-                                    <th class="px-3 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider w-24">Qty</th>
-                                    <th class="px-3 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider w-28">Satuan</th>
-                                    <th class="px-3 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-40">Harga Satuan</th>
-                                    <th class="px-3 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-44">Subtotal</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">No. Batch</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Exp Date</th>
+                                    <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Qty</th>
+                                    <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Satuan</th>
+                                    <th class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-40">Harga Satuan</th>
+                                    <th class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-44">Subtotal</th>
                                     <th class="px-2 py-3 w-10"></th>
                                 </tr>
                             </thead>
@@ -247,7 +248,7 @@
                 </div>
 
                 <div class="mt-6 flex justify-end">
-                    <button type="submit" class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-bold shadow-lg">
+                    <button type="submit" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-700">
                         Proses Penerimaan & Update Stok
                     </button>
                 </div>

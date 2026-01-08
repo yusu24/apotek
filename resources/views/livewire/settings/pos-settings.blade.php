@@ -145,11 +145,10 @@
 
         <!-- Footer Actions with Save Button Small Right -->
         <div class="mt-8 flex justify-end gap-3 border-t pt-6">
-            <button wire:click="save" 
-                class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-bold transition shadow-md flex items-center gap-2 text-sm transform active:scale-95">
+            <x-button wire:click="save" variant="primary" class="flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Simpan
-            </button>
+            </x-button>
         </div>
     </div>
 </div>

@@ -30,7 +30,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col sm:flex-row justify-start items-center gap-4 mb-6">
             @can('manage users')
-            <a href="{{ route('admin.users.create') }}" wire:navigate class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0">
+            <a href="{{ route('admin.users.create') }}" wire:navigate class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span class="hidden sm:inline">Tambah User</span>
             </a>
@@ -63,7 +63,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($user->roles as $role)
-                                        <span class="px-3 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-full 
+                                        <span class="px-3 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full 
                                             {{ $role->name === 'super-admin' ? 'bg-red-100 text-red-700 border border-red-200' : 
                                             ($role->name === 'admin' ? 'bg-slate-100 text-slate-700 border border-slate-200' : 
                                             ($role->name === 'kasir' ? 'bg-amber-100 text-amber-700 border border-amber-200' : 

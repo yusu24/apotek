@@ -13,7 +13,7 @@
                 {{-- SVG Decoration Removed --}}
                 <div class="p-6 md:p-10 flex flex-col gap-4">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-extrabold mb-2 tracking-tight">Halo, {{ auth()->user()->name }}!</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold mb-2 tracking-tight">Halo, {{ auth()->user()->name }}!</h1>
                         <p class="text-blue-100 text-sm md:text-lg opacity-90">Selamat datang kembali di <span class="font-bold border-b-2 border-blue-400">Apotek.POS</span>. Pantau performa stok Anda hari ini.</p>
                     </div>
                     <div class="flex gap-4">

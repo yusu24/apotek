@@ -225,7 +225,8 @@ class PurchaseOrderForm extends Component
     {
         $total = (float)$this->modalQty * (float)$this->modalPrice;
         if ($this->modalPpn) {
-            $total = $total * 1.12; // Add 12% PPN
+            $ppnRate = (float) \App\Models\Setting::get('pos_ppn_rate', 11) / 100;
+            $total = $total * (1 + $ppnRate);
         }
         $this->modalSubtotal = $total;
     }

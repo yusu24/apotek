@@ -59,24 +59,20 @@ class ProductIndex extends Component
                 ];
             });
 
-        // Fetch Buy Price History from Purchase Order Items
-        // Join with Purchase Order to get Date and User?
-        // PurchaseOrderItem has created_at, but actual transaction date is in PurchaseOrder->date
-        $this->buyPriceHistory = \App\Models\PurchaseOrderItem::where('product_id', $productId)
-            ->whereHas('purchaseOrder', function($q) {
-                $q->whereNotIn('status', ['draft', 'cancelled']); // Only committed POs
-            })
-            ->with(['purchaseOrder.user', 'purchaseOrder.supplier'])
-            ->latest() // This uses created_at of item, which is fine
+        // Fetch Buy Price History from Goods Receipt Items (actual prices)
+        // GoodsReceiptItem contains the actual buy_price from when goods were received
+        $this->buyPriceHistory = \App\Models\GoodsReceiptItem::where('product_id', $productId)
+            ->with(['goodsReceipt.purchaseOrder.supplier', 'goodsReceipt.user', 'unit'])
+            ->latest()
             ->get()
             ->map(function ($item) {
                 return [
-                    'date' => $item->purchaseOrder->date, // PO Date
-                    'po_number' => $item->purchaseOrder->po_number,
-                    'supplier' => $item->purchaseOrder->supplier->name ?? '-',
-                    'user' => $item->purchaseOrder->user->name ?? '-',
-                    'price' => $item->unit_price,
-                    'unit' => $item->unit->name ?? '-', // Assuming unit relationship exists or logic needed
+                    'date' => $item->goodsReceipt->received_date,
+                    'po_number' => $item->goodsReceipt->purchaseOrder->po_number ?? 'Direct',
+                    'supplier' => $item->goodsReceipt->purchaseOrder->supplier->name ?? 'Direct',
+                    'user' => $item->goodsReceipt->user->name ?? '-',
+                    'price' => $item->buy_price,
+                    'unit' => $item->unit->name ?? '-',
                 ];
             });
 

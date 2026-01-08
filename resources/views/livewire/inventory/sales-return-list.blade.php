@@ -12,7 +12,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center">
-            <button wire:click="openModal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition flex items-center gap-2 whitespace-nowrap">
+            <button wire:click="openModal" class="btn btn-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tambah Retur
             </button>
@@ -148,10 +148,10 @@
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                    <button wire:click="saveReturn" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md transition-all active:scale-95 text-sm disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedSale) disabled @endif>
+                    <button wire:click="saveReturn" class="btn btn-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedSale) disabled @endif>
                         Simpan Retur
                     </button>
-                    <button wire:click="$set('showModal', false)" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold transition-all text-sm">
+                    <button wire:click="$set('showModal', false)" class="btn btn-secondary">
                         Batal
                     </button>
                 </div>

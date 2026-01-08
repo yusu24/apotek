@@ -3,18 +3,18 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-900 leading-tight">
-                Laporan Arus Kas
+                Laporan Laba Rugi
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Laporan Aliran Kas Masuk & Keluar • Terupdate: {{ now()->format('H:i:s') }}</p>
+            <p class="text-sm text-gray-500 mt-1">Laporan Pendapatan & Beban • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
-            <button wire:click="setThisMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
+            <button wire:click="setThisMonth" class="btn btn-secondary">
                 Bulan Ini
             </button>
-            <button wire:click="setLastMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
+            <button wire:click="setLastMonth" class="btn btn-secondary">
                 Bulan Lalu
             </button>
-            <button wire:click="setThisYear" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition text-center whitespace-nowrap">
+            <button wire:click="setThisYear" class="btn btn-secondary">
                 Tahun Ini
             </button>
         </div>
@@ -32,7 +32,7 @@
                 <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
             <div>
-                <button wire:click="generateReport" class="w-full px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-black font-bold transition shadow-lg flex items-center justify-center gap-2 text-sm h-[42px]">
+                <button wire:click="generateReport" class="btn btn-lg btn-primary bg-gray-900 hover:bg-black">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Tampilkan Laporan</span>
                 </button>
@@ -49,7 +49,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Kas Masuk</p>
+                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Total Pendapatan</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_revenue'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Total Penerimaan</p>
@@ -61,7 +61,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Kas Keluar Stok</p>
+                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Total HPP</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_cogs'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">HPP Persediaan</p>
@@ -73,10 +73,10 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Gross Cash Inflow</p>
+                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Laba Kotor</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['gross_profit'], 0, ',', '.') }}</p>
-            <p class="text-[10px] text-white/60 mt-1 italic">Kas Bersih Operasi</p>
+            <p class="text-[10px] text-white/60 mt-1 italic">Pendapatan - HPP</p>
         </div>
 
         {{-- Beban --}}
@@ -85,7 +85,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Kas Keluar Ops</p>
+                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Beban Operasional</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_expenses'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Operasional & Lainnya</p>
@@ -97,18 +97,18 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Arus Kas Bersih</p>
+                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Laba/Rugi Bersih</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}</p>
-            <p class="text-[10px] text-white/60 mt-1 italic">Hasil Akhir Kas</p>
+            <p class="text-[10px] text-white/60 mt-1 italic">Hasil Akhir</p>
         </div>
     </div>
 
     {{-- Income Statement Table --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="bg-indigo-900 px-6 py-4">
-            <h3 class="text-xl font-bold text-white tracking-widest uppercase">DETAIL ARUS KAS</h3>
-            <p class="text-sm text-indigo-200 mt-1 italic">Rincian Perputaran Kas Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
+            <h3 class="text-xl font-bold text-white tracking-widest uppercase">DETAIL LABA RUGI</h3>
+            <p class="text-sm text-indigo-200 mt-1 italic">Rincian Pendapatan dan Beban Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
         </div>
         
         <div class="p-6 space-y-6">
@@ -193,7 +193,7 @@
             {{-- NET INCOME --}}
             <div class="bg-gradient-to-r from-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-50 to-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-100 p-4 sm:p-6 rounded-lg border-2 border-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-300">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-2">
-                    <span class="text-xl sm:text-2xl font-bold text-gray-900 text-center sm:text-left">{{ $reportData['net_income'] >= 0 ? 'ARUS KAS BERSIH (SURPLUS)' : 'ARUS KAS BERSIH (DEFISIT)' }}</span>
+                    <span class="text-xl sm:text-2xl font-bold text-gray-900 text-center sm:text-left">{{ $reportData['net_income'] >= 0 ? 'LABA BERSIH' : 'RUGI BERSIH' }}</span>
                     <span class="text-2xl sm:text-3xl font-bold text-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-700">
                         Rp {{ number_format(abs($reportData['net_income']), 0, ',', '.') }}
                     </span>

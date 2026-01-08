@@ -9,9 +9,21 @@
                 Total Stok: <span class="font-bold">{{ $product->batches()->sum('stock_current') }} {{ $product->unit->name ?? 'pcs' }}</span>
             </p>
         </div>
-        <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
-            ← Kembali
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('pdf.stock-history', [
+                'productId' => $productId,
+                'type' => $filterType,
+                'start_date' => $startDate,
+                'end_date' => $endDate
+            ]) }}" target="_blank"
+                class="btn btn-lg btn-danger">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Export PDF
+            </a>
+            <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
+                ← Kembali
+            </a>
+        </div>
     </div>
 
     <!-- Active Batches Section -->
@@ -121,6 +133,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Saldo</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referensi</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
@@ -147,13 +160,16 @@
                         <td class="px-6 py-4 text-sm font-bold whitespace-nowrap {{ $movement->quantity > 0 ? 'text-green-600' : 'text-red-600' }}">
                             {{ $movement->quantity > 0 ? '+' : '' }}{{ $movement->quantity }}
                         </td>
+                        <td class="px-6 py-4 text-sm font-bold whitespace-nowrap {{ $movement->running_balance < 0 ? 'text-red-600' : 'text-blue-600' }}">
+                            {{ number_format($movement->running_balance, 0, ',', '.') }}
+                        </td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $movement->doc_ref ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->description }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->user->name ?? 'System' }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi.</td>
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi.</td>
                     </tr>
                     @endforelse
                 </tbody>

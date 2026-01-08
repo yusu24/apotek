@@ -12,7 +12,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center">
-            <button wire:click="openModal" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold transition flex items-center gap-2 whitespace-nowrap">
+            <button wire:click="openModal" class="btn btn-warning">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tambah Retur
             </button>
@@ -108,7 +108,7 @@
                                                     <div class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Batch: {{ $batch->batch_no }} | Exp: {{ $batch->expired_date ? $batch->expired_date->format('d/m/Y') : '-' }}</div>
                                                 </div>
                                                 <div class="text-right">
-                                                    <div class="text-sm font-black text-orange-600">Stok: {{ $batch->stock_current }}</div>
+                                                    <div class="text-sm font-bold text-orange-600">Stok: {{ $batch->stock_current }}</div>
                                                     <div class="text-[10px] text-gray-400 font-bold">Rp {{ number_format($batch->buy_price, 0, ',', '.') }}</div>
                                                 </div>
                                             </button>
@@ -146,7 +146,7 @@
                                             <td class="px-4 py-3 text-right text-gray-500 italic">
                                                 Rp {{ number_format($item['cost_price'], 0, ',', '.') }}
                                             </td>
-                                            <td class="px-4 py-3 text-right font-black text-orange-600">
+                                            <td class="px-4 py-3 text-right font-bold text-orange-600">
                                                 Rp {{ number_format(($item['quantity'] ?: 0) * $item['cost_price'], 0, ',', '.') }}
                                             </td>
                                             <td class="px-4 py-3 text-center">
@@ -171,7 +171,7 @@
                                     <tfoot class="bg-orange-50/30">
                                         <tr class="font-bold">
                                             <td colspan="4" class="px-4 py-4 text-right uppercase tracking-widest text-[10px] text-gray-500">Total Nilai Retur</td>
-                                            <td class="px-4 py-4 text-right text-lg text-orange-700 font-black">Rp {{ number_format(collect($returnItems)->sum(fn($i) => ($i['quantity'] ?: 0) * $i['cost_price']), 0, ',', '.') }}</td>
+                                            <td class="px-4 py-4 text-right text-lg text-orange-700 font-bold">Rp {{ number_format(collect($returnItems)->sum(fn($i) => ($i['quantity'] ?: 0) * $i['cost_price']), 0, ',', '.') }}</td>
                                             <td></td>
                                         </tr>
                                     </tfoot>
@@ -190,10 +190,10 @@
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                    <button wire:click="saveReturn" class="px-6 py-2.5 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-bold shadow-md transition-all active:scale-95 text-sm disabled:opacity-50 disabled:cursor-not-allowed" @if(empty($returnItems)) disabled @endif>
+                    <button wire:click="saveReturn" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" @if(empty($returnItems)) disabled @endif>
                         Simpan Retur
                     </button>
-                    <button wire:click="$set('showModal', false)" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold transition-all text-sm">
+                    <button wire:click="$set('showModal', false)" class="btn btn-secondary">
                         Batal
                     </button>
                 </div>

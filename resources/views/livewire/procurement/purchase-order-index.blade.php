@@ -37,7 +37,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="mb-4 flex flex-col sm:flex-row gap-4">
             <a href="{{ route('procurement.purchase-orders.create') }}" wire:navigate
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0 w-full sm:w-auto">
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-medium flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0 w-full sm:w-auto">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span class="inline">Buat Pesanan</span>
             </a>
@@ -73,12 +73,12 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($orders as $po)
                         <tr>
-                            <td class="px-6 py-4 text-sm font-bold text-gray-900 border-l-4 border-blue-500 pl-4">{{ $po->po_number }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900 border-l-4 border-blue-500 pl-4">{{ $po->po_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
                             {{-- <td class="px-6 py-4 text-sm text-gray-900 text-right font-bold">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td> --}}
                             <td class="px-6 py-4 text-sm">
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                <span class="px-2 py-1 text-xs font-medium rounded-full 
                                     {{ $po->status === 'received' ? 'bg-green-100 text-green-800' : 
                                        ($po->status === 'cancelled' ? 'bg-red-100 text-red-800' : 
                                        ($po->status === 'partial' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800')) }}">

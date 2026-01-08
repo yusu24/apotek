@@ -272,6 +272,41 @@ class GuideDetail extends Component
                     ['name' => 'PPN (%)', 'description' => 'Besaran pajak default yang berlaku di toko.', 'required' => true]
                 ]
             ],
+            'user-manual' => [
+                'title' => 'Buku Panduan Lengkap',
+                'image' => 'guide_manual.png',
+                'description' => 'Tutorial lengkap penggunaan aplikasi apotek dari persiapan awal hingga operasional harian. Panduan ini mencakup semua modul: Master Data, Procurement, POS, Inventory, Accounting, dan Reporting.',
+                'screenshots' => [],
+                'golden_rules' => [
+                    'Lakukan **Setup Saldo Awal** sebelum transaksi pertama.',
+                    'Input **Data Master** (Produk, Kategori, Supplier) dengan lengkap.',
+                    'Pastikan **Harga Beli** dan **Exp Date** terisi saat penerimaan barang.',
+                    'Lakukan **Backup Data** rutin minimal seminggu sekali.',
+                    'Review **Laporan Keuangan** setiap akhir bulan.'
+                ],
+                'sub_menus' => [
+                    ['name' => 'Persiapan Awal', 'func' => 'Login pertama, pengaturan toko, dan input saldo awal kas & bank.'],
+                    ['name' => 'Master Data', 'func' => 'Setup kategori, satuan, supplier, dan data produk/obat.'],
+                    ['name' => 'Keuangan & Akuntansi', 'func' => 'Chart of accounts, rekening bank, kategori beban, dan input pengeluaran.'],
+                    ['name' => 'Procurement', 'func' => 'Membuat Purchase Order dan penerimaan barang dari supplier.'],
+                    ['name' => 'Point of Sale', 'func' => 'Transaksi penjualan di kasir dengan berbagai metode pembayaran.'],
+                    ['name' => 'Inventory', 'func' => 'Cek stok, kartu stok, penyesuaian, dan retur penjualan/pembelian.'],
+                    ['name' => 'Laporan', 'func' => 'Dashboard, laporan penjualan, stok, keuangan, dan laporan pajak.'],
+                    ['name' => 'Administrasi', 'func' => 'Manajemen user, activity log, dan pengaturan sistem.']
+                ],
+                'buttons' => [
+                    ['label' => 'Download PDF', 'func' => 'Mengunduh buku panduan lengkap dalam format PDF untuk dibaca offline atau dicetak.'],
+                    ['label' => 'Cetak Panduan', 'func' => 'Mencetak buku panduan untuk dokumentasi fisik apotek.']
+                ],
+                'procedures' => [
+                    ['title' => 'Setup Awal Aplikasi', 'desc' => '1. Login dengan akun admin.\\n2. Buka Settings → Pengaturan Toko, isi data apotek.\\n3. Buka Finance → Saldo Awal, input saldo kas dan bank.\\n4. Klik Simpan Saldo Awal.'],
+                    ['title' => 'Input Data Produk Pertama', 'desc' => '1. Buat kategori di Master → Kategori.\\n2. Tambah satuan di Master → Master Satuan.\\n3. Tambah supplier di Master → Supplier.\\n4. Buat produk di Master → Data Obat/Produk.\\n5. Isi nama, barcode, kategori, satuan, dan harga jual.'],
+                    ['title' => 'Penerimaan Barang Pertama', 'desc' => '1. Buat PO di Procurement → Purchase Order (opsional).\\n2. Buka Procurement → Penerimaan Barang.\\n3. Isi No. Surat Jalan dan pilih metode pembayaran.\\n4. Input detail: batch, exp date, qty, dan harga beli.\\n5. Klik Proses Penerimaan & Update Stok.'],
+                    ['title' => 'Transaksi Penjualan Pertama', 'desc' => '1. Buka menu Kasir (POS).\\n2. Scan barcode atau pilih produk.\\n3. Atur qty jika perlu.\\n4. Klik Bayar Sekarang.\\n5. Input uang diterima dan klik Selesai.'],
+                    ['title' => 'Melihat Laporan Keuangan', 'desc' => '1. Buka Finance → Laba Rugi.\\n2. Pilih periode (bulan/tahun).\\n3. Review pendapatan, HPP, beban, dan laba bersih.\\n4. Export PDF jika perlu untuk arsip.']
+                ],
+                'form_fields' => []
+            ],
         ];
 
         return $data[$slug] ?? null;

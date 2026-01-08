@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak] {
-    display: none !important;
-}
+@layer components {
 
-@layer components {}
+    /* Base button - Medium (Default) */
+    .btn {
+        @apply px-4 py-2 rounded-lg font-bold text-sm capitalize shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2;
+    }
+
+    /* Small button */
+    .btn-sm {
+        @apply px-3 py-1 text-xs;
+    }
+
+    /* Large button */
+    .btn-lg {
+        @apply px-6 py-3 text-base;
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+    }
+
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500;
+    }
+
+    .btn-success {
+        @apply bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
+    }
+
+    .btn-danger {
+        @apply bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500;
+    }
+
+    .btn-warning {
+        @apply bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500;
+    }
+}

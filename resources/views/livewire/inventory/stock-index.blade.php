@@ -16,7 +16,7 @@
                 </div>
                 <div class="ml-3">
                     <p class="text-sm text-yellow-700">
-                        Perhatian: Ada <span class="font-bold">{{ $low_stock_products->count() }}</span> produk dengan stok menipis (di bawah minimum).
+                        Perhatian: Ada <span class="font-medium">{{ $low_stock_products->count() }}</span> produk dengan stok menipis (di bawah minimum).
                     </p>
                 </div>
             </div>
@@ -27,11 +27,11 @@
         <div class="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex gap-2">
                 <a href="{{ route('inventory.index', ['filter_status' => 'all']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
+                    class="px-4 py-2 text-sm font-medium rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Semua
                 </a>
                 <a href="{{ route('inventory.index', ['filter_status' => 'low_stock']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-bold rounded-lg transition duration-200 {{ $filter_status == 'low_stock' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
+                    class="px-4 py-2 text-sm font-medium rounded-lg transition duration-200 {{ $filter_status == 'low_stock' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Stok Menipis
                 </a>
             </div>
@@ -54,10 +54,10 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($products as $product)
                         <tr wire:key="product-{{ $product->id }}">
-                            <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $product->name }}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $product->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $product->category->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $product->min_stock }}</td>
-                            <td class="px-6 py-4 text-sm font-bold {{ $product->total_stock <= 0 ? 'text-red-600' : 'text-gray-900' }}">
+                            <td class="px-6 py-4 text-sm font-medium {{ $product->total_stock <= 0 ? 'text-red-600' : 'text-gray-900' }}">
                                 {{ $product->total_stock ?? 0 }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
@@ -65,11 +65,11 @@
                             </td>
                             <td class="px-6 py-4">
                                 @if(($product->total_stock ?? 0) <= 0)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Habis</span>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-100 text-red-800">Habis</span>
                                 @elseif(($product->total_stock ?? 0) <= $product->min_stock)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menipis</span>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-yellow-100 text-yellow-800">Menipis</span>
                                 @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aman</span>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800">Aman</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">

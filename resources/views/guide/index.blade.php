@@ -8,11 +8,11 @@
                     <div class="p-2.5 bg-blue-600 rounded-xl shadow-lg shadow-blue-200 text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
-                    <h2 class="text-xl font-black text-slate-900 tracking-tight">Handbooks</h2>
+                    <h2 class="text-xl font-bold text-slate-900 tracking-tight">Handbooks</h2>
                 </div>
 
                 <nav class="space-y-1.5">
-                    <p class="px-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Getting Started</p>
+                    <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">Getting Started</p>
                     <a href="#quickstart" class="group flex items-center px-4 py-3 text-sm font-bold text-slate-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all">
                         Quick Start Guide
                     </a>
@@ -20,7 +20,7 @@
                         Login & Access
                     </a>
 
-                    <p class="px-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">System Modules</p>
+                    <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">System Modules</p>
                     <a href="#dashboard" class="group flex items-center px-4 py-3 text-sm font-bold text-slate-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all">
                         Dashboard Utama
                     </a>
@@ -40,7 +40,7 @@
                         Laporan Keuangan
                     </a>
 
-                    <p class="px-3 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">Administration</p>
+                    <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">Administration</p>
                     <a href="#profile" class="group flex items-center px-4 py-3 text-sm font-bold text-slate-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all">
                         Profil & Keamanan
                     </a>
@@ -69,7 +69,7 @@
                 <!-- Quick Start -->
                 <section id="quickstart" class="scroll-mt-32">
                     <div class="mb-12">
-                        <h1 class="text-6xl font-black text-slate-900 tracking-tighter mb-6">BUKU PANDUAN PENGGUNA</h1>
+                        <h1 class="text-6xl font-bold text-slate-900 tracking-tighter mb-6">BUKU PANDUAN PENGGUNA</h1>
                         <p class="text-xl text-slate-500 max-w-2xl leading-relaxed font-medium">Panduan lengkap pengoperasian sistem informasi apotek dengan standar operasional terbaru.</p>
                     </div>
 
@@ -77,7 +77,7 @@
                         <div class="p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all">
                             <h3 class="text-xl font-bold text-slate-900 mb-4">Mulai Cepat</h3>
                             <p class="text-slate-500 text-sm leading-relaxed mb-6">Pelajari alur dasar dari login hingga transaksi pertama Anda dalam kurang dari 5 menit.</p>
-                            <a href="#login" class="inline-flex items-center text-blue-600 font-black text-sm uppercase tracking-wider group">
+                            <a href="#login" class="inline-flex items-center text-blue-600 font-bold text-sm uppercase tracking-wider group">
                                 Buka Langkah 1 
                                 <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </a>
@@ -85,7 +85,7 @@
                         <div class="p-8 bg-blue-600 rounded-[2.5rem] shadow-2xl shadow-blue-200 text-white">
                             <h3 class="text-xl font-bold mb-4">Tips Efisiensi</h3>
                             <p class="text-blue-100 text-sm leading-relaxed mb-6">Gunakan fitur shortcut dan pencarian cepat untuk melayani pelanggan lebih responsif.</p>
-                            <a href="#pos" class="inline-flex items-center text-white font-black text-sm uppercase tracking-wider group">
+                            <a href="#pos" class="inline-flex items-center text-white font-bold text-sm uppercase tracking-wider group">
                                 Lihat Panduan POS
                                 <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </a>
@@ -185,10 +185,10 @@
                 <section id="{{ $section['id'] }}" class="scroll-mt-32 space-y-12">
                     <div class="max-w-3xl">
                         <div class="flex items-center gap-5 mb-6">
-                            <span class="text-sm font-black text-blue-600 uppercase tracking-[0.3em]">Module 0{{ $index + 1 }}</span>
+                            <span class="text-sm font-bold text-blue-600 uppercase tracking-[0.3em]">Module 0{{ $index + 1 }}</span>
                             <div class="h-px flex-1 bg-slate-200"></div>
                         </div>
-                        <h2 class="text-4xl font-black text-slate-900 leading-none mb-6 tracking-tight uppercase">{{ $section['title'] }}</h2>
+                        <h2 class="text-4xl font-bold text-slate-900 leading-none mb-6 tracking-tight uppercase">{{ $section['title'] }}</h2>
                         <p class="text-lg text-slate-600 leading-relaxed font-medium">{{ $section['desc'] }}</p>
                     </div>
 
@@ -197,7 +197,7 @@
                         <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[3rem] blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
                         <div class="relative bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200/50">
                             <img src="{{ asset('images/guide/' . $section['image']) }}" alt="{{ $section['title'] }}" class="w-full object-cover">
-                            <div class="absolute bottom-6 right-8 bg-slate-900/80 backdrop-blur-md px-5 py-2.5 rounded-2xl text-white text-[10px] font-black uppercase tracking-widest border border-white/10 no-print">
+                            <div class="absolute bottom-6 right-8 bg-slate-900/80 backdrop-blur-md px-5 py-2.5 rounded-2xl text-white text-[10px] font-bold uppercase tracking-widest border border-white/10 no-print">
                                 Real System Interface
                             </div>
                         </div>
@@ -207,11 +207,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         @if(isset($section['steps']))
                         <div class="space-y-6">
-                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Cara Operasional</h4>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Cara Operasional</h4>
                             <ul class="space-y-4">
                                 @foreach($section['steps'] as $step)
                                 <li class="flex items-start gap-4">
-                                    <div class="mt-1 w-5 h-5 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-black">
+                                    <div class="mt-1 w-5 h-5 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </div>
                                     <span class="text-slate-700 font-bold leading-tight">{{ $step }}</span>
@@ -223,7 +223,7 @@
 
                         @if(isset($section['points']))
                         <div class="space-y-6">
-                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Fitur Utama</h4>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Fitur Utama</h4>
                             <ul class="space-y-4">
                                 @foreach($section['points'] as $point)
                                 <li class="flex items-start gap-4 p-5 bg-white border border-slate-100 rounded-3xl shadow-sm">
@@ -244,7 +244,7 @@
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
                         <div>
-                            <h5 class="text-sm font-black text-blue-900 uppercase tracking-widest mb-1">Penting</h5>
+                            <h5 class="text-sm font-bold text-blue-900 uppercase tracking-widest mb-1">Penting</h5>
                             <p class="text-blue-700 font-bold italic leading-snug">{{ $section['tip'] }}</p>
                         </div>
                     </div>
@@ -253,7 +253,7 @@
                 @endforeach
 
                 <footer class="mt-32 pt-16 border-t border-slate-200 text-center pb-20">
-                    <p class="text-slate-400 text-xs font-black uppercase tracking-[0.5em]">Tangguh Kreatifindo &bull; Apotek POS v1.0</p>
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.5em]">Tangguh Kreatifindo &bull; Apotek POS v1.0</p>
                 </footer>
 
             </div>

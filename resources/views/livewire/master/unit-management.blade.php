@@ -6,10 +6,12 @@
 
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center">
-            <button wire:click="openModal" class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md transition-all active:scale-95 whitespace-nowrap">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Tambah Satuan
-            </button>
+            <x-button wire:click="openModal" variant="primary" class="gap-2 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                Tambah Unit
+            </x-button>
             <div class="relative max-w-sm w-full">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -22,9 +24,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">No</th>
-                        <th class="px-6 py-3 text-left text-[10px] font-black text-gray-500 uppercase tracking-widest">Nama Satuan</th>
-                        <th class="px-6 py-3 text-center text-[10px] font-black text-gray-500 uppercase tracking-widest">Aksi</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-widest">No</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-widest">Nama Satuan</th>
+                        <th class="px-6 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-widest">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
@@ -103,12 +105,12 @@
                     </div>
                     
                     <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md transition-all active:scale-95 text-sm">
+                        <x-button type="submit" variant="primary" class="px-6 py-2.5 shadow-md active:scale-95 text-sm">
                             {{ $editMode ? 'Update Satuan' : 'Simpan Satuan' }}
-                        </button>
-                        <button type="button" wire:click="closeModal" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-bold transition-all text-sm">
+                        </x-button>
+                        <x-button type="button" variant="secondary" wire:click="closeModal" class="px-6 py-2.5 text-sm">
                             Batal
-                        </button>
+                        </x-button>
                     </div>
                 </form>
             </div>

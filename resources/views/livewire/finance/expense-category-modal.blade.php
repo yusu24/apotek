@@ -10,7 +10,7 @@
             <form wire:submit.prevent="save">
                 <div class="px-8 pt-8 pb-6 bg-white">
                     <div class="mb-6 flex justify-between items-center">
-                        <h3 class="text-xl font-black text-gray-800 uppercase tracking-tight">
+                        <h3 class="text-xl font-bold text-gray-800 uppercase tracking-tight">
                             {{ $isEditMode ? 'Edit Kategori' : 'Tambah Kategori' }}
                         </h3>
                         <button type="button" wire:click="closeModal" class="text-gray-400 hover:text-gray-600 transition">
@@ -20,14 +20,14 @@
 
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1.5">Nama Kategori</label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Nama Kategori</label>
                             <input type="text" wire:model="name" placeholder="Contoh: Operasional, Gaji, Listrik..."
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 transition duration-150">
                             @error('name') <span class="text-xs text-rose-500 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1.5">Deskripsi (Opsional)</label>
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Deskripsi (Opsional)</label>
                             <textarea wire:model="description" rows="3" placeholder="Keterangan singkat kategori ini..."
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 transition duration-150"></textarea>
                             @error('description') <span class="text-xs text-rose-500 font-bold mt-1 block">{{ $message }}</span> @enderror
@@ -36,10 +36,10 @@
                 </div>
 
                 <div class="px-8 py-6 bg-gray-50 flex justify-end gap-3 rounded-b-2xl border-t border-gray-100">
-                    <button type="button" wire:click="closeModal" class="px-6 py-2.5 text-xs font-black text-gray-500 uppercase tracking-widest hover:text-gray-700 transition">
+                    <button type="button" wire:click="closeModal" class="btn btn-secondary">
                         Batal
                     </button>
-                    <button type="submit" class="px-8 py-2.5 bg-red-600 text-white rounded-xl shadow-lg shadow-red-100 hover:bg-red-700 font-black text-xs uppercase tracking-widest transition duration-200">
+                    <button type="submit" class="btn btn-lg btn-danger">
                         {{ $isEditMode ? 'Simpan Perubahan' : 'Tambah Kategori' }}
                     </button>
                 </div>

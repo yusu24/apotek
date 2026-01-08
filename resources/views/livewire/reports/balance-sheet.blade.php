@@ -6,13 +6,13 @@
             <p class="text-sm text-gray-500 mt-1">Laporan Posisi Keuangan</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <button wire:click="setThisMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
+            <button wire:click="setThisMonth" class="btn btn-secondary">
                 Bulan Ini
             </button>
-            <button wire:click="setLastMonth" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
+            <button wire:click="setLastMonth" class="btn btn-secondary">
                 Bulan Lalu
             </button>
-            <button wire:click="setThisYear" class="flex-1 md:flex-none px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-center whitespace-nowrap">
+            <button wire:click="setThisYear" class="btn btn-secondary">
                 Tahun Ini
             </button>
         </div>
@@ -30,7 +30,7 @@
                 <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="flex items-end">
-                <button wire:click="generateReport" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold transition flex items-center justify-center gap-2 text-sm h-[42px]">
+                <button wire:click="generateReport" class="btn btn-lg btn-primary">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Generate Laporan</span>
                 </button>
@@ -61,7 +61,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Aset</p>
             </div>
-            <p class="text-3xl font-black">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</p>
+            <p class="text-3xl font-bold">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</p>
         </div>
 
         {{-- Total Liabilitas --}}
@@ -72,7 +72,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Liabilitas</p>
             </div>
-            <p class="text-3xl font-black">Rp {{ number_format($reportData['total_liabilities'], 0, ',', '.') }}</p>
+            <p class="text-3xl font-bold">Rp {{ number_format($reportData['total_liabilities'], 0, ',', '.') }}</p>
         </div>
 
         {{-- Total Ekuitas --}}
@@ -83,7 +83,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Ekuitas</p>
             </div>
-            <p class="text-3xl font-black">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</p>
+            <p class="text-3xl font-bold">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</p>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
                         <span class="text-sm font-bold text-gray-700">Total Aset Lancar</span>
-                        <span class="text-base font-black text-blue-700">Rp {{ number_format($reportData['total_current_assets'], 0, ',', '.') }}</span>
+                        <span class="text-base font-bold text-blue-700">Rp {{ number_format($reportData['total_current_assets'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -126,15 +126,15 @@
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
                         <span class="text-sm font-bold text-gray-700">Total Aset Tetap</span>
-                        <span class="text-base font-black text-blue-700">Rp {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }}</span>
+                        <span class="text-base font-bold text-blue-700">Rp {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 {{-- Total Assets --}}
                 <div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-black text-gray-800">TOTAL ASET</span>
-                        <span class="text-2xl font-black text-blue-700">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-gray-800">TOTAL ASET</span>
+                        <span class="text-2xl font-bold text-blue-700">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
@@ -160,7 +160,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
                         <span class="text-sm font-bold text-gray-700">Total Liabilitas Lancar</span>
-                        <span class="text-base font-black text-red-700">Rp {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }}</span>
+                        <span class="text-base font-bold text-red-700">Rp {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -177,7 +177,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
                         <span class="text-sm font-bold text-gray-700">Total Liabilitas Jangka Panjang</span>
-                        <span class="text-base font-black text-red-700">Rp {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }}</span>
+                        <span class="text-base font-bold text-red-700">Rp {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -201,15 +201,15 @@
                     </div>
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200 bg-green-50 px-2 py-1 rounded">
                         <span class="text-sm font-bold text-gray-700">Total Ekuitas</span>
-                        <span class="text-base font-black text-green-700">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
+                        <span class="text-base font-bold text-green-700">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 {{-- Total Liabilities + Equity --}}
                 <div class="bg-red-50 p-4 rounded-lg border-2 border-red-200">
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-black text-gray-800">TOTAL LIABILITAS + EKUITAS</span>
-                        <span class="text-2xl font-black text-red-700">Rp {{ number_format($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-gray-800">TOTAL LIABILITAS + EKUITAS</span>
+                        <span class="text-2xl font-bold text-red-700">Rp {{ number_format($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>

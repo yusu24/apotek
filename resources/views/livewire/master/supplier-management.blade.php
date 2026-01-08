@@ -18,12 +18,12 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div class="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex flex-row gap-4 items-center">
-            <button wire:click="openModal" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            <x-button wire:click="openModal" variant="primary" class="gap-2 whitespace-nowrap w-fit shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
-                <span class="hidden sm:inline">Tambah Supplier</span>
-            </button>
+                Tambah Supplier
+            </x-button>
 
             <div class="flex-1 md:flex-none md:w-1/3 relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
@@ -128,12 +128,12 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition duration-200">
+                        <x-button type="submit" variant="primary" class="w-full sm:w-auto text-base sm:text-sm">
                             {{ $isEditMode ? 'Simpan Perubahan' : 'Simpan Supplier' }}
-                        </button>
-                        <button type="button" @click="$wire.closeModal()" class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm transition duration-200">
+                        </x-button>
+                        <x-button type="button" variant="secondary" wire:click="closeModal" class="mt-3 w-full sm:mt-0 sm:w-auto text-base sm:text-sm">
                             Batal
-                        </button>
+                        </x-button>
                     </div>
                 </form>
             </div>

@@ -24,20 +24,20 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Aset</p>
-            <p class="text-2xl font-black text-gray-800">Rp {{ number_format($summary['total_assets'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_assets'], 0, ',', '.') }}</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-red-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Liabilitas</p>
-            <p class="text-2xl font-black text-gray-800">Rp {{ number_format($summary['total_liabilities'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_liabilities'], 0, ',', '.') }}</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-purple-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Ekuitas</p>
-            <p class="text-2xl font-black text-gray-800">Rp {{ number_format($summary['total_equity'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_equity'], 0, ',', '.') }}</p>
         </div>
         <div class="p-6 rounded-xl shadow-md border-b-4 {{ $summary['is_balanced'] ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500' }}">
             <p class="text-xs font-bold {{ $summary['is_balanced'] ? 'text-green-600' : 'text-orange-600' }} uppercase tracking-wider mb-1">Selisih (Balance Check)</p>
             <div class="flex items-center gap-2">
-                <p class="text-2xl font-black {{ $summary['is_balanced'] ? 'text-green-700' : 'text-orange-700' }}">
+                <p class="text-2xl font-bold {{ $summary['is_balanced'] ? 'text-green-700' : 'text-orange-700' }}">
                     Rp {{ number_format(abs($summary['difference']), 0, ',', '.') }}
                 </p>
                 @if($summary['is_balanced'])
@@ -61,7 +61,7 @@
                 
                 <!-- 1. Aset Lancar -->
                 <section>
-                    <h3 class="text-lg font-black text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
+                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
                         <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm">1</span>
                         Aset Lancar (Kas & Bank)
                     </h3>
@@ -90,7 +90,7 @@
                 <!-- 2. Aset Tetap -->
                 <section>
                     <div class="flex justify-between items-center mb-6 border-b pb-2">
-                        <h3 class="text-lg font-black text-gray-800 flex items-center gap-3">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm">2</span>
                             Aset Tetap
                         </h3>
@@ -135,7 +135,7 @@
                 <!-- 3. Liabilitas (Utang) -->
                 <section>
                     <div class="flex justify-between items-center mb-6 border-b pb-2">
-                        <h3 class="text-lg font-black text-gray-800 flex items-center gap-3">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-sm">3</span>
                             Liabilitas (Utang Awal)
                         </h3>
@@ -183,7 +183,7 @@
 
                 <!-- 4. Ekuitas (Modal) -->
                 <section>
-                    <h3 class="text-lg font-black text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
+                    <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-3 border-b pb-2">
                         <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-sm">4</span>
                         Ekuitas (Modal Awal)
                     </h3>
@@ -217,13 +217,13 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <button type="button" onclick="history.back()" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-bold shadow-sm">
+                    <button type="button" onclick="history.back()" class="btn btn-lg btn-secondary">
                         Batal
                     </button>
                     <button type="submit" 
                         {{ !$summary['is_balanced'] ? 'disabled' : '' }}
                         class="px-8 py-2.5 {{ $summary['is_balanced'] ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30' : 'bg-gray-400 cursor-not-allowed opacity-50' }} text-white rounded-lg transition font-bold shadow-lg flex items-center gap-2">
-                        <svg class="w-5 h-5 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                        <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         Simpan & Posting Jurnal
                     </button>
                 </div>

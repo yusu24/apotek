@@ -68,7 +68,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-gray-800">Item Pesanan</h3>
                         @if(!$isReadOnly)
-                        <button type="button" wire:click="openModal" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 shadow-md font-bold transition duration-200 flex items-center gap-2">
+                        <button type="button" wire:click="openModal" class="btn btn-primary">
                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             Tambah Barang
                         </button>
@@ -81,10 +81,10 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50/50">
                                 <tr>
-                                    <th class="px-6 py-4 text-left text-[10px] font-black text-gray-500 uppercase tracking-[0.1em]">Informasi Produk</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-black text-gray-500 uppercase tracking-[0.1em] w-32">Kuantitas</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-black text-gray-500 uppercase tracking-[0.1em] w-32">Satuan</th>
-                                    <th class="px-6 py-4 text-right text-[10px] font-black text-gray-500 uppercase tracking-[0.1em] w-28">Aksi</th>
+                                    <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">Informasi Produk</th>
+                                    <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-32">Kuantitas</th>
+                                    <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-32">Satuan</th>
+                                    <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-28">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">
@@ -95,14 +95,14 @@
                                     <tr class="group hover:bg-gray-50/80 transition-all duration-150">
                                         <td class="px-6 py-5">
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-[13px] font-black text-gray-900 leading-none group-hover:text-blue-700 transition-colors truncate mb-1.5">{{ $product->name ?? '-' }}</div>
+                                                <div class="text-[13px] font-medium text-gray-900 leading-none group-hover:text-blue-700 transition-colors truncate mb-1.5">{{ $product->name ?? '-' }}</div>
                                                 <div class="flex items-center gap-2">
-                                                    <span class="text-[9px] font-bold text-gray-400 tracking-widest uppercase bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{{ $product->barcode ?? 'No Barcode' }}</span>
+                                                    <span class="text-[9px] text-gray-400 tracking-widest uppercase bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{{ $product->barcode ?? 'No Barcode' }}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-black rounded-lg group-hover:bg-blue-100 group-hover:text-blue-800 transition-colors">
+                                            <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-lg group-hover:bg-blue-100 group-hover:text-blue-800 transition-colors">
                                                 {{ $item['qty'] }}
                                             </span>
                                         </td>
@@ -125,7 +125,7 @@
                                                     }
                                                 }
                                             @endphp
-                                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wide bg-gray-50 px-2 py-1 rounded border border-gray-100">{{ $unitName }}</span>
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide bg-gray-50 px-2 py-1 rounded border border-gray-100">{{ $unitName }}</span>
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             @if(!$isReadOnly)
@@ -159,7 +159,7 @@
                                     <td colspan="4" class="px-6 py-4">
                                         <div class="flex items-center justify-end gap-3 text-sm">
                                             <span class="text-gray-500 font-medium tracking-tight">Ringkasan Pesanan:</span>
-                                            <span class="text-blue-700 bg-blue-50 px-4 py-1.5 rounded-lg font-bold border border-blue-100 flex items-center gap-2">
+                                            <span class="text-blue-700 bg-blue-50 px-4 py-1.5 rounded-lg font-medium border border-blue-100 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                                                 {{ count($items) }} Produk Dipesan
                                             </span>
@@ -173,7 +173,7 @@
                     {{-- Action buttons --}}
                     <div class="mt-8 pt-6 border-t border-gray-100 flex flex-wrap items-center justify-end gap-3">
                         @if(!$isReadOnly)
-                        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md transition-all active:scale-95 flex items-center gap-2 text-sm">
+                        <button type="submit" class="btn btn-lg btn-primary">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             Simpan Pesanan
                         </button>
@@ -226,7 +226,7 @@
                                             {{ $index + 1 }}
                                         </span>
                                         <div>
-                                            <h4 class="font-bold text-gray-900">{{ $receipt->delivery_note_number }}</h4>
+                                            <h4 class="font-medium text-gray-900">{{ $receipt->delivery_note_number }}</h4>
                                             <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d M Y') }} • oleh {{ $receipt->user->name ?? '-' }}</p>
                                         </div>
                                     </div>
@@ -237,12 +237,12 @@
                                     
                                     <div class="ml-11 text-sm">
                                         <span class="text-gray-500">Jumlah Item:</span>
-                                        <span class="font-semibold text-gray-900">{{ $receipt->items->count() }} produk</span>
+                                        <span class="font-medium text-gray-900">{{ $receipt->items->count() }} produk</span>
                                     </div>
                                 </div>
                                 
                                 <div class="text-right">
-                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                                         Diterima
                                     </div>
@@ -343,7 +343,7 @@
                                             <li @click="selectProduct(product)" 
                                                 class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors">
                                                 <div>
-                                                    <div class="text-sm font-semibold text-gray-800" x-text="product.name"></div>
+                                                    <div class="text-sm font-medium text-gray-800" x-text="product.name"></div>
                                                     <div class="text-xs text-gray-500" x-text="product.barcode"></div>
                                                 </div>
                                             </li>
@@ -365,11 +365,11 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-gray-50 p-2 rounded-lg border border-gray-200">
                                 <label class="block text-[10px] font-semibold text-gray-500 uppercase">Kode</label>
-                                <div class="font-semibold text-xs text-gray-800">{{ $modalProductCode ?: '-' }}</div>
+                                <div class="font-medium text-xs text-gray-800">{{ $modalProductCode ?: '-' }}</div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Satuan <span class="text-red-500">*</span></label>
-                                <select wire:model.live="modalUnitId" wire:key="unit-select-{{ $modalProductId }}" class="block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold">
+                                <select wire:model.live="modalUnitId" wire:key="unit-select-{{ $modalProductId }}" class="block w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium">
                                     @foreach($availableUnits as $u)
                                         <option value="{{ $u['id'] }}">
                                             {{ $u['name'] }}
@@ -389,7 +389,7 @@
                                 <label class="block text-xs font-bold text-gray-700 mb-1">Kuantitas <span class="text-red-500">*</span></label>
                                 <div class="flex rounded-lg shadow-sm h-9">
                                     <button type="button" wire:click="decrementQty" class="px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg hover:bg-gray-200 font-bold text-gray-600">-</button>
-                                    <input type="number" wire:model.live="modalQty" class="flex-1 min-w-0 block w-full px-2 border-gray-300 text-center font-bold focus:ring-blue-500 focus:border-blue-500 text-sm" min="1">
+                                    <input type="number" wire:model.live="modalQty" class="flex-1 min-w-0 block w-full px-2 border-gray-300 text-center font-medium focus:ring-blue-500 focus:border-blue-500 text-sm" min="1">
                                     <button type="button" wire:click="incrementQty" class="px-3 bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 font-bold text-gray-600">+</button>
                                 </div>
                             </div>
@@ -440,10 +440,10 @@
 
                     <!-- Footer -->
                     <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2 border-t border-gray-200">
-                        <button wire:click="closeModal" type="button" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium transition text-gray-700">
+                        <button wire:click="closeModal" type="button" class="btn btn-secondary">
                             Batal
                         </button>
-                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold shadow transition">
+                        <button type="submit" class="btn btn-lg btn-primary">
                             Simpan Item
                         </button>
                     </div>

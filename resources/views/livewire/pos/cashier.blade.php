@@ -288,11 +288,11 @@
 
                 <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-3 pt-3">
-                        <button wire:click="saveOrder" class="px-4 py-3 bg-gray-800 text-white rounded-xl font-bold hover:bg-gray-900 transition-all">
+                        <button wire:click="saveOrder" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-900">
                             Simpan
                         </button>
                         <button wire:click="openPayment" 
-                                class="px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all {{ count($cart) == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                class="px-4 py-3 bg-blue-600 text-white rounded-xl font-bold capitalize hover:bg-blue-700 transition-all {{ count($cart) == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
                                 {{ count($cart) == 0 ? 'disabled' : '' }}>
                             Bayar
                         </button>
@@ -710,7 +710,7 @@
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                     </div>
                     <p class="font-bold">Keranjang Kosong</p>
-                    <button @click="mobileCartOpen = false" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold">Mulai Belanja</button>
+                    <button @click="mobileCartOpen = false" class="btn btn-primary">Mulai Belanja</button>
                 </div>
              @endforelse
         </div>
@@ -733,8 +733,8 @@
              </div>
              
              <div class="grid grid-cols-2 gap-3 pt-2">
-                 <button wire:click="saveOrder" class="w-full py-3 bg-gray-800 text-white rounded-xl font-bold">Simpan</button>
-                 <button wire:click="openPayment" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold {{ count($cart) == 0 ? 'opacity-50' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>
+                 <button wire:click="saveOrder" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-900">Simpan</button>
+                 <button wire:click="openPayment" class="btn btn-lg btn-primary {{ count($cart) == 0 ? 'opacity-50' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>
                      Bayar Sekarang
                  </button>
              </div>

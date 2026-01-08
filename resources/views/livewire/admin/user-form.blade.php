@@ -155,6 +155,8 @@
                                         'view profit loss' => 'Laporan Laba Rugi',
                                         'view income statement' => 'Laporan Arus Kas',
                                         'view balance sheet' => 'Laporan Neraca',
+                                        'view ppn report' => 'Laporan PPN',
+                                        'view ap aging report' => 'Laporan Umur Hutang',
                                         'manage opening balances' => 'Neraca Awal (Saldo Awal)',
                                         'view general ledger' => 'Buku Besar'
                                     ];

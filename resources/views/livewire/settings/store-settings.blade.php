@@ -245,10 +245,10 @@
                     <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status: Aktif</span>
                     <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
                 </div>
-                <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-xl font-bold transition duration-200 flex items-center justify-center gap-2">
+                <x-button type="submit" variant="primary" class="w-full flex items-center justify-center gap-2">
                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     Simpan Perubahan
-                </button>
+                </x-button>
                 <p class="mt-4 text-center text-xs text-gray-400">
                     Perubahan akan langsung diterapkan ke seluruh sistem.
                 </p>

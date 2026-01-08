@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -129,10 +129,10 @@
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">
-                            <svg class="w-5 h-5 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             <span>Mode Impersonate: Sedang masuk sebagai <u>{{ auth()->user()->name }}</u></span>
                         </div>
-                        <a href="{{ route('admin.leave-impersonation') }}" class="bg-white text-amber-600 px-4 py-1 rounded-full text-xs font-black uppercase hover:bg-amber-50 shadow-sm transition active:scale-95">
+                        <a href="{{ route('admin.leave-impersonation') }}" class="bg-white text-amber-600 px-4 py-1 rounded-full text-xs font-bold uppercase hover:bg-amber-50 shadow-sm transition active:scale-95">
                             Kembali ke Akun Saya
                         </a>
                     </div>

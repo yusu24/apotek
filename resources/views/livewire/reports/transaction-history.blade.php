@@ -49,7 +49,7 @@
                 <option value="200">200</option>
             </select>
             
-            <button wire:click="resetFilters" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs uppercase tracking-wider transition-all">
+            <button wire:click="resetFilters" class="btn btn-secondary">
                 Reset
             </button>
         </div>
@@ -78,7 +78,7 @@
                             @php $history = $this->getHistory($p['id']); @endphp
                             <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 flex justify-between items-center">
                                 <div>
-                                    <h4 class="font-black text-gray-900 dark:text-white">{{ $p['name'] }}</h4>
+                                    <h4 class="font-bold text-gray-900 dark:text-white">{{ $p['name'] }}</h4>
                                     <p class="text-xs text-gray-500">{{ $p['barcode'] }}</p>
                                     <p class="text-[10px] text-blue-600 font-bold mt-1">{{ $history->total() }} transaksi ditemukan</p>
                                 </div>

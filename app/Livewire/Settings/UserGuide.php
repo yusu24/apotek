@@ -90,6 +90,15 @@ class UserGuide extends Component
                 'color' => 'slate',
                 'category' => 'Sistem'
             ],
+            [
+                'title' => 'Buku Panduan Lengkap',
+                'slug' => 'user-manual',
+                'description' => 'Tutorial penggunaan aplikasi apotek dari awal sampai selesai. Mencakup semua fitur dari setup awal hingga laporan.',
+                'updated_at' => '08 Jan 2026',
+                'icon' => 'book-open',
+                'color' => 'emerald',
+                'category' => 'Panduan'
+            ],
         ];
 
         $guides = $allGuides;

@@ -8,7 +8,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="mb-4 flex flex-row gap-4">
             <button wire:click="openModal"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span class="hidden sm:inline">Tambah Kategori</span>
             </button>
@@ -64,7 +64,7 @@
             <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up border border-gray-100">
                 <!-- Modal Header -->
                 <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                    <h3 class="text-xl font-black text-gray-900">
+                    <h3 class="text-xl font-bold text-gray-900">
                         {{ $editMode ? 'Edit Kategori' : 'Tambah Kategori Baru' }}
                     </h3>
                     <button wire:click="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
@@ -75,9 +75,9 @@
                 <form wire:submit.prevent="save">
                     <div class="p-6 space-y-4">
                         <div>
-                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Nama Kategori</label>
+                            <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] mb-2">Nama Kategori</label>
                             <input type="text" wire:model="name" autofocus
-                                class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-all py-3 font-bold text-gray-700"
+                                class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-all py-3 font-medium text-gray-700 placeholder:font-normal"
                                 placeholder="Contoh: Analgesik">
                             @error('name') <span class="text-red-500 text-xs font-bold mt-2 block flex items-center gap-1">
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
@@ -89,11 +89,11 @@
                     <!-- Modal Footer -->
                     <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                         <button type="button" wire:click="closeModal"
-                            class="px-5 py-2.5 text-gray-500 hover:text-gray-900 font-bold transition-all text-xs uppercase tracking-widest rounded-xl">
+                            class="px-5 py-2.5 text-gray-500 hover:text-gray-900 font-bold transition-all text-sm capitalize rounded-xl">
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-black hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all text-xs uppercase tracking-widest flex items-center gap-2">
+                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all text-sm capitalize flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             {{ $editMode ? 'Update' : 'Simpan' }}
                         </button>

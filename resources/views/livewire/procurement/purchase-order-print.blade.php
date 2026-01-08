@@ -1,4 +1,4 @@
-<div class="p-8 max-w-[210mm] mx-auto bg-white">
+<div class="p-8 max-w-[210mm] mx-auto bg-white print-container">
     <script>
         window.onload = function() {
             setTimeout(window.print, 1000);
@@ -7,10 +7,17 @@
     
     <style>
         @media print {
+            @page {
+                margin: 0;
+                size: auto;
+            }
             body { 
                 background: white; 
                 margin: 0;
                 padding: 0;
+            }
+            .print-container {
+                padding: 1.5cm;
             }
             .no-print { display: none; }
         }
@@ -114,15 +121,21 @@
         <div class="flex gap-12 text-center justify-end">
             <div>
                 <p class="text-sm text-gray-500 mb-2">Pemesan,</p>
-                <p class="font-bold text-gray-900 text-lg mt-16">{{ $po->user->name ?? '-' }}</p>
-                <div class="h-px bg-gray-400 w-40 mx-auto mt-1"></div>
+                <p class="font-bold text-gray-900 text-lg mt-16 underline">apt. Mei Dwi Cahyani S.Fam</p>
+                <p class="text-xs text-gray-600 mt-1">503/16/SIP.A/413.111/VIII/2025</p>
             </div>
         </div>
+    </div>
+    
+    <!-- Print Metadata -->
+    <div class="mt-12 pt-4 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400 italic">
+        <p>Dibuat oleh: {{ $po->user->name ?? '-' }}</p>
+        <p>Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
     </div>
 
     <!-- Action Buttons (No Print) -->
     <div class="no-print fixed bottom-6 right-6 flex gap-3">
-        <button onclick="window.print()" class="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 font-bold flex items-center gap-2 transform hover:scale-105 transition-all">
+        <button onclick="window.print()" class="btn btn-lg btn-primary">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Print Order
         </button>

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityLog;
 
+use App\Models\SalesDraft;
+
 #[Layout('layouts.app')]
 class Cashier extends Component
 {
@@ -48,8 +50,7 @@ class Cashier extends Component
 
     public function loadPendingOrders()
     {
-        $this->pendingOrders = Sale::where('status', 'pending')
-            ->where('user_id', Auth::id()) // Optional: only own pending orders
+        $this->pendingOrders = SalesDraft::where('user_id', Auth::id()) 
             ->latest()
             ->get();
         
@@ -173,150 +174,52 @@ class Cashier extends Component
         }
     }
 
-    public function restorePendingOrder($saleId)
+    public function restorePendingOrder($draftId)
     {
-        $sale = Sale::with(['saleItems.product', 'saleItems.batch'])->find($saleId);
+        $draft = SalesDraft::find($draftId);
         
-        if (!$sale) {
-            $this->dispatch('cart-error', message: 'Pesanan tidak ditemukan');
+        if (!$draft) {
+            $this->dispatch('cart-error', message: 'Draft tidak ditemukan');
             return;
         }
 
-        // Restore Invoice No
-        $this->invoice_no = $sale->invoice_no;
-        
         // Restore Cart
-        $this->cart = [];
-        foreach ($sale->saleItems as $item) {
-            // Calculate discount percent from price and subtotal if needed, 
-            // OR just use what we have. 
-            // Current DB structure might not save discount_percent.
-            // Let's infer or default to 0. 
-            
-            // Logic: $item->subtotal = ($price - discount) * qty
-            // discount_per_unit = $price - ($subtotal / qty)
-            // discount_percent = (discount_per_unit / $price) * 100
-            
-            $price = $item->sell_price;
-            $qty = $item->quantity;
-            $subtotal = $item->subtotal;
-            
-            $discount_percent = 0;
-            if ($qty > 0 && $price > 0) {
-                $actual_total = $subtotal;
-                $expected_total = $price * $qty;
-                if ($expected_total > $actual_total) {
-                    $discount_amount = ($expected_total - $actual_total) / $qty;
-                    $discount_percent = ($discount_amount / $price) * 100;
-                }
-            }
+        $this->cart = $draft->items;
 
-            $this->cart[$item->product_id] = [
-                'id' => $item->product_id,
-                'name' => $item->product->name ?? 'Unknown',
-                'price' => (float)$item->sell_price,
-                'qty' => $item->quantity,
-                'unit_id' => $item->unit_id ?? $item->product->unit_id,
-                'unit_name' => $item->unit->name ?? ($item->product->unit->name ?? 'pcs'),
-                'available_units' => [], // Will be populated below
-                'discount_percent' => round($discount_percent, 2),
-                'notes' => '', 
-                'has_ppn' => false,
-            ];
+        // Restore Totals & Settings
+        $totals = $draft->totals;
+        $this->global_discount = $totals['global_discount'] ?? 0;
+        $this->global_notes = $totals['notes'] ?? '';
+        $this->payment_method = $totals['payment_method'] ?? 'cash';
+        $this->ppn_mode = $totals['ppn_mode'] ?? 'off';
+        $this->service_charge = $totals['service_charge'] ?? 0;
 
-            // Re-populate available units for this product
-            $product = $item->product;
-            if ($product) {
-                $availableUnits = [];
-                $availableUnits[$product->unit_id] = [
-                    'name' => $product->unit->name ?? 'unit',
-                    'factor' => 1,
-                    'wholesale_price' => null
-                ];
-
-                foreach ($product->unitConversions as $conv) {
-                    $availableUnits[$conv->from_unit_id] = [
-                        'name' => $conv->fromUnit->name ?? '-',
-                        'factor' => (float)$conv->conversion_factor,
-                        'wholesale_price' => (float)$conv->wholesale_price ?: null
-                    ];
-                }
-                $this->cart[$item->product_id]['available_units'] = $availableUnits;
-            }
-        }
-
-        // Restore Global Settings
-        $this->global_notes = $sale->notes;
-        $this->global_discount = $sale->discount;
-        $this->payment_method = $sale->payment_method ?? 'cash';
-
-        // Delete the pending record (it is now "live" in session)
-        // Also revert stock movements? 
-        // processPayment created StockMovements. We MUST delete them to "Release" stock back to system, 
-        // because "saveOrder" (processPayment) deducted stock.
-        
-        // Delete Stock Movements
-        StockMovement::where('doc_ref', $sale->invoice_no)->delete();
-        
-        // Restore stock to batches
-        foreach ($sale->saleItems as $item) {
-           if ($item->batch_id) {
-               $batch = Batch::find($item->batch_id);
-               if ($batch) {
-                   $batch->increment('stock_current', $item->quantity);
-               }
-           }
-        }
-        
-        // Delete Sale Items and Sale
-        $sale->saleItems()->delete();
-        $sale->delete();
+        // Delete Draft
+        $draft->delete();
 
         $this->calculateTotal();
         $this->showPendingModal = false;
-        $this->dispatch('cart-updated', message: 'Pesanan berhasil dipulihkan');
+        $this->dispatch('cart-updated', message: 'Draft berhasil dipulihkan');
     }
 
-    public function deletePendingOrder($saleId)
+    public function deletePendingOrder($draftId)
     {
-        $sale = Sale::with(['saleItems.product', 'saleItems.batch'])->find($saleId);
+        $draft = SalesDraft::find($draftId);
 
-        if (!$sale) {
-            $this->dispatch('cart-error', message: 'Pesanan tidak ditemukan');
+        if (!$draft) {
+            $this->dispatch('cart-error', message: 'Draft tidak ditemukan');
             return;
         }
 
-        // Restore stock to batches
-        foreach ($sale->saleItems as $item) {
-            if ($item->batch_id) {
-                $batch = Batch::find($item->batch_id);
-                if ($batch) {
-                    $product = Product::find($item->product_id);
-                    $factor = 1;
-                    if ($product && $item->unit_id != $product->unit_id) {
-                        $conv = $product->unitConversions()->where('from_unit_id', $item->unit_id)->first();
-                        if ($conv) $factor = (float)$conv->conversion_factor;
-                    }
-                    $batch->increment('stock_current', $item->quantity * $factor);
-                }
-            }
-        }
-
-        // Delete Stock Movements
-        StockMovement::where('doc_ref', $sale->invoice_no)->delete();
-
-        // Delete Sale Items and Sale
-        $sale->saleItems()->delete();
-        $sale->delete();
+        $draft->delete();
 
         if ($this->showPendingModal) {
-            $this->pendingOrders = Sale::where('status', 'pending')
-                ->where('user_id', Auth::id())
+            $this->pendingOrders = SalesDraft::where('user_id', Auth::id())
                 ->latest()
                 ->get();
         }
 
-        $this->dispatch('cart-updated', message: 'Pesanan tertunda berhasil dihapus dan stok dikembalikan');
+        $this->dispatch('cart-updated', message: 'Draft berhasil dihapus');
     }
     public function generateInvoiceNo()
     {
@@ -608,9 +511,32 @@ class Cashier extends Component
     {
         if (empty($this->cart)) return;
         
-        // Simpan pesanan as "pending"
-        $this->processPayment(status: 'pending');
-        session()->flash('success', 'Pesanan berhasil disimpan!');
+        $this->saveDraft();
+        session()->flash('success', 'Pesanan disimpan sebagai DRAFT (Stok AMAN).');
+    }
+
+    public function saveDraft() {
+        SalesDraft::create([
+            'user_id' => Auth::id() ?? 1,
+            'customer_name' => 'Guest', 
+            'items' => $this->cart,
+            'totals' => [
+                'subtotal' => $this->subtotal,
+                'global_discount' => $this->global_discount,
+                'tax' => $this->tax,
+                'service_charge' => $this->service_charge,
+                'service_charge_amount' => $this->service_charge_amount,
+                'rounding' => $this->rounding,
+                'grand_total' => $this->grand_total,
+                'payment_method' => $this->payment_method,
+                'notes' => $this->global_notes,
+                'ppn_mode' => $this->ppn_mode,
+            ]
+        ]);
+
+        $this->cart = [];
+        $this->calculateTotal();
+        $this->generateInvoiceNo();
     }
 
     public function cancelOrder()

@@ -62,7 +62,12 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($journals as $journal)
-                        <tr class="bg-gray-50 border-b-2 border-gray-100 italic">
+                        <tr class="bg-gray-50 border-b-2 border-gray-100 italic
+                            {{ $journal->hasViewableSource() ? 'cursor-pointer hover:bg-blue-50 transition' : '' }}"
+                            @if($journal->hasViewableSource())
+                                wire:click="viewSource({{ $journal->id }})"
+                                title="Klik untuk melihat transaksi sumber"
+                            @endif>
                             <td class="px-6 py-4">
                                 <div class="font-bold text-gray-900">{{ $journal->date->format('d/m/Y') }}</div>
                                 <div class="text-xs text-blue-600 font-semibold">{{ $journal->entry_number }}</div>
@@ -70,6 +75,11 @@
                             <td class="px-6 py-4 font-semibold text-gray-800" colspan="3">
                                 {{ $journal->description }}
                                 <span class="ml-2 px-2 py-0.5 bg-gray-200 text-gray-700 text-[10px] rounded uppercase">{{ $journal->source }}</span>
+                                @if($journal->hasViewableSource())
+                                    <svg class="w-4 h-4 inline ml-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                @endif
                             </td>
                             <td class="px-6 py-4" colspan="2"></td>
                         </tr>
@@ -134,4 +144,47 @@
             </table>
         </div>
     </div>
+
+    {{-- Source Transaction Modal --}}
+    @if($showSourceModal && $selectedJournal)
+    <div wire:key="source-modal-{{ $selectedJournal->id }}" class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" wire:click="closeSourceModal"></div>
+
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-4xl sm:w-full border border-gray-100 animate-fade-in-up">
+                {{-- Modal Header --}}
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900" id="modal-title">Detail Transaksi Sumber</h3>
+                        <p class="text-sm text-gray-600 mt-1">{{ ucfirst($selectedJournal->source) }} - {{ $selectedJournal->entry_number }}</p>
+                    </div>
+                    <button wire:click="closeSourceModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                {{-- Modal Content --}}
+                <div class="p-6 max-h-[70vh] overflow-y-auto">
+                    @if($selectedJournal->source === 'sale' && $sourceData)
+                        @include('livewire.accounting.partials.source-sale', ['sale' => $sourceData])
+                    @elseif($selectedJournal->source === 'purchase' && $sourceData)
+                        @include('livewire.accounting.partials.source-purchase', ['receipt' => $sourceData])
+                    @elseif($selectedJournal->source === 'expense' && $sourceData)
+                        @include('livewire.accounting.partials.source-expense', ['expense' => $sourceData])
+                    @else
+                        <p class="text-center text-gray-500 py-8">Data transaksi tidak ditemukan.</p>
+                    @endif
+                </div>
+                
+                {{-- Modal Footer --}}
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
+                    <button wire:click="closeSourceModal" 
+                        class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition shadow-sm">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

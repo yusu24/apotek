@@ -15,6 +15,11 @@ class JournalIndex extends Component
     public $startDate = '';
     public $endDate = '';
 
+    // Modal for viewing source transaction
+    public $showSourceModal = false;
+    public $selectedJournal = null;
+    public $sourceData = null;
+
     public function mount()
     {
         if (!auth()->user()->can('view journals')) {
@@ -37,6 +42,23 @@ class JournalIndex extends Component
         $this->startDate = now()->startOfMonth()->format('Y-m-d');
         $this->endDate = now()->endOfMonth()->format('Y-m-d');
         $this->resetPage();
+    }
+
+    public function viewSource($journalId)
+    {
+        $this->selectedJournal = JournalEntry::find($journalId);
+        
+        if ($this->selectedJournal && $this->selectedJournal->hasViewableSource()) {
+            $this->sourceData = $this->selectedJournal->getSourceTransaction();
+            $this->showSourceModal = true;
+        }
+    }
+
+    public function closeSourceModal()
+    {
+        $this->showSourceModal = false;
+        $this->selectedJournal = null;
+        $this->sourceData = null;
     }
 
     public function render()

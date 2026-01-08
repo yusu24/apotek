@@ -43,12 +43,12 @@
         <!-- Stats (Total Sales) -->
         <div class="bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-xl border border-emerald-100 dark:border-emerald-800 flex items-baseline gap-2 min-w-[180px]">
             <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">Total:</span>
-            <span class="text-sm font-black text-emerald-700 dark:text-emerald-300">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</span>
+            <span class="text-sm font-bold text-emerald-700 dark:text-emerald-300">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</span>
         </div>
 
         <!-- Print Button -->
         <div class="ml-auto">
-            <button onclick="window.print()" class="flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-bold text-[11px] uppercase tracking-wider h-[38px]">
+            <button onclick="window.print()" class="btn btn-lg btn-secondary">
                 <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 Cetak
             </button>
@@ -84,11 +84,11 @@
                                         {{ $sale->user->name }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2 py-1 rounded-full text-[10px] font-black uppercase bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                                        <span class="px-2 py-1 rounded-full text-[10px] font-medium uppercase bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                                             {{ $sale->payment_method }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-right font-black text-gray-900 dark:text-white">
+                                    <td class="px-6 py-4 text-right font-bold text-gray-900 dark:text-white">
                                         Rp {{ number_format($sale->grand_total, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 text-right no-print">

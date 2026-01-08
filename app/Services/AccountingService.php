@@ -511,32 +511,166 @@ class AccountingService
 
     /**
      * Get Trial Balance
+     * Calculates debit/credit totals per account from journal entries within a date range
      */
-    public function getTrialBalance($date = null): array
+    public function getTrialBalance($startDate = null, $endDate = null): array
     {
-        $date = $date ?? now();
+        $startDate = $startDate ?? now()->startOfMonth()->format('Y-m-d');
+        $endDate = $endDate ?? now()->endOfMonth()->format('Y-m-d');
         
-        $accounts = Account::where('is_active', true)->orderBy('code')->get();
+        // Get all accounts with their journal entry totals
+        $accountsData = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->join('accounts', 'journal_entry_lines.account_id', '=', 'accounts.id')
+            ->where('journal_entries.is_posted', true)
+            ->whereDate('journal_entries.date', '>=', $startDate)
+            ->whereDate('journal_entries.date', '<=', $endDate)
+            ->select(
+                'accounts.id',
+                'accounts.code',
+                'accounts.name',
+                'accounts.type',
+                'accounts.category',
+                DB::raw('SUM(journal_entry_lines.debit) as total_debit'),
+                DB::raw('SUM(journal_entry_lines.credit) as total_credit')
+            )
+            ->groupBy('accounts.id', 'accounts.code', 'accounts.name', 'accounts.type', 'accounts.category')
+            ->orderBy('accounts.code')
+            ->get();
         
-        $totalDebit = 0;
-        $totalCredit = 0;
+        // Group by account type
+        $assets = $accountsData->where('type', 'asset');
+        $liabilities = $accountsData->where('type', 'liability');
+        $equity = $accountsData->where('type', 'equity');
+        $revenue = $accountsData->where('type', 'revenue');
+        $expenses = $accountsData->where('type', 'expense');
         
-        foreach ($accounts as $account) {
-            if ($account->balance >= 0) {
-                $totalDebit += $account->balance;
-            } else {
-                $totalCredit += abs($account->balance);
-            }
-        }
+        // Calculate totals per type
+        $totalAssetsDebit = $assets->sum('total_debit');
+        $totalAssetsCredit = $assets->sum('total_credit');
         
-        $isBalanced = abs($totalDebit - $totalCredit) < 0.01;
+        $totalLiabilitiesDebit = $liabilities->sum('total_debit');
+        $totalLiabilitiesCredit = $liabilities->sum('total_credit');
+        
+        $totalEquityDebit = $equity->sum('total_debit');
+        $totalEquityCredit = $equity->sum('total_credit');
+        
+        $totalRevenueDebit = $revenue->sum('total_debit');
+        $totalRevenueCredit = $revenue->sum('total_credit');
+        
+        $totalExpensesDebit = $expenses->sum('total_debit');
+        $totalExpensesCredit = $expenses->sum('total_credit');
+        
+        // Calculate grand totals
+        $grandTotalDebit = $accountsData->sum('total_debit');
+        $grandTotalCredit = $accountsData->sum('total_credit');
+        
+        // Validate balance
+        $difference = $grandTotalDebit - $grandTotalCredit;
+        $isBalanced = abs($difference) < 0.01;
         
         return [
-            'accounts' => $accounts,
-            'total_debit' => $totalDebit,
-            'total_credit' => $totalCredit,
+            'accounts' => $accountsData,
+            
+            // Grouped by type
+            'assets' => $assets,
+            'liabilities' => $liabilities,
+            'equity' => $equity,
+            'revenue' => $revenue,
+            'expenses' => $expenses,
+            
+            // Subtotals per type
+            'total_assets_debit' => $totalAssetsDebit,
+            'total_assets_credit' => $totalAssetsCredit,
+            'total_liabilities_debit' => $totalLiabilitiesDebit,
+            'total_liabilities_credit' => $totalLiabilitiesCredit,
+            'total_equity_debit' => $totalEquityDebit,
+            'total_equity_credit' => $totalEquityCredit,
+            'total_revenue_debit' => $totalRevenueDebit,
+            'total_revenue_credit' => $totalRevenueCredit,
+            'total_expenses_debit' => $totalExpensesDebit,
+            'total_expenses_credit' => $totalExpensesCredit,
+            
+            // Grand totals
+            'grand_total_debit' => $grandTotalDebit,
+            'grand_total_credit' => $grandTotalCredit,
+            
+            // Validation
             'is_balanced' => $isBalanced,
-            'date' => $date,
+            'difference' => $difference,
+            
+            // Period
+            'start_date' => $startDate,
+            'end_date' => $endDate,
         ];
+    }
+
+    /**
+     * Get AP Aging Report
+     */
+    public function getApAgingReport()
+    {
+        $receipts = \App\Models\GoodsReceipt::with('purchaseOrder.supplier')
+            ->whereIn('payment_status', ['pending', 'partial'])
+            ->get();
+            
+        $agingData = [
+            '0-30' => [],
+            '31-60' => [],
+            '61-90' => [],
+            '>90' => [],
+            'summary' => [
+                '0-30' => 0,
+                '31-60' => 0,
+                '61-90' => 0,
+                '>90' => 0,
+                'total' => 0
+            ]
+        ];
+        
+        foreach ($receipts as $receipt) {
+            $age = \Carbon\Carbon::parse($receipt->received_date)->diffInDays(now());
+            $outstanding = $receipt->total_amount - $receipt->paid_amount;
+            
+            // Skip zero or negative outstanding (fully paid should be filtered by status, but safety check)
+            if ($outstanding <= 0.01) continue;
+
+            $item = [
+                'id' => $receipt->id,
+                'supplier' => $receipt->purchaseOrder->supplier->name ?? 'Unknown',
+                'invoice_number' => $receipt->delivery_note_number,
+                'date' => $receipt->received_date,
+                'due_date' => $receipt->due_date,
+                'age' => (int) $age,
+                'outstanding' => $outstanding,
+                'total_amount' => $receipt->total_amount,
+                'status' => $receipt->payment_status
+            ];
+            
+            if ($age <= 30) {
+                $agingData['0-30'][] = $item;
+                $agingData['summary']['0-30'] += $outstanding;
+            } elseif ($age <= 60) {
+                $agingData['31-60'][] = $item;
+                $agingData['summary']['31-60'] += $outstanding;
+            } elseif ($age <= 90) {
+                $agingData['61-90'][] = $item;
+                $agingData['summary']['61-90'] += $outstanding;
+            } else {
+                $agingData['>90'][] = $item;
+                $agingData['summary']['>90'] += $outstanding;
+            }
+            
+            $agingData['summary']['total'] += $outstanding;
+        }
+        
+        // Sort each bucket by age descending (oldest first)
+        foreach (['0-30', '31-60', '61-90', '>90'] as $key) {
+            usort($agingData[$key], function($a, $b) {
+                return $b['age'] <=> $a['age'];
+            });
+        }
+        
+        return $agingData;
     }
 }

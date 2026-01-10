@@ -102,7 +102,7 @@ class PurchaseReturnList extends Component
             }
         }
 
-        $totalReturnAmount = collect($itemsToProcess)->sum(fn($i) => $i['quantity'] * $i['cost_price']);
+        $totalReturnAmount = collect($itemsToProcess)->sum(fn($i) => (float)($i['quantity'] ?: 0) * (float)($i['cost_price'] ?: 0));
 
         DB::beginTransaction();
         try {

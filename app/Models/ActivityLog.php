@@ -51,7 +51,7 @@ class ActivityLog extends Model
         $request = request();
         
         static::create([
-            'user_id' => auth()->id(),
+            'user_id' => $data['user_id'] ?? auth()->id(),
             'action' => $data['action'],
             'module' => $data['module'],
             'description' => $data['description'],

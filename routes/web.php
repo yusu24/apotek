@@ -37,6 +37,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('permission:manage master data');
     Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)->name('master.suppliers');
 
+    // Make sure to add this inside the auth middleware group
+    Route::controller(App\Http\Controllers\ImportController::class)->group(function () {
+        Route::get('/import/download-product-template', 'downloadProductTemplate')->name('import.download-product-template');
+        Route::get('/import/download-supplier-template', 'downloadSupplierTemplate')->name('import.download-supplier-template');
+        Route::get('/import/download-stock-template', 'downloadStockTemplate')->name('import.download-stock-template');
+        Route::post('/import/products', 'importProducts')->name('import.products');
+        Route::post('/import/suppliers', 'importSuppliers')->name('import.suppliers');
+        Route::post('/import/stock', 'importStock')->name('import.stock');
+    });
+
 
     // Inventory
     Route::get('/stock', App\Livewire\Inventory\StockIndex::class)->name('inventory.index');

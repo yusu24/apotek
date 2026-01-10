@@ -16,12 +16,9 @@
                 'start_date' => $startDate,
                 'end_date' => $endDate
             ]) }}" target="_blank"
-                class="btn btn-lg btn-danger">
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold flex items-center gap-2 shadow-md">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 Export PDF
-            </a>
-            <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold">
-                ← Kembali
             </a>
         </div>
     </div>
@@ -77,13 +74,13 @@
         
         <!-- Filter Section -->
         <div class="p-6 bg-gray-50/50 border-b">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                 <!-- Search -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Pencarian</label>
                     <input type="text" 
                         wire:model.live.debounce.300ms="searchTerm" 
-                        placeholder="Cari batch, referensi, keterangan..."
+                        placeholder="Cari batch, referensi..."
                         class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -115,14 +112,14 @@
                         wire:model.live="endDate" 
                         class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
-            </div>
 
-            <!-- Reset Button -->
-            <div class="mt-4 flex justify-end">
-                <button wire:click="resetFilters" 
-                    class="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
-                    Reset Filter
-                </button>
+                <!-- Reset Button -->
+                <div>
+                    <button wire:click="resetFilters" 
+                        class="w-full px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
+                        Reset Filter
+                    </button>
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto">
@@ -132,8 +129,9 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Saldo</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Masuk</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Keluar</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Saldo</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referensi</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
@@ -157,49 +155,41 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->batch->batch_no ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-bold whitespace-nowrap {{ $movement->quantity > 0 ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $movement->quantity > 0 ? '+' : '' }}{{ $movement->quantity }}
+                        
+                        <!-- Masuk -->
+                        <td class="px-6 py-4 text-sm font-bold text-center text-green-600">
+                            @if($movement->quantity > 0)
+                                +{{ number_format($movement->quantity, 0, ',', '.') }}
+                            @else
+                                -
+                            @endif
                         </td>
-                        <td class="px-6 py-4 text-sm font-bold whitespace-nowrap {{ $movement->running_balance < 0 ? 'text-red-600' : 'text-blue-600' }}">
-                            {{ number_format($movement->running_balance, 0, ',', '.') }}
+
+                        <!-- Keluar -->
+                        <td class="px-6 py-4 text-sm font-bold text-center text-red-600">
+                            @if($movement->quantity < 0)
+                                {{ number_format(abs($movement->quantity), 0, ',', '.') }}
+                            @else
+                                -
+                            @endif
                         </td>
+
+                        <!-- Saldo (Stock After) -->
+                        <td class="px-6 py-4 text-sm font-bold text-center text-blue-600">
+                            {{ number_format($movement->stock_after ?? $movement->running_balance, 0, ',', '.') }}
+                        </td>
+
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $movement->doc_ref ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->description }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->user->name ?? 'System' }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi.</td>
+                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
-        
-        <!-- Stock Movement Summary -->
-        <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <h4 class="font-bold text-gray-700 mb-2">Ringkasan Pergerakan Stok</h4>
-            <div class="grid grid-cols-3 gap-4">
-                @php
-                    $totalIn = $this->stockMovements->where('quantity', '>', 0)->sum('quantity');
-                    $totalOut = abs($this->stockMovements->where('quantity', '<', 0)->sum('quantity'));
-                    $netChange = $totalIn - $totalOut;
-                @endphp
-                <div class="text-center">
-                    <p class="text-xs text-gray-500">Total Masuk</p>
-                    <p class="text-lg font-bold text-green-600">+{{ number_format($totalIn, 0, ',', '.') }}</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-500">Total Keluar</p>
-                    <p class="text-lg font-bold text-red-600">-{{ number_format($totalOut, 0, ',', '.') }}</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-500">Sisa (Net)</p>
-                    <p class="text-lg font-bold {{ $netChange >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                        {{ $netChange >= 0 ? '+' : '' }}{{ number_format($netChange, 0, ',', '.') }}
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 </div>

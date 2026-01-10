@@ -14,7 +14,7 @@ class PurchaseOrderForm extends Component
     public $status = 'draft';
     public $items = []; 
     public $suppliers = [];
-    public $products = [];
+    public $productSearch = '';
 
     public $isReadOnly = false;
 
@@ -41,7 +41,6 @@ class PurchaseOrderForm extends Component
     public function mount($id = null)
     {
         $this->suppliers = \App\Models\Supplier::all();
-        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'sell_price', 'unit_id')->get();
 
         if ($id) {
             $this->purchaseOrder = \App\Models\PurchaseOrder::with('items')->findOrFail($id);
@@ -76,7 +75,7 @@ class PurchaseOrderForm extends Component
 
 
 
-    public function openModal($index = null)
+    public function openModal($index = null, $productId = null)
     {
         $this->resetModal();
         $this->editingItemIndex = $index;
@@ -88,7 +87,7 @@ class PurchaseOrderForm extends Component
             $this->modalPrice = $item['unit_price'];
             $this->modalPpn = $item['has_ppn'] ?? false;
             // Fetch product details for display
-            $product = $this->products->firstWhere('id', $item['product_id']);
+            $product = \App\Models\Product::with(['unit', 'unitConversions.fromUnit'])->find($item['product_id']);
             if ($product) {
                $this->updatedModalProductId($item['product_id']); 
                $this->modalQty = $item['qty'];
@@ -97,6 +96,11 @@ class PurchaseOrderForm extends Component
                $this->updatedModalUnitId($this->modalUnitId); // Refresh unit name/factor
                $this->modalConversionFactor = $item['conversion_factor'] ?? 1; 
             }
+        } elseif ($productId) {
+            $productId = (int) $productId;
+            $this->modalProductId = $productId;
+            $this->updatedModalProductId($productId);
+            $this->productSearch = ''; // Clear search
         }
         
         $this->calculateModalTotal();
@@ -131,7 +135,7 @@ class PurchaseOrderForm extends Component
 
     public function updatedModalProductId($value)
     {
-        $product = $this->products->firstWhere('id', $value);
+        $product = \App\Models\Product::with(['unit', 'unitConversions.fromUnit'])->find((int) $value);
         if ($product) {
             $this->modalProductName = $product->name;
             $this->modalProductCode = $product->barcode;
@@ -223,37 +227,14 @@ class PurchaseOrderForm extends Component
 
     public function calculateModalTotal()
     {
-        $total = (float)$this->modalQty * (float)$this->modalPrice;
-        if ($this->modalPpn) {
-            $ppnRate = (float) \App\Models\Setting::get('pos_ppn_rate', 11) / 100;
-            $total = $total * (1 + $ppnRate);
-        }
-        $this->modalSubtotal = $total;
+        $this->modalPrice = 0;
+        $this->modalSubtotal = 0;
     }
 
     public function calculateMargin()
     {
-        if (!$this->modalProductId) return;
-
-        $product = $this->products->firstWhere('id', $this->modalProductId);
-        if (!$product) return;
-
-        // Calculate Sell Price for the selected unit
-        // Base Sell Price * Conversion Factor
-        $baseSellPrice = (float) $product->sell_price;
-        $configuredSellPrice = $baseSellPrice * (float) $this->modalConversionFactor;
-        
-        $this->modalSellPrice = $configuredSellPrice;
-
-        $buyPrice = (float) $this->modalPrice;
-
-        if ($buyPrice > 0) {
-            $this->modalMargin = $configuredSellPrice - $buyPrice;
-            $this->modalMarginPercentage = ($this->modalMargin / $buyPrice) * 100;
-        } else {
-            $this->modalMargin = 0;
-            $this->modalMarginPercentage = 0;
-        }
+        $this->modalMargin = 0;
+        $this->modalMarginPercentage = 0;
     }
 
     public function saveItem()
@@ -263,15 +244,12 @@ class PurchaseOrderForm extends Component
             'modalQty' => 'required|numeric|min:1',
         ]);
 
-        $this->modalPrice = 0; // Ensure it's 0 if hidden
-        $this->modalSubtotal = 0; // Ensure it's 0 if hidden
-
         $newItem = [
             'product_id' => $this->modalProductId,
             'qty' => $this->modalQty,
-            'unit_price' => $this->modalPrice,
-            'has_ppn' => $this->modalPpn,
-            'subtotal' => $this->modalSubtotal,
+            'unit_price' => 0,
+            'has_ppn' => false,
+            'subtotal' => 0,
             'unit_id' => $this->modalUnitId,
             'conversion_factor' => $this->modalConversionFactor,
         ];
@@ -354,6 +332,27 @@ class PurchaseOrderForm extends Component
 
     public function render()
     {
-        return view('livewire.procurement.purchase-order-form');
+        $productIds = collect($this->items)->pluck('product_id')->unique();
+        $tableProducts = \App\Models\Product::whereIn('id', $productIds)->with(['unit', 'unitConversions.fromUnit'])->get();
+
+        $searchResults = [];
+        if (!empty($this->productSearch)) {
+            $search = '%' . $this->productSearch . '%';
+            $searchResults = \App\Models\Product::where(function($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('barcode', 'like', $search);
+            })->take(10)->get();
+        }
+
+        $modalProductData = null;
+        if ($this->modalProductId) {
+            $modalProductData = \App\Models\Product::select('id', 'name', 'barcode')->find($this->modalProductId);
+        }
+
+        return view('livewire.procurement.purchase-order-form', [
+            'tableProducts' => $tableProducts,
+            'searchResults' => $searchResults,
+            'modalProductData' => $modalProductData
+        ]);
     }
 }

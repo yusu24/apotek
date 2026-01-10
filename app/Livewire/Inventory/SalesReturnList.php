@@ -40,16 +40,40 @@ class SalesReturnList extends Component
             
             if ($this->selectedSale) {
                 $this->returnItems = [];
+                
+                // Get already returned quantities for this sale
+                $returnedQuantities = SalesReturnItem::whereHas('salesReturn', function($q) {
+                    $q->where('sale_id', $this->selectedSale->id);
+                })
+                ->select('product_id', 'batch_id', DB::raw('SUM(quantity) as total_returned'))
+                ->groupBy('product_id', 'batch_id')
+                ->get()
+                ->keyBy(function($item) {
+                    return $item->product_id . '-' . ($item->batch_id ?: 'null');
+                });
+
                 foreach ($this->selectedSale->saleItems as $item) {
-                    $this->returnItems[$item->id] = [
-                        'quantity' => 0,
-                        'max_quantity' => $item->quantity,
-                        'price' => $item->sell_price,
-                        'product_id' => $item->product_id,
-                        'batch_id' => $item->batch_id,
-                        'name' => $item->product->name,
-                        'batch_no' => $item->batch ? $item->batch->batch_no : '-'
-                    ];
+                    $key = $item->product_id . '-' . ($item->batch_id ?: 'null');
+                    $alreadyReturned = isset($returnedQuantities[$key]) ? $returnedQuantities[$key]->total_returned : 0;
+                    $remainingQuantity = $item->quantity - $alreadyReturned;
+
+                    // Only add if there's remaining quantity to return
+                    if ($remainingQuantity > 0) {
+                        $this->returnItems[$item->id] = [
+                            'quantity' => 0,
+                            'max_quantity' => $remainingQuantity,
+                            'price' => $item->sell_price,
+                            'product_id' => $item->product_id,
+                            'batch_id' => $item->batch_id,
+                            'name' => $item->product->name,
+                            'batch_no' => $item->batch ? $item->batch->batch_no : '-'
+                        ];
+                    }
+                }
+
+                if (empty($this->returnItems)) {
+                    $this->addError('invoiceSearch', 'Semua barang dalam invoice ini sudah diretur sepenuhnya.');
+                    $this->selectedSale = null;
                 }
             } else {
                 $this->selectedSale = null;
@@ -83,7 +107,7 @@ class SalesReturnList extends Component
                 $this->addError("returnItems.{$id}.quantity", "Jumlah retur melebihi jumlah beli.");
                 return;
             }
-            $totalReturnAmount += $item['quantity'] * $item['price'];
+            $totalReturnAmount += (float)($item['quantity'] ?: 0) * (float)($item['price'] ?: 0);
         }
 
         DB::beginTransaction();

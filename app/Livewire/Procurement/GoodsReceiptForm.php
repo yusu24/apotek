@@ -12,12 +12,17 @@ class GoodsReceiptForm extends Component
     public $notes;
     public $payment_method = '';
     public $due_date_weeks = null;
+    public $bank_account_id = null; // New Property
     public $items = []; // ['product_id', 'product_name', 'batch_no', 'expired_date', 'qty_received', 'buy_price']
 
     public $purchaseOrders = [];
     public $products = [];
+    public $accounts = []; // New Property
     
     public $po_id; // For query string
+    
+    public $productSearch = '';
+    public $searchResults = [];
     
     protected $queryString = ['po_id'];
 
@@ -27,7 +32,8 @@ class GoodsReceiptForm extends Component
         
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
-        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'unit_id')->get();
+        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
+        $this->accounts = \App\Models\Account::where('type', 'bank')->get(); // Load Bank Accounts
         
         if ($this->po_id) {
             \Log::info('Processing PO ID: ' . $this->po_id);
@@ -64,12 +70,12 @@ class GoodsReceiptForm extends Component
                     foreach ($po->goodsReceipts as $gr) {
                         foreach ($gr->items as $grItem) {
                             if ($grItem->product_id == $poItem->product_id) {
-                                $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                                $totalReceivedBase += ((float)$grItem->qty_received * (float)($grItem->conversion_factor ?? 1));
                             }
                         }
                     }
 
-                    $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
+                    $totalOrderedBase = (float)$poItem->qty_ordered * (float)($poItem->conversion_factor ?? 1);
                     $remainingBase = $totalOrderedBase - $totalReceivedBase;
 
                      // Convert remaining base back to PO Unit
@@ -118,6 +124,40 @@ class GoodsReceiptForm extends Component
             'unit_id' => null,
             'conversion_factor' => 1,
         ];
+    }
+
+    public function updatedProductSearch($value)
+    {
+        if (strlen($value) < 2) {
+            $this->searchResults = [];
+            return;
+        }
+
+        $this->searchResults = \App\Models\Product::where('name', 'like', '%' . $value . '%')
+            ->orWhere('barcode', 'like', '%' . $value . '%')
+            ->limit(10)
+            ->get();
+    }
+
+    public function selectProduct($productId)
+    {
+        $product = \App\Models\Product::with(['unit', 'unitConversions'])->find($productId);
+        
+        if ($product) {
+            $this->items[] = [
+                'product_id' => $product->id,
+                'product_name' => $product->name,
+                'batch_no' => $this->generateNextBatchNo(),
+                'expired_date' => '',
+                'qty_received' => 1,
+                'buy_price' => $product->buy_price ?? 0,
+                'unit_id' => $product->unit_id,
+                'conversion_factor' => 1,
+            ];
+        }
+
+        $this->productSearch = '';
+        $this->searchResults = [];
     }
 
     public function removeItem($index)
@@ -190,6 +230,7 @@ class GoodsReceiptForm extends Component
             'delivery_note_number' => 'required',
             'received_date' => 'required|date',
             'payment_method' => 'required',
+            'bank_account_id' => 'required_if:payment_method,transfer',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.qty_received' => 'required|numeric|min:1',
@@ -200,6 +241,7 @@ class GoodsReceiptForm extends Component
             'delivery_note_number.required' => 'Nomor Surat Jalan wajib diisi',
             'received_date.required' => 'Tanggal terima wajib diisi',
             'payment_method.required' => 'Metode pembayaran wajib dipilih',
+            'bank_account_id.required_if' => 'Akun Bank wajib dipilih untuk Transfer',
             'items.required' => 'Minimal harus ada 1 item',
             'items.*.product_id.required' => 'Produk wajib dipilih',
             'items.*.qty_received.required' => 'Jumlah terima wajib diisi',
@@ -276,6 +318,7 @@ class GoodsReceiptForm extends Component
                 'user_id' => auth()->id(),
                 'notes' => $this->notes,
                 'payment_method' => $this->payment_method,
+                'bank_account_id' => $this->payment_method === 'transfer' ? $this->bank_account_id : null, // Save Bank Account
                 'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
                 'total_amount' => $totalAmount,
                 'paid_amount' => $paidAmount,
@@ -323,7 +366,6 @@ class GoodsReceiptForm extends Component
                 // Usually for performance we keep a total.
                 // Note: User previous code used batches, but let's check Product model.
                 // Assuming Product has dynamic accessor or we should update it if it has 'stock' column.
-                // Let's assume standard behavior: Update product stock if column exists?
                 // I will just increment if the column exists, otherwise I rely on Batch sum.
                 // Checking Product.php earlier... it logic wasn't fully shown but typically yes.
                 // I'll stick to updating Batch which is the source of truth for "Apotek" (Expiry is key).
@@ -351,12 +393,12 @@ class GoodsReceiptForm extends Component
                         foreach ($po->goodsReceipts as $gr) {
                              foreach ($gr->items as $grItem) {
                                 if ($grItem->product_id == $poItem->product_id) {
-                                    $totalReceivedBase += ($grItem->qty_received * ($grItem->conversion_factor ?? 1));
+                                    $totalReceivedBase += ((float)$grItem->qty_received * (float)($grItem->conversion_factor ?? 1));
                                 }
                             }
                         }
                         
-                        $totalOrderedBase = $poItem->qty_ordered * ($poItem->conversion_factor ?? 1);
+                        $totalOrderedBase = (float)$poItem->qty_ordered * (float)($poItem->conversion_factor ?? 1);
                         
                         // If received is less than ordered (with small float tolerance)
                         if (($totalOrderedBase - $totalReceivedBase) > 0.001) {
@@ -367,6 +409,16 @@ class GoodsReceiptForm extends Component
 
                     $po->update(['status' => $allReceived ? 'received' : 'partial']);
                 }
+            }
+
+            // 7. Accounting Integration
+            try {
+                $accountingService = new \App\Services\AccountingService();
+                $accountingService->postPurchaseJournal($gr->id);
+            } catch (\Exception $e) {
+                \Log::error('Failed to post purchase journal for GR-' . $gr->id . ': ' . $e->getMessage());
+                // We don't throw the exception to avoid rolling back the transaction for accounting errors
+                // as the inventory and operational records are already saved correctly.
             }
         });
 

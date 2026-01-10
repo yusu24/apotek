@@ -25,4 +25,9 @@ class Expense extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'expense')->where('source_id', $this->id);
+    }
 }

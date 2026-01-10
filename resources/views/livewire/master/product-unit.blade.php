@@ -178,12 +178,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" wire:click="save" class="btn btn-lg btn-primary">
-                        Simpan
-                    </button>
-                    <button type="button" wire:click="$set('showModal', false)" class="btn btn-secondary">
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                    <button type="button" wire:click="$set('showModal', false)"
+                        class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
                         Batal
+                    </button>
+                    <button type="button" wire:click="save"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        Simpan
                     </button>
                 </div>
             </div>

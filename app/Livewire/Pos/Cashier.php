@@ -731,6 +731,14 @@ class Cashier extends Component
             $this->calculateTotal();
             $this->generateInvoiceNo(); // Generate new invoice for next order
 
+            // 11. Accounting Integration
+            try {
+                $accountingService = new \App\Services\AccountingService();
+                $accountingService->postSaleJournal($sale->id);
+            } catch (\Exception $e) {
+                \Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
+            }
+
             if ($status === 'pending') {
                  $this->dispatch('cart-updated', message: 'Pesanan berhasil disimpan ke Pending list.');
                  return;

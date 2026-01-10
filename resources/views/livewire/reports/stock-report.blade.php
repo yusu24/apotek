@@ -12,7 +12,7 @@
     <!-- Print Header (Simplified) -->
     <div class="hidden print:block">
         <div class="border-b-2 border-gray-900 pb-2 text-center uppercase">
-            <h1 class="text-xl font-bold tracking-widest text-gray-950">LAPORAN STOK</h1>
+            <h1 class="text-xl font-bold text-gray-950">LAPORAN STOK</h1>
             <div class="text-[12px] font-bold mt-1">
                 PERIODE: {{ $startExpiry ? \Carbon\Carbon::parse($startExpiry)->format('d-m-Y') : 'AWAL' }} s/d {{ $endExpiry ? \Carbon\Carbon::parse($endExpiry)->format('d-m-Y') : 'AKHIR' }}
             </div>
@@ -25,7 +25,7 @@
                 <!-- Value Card -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">Estimasi Nilai Barang (HPP)</p>
+                        <p class="text-[10px] font-bold text-blue-600 uppercase mb-1">Estimasi Nilai Barang (HPP)</p>
                         <div class="flex items-baseline gap-1">
                             <span class="text-xs font-semibold text-gray-400">Rp</span>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalInventoryValue, 0, ',', '.') }}</p>
@@ -36,7 +36,7 @@
                 <!-- Stock Card -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Total Unit Stok</p>
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase mb-1">Total Unit Stok</p>
                         <div class="flex items-baseline gap-1">
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalStock, 0) }}</p>
                             <span class="text-xs font-semibold text-gray-400">item</span>
@@ -47,7 +47,7 @@
                 <!-- Info Card -->
                 <div class="bg-indigo-900 rounded-lg shadow-md p-6 text-white flex items-center justify-between">
                     <div class="truncate mr-2">
-                        <p class="text-[10px] font-bold text-indigo-100 uppercase tracking-wider mb-1 opacity-70">Pencarian & Filter</p>
+                        <p class="text-[10px] font-bold text-indigo-100 uppercase mb-1 opacity-70">Pencarian & Filter</p>
                         @if($search || $startExpiry || $endExpiry)
                             <p class="text-lg font-bold truncate">
                                 @if($search) "{{ $search }}" @else Filter Aktif @endif
@@ -79,7 +79,7 @@
 
                         <!-- Date Range Selection -->
                         <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider pl-1">Kadaluarsa:</span>
+                            <span class="text-xs font-bold text-gray-400 uppercase pl-1">Kadaluarsa:</span>
                             <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-36">
                             <span class="text-gray-300">/</span>
                             <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-36">
@@ -87,9 +87,9 @@
 
                         <!-- Print Button -->
                         <div class="flex-shrink-0 ml-auto">
-                            <button onclick="window.print()" class="btn btn-lg btn-secondary">
-                                <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                Cetak A4
+                            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                Cetak Pdf
                             </button>
                         </div>
                     </div>
@@ -100,13 +100,13 @@
                     <table class="w-full text-left border-collapse custom-print-table">
                         <thead>
                             <tr class="bg-gray-50 dark:bg-gray-900/50 print:bg-transparent">
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NO.</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">KODE BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NAMA BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">SATUAN</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">STOK</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 uppercase">Harga Beli</th>
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 uppercase">Saldo</th>
+                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NO.</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">KODE BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NAMA BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">SATUAN</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">STOK</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">Harga Beli</th>
+                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">Saldo</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-800 print:divide-none">
@@ -147,7 +147,7 @@
                         @if($batches->count() > 0)
                             <tfoot class="bg-gray-50 dark:bg-gray-900/80 print:bg-transparent">
                                 <tr class="font-bold border-t-2 border-gray-100 dark:border-gray-800 print:border-t-2 print:border-gray-800">
-                                    <td colspan="4" class="px-6 py-4 print:px-2 print:py-1 text-xs text-gray-400 print:text-gray-900 uppercase tracking-widest text-center">TOTAL KESELURUHAN</td>
+                                    <td colspan="4" class="px-6 py-4 print:px-2 print:py-1 text-xs text-gray-400 print:text-gray-900 uppercase text-center">TOTAL KESELURUHAN</td>
                                     <td class="px-4 py-4 print:px-2 print:py-1 text-right tabular-nums">
                                         <div class="text-sm print:text-[10px] text-gray-900 dark:text-white">{{ number_format($totalStock, 0) }}</div>
                                     </td>

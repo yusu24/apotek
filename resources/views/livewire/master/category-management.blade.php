@@ -8,9 +8,9 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="mb-4 flex flex-row gap-4">
             <button wire:click="openModal"
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span class="hidden sm:inline">Tambah Kategori</span>
+                <span>Tambah Kategori</span>
             </button>
             <input type="text" wire:model.live="search" placeholder="Cari kategori..." 
                 class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -89,12 +89,11 @@
                     <!-- Modal Footer -->
                     <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                         <button type="button" wire:click="closeModal"
-                            class="px-5 py-2.5 text-gray-500 hover:text-gray-900 font-bold transition-all text-sm capitalize rounded-xl">
+                            class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all text-sm capitalize flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
                             {{ $editMode ? 'Update' : 'Simpan' }}
                         </button>
                     </div>

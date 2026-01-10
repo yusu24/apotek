@@ -16,18 +16,6 @@ class GoodsReceipt extends Model
         'due_date' => 'date',
     ];
 
-    protected static function booted()
-    {
-        static::created(function ($goodsReceipt) {
-            // Auto-post journal entry for goods receipt
-            try {
-                $accountingService = new AccountingService();
-                $accountingService->postPurchaseJournal($goodsReceipt->id);
-            } catch (\Exception $e) {
-                \Log::error('Failed to post purchase journal: ' . $e->getMessage());
-            }
-        });
-    }
 
     public function getPaymentStatusLabelAttribute()
     {
@@ -83,5 +71,10 @@ class GoodsReceipt extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'purchase')->where('source_id', $this->id);
     }
 }

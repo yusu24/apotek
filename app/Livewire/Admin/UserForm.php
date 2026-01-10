@@ -48,6 +48,7 @@ class UserForm extends Component
         'manage suppliers' => false,
         'manage pos settings' => false,
         'manage opening balances' => false,
+        'import_master_data' => false,
     ];
 
     public function mount($id = null)

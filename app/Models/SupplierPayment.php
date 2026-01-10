@@ -18,4 +18,9 @@ class SupplierPayment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'supplier_payment')->where('source_id', $this->id);
+    }
 }

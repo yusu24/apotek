@@ -89,7 +89,8 @@
                                         'view products' => 'Obat / Produk',
                                         'manage categories' => 'Kategori Produk',
                                         'manage product units' => 'Satuan Produk',
-                                        'manage suppliers' => 'Daftar Supplier'
+                                        'manage suppliers' => 'Daftar Supplier',
+                                        'import_master_data' => 'Import Master Data (Excel)'
                                     ];
                                 @endphp
                                 @foreach($productItems as $perm => $label)

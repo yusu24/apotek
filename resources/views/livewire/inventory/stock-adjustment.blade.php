@@ -3,10 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">
             Penyesuaian Stok (Stock Adjustment)
         </h2>
-        <a href="{{ route('inventory.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali
-        </a>
     </div>
 
     @if (session()->has('message'))
@@ -111,13 +107,12 @@
 
             <div class="mt-8 flex justify-end gap-3 border-t pt-6">
                 <a href="{{ route('inventory.index') }}" wire:navigate
-                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-bold transition text-sm">
+                    class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
                     Batal
                 </a>
                 <button type="submit" 
-                    class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 font-bold transition shadow-md flex items-center gap-2 text-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    {{ $adjustment_type === 'add' ? 'Tambah Stok' : 'Kurangi Stok' }}
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
+                    Simpan
                 </button>
             </div>
         </form>

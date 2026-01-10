@@ -28,32 +28,6 @@ class Sale extends Model
         'date' => 'datetime',
     ];
 
-    protected static function booted()
-    {
-        static::created(function ($sale) {
-            // Auto-post journal entry for completed sales
-            if ($sale->status === 'completed') {
-                try {
-                    $accountingService = new AccountingService();
-                    $accountingService->postSaleJournal($sale->id);
-                } catch (\Exception $e) {
-                    \Log::error('Failed to post sale journal: ' . $e->getMessage());
-                }
-            }
-        });
-
-        static::updated(function ($sale) {
-            // Auto-post journal entry when status changes to completed
-            if ($sale->isDirty('status') && $sale->status === 'completed') {
-                try {
-                    $accountingService = new AccountingService();
-                    $accountingService->postSaleJournal($sale->id);
-                } catch (\Exception $e) {
-                    \Log::error('Failed to post sale journal: ' . $e->getMessage());
-                }
-            }
-        });
-    }
 
     public function saleItems()
     {

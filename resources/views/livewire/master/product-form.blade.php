@@ -191,10 +191,10 @@
             </div>
 
             <div class="mt-8 flex justify-end gap-3 border-t pt-6">
-                <a href="{{ route('products.index') }}" wire:navigate class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-bold capitalize transition duration-200">
+                <a href="{{ route('products.index') }}" wire:navigate class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
                     Batal
                 </a>
-                <button type="submit" class="btn btn-lg btn-primary">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
                     {{ $product_id ? 'Update' : 'Simpan' }}
                 </button>
             </div>

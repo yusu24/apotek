@@ -1,47 +1,60 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
+        <h2 class="text-2xl font-normal text-gray-800">
             {{ $purchaseOrder ? 'Edit Pesanan' : 'Surat Pesanan Baru' }}
         </h2>
-        <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1 transition">
+        <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-normal flex items-center gap-1 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
         </a>
     </div>
 
     <form wire:submit="save">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left: Info PO -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">Informasi PO</h3>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">No. PO <span class="text-red-500">*</span></label>
-                            <input type="text" wire:model="po_number" class="mt-1 block w-full rounded-lg border-gray-300 bg-gray-100" readonly placeholder="Auto Generated">
+        <!-- Header Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+            <div class="space-y-3">
+                
+                <!-- Row 1: No. PO & Tanggal -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3">
+                    <!-- No. PO -->
+                    <div class="flex items-center">
+                        <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">No. PO <span class="text-red-500">*</span></label>
+                        <div class="flex-1 max-w-sm">
+                            <input type="text" wire:model="po_number" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal bg-gray-100 py-1.5 h-8" readonly placeholder="Auto Generated">
                         </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Tanggal <span class="text-red-500">*</span></label>
-                            <input type="date" wire:model="date" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'readonly' : '' }}>
-                            @error('date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                        </div>
+                    </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Supplier <span class="text-red-500">*</span></label>
-                            <select wire:model="supplier_id" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'disabled' : '' }}>
+                    <!-- Tanggal -->
+                    <div class="flex items-center">
+                        <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Tanggal <span class="text-red-500">*</span></label>
+                        <div class="flex-1 max-w-xs">
+                            <input type="date" wire:model="date" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" {{ $isReadOnly ? 'readonly' : '' }}>
+                            @error('date') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Supplier & Status -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-3">
+                    <!-- Supplier -->
+                    <div class="flex items-center">
+                        <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Supplier <span class="text-red-500">*</span></label>
+                        <div class="flex-1 max-w-sm">
+                            <select wire:model="supplier_id" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" {{ $isReadOnly ? 'disabled' : '' }}>
                                 <option value="">-- Pilih Supplier --</option>
                                 @foreach($suppliers as $sup)
                                     <option value="{{ $sup->id }}">{{ $sup->name }}</option>
                                 @endforeach
                             </select>
-                            @error('supplier_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            @error('supplier_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
+                    </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Status</label>
-                            <select wire:model="status" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" {{ $isReadOnly ? 'disabled' : '' }}>
+                    <!-- Status -->
+                    <div class="flex items-center">
+                        <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Status</label>
+                        <div class="flex-1 max-w-xs">
+                            <select wire:model="status" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" {{ $isReadOnly ? 'disabled' : '' }}>
                                 <option value="draft">Draf</option>
                                 <option value="ordered">Dipesan</option>
                                 <option value="cancelled">Dibatalkan</option>
@@ -53,44 +66,92 @@
                                 @endif
                             </select>
                         </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Catatan</label>
-                            <textarea wire:model="notes" rows="3" class="mt-1 block w-full rounded-lg border-gray-300 {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" placeholder="Catatan tambahan..." {{ $isReadOnly ? 'readonly' : '' }}></textarea>
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Right: Items -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Item Pesanan</h3>
-                        @if(!$isReadOnly)
-                        <button type="button" wire:click="openModal" class="btn btn-primary">
-                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            Tambah Barang
-                        </button>
+        <!-- Items Table Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200" x-data="{ activeTab: 'items' }">
+            <!-- Tab Navigation -->
+            <div class="px-3 pt-3 border-b border-gray-200 bg-gray-50/50">
+                <div class="flex items-center gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+                    <!-- Items Tab -->
+                    <button type="button" @click="activeTab = 'items'" 
+                            :class="activeTab === 'items' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                            class="px-4 py-2 rounded-lg font-normal transition flex items-center gap-2 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span>Items</span>
+                    </button>
+                    
+                    <!-- Notes Tab -->
+                    <button type="button" @click="activeTab = 'notes'" 
+                            :class="activeTab === 'notes' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                            class="px-4 py-2 rounded-lg font-normal transition flex items-center gap-2 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span>Catatan</span>
+                    </button>
+                </div>
+
+                @if(!$isReadOnly)
+                <!-- Product Search Box Below Tabs (Livewire Based) -->
+                <div x-show="activeTab === 'items'" class="relative w-full py-3" x-data="{ open: false }">
+                    <div class="relative max-w-xl">
+                        <input type="text" 
+                            wire:model.live.debounce.300ms="productSearch"
+                            @focus="open = true"
+                            @click.away="open = false"
+                            @keydown.escape="open = false"
+                            class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-10 pr-4"
+                            placeholder="Cari produk atau scan barcode untuk menambah item...">
+                        
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+
+                        <!-- Dropdown List -->
+                        @if(!empty($productSearch))
+                        <div x-show="open" 
+                             class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                            <ul class="py-1">
+                                @forelse($searchResults as $p)
+                                    <li wire:click="openModal(null, {{ $p->id }})" @click="open = false"
+                                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-800">{{ $p->name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $p->barcode }}</div>
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li class="px-4 py-2 text-sm text-gray-500">Produk tidak ditemukan.</li>
+                                @endforelse
+                            </ul>
+                        </div>
                         @endif
                     </div>
+                </div>
+                @else
+                <div class="py-2"></div>
+                @endif
+            </div>
 
-                    @error('items') <div class="text-red-500 text-sm mb-2">{{ $message }}</div> @enderror
+                    @error('items') <div class="text-red-500 text-sm mb-2 px-4">{{ $message }}</div> @enderror
 
-                    <div class="overflow-hidden border border-gray-100 rounded-lg shadow-sm">
+            <!-- Items Table Content -->
+            <div x-show="activeTab === 'items'" class="">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50/50">
+                            <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="px-6 py-4 text-left text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em]">Informasi Produk</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-32">Kuantitas</th>
-                                    <th class="px-6 py-4 text-center text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-32">Satuan</th>
-                                    <th class="px-6 py-4 text-right text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] w-28">Aksi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200">Informasi Produk</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-24">QTY</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-28">Satuan</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-20">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">
                                 @forelse($items as $index => $item)
                                     @php
-                                        $product = $products->firstWhere('id', $item['product_id']);
+                                        $product = $tableProducts->firstWhere('id', $item['product_id']);
                                     @endphp
                                     <tr class="group hover:bg-gray-50/80 transition-all duration-150">
                                         <td class="px-6 py-5">
@@ -127,9 +188,9 @@
                                             @endphp
                                             <span class="text-xs text-gray-500 uppercase tracking-wide bg-gray-50 px-2 py-1 rounded border border-gray-100">{{ $unitName }}</span>
                                         </td>
-                                        <td class="px-6 py-4 text-right">
+                                        <td class="px-6 py-4 text-center">
                                             @if(!$isReadOnly)
-                                            <div class="flex items-center justify-end gap-1">
+                                            <div class="flex items-center justify-center gap-1">
                                                 <button type="button" wire:click="openModal({{ $index }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                                 </button>
@@ -148,7 +209,7 @@
                                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                                                 </div>
                                                 <div class="text-sm font-bold text-gray-900">Belum ada barang</div>
-                                                <div class="text-xs text-gray-400 mt-1">Silakan tambah barang untuk memulai pesanan</div>
+                                                <div class="text-xs text-gray-400 mt-1">Gunakan kotak pencarian di atas untuk menambah barang pesanan</div>
                                             </div>
                                         </td>
                                     </tr>
@@ -170,32 +231,30 @@
                         </table>
                     </div>
 
-                    {{-- Action buttons --}}
-                    <div class="mt-8 pt-6 border-t border-gray-100 flex flex-wrap items-center justify-end gap-3">
-                        @if(!$isReadOnly)
-                        <button type="submit" class="btn btn-lg btn-primary">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Simpan Pesanan
-                        </button>
-                        @endif
+            <!-- Notes Content -->
+            <div x-show="activeTab === 'notes'" class="p-6" style="display: none;">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Pesanan</label>
+                <textarea wire:model="notes" rows="8" class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : '' }}" placeholder="Tulis catatan tambahan di sini..." {{ $isReadOnly ? 'readonly' : '' }}></textarea>
+            </div>
 
-                        @if($purchaseOrder && ($status === 'ordered' || $status === 'partial'))
-                        <a href="{{ route('procurement.goods-receipts.create', ['po_id' => $purchaseOrder->id]) }}"
-                           class="px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold shadow-md flex items-center gap-2 transition-all transform hover:-translate-y-0.5 active:scale-95 text-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                            Proses Penerimaan
-                        </a>
-                        @endif
+            <!-- Footer Actions -->
+            <div class="bg-gray-50 p-4 border-t border-gray-200 flex justify-end items-center rounded-b-lg gap-3">
+                @if($purchaseOrder && ($status === 'ordered' || $status === 'partial'))
+                <a href="{{ route('procurement.goods-receipts.create', ['po_id' => $purchaseOrder->id]) }}"
+                    class="px-5 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold shadow-md transition text-sm flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    Proses Penerimaan
+                </a>
+                @endif
 
-                        @if($purchaseOrder && $status === 'partial')
-                        <button type="button" wire:click="markAsDone" wire:confirm="Yakin ingin menyelesaikan PO ini? Item yang belum diterima akan dianggap batal."
-                           class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md flex items-center gap-2 transition-all active:scale-95 text-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Selesaikan PO
-                        </button>
-                        @endif
-                    </div>
-                </div>
+                @if(!$isReadOnly)
+                <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-white shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                    Batal
+                </a>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                    Simpan
+                </button>
+                @endif
             </div>
         </div>
         
@@ -264,7 +323,7 @@
 
     <!-- Modal Item moved outside main form -->
     @if($showModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" x-data x-cloak>
+        <div class="fixed inset-0 z-[60] overflow-y-auto">
             <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" wire:click="closeModal"></div>
             
             <div class="flex items-center justify-center min-h-screen p-4">
@@ -286,76 +345,19 @@
                         <!-- Product Selection (Searchable) -->
                         <div x-data="{
                             open: false,
-                            search: '',
+                            search: @entangle('modalProductName').live,
                             selectedId: @entangle('modalProductId').live,
-                            products: {{ $products->map(fn($p) => ['id' => $p->id, 'name' => $p->name, 'barcode' => $p->barcode])->toJson() }},
-                            get filteredProducts() {
-                                if (this.search === '') return this.products;
-                                return this.products.filter(p => 
-                                    p.name.toLowerCase().includes(this.search.toLowerCase()) || 
-                                    (p.barcode && p.barcode.toLowerCase().includes(this.search.toLowerCase()))
-                                );
-                            },
                             selectProduct(product) {
-                                this.selectedId = product.id;
-                                this.search = product.name;
-                                this.open = false;
-                            },
-                            init() {
-                                this.$watch('selectedId', (value) => {
-                                    if(!value) { this.search = ''; return; }
-                                    const product = this.products.find(p => p.id == value);
-                                    if (product) this.search = product.name;
-                                });
-                                // Initial State
-                                if(this.selectedId) {
-                                    const product = this.products.find(p => p.id == this.selectedId);
-                                    if (product) this.search = product.name;
-                                }
+                                // Handled by searchResults wire:click
                             }
                         }" class="relative">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Pilih Produk <span class="text-red-500">*</span></label>
-                            
-                            <div class="relative">
-                                <input type="text" 
-                                    x-model="search"
-                                    @focus="open = true"
-                                    @click.away="open = false"
-                                    @keydown.escape="open = false"
-                                    class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-4 pr-10"
-                                    placeholder="Ketik nama produk atau scan barcode..."
-                                >
-                                
-                                <!-- Search Icon / Loading -->
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Produk Terpilih</label>
+                            <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-lg flex justify-between items-center group">
+                                <div>
+                                    <div class="text-sm font-bold text-blue-900" x-text="search || 'Pilih Produk...'"></div>
                                 </div>
-
-                                <!-- Dropdown List -->
-                                <div x-show="open && filteredProducts.length > 0" 
-                                     x-transition:enter="transition ease-out duration-100"
-                                     x-transition:enter-start="opacity-0 scale-95"
-                                     x-transition:enter-end="opacity-100 scale-100"
-                                     class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto"
-                                     style="display: none;">
-                                    <ul class="py-1">
-                                        <template x-for="product in filteredProducts" :key="product.id">
-                                            <li @click="selectProduct(product)" 
-                                                class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors">
-                                                <div>
-                                                    <div class="text-sm font-medium text-gray-800" x-text="product.name"></div>
-                                                    <div class="text-xs text-gray-500" x-text="product.barcode"></div>
-                                                </div>
-                                            </li>
-                                        </template>
-                                    </ul>
-                                </div>
-
-                                <!-- No Results -->
-                                <div x-show="open && filteredProducts.length === 0" 
-                                     class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 p-4 text-center text-gray-500 text-sm"
-                                     style="display: none;">
-                                    Produk tidak ditemukan.
+                                <div class="text-blue-300 group-hover:text-blue-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </div>
                             </div>
                             @error('modalProductId') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
@@ -394,47 +396,6 @@
                                 </div>
                             </div>
                             
-                            <div class="hidden">
-                                <label class="block text-xs font-bold text-gray-700 mb-1">Harga Beli Satuan <span class="text-red-500">*</span></label>
-                                <div class="relative rounded-lg shadow-sm h-9" x-data="money($wire.entangle('modalPrice').live)">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <span class="text-gray-500 text-xs">Rp</span>
-                                    </div>
-                                    <input type="text" x-bind="input" class="block w-full pl-8 pr-3 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-right font-bold text-sm" placeholder="0">
-                                </div>
-                                
-                                <!-- Margin Info -->
-                                <div class="mt-2 bg-gray-50 p-2 rounded border border-gray-200 text-xs space-y-1">
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-gray-500">Harga Jual (Est):</span>
-                                        <span class="font-medium text-gray-800">Rp {{ number_format($modalSellPrice, 0, ',', '.') }}</span>
-                                    </div>
-                                    <div class="flex justify-between items-center border-t border-gray-200 pt-1">
-                                        <span class="text-gray-500">Margin / Profit:</span>
-                                        <span class="{{ $modalMargin >= 0 ? 'text-green-600' : 'text-red-500' }} font-bold">
-                                            Rp {{ number_format($modalMargin, 0, ',', '.') }} 
-                                            <span class="text-[10px] ml-1 bg-{{ $modalMargin >= 0 ? 'green' : 'red' }}-100 px-1 rounded">
-                                                {{ number_format($modalMarginPercentage, 1) }}%
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Subtotal Display (Hidden for now as requested) -->
-                        <div class="space-y-3 hidden">
-                            <div class="flex items-center justify-between pt-2">
-                                <label class="flex items-center gap-2 cursor-pointer select-none">
-                                    <input type="checkbox" wire:model.live="modalPpn" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                    <span class="text-sm font-medium text-gray-700">Kenakan PPN 12%</span>
-                                </label>
-                            </div>
-
-                            <div class="bg-blue-50 p-3 rounded-lg flex items-center justify-between border border-blue-100">
-                                <span class="text-blue-800 text-sm font-semibold">Subtotal</span>
-                                <span class="text-lg font-bold text-blue-900">Rp {{ number_format($modalSubtotal, 0, ',', '.') }}</span>
-                            </div>
                         </div>
                     </div>
 

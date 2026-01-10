@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Retur Pembelian</h2>
+        <h2 class="text-2xl font-normal text-gray-800">Retur Pembelian</h2>
         <p class="text-sm text-gray-500">Kelola pengembalian barang ke supplier.</p>
     </div>
 
@@ -12,7 +12,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row gap-4 items-center">
-            <button wire:click="openModal" class="btn btn-warning">
+            <button wire:click="openModal" class="btn btn-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Tambah Retur
             </button>
@@ -20,13 +20,13 @@
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
-                <input type="text" wire:model.live="search" placeholder="Cari No. Retur atau Nama Supplier..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 text-sm">
+                <input type="text" wire:model.live="search" placeholder="Cari No. Retur atau Nama Supplier..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
             </div>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
                         <th class="px-6 py-4">No. Retur</th>
                         <th class="px-6 py-4">Supplier</th>
@@ -39,9 +39,9 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($returns as $return)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-bold text-orange-600">{{ $return->return_no }}</td>
-                            <td class="px-6 py-4 font-medium">{{ $return->supplier->name }}</td>
-                            <td class="px-6 py-4 text-right font-bold">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
+                            <td class="px-6 py-4 font-normal">{{ $return->supplier->name }}</td>
+                            <td class="px-6 py-4 text-right font-normal">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 text-center text-gray-600">{{ $return->user->name }}</td>
                             <td class="px-6 py-4 text-center">{{ $return->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-6 py-4 text-gray-500 text-xs italic">{{ $return->notes ?: '-' }}</td>
@@ -72,7 +72,7 @@
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
                 <div class="px-6 pt-6 pb-4">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-900">Tambah Retur Pembelian</h3>
+                        <h3 class="text-xl font-normal text-gray-900">Tambah Retur Pembelian</h3>
                         <button type="button" wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-500 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
@@ -81,8 +81,8 @@
                     <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Pilih Supplier <span class="text-red-500">*</span></label>
-                                <select wire:model.live="selectedSupplierId" class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all">
+                                <label class="block text-sm font-normal text-gray-700 mb-2">Pilih Supplier <span class="text-red-500">*</span></label>
+                                <select wire:model.live="selectedSupplierId" class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
                                     <option value="">-- Pilih Supplier --</option>
                                     @foreach($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -91,25 +91,25 @@
                                 @error('selectedSupplierId') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                             </div>
                             <div class="relative">
-                                <label class="block text-sm font-bold text-gray-700 mb-2">Cari Barang (Batch) <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-normal text-gray-700 mb-2">Cari Barang (Batch) <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                     </span>
-                                    <input type="text" wire:model.live="productSearch" placeholder="Ketik nama produk..." class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all">
+                                    <input type="text" wire:model.live="productSearch" placeholder="Ketik nama produk..." class="block w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
                                 </div>
                                 
                                 @if(!empty($foundBatches))
                                     <div class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
                                         @foreach($foundBatches as $batch)
-                                            <button wire:click="addBatchToReturn({{ $batch->id }})" class="w-full text-left p-3 hover:bg-orange-50 border-b border-gray-50 flex justify-between items-center transition-colors">
+                                            <button wire:click="addBatchToReturn({{ $batch->id }})" class="w-full text-left p-3 hover:bg-blue-50 border-b border-gray-50 flex justify-between items-center transition-colors">
                                                 <div>
                                                     <div class="font-bold text-gray-800 text-sm">{{ $batch->product->name }}</div>
-                                                    <div class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Batch: {{ $batch->batch_no }} | Exp: {{ $batch->expired_date ? $batch->expired_date->format('d/m/Y') : '-' }}</div>
+                                                    <div class="text-[10px] text-gray-500 font-normal uppercase tracking-wider">Batch: {{ $batch->batch_no }} | Exp: {{ $batch->expired_date ? $batch->expired_date->format('d/m/Y') : '-' }}</div>
                                                 </div>
                                                 <div class="text-right">
-                                                    <div class="text-sm font-bold text-orange-600">Stok: {{ $batch->stock_current }}</div>
-                                                    <div class="text-[10px] text-gray-400 font-bold">Rp {{ number_format($batch->buy_price, 0, ',', '.') }}</div>
+                                                    <div class="text-sm font-normal text-blue-600">Stok: {{ $batch->stock_current }}</div>
+                                                    <div class="text-[10px] text-gray-400 font-normal">Rp {{ number_format($batch->buy_price, 0, ',', '.') }}</div>
                                                 </div>
                                             </button>
                                         @endforeach
@@ -140,14 +140,14 @@
                                             </td>
                                             <td class="px-4 py-3 text-center font-bold text-gray-600">{{ $item['max_quantity'] }}</td>
                                             <td class="px-4 py-3">
-                                                <input type="number" wire:model.live="returnItems.{{ $batchId }}.quantity" class="w-full h-9 rounded-lg border-gray-300 text-sm text-center focus:ring-orange-500 focus:border-orange-500" min="0" max="{{ $item['max_quantity'] }}">
+                                                <input type="number" wire:model.live="returnItems.{{ $batchId }}.quantity" class="w-full h-9 rounded-lg border-gray-300 text-sm text-center focus:ring-blue-500 focus:border-blue-500" min="0" max="{{ $item['max_quantity'] }}">
                                                 @error("returnItems.{$batchId}.quantity") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                             </td>
                                             <td class="px-4 py-3 text-right text-gray-500 italic">
                                                 Rp {{ number_format($item['cost_price'], 0, ',', '.') }}
                                             </td>
-                                            <td class="px-4 py-3 text-right font-bold text-orange-600">
-                                                Rp {{ number_format(($item['quantity'] ?: 0) * $item['cost_price'], 0, ',', '.') }}
+                                            <td class="px-4 py-3 text-right font-bold text-blue-600">
+                                                Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['cost_price'] ?: 0), 0, ',', '.') }}
                                             </td>
                                             <td class="px-4 py-3 text-center">
                                                 <button wire:click="removeItem({{ $batchId }})" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-all">
@@ -168,10 +168,10 @@
                                     @endif
                                 </tbody>
                                 @if(!empty($returnItems))
-                                    <tfoot class="bg-orange-50/30">
+                                    <tfoot class="bg-blue-50/30">
                                         <tr class="font-bold">
                                             <td colspan="4" class="px-4 py-4 text-right uppercase tracking-widest text-[10px] text-gray-500">Total Nilai Retur</td>
-                                            <td class="px-4 py-4 text-right text-lg text-orange-700 font-bold">Rp {{ number_format(collect($returnItems)->sum(fn($i) => ($i['quantity'] ?: 0) * $i['cost_price']), 0, ',', '.') }}</td>
+                                            <td class="px-4 py-4 text-right text-lg text-blue-700 font-bold">Rp {{ number_format(collect($returnItems)->sum(fn($i) => (float)($i['quantity'] ?: 0) * (float)($i['cost_price'] ?: 0)), 0, ',', '.') }}</td>
                                             <td></td>
                                         </tr>
                                     </tfoot>
@@ -181,7 +181,7 @@
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Catatan / Alasan Retur</label>
-                            <textarea wire:model="notes" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-orange-500 focus:border-orange-500 transition-all" placeholder="Tuliskan alasan pengembalian barang..."></textarea>
+                            <textarea wire:model="notes" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Tuliskan alasan pengembalian barang..."></textarea>
                         </div>
                         
                         @error('error') <div class="p-4 bg-red-50 text-red-700 rounded-xl text-sm font-medium border border-red-100 italic">{{ $message }}</div> @enderror
@@ -189,12 +189,15 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                    <button wire:click="saveReturn" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed" @if(empty($returnItems)) disabled @endif>
-                        Simpan Retur
-                    </button>
-                    <button wire:click="$set('showModal', false)" class="btn btn-secondary">
+                <div class="px-6 py-4 bg-gray-50 flex justify-end items-center gap-3">
+                    <button type="button" wire:click="$set('showModal', false)" 
+                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm font-normal transition duration-200 text-sm">
                         Batal
+                    </button>
+                    <button wire:click="saveReturn" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-normal flex items-center justify-center gap-2 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed" 
+                        @if(empty($returnItems)) disabled @endif>
+                        Simpan
                     </button>
                 </div>
             </div>

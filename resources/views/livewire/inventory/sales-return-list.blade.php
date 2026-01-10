@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Retur Penjualan</h2>
+        <h2 class="text-2xl font-normal text-gray-800">Retur Penjualan</h2>
         <p class="text-sm text-gray-500">Kelola pengembalian barang dari pelanggan.</p>
     </div>
 
@@ -26,7 +26,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
                         <th class="px-6 py-4">No. Retur</th>
                         <th class="px-6 py-4">No. Invoice</th>
@@ -39,7 +39,7 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($returns as $return)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-bold text-blue-600">{{ $return->return_no }}</td>
+                            <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
                             <td class="px-6 py-4">{{ $return->sale->invoice_no }}</td>
                             <td class="px-6 py-4">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">{{ $return->user->name }}</td>
@@ -72,7 +72,7 @@
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
                 <div class="px-6 pt-6 pb-4">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-900">Tambah Retur Penjualan Baru</h3>
+                        <h3 class="text-xl font-normal text-gray-900">Tambah Retur Penjualan Baru</h3>
                         <button type="button" wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-500 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
@@ -80,7 +80,7 @@
 
                     <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Cari No. Invoice <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-normal text-gray-700 mb-2">Cari No. Invoice <span class="text-red-500">*</span></label>
                             <input type="text" wire:model.live="invoiceSearch" placeholder="Masukkan Nomor Invoice (cth: INV/...)" class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
                             <p class="mt-1 text-xs text-gray-500 italic">Masukkan minimal 4 karakter untuk mencari.</p>
                         </div>
@@ -90,11 +90,11 @@
                                 <div class="grid grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <p class="text-gray-500">Customer</p>
-                                        <p class="font-bold text-blue-800">{{ $selectedSale->invoice_no }}</p>
+                                        <p class="font-normal text-blue-800">{{ $selectedSale->invoice_no }}</p>
                                     </div>
                                     <div>
                                         <p class="text-gray-500">Tgl Transaksi</p>
-                                        <p class="font-bold text-blue-800">{{ $selectedSale->date->format('d M Y') }}</p>
+                                        <p class="font-normal text-blue-800">{{ $selectedSale->date->format('d M Y') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                                     @error("returnItems.{$id}.quantity") <span class="text-red-500 text-[10px]">{{ $message }}</span> @enderror
                                                 </td>
                                                 <td class="px-4 py-3 text-right font-bold text-blue-600">
-                                                    Rp {{ number_format(($item['quantity'] ?: 0) * $item['price'], 0, ',', '.') }}
+                                                    Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['price'] ?: 0), 0, ',', '.') }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -147,12 +147,15 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                    <button wire:click="saveReturn" class="btn btn-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed" @if(!$selectedSale) disabled @endif>
-                        Simpan Retur
-                    </button>
-                    <button wire:click="$set('showModal', false)" class="btn btn-secondary">
+                <div class="px-6 py-4 bg-gray-50 flex justify-end items-center gap-3">
+                    <button type="button" wire:click="$set('showModal', false)" 
+                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm font-normal transition duration-200 text-sm">
                         Batal
+                    </button>
+                    <button wire:click="saveReturn" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-normal flex items-center justify-center gap-2 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed" 
+                        @if(!$selectedSale) disabled @endif>
+                        Simpan
                     </button>
                 </div>
             </div>

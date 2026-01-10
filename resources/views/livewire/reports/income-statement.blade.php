@@ -24,11 +24,11 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 items-end">
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[10px]">Mulai Tanggal</label>
+                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase text-[10px]">Mulai Tanggal</label>
                 <input type="date" wire:model="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[10px]">Sampai Tanggal</label>
+                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase text-[10px]">Sampai Tanggal</label>
                 <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
             <div>
@@ -49,7 +49,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Total Pendapatan</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Total Pendapatan</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_revenue'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Total Penerimaan</p>
@@ -61,7 +61,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Total HPP</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Total HPP</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_cogs'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">HPP Persediaan</p>
@@ -73,7 +73,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Laba Kotor</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Laba Kotor</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['gross_profit'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Pendapatan - HPP</p>
@@ -85,7 +85,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Beban Operasional</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Beban Operasional</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['total_expenses'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Operasional & Lainnya</p>
@@ -97,7 +97,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold tracking-wider uppercase opacity-80">Laba/Rugi Bersih</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Laba/Rugi Bersih</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Hasil Akhir</p>
@@ -107,7 +107,7 @@
     {{-- Income Statement Table --}}
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="bg-indigo-900 px-6 py-4">
-            <h3 class="text-xl font-bold text-white tracking-widest uppercase">DETAIL LABA RUGI</h3>
+            <h3 class="text-xl font-bold text-white uppercase">DETAIL LABA RUGI</h3>
             <p class="text-sm text-indigo-200 mt-1 italic">Rincian Pendapatan dan Beban Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
         </div>
         

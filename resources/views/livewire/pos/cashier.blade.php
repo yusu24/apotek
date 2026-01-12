@@ -84,8 +84,11 @@
             <div class="hidden md:flex md:w-[350px] lg:w-[380px] md:shrink-0 bg-white rounded-2xl shadow-xl flex-col overflow-hidden border border-gray-200 z-10 h-full">
                 
                 <!-- Cart Header -->
-                <div class="p-4 md:p-6 border-b border-gray-100">
-                    <div class="flex items-center gap-2 mb-1">
+                <!-- Customer Info & Cart Header -->
+                <div class="p-4 md:p-6 border-b border-gray-100 bg-gray-50/50">
+
+
+                    <div class="flex items-center gap-2">
                         <svg class="w-5 h-5 md:w-7 md:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <h2 class="text-lg md:text-2xl font-bold text-gray-900">Keranjang</h2>
                     </div>
@@ -250,6 +253,13 @@
                             <span class="font-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
                         
+                        @if($showDpp)
+                        <div class="flex justify-between text-gray-500">
+                            <span>DPP</span>
+                            <span>Rp {{ number_format($dpp, 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+
                         @if($global_discount > 0)
                         <div class="flex justify-between text-red-600">
                             <span>Diskon Global</span>
@@ -381,6 +391,35 @@
                     <button wire:click="loadPendingOrders" class="shrink-0 p-3 bg-white border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all h-[50px] w-[50px] flex items-center justify-center" title="Daftar Transaksi Pending">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </button>
+
+                    <!-- Settings Button -->
+                    <div x-data="{ openSettings: false }" class="relative">
+                        <button @click="openSettings = !openSettings" class="shrink-0 p-3 bg-white border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all h-[50px] w-[50px] flex items-center justify-center" title="Pengaturan Kasir">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </button>
+                        
+                        <div x-show="openSettings" 
+                             @click.outside="openSettings = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 p-4">
+                            <h4 class="font-bold text-gray-900 mb-3 text-sm border-b pb-2">Pengaturan Tampilan</h4>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Tampilkan DPP</span>
+                                <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" wire:model.live="showDpp" id="toggle-dpp" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer checked:right-0 checked:border-green-400"/>
+                                    <label for="toggle-dpp" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer checked:bg-green-400"></label>
+                                </div>
+                            </div>
+                            <style>
+                                .toggle-checkbox:checked { right: 0; border-color: #68D391; }
+                                .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
+                                .toggle-checkbox { right: auto; left: 0; transition: all 0.3s; }
+                            </style>
+                        </div>
+                    </div>
                     </div>
 
                     <!-- Category Filter -->
@@ -472,6 +511,8 @@
                 
                 <!-- Modal Body -->
                 <div class="p-6 space-y-6">
+
+
                     <!-- Total Display -->
                     <div class="text-center p-6 bg-gray-900 rounded-xl">
                         <p class="text-sm text-gray-400 mb-2">Total Akhir</p>
@@ -486,18 +527,82 @@
                     @enderror
 
                     <!-- Payment Method -->
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-3 gap-3">
                         <button type="button" wire:click="$set('payment_method', 'cash')" 
-                            class="p-4 border-2 rounded-xl font-semibold transition-all {{ $payment_method == 'cash' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
-                            💵 Tunai
+                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'cash' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-xl">💵</span> Tunai
                         </button>
                         <button type="button" wire:click="$set('payment_method', 'qris')" 
-                            class="p-4 border-2 rounded-xl font-semibold transition-all {{ $payment_method == 'qris' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
-                            📱 QRIS
+                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'qris' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-xl">📱</span> QRIS
+                        </button>
+                        <button type="button" wire:click="$set('payment_method', 'tempo')" 
+                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'tempo' ? 'border-amber-600 bg-amber-50 text-amber-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-xl">📅</span> Tempo
                         </button>
                     </div>
 
-                    <!-- Cash Input -->
+                    <!-- Tempo / Debt Logic -->
+                    @if($payment_method == 'tempo')
+                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-white p-2 rounded-lg text-amber-600 shadow-sm shrink-0">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-amber-900">Pembayaran Tempo</h4>
+                                    <p class="text-xs text-amber-700">Tagihan akan dicatat sebagai hutang customer.</p>
+                                </div>
+                            </div>
+                            
+                            @if(!$selectedCustomerId)
+                                <div class="bg-amber-100 border border-amber-300 rounded-lg p-3 mb-3">
+                                    <p class="text-xs font-bold text-amber-800 mb-2">Data Pelanggan (Baru)</p>
+                                    <div class="space-y-2">
+                                        <input type="text" wire:model="newCustomerName" placeholder="Nama Customer" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                                        <input type="text" wire:model="newCustomerPhone" placeholder="No HP" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                                        <textarea wire:model="newCustomerAddress" placeholder="Alamat Lengkap" rows="2" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500"></textarea>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-amber-800">Customer:</span>
+                                    <span class="font-bold text-amber-900">{{ $selectedCustomerName }}</span>
+                                </div>
+                            @endif
+
+                            <div class="mt-3">
+                                <label class="block text-xs font-bold text-amber-800 mb-1">Jangka Waktu Tempo</label>
+                                <select wire:model.live="tempoDuration" class="w-full text-sm border-amber-300 rounded-lg focus:ring-amber-500 focus:border-amber-500 bg-white">
+                                    <option value="7">1 Minggu</option>
+                                    <option value="14">2 Minggu</option>
+                                    <option value="21">3 Minggu</option>
+                                    <option value="30">1 Bulan (30 Hari)</option>
+                                </select>
+                                <div class="flex justify-between text-xs mt-1">
+                                    <span class="text-amber-700">Jatuh Tempo:</span>
+                                    <span class="font-bold text-amber-900">{{ now()->addDays((int)$tempoDuration)->format('d/m/Y') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-amber-200">
+                                <label class="block text-xs font-bold text-amber-800 mb-1">Uang Muka / DP (Opsional)</label>
+                                <div class="flex items-center bg-white rounded-lg border border-amber-300 px-3">
+                                    <span class="text-gray-500 font-bold mr-2">Rp</span>
+                                    <input type="text" 
+                                           class="flex-1 py-2 text-right font-bold text-gray-900 border-none focus:ring-0 placeholder-gray-300" 
+                                           placeholder="0"
+                                           x-data="money($wire.entangle('cash_amount').live)" x-bind="input">
+                                </div>
+                                <div class="flex justify-between mt-2 text-sm font-bold">
+                                    <span class="text-amber-800">Sisa Hutang:</span>
+                                    <span class="text-red-600">Rp {{ number_format(max(0, $grand_total - (float)$cash_amount), 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Cash Input (Only for Cash) -->
                     @if($payment_method == 'cash')
                     <div class="space-y-4">
                         <div class="bg-gray-50 p-4 rounded-xl">
@@ -721,6 +826,14 @@
                  <span class="text-gray-600">Subtotal</span>
                  <span class="font-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
              </div>
+
+             @if($showDpp)
+             <div class="flex justify-between text-sm text-gray-500">
+                 <span>DPP</span>
+                 <span>Rp {{ number_format($dpp, 0, ',', '.') }}</span>
+             </div>
+             @endif
+
              @if($global_discount > 0)
              <div class="flex justify-between text-sm text-red-600">
                  <span>Diskon Global</span>

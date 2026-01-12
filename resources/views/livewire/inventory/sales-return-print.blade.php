@@ -33,8 +33,8 @@
     <!-- Header -->
     <div class="flex justify-between items-start border-b border-gray-800 pb-6 mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Surat Pesanan</h1>
-            <p class="text-gray-600 font-bold text-lg">{{ $po->po_number }}</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">RETUR PENJUALAN</h1>
+            <p class="text-gray-600 font-bold text-lg">{{ $return->return_no }}</p>
         </div>
         <div class="text-right">
             <h2 class="text-xl font-bold text-gray-800">{{ $store_name }}</h2>
@@ -48,36 +48,23 @@
     <!-- Info Sections -->
     <div class="flex justify-between mb-8 gap-8">
         <div class="w-1/2">
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kepada Supplier:</h3>
+            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Ref. Invoice:</h3>
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <p class="font-bold text-gray-900 text-lg">{{ $po->supplier->name }}</p>
-                <p class="text-gray-600">{{ $po->supplier->address ?? '-' }}</p>
-                <p class="text-gray-600">Tel: {{ $po->supplier->phone ?? '-' }}</p>
+                <p class="font-bold text-gray-900 text-lg">{{ $return->sale->invoice_no }}</p>
+                <p class="text-gray-600 text-sm">Tgl Invoice: {{ $return->sale->created_at->format('d/m/Y') }}</p>
+                <p class="text-gray-600 text-sm">Pelanggan: {{ $return->sale->customer_name ?? 'Umum' }}</p>
             </div>
         </div>
         <div class="w-1/2 text-right">
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Detail Pesanan:</h3>
+            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Detail Retur:</h3>
             <div class="space-y-1">
                 <div class="flex justify-end gap-4">
                     <span class="text-gray-600">Tanggal:</span>
-                    <span class="font-bold text-gray-900">{{ \Carbon\Carbon::parse($po->order_date)->format('d/m/Y') }}</span>
-                </div>
-                <div class="flex justify-end gap-4">
-                    <span class="text-gray-600">Status:</span>
-                    <span class="font-bold uppercase {{ in_array($po->status, ['received', 'completed']) ? 'text-green-600' : 'text-amber-600' }}">
-                        {{ [
-                            'draft' => 'Draf',
-                            'ordered' => 'Dipesan',
-                            'partial' => 'Sebagian',
-                            'received' => 'Diterima',
-                            'completed' => 'Selesai',
-                            'cancelled' => 'Dibatalkan'
-                        ][$po->status] ?? $po->status }}
-                    </span>
+                    <span class="font-bold text-gray-900">{{ $return->created_at->format('d/m/Y') }}</span>
                 </div>
                 <div class="flex justify-end gap-4">
                     <span class="text-gray-600">Dibuat Oleh:</span>
-                    <span class="font-bold text-gray-900">apt. Mei Dwi Cahyani S.Fam</span>
+                    <span class="font-bold text-gray-900">{{ optional($return->user)->name ?? '-' }}</span>
                 </div>
             </div>
         </div>
@@ -88,51 +75,61 @@
         <thead>
             <tr class="bg-gray-800 text-white text-sm uppercase">
                 <th class="py-3 px-4 text-left rounded-l-lg">Produk</th>
+                <th class="py-3 px-4 text-center">Batch</th>
                 <th class="py-3 px-4 text-center">Qty</th>
-                <th class="py-3 px-4 text-center rounded-r-lg">Satuan</th>
+                <th class="py-3 px-4 text-right">Harga</th>
+                <th class="py-3 px-4 text-right rounded-r-lg">Subtotal</th>
             </tr>
         </thead>
         <tbody class="text-gray-700">
-            @foreach($po->items as $item)
+            @foreach($return->items as $item)
             <tr class="border-b border-gray-100 items-center">
                 <td class="py-3 px-4">
-                    <div class="font-bold text-gray-900">{{ $item->product->name }}</div>
-                    <div class="text-xs text-gray-500">Kode: {{ $item->product->barcode ?? '-' }}</div>
+                    <div class="font-bold text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</div>
                 </td>
-                <td class="py-3 px-4 text-center font-bold">{{ $item->qty_ordered }}</td>
-                <td class="py-3 px-4 text-center text-gray-600">{{ $item->product->unit->name ?? 'pcs' }}</td>
+                <td class="py-3 px-4 text-center text-gray-600">{{ $item->batch->batch_no ?? '-' }}</td>
+                <td class="py-3 px-4 text-center font-bold">{{ $item->quantity }}</td>
+                <td class="py-3 px-4 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                <td class="py-3 px-4 text-right font-bold text-gray-900">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot class="text-gray-900">
             <tr>
-                <td colspan="2" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Item</td>
-                <td class="py-4 px-4 text-center text-xl font-bold bg-gray-50 rounded-lg">{{ $po->items->count() }} Produk</td>
+                <td colspan="4" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Refund</td>
+                <td class="py-4 px-4 text-right text-xl font-bold bg-gray-50 rounded-lg">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
 
     <!-- Footer -->
-    <div class="border-t-2 border-dashed border-gray-200 pt-8 mt-12 flex justify-between items-end">
-        <div class="text-sm text-gray-500 max-w-md">
-            <p class="font-bold mb-1">Catatan:</p>
-            <p class="italic">{{ $po->notes ?? 'Tidak ada catatan tambahan.' }}</p>
-        </div>
-        <div class="flex gap-12 text-center justify-end">
-            <div>
-                <p class="text-sm text-gray-500 mb-2">Pemesan,</p>
-                <p class="font-bold text-gray-900 text-lg mt-16 underline">apt. Mei Dwi Cahyani S.Fam</p>
-                <p class="text-xs text-gray-600 mt-1">503/16/SIP.A/413.111/VIII/2025</p>
+    <div class="border-t-2 border-dashed border-gray-200 pt-8 mt-12">
+        <div class="flex justify-between gap-8 text-center">
+            <div class="w-1/3">
+                <p class="text-sm text-gray-500 mb-8">Dibuat Oleh,</p>
+                <p class="font-bold text-gray-900 underline">{{ optional($return->user)->name ?? '-' }}</p>
+                <p class="text-xs text-gray-500 mt-1">Staff</p>
+            </div>
+            <div class="w-1/3">
+                <p class="text-sm text-gray-500 mb-8">Pelanggan,</p>
+                <div class="border-b border-gray-400 w-32 mx-auto my-6"></div>
+                <p class="text-xs text-gray-500 mt-1">Tanda Tangan</p>
             </div>
         </div>
+        
+        <div class="mt-8 text-sm text-gray-500">
+            <p class="font-bold mb-1">Catatan:</p>
+            <p class="italic">{{ $return->notes ?? '-' }}</p>
+        </div>
     </div>
+    
     <!-- Action Buttons (No Print) -->
     <div class="no-print fixed bottom-6 right-6 flex gap-3">
         <button onclick="window.print()" class="btn btn-lg btn-primary">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            Print Order
+            Cetak Retur
         </button>
-        <a href="{{ route('procurement.purchase-orders.index') }}" class="bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg hover:bg-gray-900 font-bold flex items-center gap-2 transform hover:scale-105 transition-all">
+        <a href="{{ route('inventory.returns.sales') }}" class="bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg hover:bg-gray-900 font-bold flex items-center gap-2 transform hover:scale-105 transition-all">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
         </a>

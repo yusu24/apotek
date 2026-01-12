@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-normal text-gray-800">
-             Penerimaan Pesanan
+             {{ $isEdit ? 'Edit Penerimaan Pesanan' : 'Penerimaan Pesanan' }}
         </h2>
         <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-normal flex items-center gap-1 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -20,12 +20,17 @@
                     <div class="flex items-center">
                         <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Terima Dari</label>
                         <div class="flex-1 relative max-w-sm">
-                            <select wire:model.live="purchase_order_id" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal bg-gray-50 py-1.5 h-8">
+                            <select wire:model.live="purchase_order_id" 
+                                {{ $isEdit ? 'disabled' : '' }}
+                                class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal bg-gray-50 py-1.5 h-8 {{ $isEdit ? 'opacity-70 cursor-not-allowed' : '' }}">
                                 <option value="">-- Tanpa PO / Langsung --</option>
                                 @foreach($purchaseOrders as $po)
                                     <option value="{{ $po->id }}">{{ $po->po_number }} - {{ $po->supplier->name ?? '' }}</option>
                                 @endforeach
                             </select>
+                            @if($isEdit)
+                                <input type="hidden" wire:model="purchase_order_id">
+                            @endif
                         </div>
                     </div>
 
@@ -115,7 +120,6 @@
         <!-- Items Table Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="p-4 border-b border-gray-200 bg-gray-50/50 h-16 flex items-center">
-                @if(!$purchase_order_id)
                 <div class="relative w-full max-w-xl" x-data="{ open: false }">
                     <div class="relative">
                         <input type="text" 
@@ -152,28 +156,41 @@
                     </div>
                     @endif
                 </div>
-                @endif
             </div>
 
-            <div class="">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full table-fixed divide-y divide-gray-200 border-collapse" style="table-layout: fixed !important; min-width: 1100px;">
                     <thead class="bg-gray-50/50">
                         <tr>
-                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-48">Produk</th>
-                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-36">Batch No</th>
-                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-40">Exp Date</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-auto min-w-[200px]">Produk</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-28">Batch No</th>
+                            <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-32">Exp Date</th>
                             <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-20">Qty</th>
-                            <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-28">Satuan</th>
-                            <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-44">Harga</th>
+                            <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-24">Satuan</th>
+                            <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-40">Harga Beli</th>
+                            <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-40">Harga Jual</th>
+                            <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-24">Margin</th>
                             <th class="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 w-44">Total</th>
-                            <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest w-20">Aksi</th>
+                            <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest w-16">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($items as $index => $item)
-                            <tr wire:key="item-{{ $index }}" class="group hover:bg-blue-50/30 transition-colors">
+                            <tr wire:key="item-{{ $index }}" 
+                                x-data="{ 
+                                    qty: $wire.entangle('items.{{ $index }}.qty_received'), 
+                                    buy_price: $wire.entangle('items.{{ $index }}.buy_price'), 
+                                    sell_price: $wire.entangle('items.{{ $index }}.sell_price'),
+                                    get margin() {
+                                        let buy = parseFloat(this.buy_price) || 0;
+                                        let sell = parseFloat(this.sell_price) || 0;
+                                        if (buy <= 0) return 0;
+                                        return ((sell - buy) / buy) * 100;
+                                    }
+                                }"
+                                class="group hover:bg-blue-50/30 transition-colors">
                                 <td class="px-4 py-3 align-top border-r border-gray-100">
-                                    @if($purchase_order_id)
+                                    @if(!empty($item['po_info']) || ($isEdit && $purchase_order_id))
                                         <div class="text-sm font-normal text-gray-800">{{ $item['product_name'] }}</div>
                                         @php $selectedProduct = $products->firstWhere('id', $item['product_id']); @endphp
                                         <div class="text-[10px] text-gray-500 mt-0.5">{{ $selectedProduct->barcode ?? '-' }}</div>
@@ -204,8 +221,8 @@
                                     @error("items.{$index}.expired_date") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
-                                    <input type="number" wire:model.live="items.{{ $index }}.qty_received" class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-normal text-gray-900" min="1">
-                                    @error("items.{$index}.qty_received") <span class="text-red-500 text-[10px] mt-1 block text-center">{{ $message }}</span> @enderror
+                                    <input type="number" x-model="qty" class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-normal text-gray-900" placeholder="0" min="0">
+                                    @error("items.{$index}.qty_received") <span class="text-red-500 text-[10px] mt-1 block text-center leading-tight">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
                                      @php $selectedProduct = $products->firstWhere('id', $item['product_id']); @endphp
@@ -223,18 +240,31 @@
                                      @endif
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
-                                    <div class="relative" x-data="money($wire.entangle('items.{{ $index }}.buy_price'))">
-                                        <span class="absolute left-2 top-2 text-[10px] text-gray-400">Rp</span>
-                                        <input type="text" x-bind="input" class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-2 pl-6 py-1.5 font-normal text-gray-700">
+                                    <div class="relative" x-data="money(buy_price)" x-modelable="value" x-model="buy_price">
+                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
+                                        <input type="text" x-bind="input" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
+                                    </div>
+                                    @error("items.{$index}.buy_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
+                                </td>
+                                <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
+                                    <div class="relative" x-data="money(sell_price)" x-modelable="value" x-model="sell_price">
+                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
+                                        <input type="text" x-bind="input" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
+                                    </div>
+                                    @error("items.{$index}.sell_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
+                                </td>
+                                <td class="px-3 py-3 align-top border-r border-gray-100">
+                                    <div class="flex items-center justify-center h-8">
+                                        <div class="flex flex-col items-center">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border"
+                                                :class="margin < 0 ? 'bg-red-100 text-red-700 border-red-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'"
+                                                x-text="new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(margin) + '%'">
+                                            </span>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 align-top text-right text-sm font-bold text-gray-900">
-                                    @php
-                                        $qty = (float)($item['qty_received'] ?? 0);
-                                        $price = (float)($item['buy_price'] ?? 0);
-                                        $subtotal = $qty * $price;
-                                    @endphp
-                                    Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                <td class="px-4 py-3 align-top text-right text-sm font-bold text-gray-900 border-r border-gray-100">
+                                    Rp <span x-text="new Intl.NumberFormat('id-ID').format((parseFloat(qty) || 0) * (parseFloat(buy_price) || 0))"></span>
                                 </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">
@@ -290,8 +320,20 @@
     <!-- Final Footer Actions -->
     <div class="mt-8 flex items-center justify-end gap-4">
         <div class="flex items-center gap-3">
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
-                Simpan
+            @if(session()->has('message'))
+                <span class="text-green-600 text-sm font-bold bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">{{ session('message') }}</span>
+            @endif
+            <button type="submit" 
+                wire:loading.attr="disabled"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <span wire:loading.remove wire:target="save">{{ $isEdit ? 'Update' : 'Simpan' }}</span>
+                <span wire:loading wire:target="save" class="flex items-center gap-2">
+                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Memproses...
+                </span>
             </button>
         </div>
     </div>

@@ -25,79 +25,91 @@ class PurchaseReturnList extends Component
     public $returnItems = [];
     public $notes = '';
     
-    // Selection helpers
-    public $productSearch = '';
-    public $foundBatches = [];
+    public $goodsReceipts = [];
+    public $selectedGoodsReceiptId = '';
+    
+    public $showDetailModal = false;
+    public $selectedReturn;
 
     protected $rules = [
         'selectedSupplierId' => 'required',
+        'selectedGoodsReceiptId' => 'required',
         'notes' => 'nullable|string',
-        'returnItems.*.quantity' => 'numeric|min:0',
     ];
 
-    public function updatedProductSearch()
+    public function updatedSelectedSupplierId()
     {
-        if (strlen($this->productSearch) > 2) {
-            $this->foundBatches = Batch::with('product')
-                ->whereHas('product', function($q) {
-                    $q->where('name', 'like', '%' . $this->productSearch . '%');
-                })
-                ->where('stock_current', '>', 0)
-                ->limit(10)
-                ->get();
-        } else {
-            $this->foundBatches = [];
-        }
+        // Fetch GRs based on Purchase Orders for the selected supplier
+        $poIds = \App\Models\PurchaseOrder::where('supplier_id', $this->selectedSupplierId)->pluck('id');
+        $this->goodsReceipts = \App\Models\GoodsReceipt::whereIn('purchase_order_id', $poIds)
+            ->latest()
+            ->get();
+            
+        $this->selectedGoodsReceiptId = '';
+        $this->returnItems = [];
     }
 
-    public function addBatchToReturn($batchId)
+    public function updatedSelectedGoodsReceiptId()
     {
-        $batch = Batch::with('product')->find($batchId);
-        if ($batch && !isset($this->returnItems[$batchId])) {
-            $this->returnItems[$batchId] = [
-                'batch_id' => $batch->id,
-                'batch_no' => $batch->batch_no,
-                'product_id' => $batch->product_id,
-                'product_name' => $batch->product->name,
-                'quantity' => 0,
-                'max_quantity' => $batch->stock_current,
-                'cost_price' => $batch->buy_price,
-            ];
-        }
-        $this->productSearch = '';
-        $this->foundBatches = [];
-    }
+        $gr = \App\Models\GoodsReceipt::with('items.product')->find($this->selectedGoodsReceiptId);
+        $this->returnItems = [];
 
-    public function removeItem($batchId)
-    {
-        unset($this->returnItems[$batchId]);
+        if ($gr) {
+            foreach ($gr->items as $item) {
+                // Ensure batch stock is available
+                // We use the batch_no from GR item to find the current batch status
+                // But wait, GR Item stores batch_no.
+                // We need the actual Batch model to check current stock.
+                $batch = \App\Models\Batch::where('product_id', $item->product_id)
+                    ->where('batch_no', $item->batch_no)
+                    ->first();
+                
+                if ($batch) {
+                    $this->returnItems[$batch->id] = [
+                        'selected' => false,
+                        'batch_id' => $batch->id,
+                        'batch_no' => $batch->batch_no,
+                        'product_id' => $batch->product_id,
+                        'product_name' => optional($item->product)->name ?? 'Produk Dihapus',
+                        'quantity' => 0,
+                        'max_quantity' => $batch->stock_current, // Limit by current stock
+                        'gr_quantity' => $item->qty_received, // Info only
+                        'cost_price' => $batch->buy_price,
+                        'unit_name' => optional($item->unit)->name ?? 'pcs',
+                    ];
+                }
+            }
+        }
     }
 
     public function openModal()
     {
-        $this->reset(['selectedSupplierId', 'returnItems', 'notes', 'productSearch', 'foundBatches']);
+        $this->reset(['selectedSupplierId', 'selectedGoodsReceiptId', 'returnItems', 'notes', 'goodsReceipts']);
         $this->showModal = true;
+    }
+
+    public function viewDetails($id)
+    {
+        $this->selectedReturn = PurchaseReturn::with(['items.product', 'items.batch', 'supplier', 'user'])->find($id);
+        $this->showDetailModal = true;
     }
 
     public function saveReturn()
     {
-        if (!$this->selectedSupplierId) {
-            $this->addError('selectedSupplierId', 'Pilih supplier terlebih dahulu.');
-            return;
-        }
+        $this->validate();
 
         $itemsToProcess = array_filter($this->returnItems, function($item) {
-            return $item['quantity'] > 0;
+            return !empty($item['selected']) && $item['quantity'] > 0;
         });
 
         if (empty($itemsToProcess)) {
-            $this->addError('returnItems', 'Minimal satu barang harus diretur.');
+            $this->addError('returnItems', 'Pilih minimal satu barang dan masukkan jumlah retur.');
             return;
         }
 
-        foreach ($itemsToProcess as $id => $item) {
+        foreach ($itemsToProcess as $batchId => $item) {
             if ($item['quantity'] > $item['max_quantity']) {
-                $this->addError("returnItems.{$id}.quantity", "Jumlah retur melebihi stok yang tersedia.");
+                $this->addError("returnItems", "Jumlah retur untuk {$item['product_name']} melebihi stok tersedia ({$item['max_quantity']}).");
                 return;
             }
         }
@@ -106,12 +118,15 @@ class PurchaseReturnList extends Component
 
         DB::beginTransaction();
         try {
+            // Get Supplier Info for log or whatever, defined by selectedSupplierId
+            
             $purchaseReturn = PurchaseReturn::create([
                 'supplier_id' => $this->selectedSupplierId,
+                // 'goods_receipt_id' => $this->selectedGoodsReceiptId, // Column does not exist in table
                 'return_no' => 'PR-' . date('YmdHis'),
                 'user_id' => auth()->id(),
                 'total_amount' => $totalReturnAmount,
-                'notes' => $this->notes,
+                'notes' => $this->notes . "\nRef SJ: " . (\App\Models\GoodsReceipt::find($this->selectedGoodsReceiptId)->delivery_note_number ?? '-'),
             ]);
 
             foreach ($itemsToProcess as $batchId => $item) {
@@ -124,7 +139,7 @@ class PurchaseReturnList extends Component
                 ]);
 
                 // Update Stock
-                $batch = Batch::find($batchId);
+                $batch = \App\Models\Batch::find($batchId);
                 $batch->decrement('stock_current', $item['quantity']);
 
                 // Record Stock Movement
@@ -134,7 +149,8 @@ class PurchaseReturnList extends Component
                     'type' => 'out',
                     'quantity' => $item['quantity'],
                     'reference' => $purchaseReturn->return_no,
-                    'notes' => 'Retur Pembelian ke Supplier',
+                    'doc_ref' => 'PR-' . $purchaseReturn->id, 
+                    'description' => 'Retur Pembelian (SJ: ' . (\App\Models\GoodsReceipt::find($this->selectedGoodsReceiptId)->delivery_note_number ?? '-') . ')',
                     'user_id' => auth()->id(),
                 ]);
             }
@@ -148,7 +164,8 @@ class PurchaseReturnList extends Component
 
             DB::commit();
             session()->flash('message', 'Retur pembelian berhasil disimpan.');
-            $this->reset(['showModal', 'selectedSupplierId', 'returnItems', 'notes']);
+            $this->showModal = false;
+            $this->reset(['selectedSupplierId', 'selectedGoodsReceiptId', 'returnItems', 'notes']);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->addError('error', 'Terjadi kesalahan: ' . $e->getMessage());

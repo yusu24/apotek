@@ -4,9 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\MassPrunable;
 
 class ActivityLog extends Model
 {
+    use MassPrunable;
+
+    /**
+     * Delete activity logs older than 30 days.
+     */
+    public function prunable()
+    {
+        return static::where('created_at', '<=', now()->subDays(30));
+    }
     protected $fillable = [
         'user_id',
         'action',

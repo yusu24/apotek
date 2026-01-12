@@ -206,11 +206,11 @@
                                 <!-- User Info -->
                                 <div class="flex items-center gap-2 mb-2">
                                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                        {{ substr($log->user->name, 0, 1) }}
+                                        {{ substr(optional($log->user)->name ?? 'S', 0, 1) }}
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-gray-900 text-sm">{{ $log->user->name }}</p>
-                                        <p class="text-xs text-gray-500">{{ $log->user->email }}</p>
+                                        <p class="font-semibold text-gray-900 text-sm">{{ optional($log->user)->name ?? 'System / Deleted User' }}</p>
+                                        <p class="text-xs text-gray-500">{{ optional($log->user)->email ?? '-' }}</p>
                                     </div>
                                 </div>
 

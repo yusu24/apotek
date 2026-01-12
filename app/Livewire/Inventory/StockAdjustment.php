@@ -43,7 +43,7 @@ class StockAdjustment extends Component
         $this->validate([
             'adjustment_type' => 'required|in:add,subtract',
             'quantity' => 'required|integer|min:1',
-            'description' => 'required|string|min:3',
+            'description' => 'nullable|string',
         ]);
 
         DB::beginTransaction();

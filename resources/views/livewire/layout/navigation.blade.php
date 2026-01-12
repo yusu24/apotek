@@ -254,9 +254,9 @@ new class extends Component
                     @endcan
 
                     @can('view ap aging report')
-                    <a href="{{ route('finance.ap-aging-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.ap-aging-report') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                    <a href="{{ route('finance.aging-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.aging-report') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Laporan Umur Hutang
+                        Laporan Umur Hutang & Piutang
                     </a>
                     @endcan
 
@@ -374,7 +374,7 @@ new class extends Component
                     @endif
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-200 truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-gray-500 truncate capitalize">{{ auth()->user()->roles->first()->name ?? 'User' }}</p>
+                        <p class="text-xs text-gray-500 truncate capitalize">{{ optional(auth()->user()->roles->first())->name ?? 'User' }}</p>
                     </div>
                 </a>
                 <button 

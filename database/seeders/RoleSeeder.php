@@ -58,6 +58,7 @@ class RoleSeeder extends Seeder
             'view purchase orders',
             'view goods receipts',
             'create purchase',
+            'edit goods receipts',
             'approve purchase',
             'receive stock',
             

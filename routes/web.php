@@ -54,6 +54,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/stock/adjust/{batchId}', App\Livewire\Inventory\StockAdjustment::class)->name('inventory.adjust');
     Route::get('/inventory/returns/sales', App\Livewire\Inventory\SalesReturnList::class)->name('inventory.returns.sales');
     Route::get('/inventory/returns/purchase', App\Livewire\Inventory\PurchaseReturnList::class)->name('inventory.returns.purchase');
+    Route::get('/inventory/returns/purchase/{id}/print', App\Livewire\Inventory\PurchaseReturnPrint::class)->name('inventory.returns.purchase.print');
+    Route::get('/inventory/returns/sales/{id}/print', App\Livewire\Inventory\SalesReturnPrint::class)->name('inventory.returns.sales.print');
 
     // POS
     Route::get('/cashier', App\Livewire\Pos\Cashier::class)->name('pos.cashier');
@@ -66,20 +68,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reports/transaction-history', App\Livewire\Reports\TransactionHistory::class)->name('reports.transaction-history');
     Route::get('/reports/product-margin', App\Livewire\Reports\ProductMarginReport::class)->name('reports.product-margin');
 
-    // Finance (Super Admin & Admin)
-    Route::get('/finance/summary', App\Livewire\Finance\FinancialSummary::class)->name('finance.summary');
-    Route::get('/finance/expenses', App\Livewire\Finance\ExpenseManager::class)->name('finance.expenses');
-    Route::get('/finance/profit-loss', App\Livewire\Finance\ProfitLoss::class)->name('finance.profit-loss');
-    
-    // Accounting Reports
-    Route::get('/finance/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('finance.balance-sheet');
-    Route::get('/finance/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('finance.income-statement');
-    Route::get('/finance/trial-balance', App\Livewire\Reports\TrialBalance::class)->name('finance.trial-balance');
-    Route::get('/finance/ppn-report', App\Livewire\Reports\PpnReport::class)->name('finance.ppn-report');
-    Route::get('/finance/ap-aging-report', App\Livewire\Reports\ApAgingReport::class)->name('finance.ap-aging-report');
-    Route::get('/finance/opening-balance', App\Livewire\Finance\OpeningBalanceManager::class)
-        ->name('finance.opening-balance')
-        ->middleware('permission:manage opening balances');
+
+    // Finance Routes
+    Route::group(['prefix' => 'finance', 'as' => 'finance.'], function () {
+        Route::get('/summary', App\Livewire\Finance\FinancialSummary::class)->name('summary');
+        Route::get('/aging-report', App\Livewire\Reports\AgingReport::class)->name('aging-report');
+        Route::get('/ppn-report', App\Livewire\Reports\PpnReport::class)->name('ppn-report');
+        Route::get('/profit-loss', App\Livewire\Finance\ProfitLoss::class)->name('profit-loss');
+        Route::get('/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('balance-sheet');
+        Route::get('/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('income-statement');
+        Route::get('/expenses', App\Livewire\Finance\ExpenseManager::class)->name('expenses');
+        Route::get('/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)->name('expense-categories');
+        Route::get('/opening-balance', App\Livewire\Finance\OpeningBalanceManager::class)
+            ->name('opening-balance')
+            ->middleware('permission:manage opening balances');
+        Route::get('/trial-balance', App\Livewire\Reports\TrialBalance::class)->name('trial-balance');
+    });
     // Accounting
     Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
     Route::get('/accounting/journals', App\Livewire\Accounting\JournalIndex::class)->name('accounting.journals.index');
@@ -99,6 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/procurement/goods-receipts', App\Livewire\Procurement\GoodsReceiptIndex::class)->name('procurement.goods-receipts.index');
     Route::get('/procurement/goods-receipts/create', App\Livewire\Procurement\GoodsReceiptForm::class)->name('procurement.goods-receipts.create');
+    Route::get('/procurement/goods-receipts/{id}/edit', App\Livewire\Procurement\GoodsReceiptForm::class)->name('procurement.goods-receipts.edit');
 
     // PDF Exports
     Route::get('/pdf/goods-receipt/{id}', [App\Http\Controllers\PdfController::class, 'exportGoodsReceipt'])->name('pdf.goods-receipt');

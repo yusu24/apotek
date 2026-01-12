@@ -24,18 +24,25 @@ class GoodsReceiptForm extends Component
     public $productSearch = '';
     public $searchResults = [];
     
+    public $isEdit = false;
+    public $receiptId;
+    
     protected $queryString = ['po_id'];
 
-    public function mount()
+    public function mount($id = null)
     {
-        \Log::info('GoodsReceiptForm mount called with po_id: ' . $this->po_id);
+        \Log::info('GoodsReceiptForm mount called with id: ' . $id . ' and po_id: ' . $this->po_id);
         
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
         $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
         $this->accounts = \App\Models\Account::where('type', 'bank')->get(); // Load Bank Accounts
         
-        if ($this->po_id) {
+        if ($id) {
+            $this->isEdit = true;
+            $this->receiptId = $id;
+            $this->loadReceipt($id);
+        } elseif ($this->po_id) {
             \Log::info('Processing PO ID: ' . $this->po_id);
             $this->purchase_order_id = $this->po_id;
             
@@ -53,6 +60,45 @@ class GoodsReceiptForm extends Component
         } else {
             \Log::info('No PO ID provided, adding empty item');
             $this->addItem(); // Only add empty item if no PO selected
+        }
+    }
+
+    public function loadReceipt($id)
+    {
+        $gr = \App\Models\GoodsReceipt::with(['items.product', 'items.unit'])->findOrFail($id);
+        
+        $this->purchase_order_id = $gr->purchase_order_id;
+        $this->delivery_note_number = $gr->delivery_note_number;
+        $this->received_date = $gr->received_date;
+        $this->notes = $gr->notes;
+        $this->payment_method = $gr->payment_method;
+        $this->bank_account_id = $gr->bank_account_id;
+        $this->due_date_weeks = $gr->due_date_weeks;
+        
+        $this->items = [];
+        foreach ($gr->items as $item) {
+            $poItem = null;
+            if ($gr->purchase_order_id) {
+                $poItem = \App\Models\PurchaseOrderItem::where('purchase_order_id', $gr->purchase_order_id)
+                    ->where('product_id', $item->product_id)
+                    ->first();
+            }
+
+            $this->items[] = [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'batch_no' => $item->batch_no,
+                'expired_date' => $item->expired_date,
+                'qty_received' => (float)$item->qty_received,
+                'buy_price' => (float)$item->buy_price,
+                'sell_price' => (float)($item->product->sell_price ?? 0), // Defaulting to current product sell price if not stored in item
+                'margin' => (float)$item->buy_price > 0 ? ((($item->product->sell_price ?? 0) - $item->buy_price) / $item->buy_price) * 100 : 0,
+                'unit_id' => $item->unit_id,
+                'conversion_factor' => (float)($item->conversion_factor ?? 1),
+                'po_item_id' => $poItem ? $poItem->id : null,
+                'po_info' => $poItem ? 'Item PO (' . ($poItem->qty_ordered) . ' ' . ($poItem->unit->name ?? 'Unit') . ')' : null,
+            ];
         }
     }
 
@@ -82,18 +128,20 @@ class GoodsReceiptForm extends Component
                     $poItemFactor = $poItem->conversion_factor ?? 1;
                     
                     // Use tolerance for float comparison
-                    if ($remainingBase > 0.001) {
-                         $remainingQty = $remainingBase / $poItemFactor;
-                         
-                         $infoLabel = ($totalReceivedBase > 0) ? 'Sisa Order: ' : 'Total Order: ';
+                if ($remainingBase > 0.001) {
+                        $remainingQty = $remainingBase / $poItemFactor;
+                        
+                        $infoLabel = ($totalReceivedBase > 0) ? 'Sisa Order: ' : 'Total Order: ';
 
-                             $this->items[] = [
+                            $this->items[] = [
                                 'product_id' => $poItem->product_id,
                                 'product_name' => $poItem->product->name ?? '-',
                                 'batch_no' => $this->generateNextBatchNo(),
                                 'expired_date' => '',
-                                'qty_received' => (float)$remainingQty, 
-                                'buy_price' => $poItem->unit_price,
+                                'qty_received' => null, // Default to null as requested
+                                'buy_price' => null, // Default to null as requested
+                                'sell_price' => $poItem->product->sell_price ?? 0,
+                                'margin' => 0,
                                 'unit_id' => $poItem->unit_id,
                                 'po_unit_id' => $poItem->unit_id, // Store for comparison
                                 'po_unit_name' => $poItem->unit->name ?? 'Unit',
@@ -119,8 +167,10 @@ class GoodsReceiptForm extends Component
             'product_name' => '',
             'batch_no' => $this->generateNextBatchNo(),
             'expired_date' => '',
-            'qty_received' => 1,
-            'buy_price' => 0,
+            'qty_received' => null,
+            'buy_price' => null,
+            'sell_price' => 0,
+            'margin' => 0,
             'unit_id' => null,
             'conversion_factor' => 1,
         ];
@@ -149,8 +199,10 @@ class GoodsReceiptForm extends Component
                 'product_name' => $product->name,
                 'batch_no' => $this->generateNextBatchNo(),
                 'expired_date' => '',
-                'qty_received' => 1,
-                'buy_price' => $product->buy_price ?? 0,
+                'qty_received' => null,
+                'buy_price' => null,
+                'sell_price' => $product->sell_price ?? 0,
+                'margin' => 0,
                 'unit_id' => $product->unit_id,
                 'conversion_factor' => 1,
             ];
@@ -166,42 +218,82 @@ class GoodsReceiptForm extends Component
         $this->items = array_values($this->items);
     }
 
-    public function updatedItems($value, $key)
+    public function updated($name, $value)
     {
-        $parts = explode('.', $key);
-        if (count($parts) == 3 && $parts[2] == 'product_id') {
-           $index = $parts[0];
-           $product = $this->products->firstWhere('id', $value);
-           if ($product) {
-               $this->items[$index]['unit_id'] = $product->unit_id;
-               $this->items[$index]['conversion_factor'] = 1;
-           }
-        }
-        
-        if (count($parts) == 3 && $parts[2] == 'unit_id') {
-            $index = $parts[0];
-            $unitId = $value;
-            $productId = $this->items[$index]['product_id'] ?? null;
-            
-            if ($productId) {
-                $product = $this->products->firstWhere('id', $productId);
-                if ($product) {
-                    if ($unitId == $product->unit_id) {
+        // Livewire 3 nested property update
+        if (str_starts_with($name, 'items.')) {
+            $parts = explode('.', $name);
+            if (count($parts) == 3) {
+                $index = $parts[1];
+                $field = $parts[2];
+
+                if ($field === 'product_id') {
+                    $product = $this->products->firstWhere('id', $value);
+                    if ($product) {
+                        $this->items[$index]['unit_id'] = $product->unit_id;
                         $this->items[$index]['conversion_factor'] = 1;
-                    } else {
-                        $conversion = $product->unitConversions->where('from_unit_id', $unitId)->first();
-                        // Try reverse or other logic if your conversions are bidirectional or strict.
-                        // Assuming standard: from_unit(Large) -> to_unit(Small/Base) = factor.
-                        // If selected unit is "Box" (from_unit_id), and base is "Pcs" (to_unit_id).
-                        if ($conversion) {
-                            $this->items[$index]['conversion_factor'] = $conversion->conversion_factor;
-                        } else {
-                             // Fallback or 1
-                             $this->items[$index]['conversion_factor'] = 1;
+                        $this->items[$index]['buy_price'] = null;
+                        $this->items[$index]['sell_price'] = $product->sell_price ?? 0;
+                        $this->calculateMargin($index);
+                    }
+                }
+
+                if ($field === 'unit_id') {
+                    $unitId = $value;
+                    $productId = $this->items[$index]['product_id'] ?? null;
+                    
+                    if ($productId) {
+                        $product = $this->products->firstWhere('id', $productId);
+                        if ($product) {
+                            $oldFactor = (float)($this->items[$index]['conversion_factor'] ?? 1);
+                            $newFactor = 1;
+
+                            if ($unitId == $product->unit_id) {
+                                $newFactor = 1;
+                            } else {
+                                $conversion = $product->unitConversions->where('from_unit_id', $unitId)->first();
+                                $newFactor = $conversion ? (float)$conversion->conversion_factor : 1;
+                            }
+
+                            // Adjust Qty and Prices based on factor change
+                            if ($oldFactor > 0 && $newFactor > 0) {
+                                $currentQty = (float)($this->items[$index]['qty_received'] ?? 0);
+                                $currentBuy = (float)($this->items[$index]['buy_price'] ?? 0);
+                                $currentSell = (float)($this->items[$index]['sell_price'] ?? 0);
+                                
+                                // Base values (per smallest unit)
+                                $baseQty = $currentQty * $oldFactor;
+                                $baseBuy = $currentBuy / $oldFactor;
+                                $baseSell = $currentSell / $oldFactor;
+                                
+                                // New values (per selected unit)
+                                $this->items[$index]['qty_received'] = (float)($baseQty / $newFactor);
+                                $this->items[$index]['buy_price'] = $baseBuy * $newFactor;
+                                $this->items[$index]['sell_price'] = $baseSell * $newFactor;
+                            }
+
+                            $this->items[$index]['conversion_factor'] = $newFactor;
+                            $this->calculateMargin($index);
                         }
                     }
                 }
+
+                if ($field === 'buy_price' || $field === 'sell_price' || $field === 'qty_received') {
+                    $this->calculateMargin($index);
+                }
             }
+        }
+    }
+
+    private function calculateMargin($index)
+    {
+        $buy = (float)($this->items[$index]['buy_price'] ?? 0);
+        $sell = (float)($this->items[$index]['sell_price'] ?? 0);
+        
+        if ($buy > 0) {
+            $this->items[$index]['margin'] = (($sell - $buy) / $buy) * 100;
+        } else {
+            $this->items[$index]['margin'] = 0;
         }
     }
 
@@ -266,7 +358,8 @@ class GoodsReceiptForm extends Component
                         $maxBaseQty = $item['max_qty_allowed'] * $poFactor;
 
                         if ($baseReceivedQty > ($maxBaseQty + 0.001)) {
-                            $this->addError("items.{$index}.qty_received", "Gagal: Jumlah terima (" . $item['qty_received'] . ") melebihi sisa sisa pesanan di PO (" . $item['max_qty_allowed'] . " " . $item['po_unit_name'] . ")");
+                            $currentUnitName = \App\Models\Unit::find($item['unit_id'])?->name ?? 'Unit';
+                            $this->addError("items.{$index}.qty_received", "Gagal: Jumlah terima (" . (float)$item['qty_received'] . " " . $currentUnitName . ") melebihi sisa pesanan di PO (" . (float)$item['max_qty_allowed'] . " " . $item['po_unit_name'] . ")");
                             return;
                         }
                     }
@@ -310,24 +403,67 @@ class GoodsReceiptForm extends Component
         }
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($totalAmount, $paymentStatus, $paidAmount, $dueDate) {
-            // 1. Create Goods Receipt
-            $gr = \App\Models\GoodsReceipt::create([
-                'purchase_order_id' => $this->purchase_order_id ?: null,
-                'delivery_note_number' => $this->delivery_note_number,
-                'received_date' => $this->received_date,
-                'user_id' => auth()->id(),
-                'notes' => $this->notes,
-                'payment_method' => $this->payment_method,
-                'bank_account_id' => $this->payment_method === 'transfer' ? $this->bank_account_id : null, // Save Bank Account
-                'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
-                'total_amount' => $totalAmount,
-                'paid_amount' => $paidAmount,
-                'payment_status' => $paymentStatus,
-                'due_date' => $dueDate,
-            ]);
+            if ($this->isEdit) {
+                $gr = \App\Models\GoodsReceipt::with(['items', 'journalEntries'])->findOrFail($this->receiptId);
+                
+                // 1. Revert Stock & Movements
+                foreach ($gr->items as $oldItem) {
+                    $baseQtyOld = $oldItem->qty_received * ($oldItem->conversion_factor ?? 1);
+                    $batch = \App\Models\Batch::where('product_id', $oldItem->product_id)
+                        ->where('batch_no', $oldItem->batch_no)
+                        ->first();
+                    
+                    if ($batch) {
+                        $batch->decrement('stock_in', $baseQtyOld);
+                        $batch->decrement('stock_current', $baseQtyOld);
+                    }
+                }
+                \App\Models\StockMovement::where('doc_ref', 'like', 'GR-' . $gr->id . '%')->delete();
+
+                // 2. Clear previous Journal Entries (they will be re-posted)
+                foreach ($gr->journalEntries as $je) {
+                    $je->reverse();
+                    $je->lines()->delete();
+                    $je->delete();
+                }
+
+                // 3. Update main GR
+                $gr->update([
+                    'purchase_order_id' => $this->purchase_order_id ?: null,
+                    'delivery_note_number' => $this->delivery_note_number,
+                    'received_date' => $this->received_date,
+                    'notes' => $this->notes,
+                    'payment_method' => $this->payment_method,
+                    'bank_account_id' => $this->payment_method === 'transfer' ? $this->bank_account_id : null,
+                    'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
+                    'total_amount' => $totalAmount,
+                    'paid_amount' => $paidAmount,
+                    'payment_status' => $paymentStatus,
+                    'due_date' => $dueDate,
+                ]);
+
+                // 4. Update items (Delete old, create new for simplicity and to handle added/removed items)
+                $gr->items()->delete();
+            } else {
+                // 1. Create Goods Receipt
+                $gr = \App\Models\GoodsReceipt::create([
+                    'purchase_order_id' => $this->purchase_order_id ?: null,
+                    'delivery_note_number' => $this->delivery_note_number,
+                    'received_date' => $this->received_date,
+                    'user_id' => auth()->id(),
+                    'notes' => $this->notes,
+                    'payment_method' => $this->payment_method,
+                    'bank_account_id' => $this->payment_method === 'transfer' ? $this->bank_account_id : null, 
+                    'due_date_weeks' => $this->payment_method === 'due_date' ? $this->due_date_weeks : null,
+                    'total_amount' => $totalAmount,
+                    'paid_amount' => $paidAmount,
+                    'payment_status' => $paymentStatus,
+                    'due_date' => $dueDate,
+                ]);
+            }
 
             foreach ($this->items as $item) {
-                // 2. Create GR Item
+                // 5. Create GR Item
                 $gr->items()->create([
                     'product_id' => $item['product_id'],
                     'batch_no' => $item['batch_no'],
@@ -346,7 +482,7 @@ class GoodsReceiptForm extends Component
                     ? $item['buy_price'] / ($item['conversion_factor'] ?? 1)
                     : $item['buy_price'];
 
-                // 3. Update or Create Batch
+                // 6. Update or Create Batch
                 $batch = \App\Models\Batch::updateOrCreate(
                     [
                         'product_id' => $item['product_id'],
@@ -360,29 +496,44 @@ class GoodsReceiptForm extends Component
                 $batch->increment('stock_in', $baseQty);
                 $batch->increment('stock_current', $baseQty);
 
-                // 4. Update Product Master Stock
-                $product = \App\Models\Product::find($item['product_id']);
-                // Assuming product has a stock field, OR we rely on batches sum. 
-                // Usually for performance we keep a total.
-                // Note: User previous code used batches, but let's check Product model.
-                // Assuming Product has dynamic accessor or we should update it if it has 'stock' column.
-                // I will just increment if the column exists, otherwise I rely on Batch sum.
-                // Checking Product.php earlier... it logic wasn't fully shown but typically yes.
-                // I'll stick to updating Batch which is the source of truth for "Apotek" (Expiry is key).
-                
-                // 5. Log Movement
+                // 7. Log Movement
                 \App\Models\StockMovement::create([
                     'product_id' => $item['product_id'],
                     'batch_id' => $batch->id,
                     'type' => 'in',
                     'quantity' => $baseQty,
                     'doc_ref' => 'GR-' . ($gr->id ?? '?') . ' (SJ: ' . ($this->delivery_note_number ?? '-') . ')',
-                    'description' => 'Penerimaan Barang dari ' . ($gr->purchaseOrder?->supplier?->name ?? 'Direct'),
+                    'description' => ($this->isEdit ? '[EDIT] ' : '') . 'Penerimaan Barang dari ' . ($gr->purchaseOrder?->supplier?->name ?? 'Direct'),
                     'user_id' => auth()->id(),
                 ]);
+
+                // 8. Update Product Master Prices (Base Prices)
+                $product = \App\Models\Product::find($item['product_id']);
+                if ($product) {
+                    $baseSellPrice = ($item['conversion_factor'] ?? 1) > 0 
+                        ? $item['sell_price'] / ($item['conversion_factor'] ?? 1)
+                        : $item['sell_price'];
+                    
+                    $oldData = $product->toArray();
+                    $newData = array_merge($oldData, ['sell_price' => $baseSellPrice]);
+
+                    if (abs((float)$product->sell_price - (float)$baseSellPrice) > 0.01) {
+                        $product->update(['sell_price' => $baseSellPrice]);
+                        
+                        \App\Models\ActivityLog::log([
+                            'action' => 'updated',
+                            'module' => 'products',
+                            'description' => "Penyesuaian harga jual via Penerimaan Barang (GR-{$gr->id})",
+                            'old_values' => $oldData,
+                            'new_values' => $newData,
+                            'subject_id' => $product->id,
+                            'subject_type' => \App\Models\Product::class,
+                        ]);
+                    }
+                }
             }
 
-            // 6. Update PO Status
+            // 8. Update PO Status
             if ($this->purchase_order_id) {
                 $po = \App\Models\PurchaseOrder::with(['items', 'goodsReceipts.items'])->find($this->purchase_order_id);
                 
@@ -390,8 +541,8 @@ class GoodsReceiptForm extends Component
                     $allReceived = true;
                     foreach ($po->items as $poItem) {
                         $totalReceivedBase = 0;
-                        foreach ($po->goodsReceipts as $gr) {
-                             foreach ($gr->items as $grItem) {
+                        foreach ($po->goodsReceipts as $otherGr) {
+                             foreach ($otherGr->items as $grItem) {
                                 if ($grItem->product_id == $poItem->product_id) {
                                     $totalReceivedBase += ((float)$grItem->qty_received * (float)($grItem->conversion_factor ?? 1));
                                 }

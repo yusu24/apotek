@@ -93,7 +93,7 @@
 
                 <!-- Description -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Penyesuaian *</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Penyesuaian</label>
                     <textarea wire:model="description" rows="3" 
                         placeholder="Contoh: Stok rusak, Stok hilang, Koreksi perhitungan, dll."
                         class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"></textarea>

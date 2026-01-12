@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityLog;
 
 use App\Models\SalesDraft;
+use App\Models\Customer;
+use App\Models\Receivable;
 
 #[Layout('layouts.app')]
 class Cashier extends Component
@@ -47,6 +49,20 @@ class Cashier extends Component
     public $showPaymentModal = false;
     public $showPendingModal = false;
     public $pendingOrders = [];
+
+    // Customer
+    public $selectedCustomerId = null;
+
+    public $selectedCustomerName = null; // For display
+    public $customerSearch = '';
+    public $customerSearchResults = [];
+    public $showCustomerModal = false;
+    public $newCustomerName = '';
+    public $newCustomerPhone = '';
+    public $newCustomerAddress = '';
+    public $tempoDuration = 30; // Default 30 days
+    public $showDpp = false; // Toggle to show DPP in summary
+
 
     public function loadPendingOrders()
     {
@@ -224,6 +240,61 @@ class Cashier extends Component
     public function generateInvoiceNo()
     {
         $this->invoice_no = 'INV/' . date('Ymd') . '/' . substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 6);
+    }
+
+    // Customer Methods
+    public function updatedCustomerSearch()
+    {
+        if (strlen($this->customerSearch) < 2) {
+            $this->customerSearchResults = [];
+            return;
+        }
+
+        $this->customerSearchResults = Customer::where('name', 'like', '%' . $this->customerSearch . '%')
+            ->orWhere('phone', 'like', '%' . $this->customerSearch . '%')
+            ->limit(10)
+            ->get()
+            ->toArray();
+    }
+
+    public function selectCustomer($id, $name)
+    {
+        $this->selectedCustomerId = $id;
+        $this->selectedCustomerName = $name;
+        $this->customerSearch = '';
+        $this->customerSearchResults = [];
+    }
+
+    public function resetCustomer()
+    {
+        $this->selectedCustomerId = null;
+        $this->selectedCustomerName = null;
+    }
+
+    public function saveNewCustomer()
+    {
+        $this->validate([
+            'newCustomerName' => 'required|min:3',
+            'newCustomerPhone' => 'nullable|numeric',
+        ]);
+
+        $customer = Customer::create([
+            'name' => $this->newCustomerName,
+            'phone' => $this->newCustomerPhone,
+            'address' => $this->newCustomerAddress,
+        ]);
+
+        $this->selectCustomer($customer->id, $customer->name);
+        $this->showCustomerModal = false;
+        $this->resetNewCustomerForm();
+        $this->dispatch('cart-updated', message: 'Customer berhasil ditambahkan');
+    }
+
+    public function resetNewCustomerForm()
+    {
+        $this->newCustomerName = '';
+        $this->newCustomerPhone = '';
+        $this->newCustomerAddress = '';
     }
 
     public function updatedSearch()
@@ -622,6 +693,24 @@ class Cashier extends Component
             return;
         }
 
+        // Validate Tempo
+        if ($this->payment_method === 'tempo') {
+            if (!$this->selectedCustomerId) {
+                // If customer not selected, check if inline details are provided
+                if (!empty($this->newCustomerName)) {
+                    $customer = \App\Models\Customer::create([
+                        'name' => $this->newCustomerName,
+                        'phone' => $this->newCustomerPhone,
+                        'address' => $this->newCustomerAddress,
+                    ]);
+                    $this->selectCustomer($customer->id, $customer->name);
+                } else {
+                    $this->addError('checkout', 'Harap pilih Customer atau isi Data Pelanggan Baru untuk pembayaran Tempo.');
+                    return;
+                }
+            }
+        }
+
         if ($status === 'completed' && $this->payment_method == 'cash' && (float)$this->cash_amount < $this->grand_total) {
             $this->addError('cash_amount', 'Uang tunai kurang!');
             return;
@@ -631,6 +720,7 @@ class Cashier extends Component
         try {
             $sale = Sale::create([
                 'user_id' => Auth::id() ?? 1,
+                'customer_id' => $this->selectedCustomerId,
                 'invoice_no' => $this->invoice_no,
                 'date' => now(),
                 'total_amount' => $this->subtotal,
@@ -649,6 +739,20 @@ class Cashier extends Component
                 'notes' => $this->global_notes,
                 'status' => $status,
             ]);
+
+            // Create Receivable Record if Tempo
+            if ($this->payment_method === 'tempo') {
+                \App\Models\Receivable::create([
+                    'sale_id' => $sale->id,
+                    'customer_id' => $this->selectedCustomerId,
+                    'amount' => $sale->grand_total,
+                    'paid_amount' => (float)$this->cash_amount, // DP
+                    'remaining_balance' => $sale->grand_total - (float)$this->cash_amount,
+                    'due_date' => now()->addDays((int)$this->tempoDuration),
+                    'status' => ((float)$this->cash_amount >= $sale->grand_total) ? 'paid' : 'partial',
+                    'notes' => 'Tempo Payment for ' . $sale->invoice_no,
+                ]);
+            }
 
             foreach ($this->cart as $item) {
                 $factor = $item['unit_factor'] ?? 1;
@@ -728,6 +832,7 @@ class Cashier extends Component
 
             $this->showPaymentModal = false;
             $this->cart = [];
+            $this->resetCustomer();
             $this->calculateTotal();
             $this->generateInvoiceNo(); // Generate new invoice for next order
 
@@ -738,6 +843,24 @@ class Cashier extends Component
             } catch (\Exception $e) {
                 \Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
             }
+
+            // Handle Tempo / Receivable
+            if ($this->payment_method === 'tempo') {
+                 $debtAmount = $this->grand_total - ((float)$this->cash_amount); // Cash amount can be DP
+                 if ($debtAmount > 0) {
+                     Receivable::create([
+                         'sale_id' => $sale->id,
+                         'customer_id' => $this->selectedCustomerId,
+                         'amount' => $this->grand_total,
+                         'paid_amount' => (float)$this->cash_amount,
+                         'remaining_balance' => $debtAmount,
+                         'status' => (float)$this->cash_amount > 0 ? 'partial' : 'unpaid',
+                         'due_date' => now()->addDays(30), // Default 30 days
+                         'notes' => 'Tempo transaction',
+                     ]);
+                 }
+            }
+
 
             if ($status === 'pending') {
                  $this->dispatch('cart-updated', message: 'Pesanan berhasil disimpan ke Pending list.');

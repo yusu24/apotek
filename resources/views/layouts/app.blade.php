@@ -48,10 +48,12 @@
                 Alpine.data('money', (model) => ({
                     displayValue: '',
                     value: model,
+                    timeout: null,
 
                     init() {
                         this.$watch('value', (newValue) => {
-                            if (newValue !== this.unformat(this.displayValue)) {
+                            // Only update displayValue if we are not currently typing/debouncing
+                            if (!this.timeout && newValue !== this.unformat(this.displayValue)) {
                                 this.formatDisplay();
                             }
                         });
@@ -66,31 +68,58 @@
                             this.displayValue = '';
                             return;
                         }
-                        this.displayValue = new Intl.NumberFormat('id-ID', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                        }).format(this.value);
+                        this.displayValue = new Intl.NumberFormat('id-ID').format(this.value);
                     },
 
                     unformat(val) {
                         if (!val) return null;
-                        return parseInt(val.replace(/\./g, '')) || 0;
+                        return parseInt(val.toString().replace(/\./g, '')) || 0;
                     },
 
                     input: {
                         ['@input']($event) {
-                            let raw = $event.target.value.replace(/[^0-9]/g, '');
+                            const input = $event.target;
+                            const selectionStart = input.selectionStart;
+                            const oldLength = input.value.length;
+                            
+                            let raw = input.value.replace(/[^0-9]/g, '');
                             if (raw === '') {
                                 this.displayValue = '';
                                 this.value = null;
                                 return;
                             }
-                            let number = parseInt(raw, 10);
-                            this.value = number;
                             
+                            let number = parseInt(raw, 10);
+                            
+                            // Format locally immediately for smooth feedback
                             let formatted = new Intl.NumberFormat('id-ID').format(number);
                             this.displayValue = formatted;
-                            $event.target.value = formatted;
+                            
+                            if (input.value !== formatted) {
+                                input.value = formatted;
+                                
+                                // Adjust cursor position
+                                const newLength = formatted.length;
+                                const diff = newLength - oldLength;
+                                const newPos = Math.max(0, selectionStart + diff);
+                                input.setSelectionRange(newPos, newPos);
+                            }
+
+                            // Debounce the update to 'value' (Livewire entangle)
+                            // This prevents server roundtrips from interrupting typing
+                            clearTimeout(this.timeout);
+                            this.timeout = setTimeout(() => {
+                                this.value = number;
+                                this.timeout = null;
+                            }, 500);
+                        },
+                        ['@blur']() {
+                            if (this.timeout) {
+                                clearTimeout(this.timeout);
+                                this.value = this.unformat(this.displayValue);
+                                this.timeout = null;
+                            }
+                            this.formatDisplay();
                         },
                         ['x-model']: 'displayValue',
                         ['inputmode']: 'numeric',

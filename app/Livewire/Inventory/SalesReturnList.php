@@ -24,6 +24,10 @@ class SalesReturnList extends Component
     public $selectedSale = null;
     public $returnItems = [];
     public $notes = '';
+    
+    // Detail Modal
+    public $showDetailModal = false;
+    public $selectedReturn;
 
     protected $rules = [
         'invoiceSearch' => 'nullable|string',
@@ -65,7 +69,7 @@ class SalesReturnList extends Component
                             'price' => $item->sell_price,
                             'product_id' => $item->product_id,
                             'batch_id' => $item->batch_id,
-                            'name' => $item->product->name,
+                            'name' => optional($item->product)->name ?? 'Produk Dihapus',
                             'batch_no' => $item->batch ? $item->batch->batch_no : '-'
                         ];
                     }
@@ -86,6 +90,12 @@ class SalesReturnList extends Component
     {
         $this->reset(['selectedSale', 'returnItems', 'invoiceSearch', 'notes']);
         $this->showModal = true;
+    }
+
+    public function viewDetails($id)
+    {
+        $this->selectedReturn = SalesReturn::with(['sale', 'user', 'items.product', 'items.batch'])->find($id);
+        $this->showDetailModal = true;
     }
 
     public function saveReturn()

@@ -64,13 +64,13 @@
                     @forelse($products as $product)
                         <tr wire:key="product-{{ $product->id }}">
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $product->name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $product->category->name ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ optional($product->category)->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $product->min_stock }}</td>
                             <td class="px-6 py-4 text-sm font-medium {{ $product->total_stock <= 0 ? 'text-red-600' : 'text-gray-900' }}">
                                 {{ $product->total_stock ?? 0 }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
-                                {{ $product->unit->name ?? 'pcs' }}
+                                {{ optional($product->unit)->name ?? 'pcs' }}
                             </td>
                             <td class="px-6 py-4">
                                 @if(($product->total_stock ?? 0) <= 0)

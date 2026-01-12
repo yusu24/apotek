@@ -12,7 +12,7 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'invoice_no', 'date', 'total_amount', 'discount', 
+        'user_id', 'customer_id', 'invoice_no', 'date', 'total_amount', 'discount', 
         'service_charge_amount', 'service_charge_percentage', 'tax', 
         'dpp', 'ppn_mode', 'order_mode', 'rounding', 'grand_total', 
         'payment_method', 'cash_amount', 'change_amount', 'notes', 'status'
@@ -37,6 +37,16 @@ class Sale extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(\App\Models\Customer::class);
+    }
+
+    public function receivables()
+    {
+        return $this->hasOne(\App\Models\Receivable::class);
     }
     
     public function journalEntries()

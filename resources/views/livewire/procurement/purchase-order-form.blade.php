@@ -57,7 +57,9 @@
                             <select wire:model="status" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" {{ $isReadOnly ? 'disabled' : '' }}>
                                 <option value="draft">Draf</option>
                                 <option value="ordered">Dipesan</option>
-                                <option value="cancelled">Dibatalkan</option>
+                                @if($purchaseOrder && $purchaseOrder->status == 'cancelled')
+                                    <option value="cancelled">Dibatalkan</option>
+                                @endif
                                 @if($purchaseOrder && $purchaseOrder->status == 'received')
                                     <option value="received" disabled>Diterima</option>
                                 @endif

@@ -34,6 +34,7 @@
                         <th class="px-6 py-4">User</th>
                         <th class="px-6 py-4">Tanggal</th>
                         <th class="px-6 py-4">Catatan</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -42,9 +43,17 @@
                             <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
                             <td class="px-6 py-4">{{ $return->sale->invoice_no }}</td>
                             <td class="px-6 py-4">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">{{ $return->user->name }}</td>
+                            <td class="px-6 py-4">{{ optional($return->user)->name ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $return->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-6 py-4 text-gray-500">{{ $return->notes ?: '-' }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <button wire:click="viewDetails({{ $return->id }})" class="text-blue-600 hover:text-blue-800 transition-colors inline-block mr-2" title="Lihat Detail">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                </button>
+                                <a href="{{ route('inventory.returns.sales.print', $return->id) }}" target="_blank" class="text-gray-600 hover:text-gray-800 transition-colors inline-block" title="Cetak Retur">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -156,6 +165,86 @@
                         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-normal flex items-center justify-center gap-2 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed" 
                         @if(!$selectedSale) disabled @endif>
                         Simpan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Detail Modal -->
+    @if($showDetailModal && $selectedReturn)
+    <div class="fixed inset-0 z-[100] overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" wire:click="$set('showDetailModal', false)">
+                <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+            </div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                <div class="px-6 pt-6 pb-4">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-normal text-gray-900">Detail Retur Penjualan</h3>
+                        <button type="button" wire:click="$set('showDetailModal', false)" class="text-gray-400 hover:text-gray-500 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+                        <div>
+                            <p class="text-gray-500">No. Retur</p>
+                            <p class="font-bold text-gray-900">{{ $selectedReturn->return_no }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Invoice Ref</p>
+                            <p class="font-bold text-gray-900">{{ $selectedReturn->sale->invoice_no }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Tanggal</p>
+                            <p class="font-bold text-gray-900">{{ $selectedReturn->created_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                         <div>
+                            <p class="text-gray-500">Dibuat Oleh</p>
+                            <p class="font-bold text-gray-900">{{ optional($selectedReturn->user)->name ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto border border-gray-100 rounded-xl mb-4">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-widest">
+                                <tr>
+                                    <th class="px-4 py-3">Produk</th>
+                                    <th class="px-4 py-3 text-center">Batch</th>
+                                    <th class="px-4 py-3 text-center">Qty</th>
+                                    <th class="px-4 py-3 text-right">Harga</th>
+                                    <th class="px-4 py-3 text-right">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach($selectedReturn->items as $item)
+                                    <tr class="hover:bg-gray-50/50">
+                                        <td class="px-4 py-3 font-medium text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
+                                        <td class="px-4 py-3 text-center text-gray-500">{{ $item->batch->batch_no ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-center font-bold">{{ $item->quantity }}</td>
+                                        <td class="px-4 py-3 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-right font-bold text-blue-600">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot class="bg-blue-50/30">
+                                <tr>
+                                    <td colspan="4" class="px-4 py-3 text-right font-bold text-gray-600 uppercase text-xs">Total Refund</td>
+                                    <td class="px-4 py-3 text-right font-bold text-lg text-blue-700">Rp {{ number_format($selectedReturn->total_amount, 0, ',', '.') }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 flex justify-end">
+                     <button type="button" wire:click="$set('showDetailModal', false)" 
+                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm font-normal transition duration-200 text-sm">
+                        Tutup
                     </button>
                 </div>
             </div>

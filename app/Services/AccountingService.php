@@ -828,10 +828,15 @@ class AccountingService
     /**
      * Get AP Aging Report
      */
-    public function getApAgingReport()
+    public function getApAgingReport($includePaid = false)
     {
+        $statuses = ['pending', 'partial'];
+        if ($includePaid) {
+            $statuses[] = 'paid';
+        }
+
         $receipts = \App\Models\GoodsReceipt::with('purchaseOrder.supplier')
-            ->whereIn('payment_status', ['pending', 'partial'])
+            ->whereIn('payment_status', $statuses)
             ->get();
             
         $agingData = [
@@ -852,8 +857,8 @@ class AccountingService
             $age = \Carbon\Carbon::parse($receipt->received_date)->diffInDays(now());
             $outstanding = $receipt->total_amount - $receipt->paid_amount;
             
-            // Skip zero or negative outstanding (fully paid should be filtered by status, but safety check)
-            if ($outstanding <= 0.01) continue;
+            // Skip zero or negative outstanding UNLESS we want to show paid
+            if (!$includePaid && $outstanding <= 0.01) continue;
 
             $item = [
                 'id' => $receipt->id,
@@ -897,10 +902,15 @@ class AccountingService
 /**
  * Get AR Aging Report (Piutang)
  */
-public function getArAgingReport()
+public function getArAgingReport($includePaid = false)
 {
+    $statuses = ['partial', 'unpaid'];
+    if ($includePaid) {
+        $statuses[] = 'paid';
+    }
+
     $receivables = \App\Models\Receivable::with(['customer', 'sale'])
-        ->whereIn('status', ['partial', 'unpaid'])
+        ->whereIn('status', $statuses)
         ->get();
         
     $agingData = [
@@ -926,8 +936,8 @@ public function getArAgingReport()
         
         $outstanding = $receivable->remaining_balance;
         
-        // Skip zero or negative outstanding
-        if ($outstanding <= 0.01) continue;
+        // Skip zero or negative outstanding UNLESS we want to show paid
+        if (!$includePaid && $outstanding <= 0.01) continue;
 
         $item = [
             'id' => $receivable->id,

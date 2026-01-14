@@ -24,6 +24,8 @@ class UserManagement extends Component
 
     public function deleteUser($id)
     {
+        \Log::info("Attempting to delete user ID: " . $id . " by User: " . auth()->id());
+        
         if (!auth()->user()->can('manage users')) {
             session()->flash('error', 'Anda tidak memiliki izin untuk menghapus user.');
             return;
@@ -31,11 +33,31 @@ class UserManagement extends Component
 
         $user = User::find($id);
         
-        if ($user && $user->id !== auth()->id()) {
-            $user->delete();
-            session()->flash('message', 'User berhasil dihapus.');
-        } else {
+        if (!$user) {
+            session()->flash('error', 'User tidak ditemukan.');
+            return;
+        }
+
+        if ($user->id === auth()->id()) {
             session()->flash('error', 'Tidak dapat menghapus user sendiri.');
+            return;
+        }
+
+        try {
+            $userName = $user->name;
+            $userData = $user->toArray();
+            $user->delete();
+            
+            \App\Models\ActivityLog::log([
+                'action' => 'deleted',
+                'module' => 'users',
+                'description' => "Menghapus user: {$userName}",
+                'old_values' => $userData
+            ]);
+
+            session()->flash('message', "User {$userName} berhasil dihapus.");
+        } catch (\Exception $e) {
+            session()->flash('error', 'Gagal menghapus user. User ini mungkin sudah memiliki data transaksi atau riwayat aktivitas.');
         }
     }
 

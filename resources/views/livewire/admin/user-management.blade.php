@@ -57,7 +57,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($users as $user)
-                        <tr class="hover:bg-gray-50 transition duration-150">
+                        <tr wire:key="user-row-{{ $user->id }}" class="hover:bg-gray-50 transition duration-150">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $user->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -91,9 +91,10 @@
 
                                     @if($user->id !== auth()->id())
                                         @can('manage users')
-                                        <button wire:click="deleteUser({{ $user->id }})" 
-                                            wire:confirm="Apakah Anda yakin ingin menghapus user ini?"
-                                            class="text-red-600 hover:text-red-900 transition-colors" title="Hapus User">
+                                        <button 
+                                            wire:click.prevent="deleteUser({{ $user->id }})" 
+                                            wire:loading.attr="disabled"
+                                            class="text-red-600 hover:text-red-900 transition-colors disabled:opacity-50" title="Hapus User">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                         @endcan

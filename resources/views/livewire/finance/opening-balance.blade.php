@@ -65,7 +65,7 @@
                         <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm">1</span>
                         Aset Lancar (Kas & Bank)
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Awal Kas (Tunai)</label>
                             <div class="relative group" x-data="money($wire.entangle('cash_amount').live)">
@@ -83,6 +83,22 @@
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3">
                             </div>
                             @error('bank_amount') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Persediaan Barang</label>
+                            <div class="relative group" x-data="money($wire.entangle('inventory_amount').live)">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
+                                <input type="text" x-bind="input" placeholder="0"
+                                    class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3">
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <p class="text-[10px] text-gray-500 italic">Total nilai rupiah stok saat ini.</p>
+                                <button type="button" wire:click="calculateInventoryFromDb" class="text-[10px] text-blue-600 font-bold hover:underline flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                    Hitung dari Stok
+                                </button>
+                            </div>
+                            @error('inventory_amount') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </section>

@@ -12,6 +12,7 @@ class OpeningBalance extends Model
     protected $fillable = [
         'cash_amount',
         'bank_amount',
+        'inventory_amount',
         'capital_amount',
         'journal_entry_id',
         'is_confirmed',
@@ -20,6 +21,7 @@ class OpeningBalance extends Model
     protected $casts = [
         'cash_amount' => 'decimal:2',
         'bank_amount' => 'decimal:2',
+        'inventory_amount' => 'decimal:2',
         'capital_amount' => 'decimal:2',
         'is_confirmed' => 'boolean',
     ];
@@ -44,7 +46,7 @@ class OpeningBalance extends Model
      */
     public function getSummary()
     {
-        $totalAssets = $this->cash_amount + $this->bank_amount + $this->assets()->sum('amount');
+        $totalAssets = $this->cash_amount + $this->bank_amount + $this->inventory_amount + $this->assets()->sum('amount');
         $totalLiabilities = $this->debts()->sum('amount');
         $totalEquity = $this->capital_amount;
 
@@ -101,6 +103,9 @@ class OpeningBalance extends Model
             }
             if ($this->bank_amount > 0) {
                 $lines[] = ['account_id' => Account::where('code', '1-1200')->first()->id, 'debit' => $this->bank_amount, 'credit' => 0];
+            }
+            if ($this->inventory_amount > 0) {
+                $lines[] = ['account_id' => Account::where('code', '1-1400')->first()->id, 'debit' => $this->inventory_amount, 'credit' => 0];
             }
             foreach ($this->assets as $asset) {
                 if ($asset->amount > 0) {

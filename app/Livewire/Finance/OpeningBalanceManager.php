@@ -11,6 +11,7 @@ class OpeningBalanceManager extends Component
     public $openingBalanceId;
     public $cash_amount = null;
     public $bank_amount = null;
+    public $inventory_amount = null;
     public $capital_amount = null;
     
     public $assets = [];
@@ -31,6 +32,7 @@ class OpeningBalanceManager extends Component
             $this->openingBalanceId = $ob->id;
             $this->cash_amount = number_format($ob->cash_amount, 2, '.', '');
             $this->bank_amount = number_format($ob->bank_amount, 2, '.', '');
+            $this->inventory_amount = number_format($ob->inventory_amount, 2, '.', '');
             $this->capital_amount = number_format($ob->capital_amount, 2, '.', '');
             
             foreach ($ob->assets as $asset) {
@@ -89,7 +91,7 @@ class OpeningBalanceManager extends Component
 
     public function updateSummary()
     {
-        $totalAssets = (float)$this->cash_amount + (float)$this->bank_amount;
+        $totalAssets = (float)$this->cash_amount + (float)$this->bank_amount + (float)$this->inventory_amount;
         foreach ($this->assets as $asset) {
             $totalAssets += (float)($asset['amount'] ?? 0);
         }
@@ -112,11 +114,28 @@ class OpeningBalanceManager extends Component
         ];
     }
 
+    public function calculateInventoryFromDb()
+    {
+        // Hitung total nilai persediaan dari batch yang ada
+        // Rumus: Sum(current_stock * buy_price)
+        $totalValue = \App\Models\Batch::where('stock_current', '>', 0)
+            ->get()
+            ->sum(function ($batch) {
+                return $batch->stock_current * $batch->buy_price;
+            });
+
+        $this->inventory_amount = $totalValue;
+        $this->updateSummary();
+        
+        session()->flash('success', 'Berhasil menghitung nilai persediaan dari ' . \App\Models\Batch::where('stock_current', '>', 0)->count() . ' batch aktif.');
+    }
+
     public function save()
     {
         $this->validate([
             'cash_amount' => 'required|numeric|min:0',
             'bank_amount' => 'required|numeric|min:0',
+            'inventory_amount' => 'required|numeric|min:0',
             'capital_amount' => 'required|numeric|min:0',
             'assets.*.asset_name' => 'required_with:assets.*.amount',
             'assets.*.amount' => 'nullable|numeric|min:0',
@@ -138,6 +157,7 @@ class OpeningBalanceManager extends Component
                 [
                     'cash_amount' => $this->cash_amount,
                     'bank_amount' => $this->bank_amount,
+                    'inventory_amount' => $this->inventory_amount,
                     'capital_amount' => $this->capital_amount,
                     'is_confirmed' => true
                 ]

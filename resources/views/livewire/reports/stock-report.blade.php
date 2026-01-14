@@ -65,31 +65,31 @@
             <!-- Main Content Area: Filter & Table Unified in one Card -->
             <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl overflow-hidden print:rounded-none print:shadow-none print:border-none border border-gray-200 dark:border-gray-700">
                 <!-- Filter Header (Hidden in Print) -->
-                <div class="px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 no-print">
-                    <div class="flex flex-row items-center gap-3">
+                <div class="px-4 py-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 no-print">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                         <!-- Search Box -->
-                        <div class="w-48 flex-shrink-0">
+                        <div class="w-full sm:w-48 flex-shrink-0">
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
                                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 </span>
-                                <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari Nama/Barcode..." class="block w-full pl-8 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none">
+                                <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari..." class="block w-full pl-8 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none">
                             </div>
                         </div>
 
                         <!-- Date Range Selection -->
-                        <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase pl-1">Kadaluarsa:</span>
-                            <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-36">
+                        <div class="flex flex-1 items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2 w-full sm:w-auto overflow-x-auto">
+                            <span class="text-xs font-bold text-gray-400 uppercase pl-1 whitespace-nowrap">Exp:</span>
+                            <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-36">
                             <span class="text-gray-300">/</span>
-                            <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-36">
+                            <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-36">
                         </div>
 
                         <!-- Print Button -->
-                        <div class="flex-shrink-0 ml-auto">
+                        <div class="flex-shrink-0 ml-auto self-end sm:self-center">
                             <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                Cetak Pdf
+                                <span class="hidden sm:inline">Cetak Pdf</span>
                             </button>
                         </div>
                     </div>
@@ -100,13 +100,13 @@
                     <table class="w-full text-left border-collapse custom-print-table">
                         <thead>
                             <tr class="bg-gray-50 dark:bg-gray-900/50 print:bg-transparent">
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NO.</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">KODE BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">NAMA BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">SATUAN</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">STOK</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">Harga Beli</th>
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900">Saldo</th>
+                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">NO.</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">KODE BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">NAMA BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">SATUAN</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">STOK</th>
+                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">Harga Beli</th>
+                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">Saldo</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-800 print:divide-none">

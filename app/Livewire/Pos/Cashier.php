@@ -335,7 +335,7 @@ class Cashier extends Component
                 if ($field === 'qty') {
                      // Basic cleaning
                      if ($value === '' || $value === null) return;
-                     $qty = (int)$value;
+                     $qty = (float)$value;
 
                      if ($qty <= 0) {
                          $this->removeFromCart($productId);
@@ -515,13 +515,13 @@ class Cashier extends Component
         $ppn_rate = (float)\App\Models\Setting::get('pos_ppn_rate', 11) / 100;
 
         foreach ($this->cart as $key => $item) {
-            $line_total_gross = $item['price'] * $item['qty'];
+            $line_total_gross = (float)$item['price'] * (float)$item['qty'];
             
             // Calculate Discount Amount based on Percentage
             $discount_percent = (float)($item['discount_percent'] ?? 0);
-            $discount_amount_per_unit = $item['price'] * ($discount_percent / 100);
+            $discount_amount_per_unit = (float)$item['price'] * ($discount_percent / 100);
             
-            $total_line_discount = $discount_amount_per_unit * $item['qty'];
+            $total_line_discount = $discount_amount_per_unit * (float)$item['qty'];
             
             $net_item_total = $line_total_gross - $total_line_discount;
             

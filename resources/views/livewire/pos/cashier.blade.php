@@ -800,7 +800,7 @@
                         </div>
                         <div class="text-right">
                              <p class="font-bold text-blue-600">
-                                 Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}
+                                 Rp {{ number_format((float)$item['price'] * (float)$item['qty'], 0, ',', '.') }}
                              </p>
                              @if(($item['discount_percent'] ?? 0) > 0)
                                  <span class="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded">

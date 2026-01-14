@@ -83,6 +83,12 @@
                     <td>Kasir</td>
                     <td>: {{ $sale->user->name }}</td>
                 </tr>
+                @if($sale->payment_method === 'tempo' && $sale->receivables)
+                <tr>
+                    <td class="font-bold">Jatuh Tempo</td>
+                    <td class="font-bold">: {{ $sale->receivables->due_date->format('d/m/Y') }}</td>
+                </tr>
+                @endif
             </table>
         </div>
 

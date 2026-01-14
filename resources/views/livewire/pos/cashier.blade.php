@@ -680,7 +680,7 @@
                             </span>
                         </div>
                     </div>
-                    @else
+                    @elseif($payment_method == 'qris')
                     <!-- QRIS Payment Section -->
                     @php
                         $qrisPath = \App\Models\Setting::get('store_qris_path');

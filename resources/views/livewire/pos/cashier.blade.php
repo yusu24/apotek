@@ -585,7 +585,7 @@
                                 </div>
                                 <div class="flex justify-between mt-2 text-sm font-bold">
                                     <span class="text-amber-800">Sisa Hutang:</span>
-                                    <span class="text-red-600">Rp {{ number_format(max(0, $grand_total - (float)$cash_amount), 0, ',', '.') }}</span>
+                                    <span class="text-red-600">Rp {{ number_format(max(0, (float)$grand_total - (float)$cash_amount), 0, ',', '.') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -814,7 +814,7 @@
                      <div class="flex items-center justify-between mt-3 pt-3 border-t border-dashed border-gray-200">
                          <!-- Qty Control -->
                          <div class="flex items-center bg-gray-100 rounded-lg p-1">
-                             <button wire:click="updateQty({{ $id }}, {{ $item['qty'] - 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600 disabled:opacity-50" {{ $item['qty'] <= 1 ? 'disabled' : '' }}>
+                             <button wire:click="updateQty({{ $id }}, {{ (float)$item['qty'] - 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600 disabled:opacity-50" {{ (float)$item['qty'] <= 1 ? 'disabled' : '' }}>
                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                              </button>
                              <input type="number" 

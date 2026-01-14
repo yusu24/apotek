@@ -112,7 +112,7 @@ class Cashier extends Component
                     $actual_total = $subtotal;
                     $expected_total = $price * $qty;
                     if ($expected_total > $actual_total) {
-                        $discount_amount = ($expected_total - $actual_total) / $qty;
+                        $discount_amount = ((float)$expected_total - (float)$actual_total) / (float)$qty;
                         $discount_percent = ($discount_amount / $price) * 100;
                     }
                 }
@@ -541,7 +541,7 @@ class Cashier extends Component
         }
 
         // Net Amount after item and global discounts
-        $net_before_sc = $this->subtotal - $total_item_discount - (float)$this->global_discount;
+        $net_before_sc = (float)$this->subtotal - (float)$total_item_discount - (float)$this->global_discount;
         if ($net_before_sc < 0) $net_before_sc = 0;
 
         // Service Charge calculation (applied on net amount)
@@ -564,8 +564,8 @@ class Cashier extends Component
         // Rounding for cash (Ceil to nearest 100)
         $raw_total = $this->grand_total;
         if ($this->payment_method === 'cash') {
-            $this->grand_total = ceil($raw_total / 100) * 100;
-            $this->rounding = $this->grand_total - $raw_total;
+            $this->grand_total = ceil((float)$raw_total / 100) * 100;
+            $this->rounding = (float)$this->grand_total - (float)$raw_total;
         } else {
             $this->rounding = 0;
             $this->grand_total = round($raw_total);
@@ -666,8 +666,8 @@ class Cashier extends Component
 
     public function calculateChange()
     {
-        if ((float)$this->cash_amount >= $this->grand_total) {
-            $this->change_amount = (float)$this->cash_amount - $this->grand_total;
+        if ((float)$this->cash_amount >= (float)$this->grand_total) {
+            $this->change_amount = (float)$this->cash_amount - (float)$this->grand_total;
         } else {
             $this->change_amount = 0;
         }
@@ -774,7 +774,7 @@ class Cashier extends Component
                     'customer_id' => $this->selectedCustomerId,
                     'amount' => $sale->grand_total,
                     'paid_amount' => (float)$this->cash_amount, // DP
-                    'remaining_balance' => $sale->grand_total - (float)$this->cash_amount,
+                    'remaining_balance' => (float)$sale->grand_total - (float)$this->cash_amount,
                     'due_date' => now()->addDays((int)$this->tempoDuration),
                     'status' => ((float)$this->cash_amount >= $sale->grand_total) ? 'paid' : 'partial',
                     'notes' => 'Tempo Payment for ' . $sale->invoice_no,

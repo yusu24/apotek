@@ -111,9 +111,9 @@ class Cashier extends Component
                 if ($qty > 0 && $price > 0) {
                     $actual_total = $subtotal;
                     $expected_total = $price * $qty;
-                    if ($expected_total > $actual_total) {
+                    if ((float)$expected_total > (float)$actual_total) {
                         $discount_amount = ((float)$expected_total - (float)$actual_total) / (float)$qty;
-                        $discount_percent = ($discount_amount / $price) * 100;
+                        $discount_percent = ($discount_amount / (float)$price) * 100;
                     }
                 }
 
@@ -344,8 +344,8 @@ class Cashier extends Component
                      
                      // Stock Validation
                      $product = Product::withSum('batches as total_stock', 'stock_current')->find($productId);
-                     $factor = $this->cart[$productId]['unit_factor'] ?? 1;
-                     $baseQtyNeeded = $qty * $factor;
+                     $factor = (float)($this->cart[$productId]['unit_factor'] ?? 1);
+                     $baseQtyNeeded = (float)$qty * $factor;
 
                      if ($product && $baseQtyNeeded > $product->total_stock) {
                          $maxAllowedRaw = floor($product->total_stock / $factor);
@@ -430,8 +430,8 @@ class Cashier extends Component
         if ($qty <= 0) {
             $this->removeFromCart($productId);
         } else {
-            $factor = $this->cart[$productId]['unit_factor'] ?? 1;
-            $baseQtyNeeded = $qty * $factor;
+            $factor = (float)($this->cart[$productId]['unit_factor'] ?? 1);
+            $baseQtyNeeded = (float)$qty * $factor;
 
             if ($product && $baseQtyNeeded > $product->total_stock) {
                 $maxAllowedRaw = floor($product->total_stock / $factor);
@@ -495,7 +495,7 @@ class Cashier extends Component
 
         // Re-validate stock with new factor
         $productStock = Product::withSum('batches as total_stock', 'stock_current')->find($productId);
-        $baseQtyNeeded = $item['qty'] * $item['unit_factor'];
+        $baseQtyNeeded = (float)$item['qty'] * (float)$item['unit_factor'];
         
         if ($productStock && $baseQtyNeeded > $productStock->total_stock) {
             $maxAllowedRaw = floor($productStock->total_stock / $item['unit_factor']);
@@ -531,7 +531,7 @@ class Cashier extends Component
             
             // Calculate Item PPN
             if (isset($item['has_ppn']) && $item['has_ppn']) {
-                $item_tax = $net_item_total * $ppn_rate;
+                $item_tax = (float)$net_item_total * (float)$ppn_rate;
                 $this->tax += $item_tax;
                 $net_item_total += $item_tax; 
             }
@@ -786,8 +786,8 @@ class Cashier extends Component
                 $qtyNeeded = $item['qty'] * $factor;
                 
                 // Use calculated amount from loop
-                $discount_percent = $item['discount_percent'] ?? 0;
-                $itemDiscount = $item['price'] * ($discount_percent / 100);
+                $discount_percent = (float)($item['discount_percent'] ?? 0);
+                $itemDiscount = (float)$item['price'] * ($discount_percent / 100);
                 
                 $itemNotes = $item['notes'] ?? '';
                 

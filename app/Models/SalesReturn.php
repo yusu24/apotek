@@ -31,4 +31,9 @@ class SalesReturn extends Model
     {
         return $this->hasMany(SalesReturnItem::class);
     }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'sales_return')->where('source_id', $this->id);
+    }
 }

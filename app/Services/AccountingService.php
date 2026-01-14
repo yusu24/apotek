@@ -159,6 +159,118 @@ class AccountingService
     }
 
     /**
+     * Post sales return journal automatically
+     * 
+     * Journal Entry:
+     * Dr. Retur Penjualan (Contra Revenue)  [total_amount]
+     *    Cr. Kas/Bank                              [total_amount]
+     * 
+     * Dr. Persediaan                        [cost_total]
+     *    Cr. COGS                                  [cost_total]
+     */
+    public function postSalesReturnJournal(int $salesReturnId): ?JournalEntry
+    {
+        $salesReturn = \App\Models\SalesReturn::with(['items.product', 'sale'])->findOrFail($salesReturnId);
+        
+        // Check if journal already exists
+        if (JournalEntry::where('source', 'sales_return')->where('source_id', $salesReturnId)->exists()) {
+            return null; // Already posted
+        }
+
+        DB::beginTransaction();
+        try {
+            // Get accounts
+            $cashAccount = Account::where('code', '1-1100')->first(); // Kas
+            $salesReturnAccount = Account::where('code', '4-1100')->first(); // Retur Penjualan
+            $cogsAccount = Account::where('code', '5-1000')->first(); // COGS
+            $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
+
+            if (!$cashAccount || !$salesReturnAccount || !$cogsAccount || !$inventoryAccount) {
+                $missing = [];
+                if (!$cashAccount) $missing[] = "Kas (1-1100)";
+                if (!$salesReturnAccount) $missing[] = "Retur Penjualan (4-1100)";
+                if (!$cogsAccount) $missing[] = "COGS (5-1000)";
+                if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
+                
+                throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing) . ". Silakan jalankan 'php artisan db:seed --class=AccountSeeder'.");
+            }
+
+            // Calculate COGS (cost to restore)
+            $cogsTotal = 0;
+            foreach ($salesReturn->items as $item) {
+                // Get the original batch cost from the sale item
+                $saleItem = \App\Models\SaleItem::where('sale_id', $salesReturn->sale_id)
+                    ->where('product_id', $item->product_id)
+                    ->first();
+                
+                if ($saleItem && $saleItem->batch) {
+                    $cogsTotal += $item->quantity * $saleItem->batch->buy_price;
+                }
+            }
+
+            // Create journal entry
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
+                'date' => $salesReturn->created_at ?? now(),
+                'description' => 'Retur Penjualan - ' . $salesReturn->return_no,
+                'source' => 'sales_return',
+                'source_id' => $salesReturnId,
+                'user_id' => $salesReturn->user_id,
+            ]);
+
+            // Entry 1: Record Sales Return (Reduce Revenue)
+            // Dr. Retur Penjualan (Contra Revenue)
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $salesReturnAccount->id,
+                'debit' => $salesReturn->total_amount,
+                'credit' => 0,
+                'notes' => 'Retur Penjualan ' . $salesReturn->return_no,
+            ]);
+
+            // Cr. Kas
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $cashAccount->id,
+                'debit' => 0,
+                'credit' => $salesReturn->total_amount,
+                'notes' => 'Pengembalian Dana - ' . $salesReturn->return_no,
+            ]);
+
+            // Entry 2: Restore Inventory
+            if ($cogsTotal > 0) {
+                // Dr. Persediaan
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $inventoryAccount->id,
+                    'debit' => $cogsTotal,
+                    'credit' => 0,
+                    'notes' => 'Pengembalian Persediaan - ' . $salesReturn->return_no,
+                ]);
+
+                // Cr. COGS
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $cogsAccount->id,
+                    'debit' => 0,
+                    'credit' => $cogsTotal,
+                    'notes' => 'Pengurangan COGS - ' . $salesReturn->return_no,
+                ]);
+            }
+
+            // Post journal
+            $entry->post();
+
+            DB::commit();
+            return $entry;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+
+    /**
      * Post purchase journal automatically
      * 
      * Journal Entry:
@@ -238,6 +350,114 @@ class AccountingService
             throw $e;
         }
     }
+
+    /**
+     * Post purchase return journal automatically
+     * 
+     * Journal Entry:
+     * Dr. Kas/Bank                          [total_amount]
+     *    Cr. Retur Pembelian                      [total_amount]
+     * 
+     * Dr. COGS                              [cost_total]
+     *    Cr. Persediaan                           [cost_total]
+     */
+    public function postPurchaseReturnJournal(int $purchaseReturnId): ?JournalEntry
+    {
+        $purchaseReturn = \App\Models\PurchaseReturn::with(['items.product', 'supplier'])->findOrFail($purchaseReturnId);
+        
+        // Check if journal already exists
+        if (JournalEntry::where('source', 'purchase_return')->where('source_id', $purchaseReturnId)->exists()) {
+            return null; // Already posted
+        }
+
+        DB::beginTransaction();
+        try {
+            // Get accounts
+            $cashAccount = Account::where('code', '1-1100')->first(); // Kas
+            $purchaseReturnAccount = Account::where('code', '5-1100')->first(); // Retur Pembelian
+            $cogsAccount = Account::where('code', '5-1000')->first(); // COGS
+            $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
+
+            if (!$cashAccount || !$purchaseReturnAccount || !$cogsAccount || !$inventoryAccount) {
+                $missing = [];
+                if (!$cashAccount) $missing[] = "Kas (1-1100)";
+                if (!$purchaseReturnAccount) $missing[] = "Retur Pembelian (5-1100)";
+                if (!$cogsAccount) $missing[] = "COGS (5-1000)";
+                if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
+                
+                throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing) . ". Silakan jalankan 'php artisan db:seed --class=AccountSeeder'.");
+            }
+
+            // Calculate total cost
+            $costTotal = 0;
+            foreach ($purchaseReturn->items as $item) {
+                // Use the buy price from the batch
+                if ($item->batch) {
+                    $costTotal += $item->quantity * $item->batch->buy_price;
+                }
+            }
+
+            // Create journal entry
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
+                'date' => $purchaseReturn->created_at ?? now(),
+                'description' => 'Retur Pembelian - ' . $purchaseReturn->return_no,
+                'source' => 'purchase_return',
+                'source_id' => $purchaseReturnId,
+                'user_id' => $purchaseReturn->user_id,
+            ]);
+
+            // Entry 1: Record Cash Refund
+            // Dr. Kas
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $cashAccount->id,
+                'debit' => $purchaseReturn->total_amount,
+                'credit' => 0,
+                'notes' => 'Pengembalian Dana - ' . $purchaseReturn->return_no,
+            ]);
+
+            // Cr. Retur Pembelian
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $purchaseReturnAccount->id,
+                'debit' => 0,
+                'credit' => $purchaseReturn->total_amount,
+                'notes' => 'Retur Pembelian - ' . $purchaseReturn->return_no,
+            ]);
+
+            // Entry 2: Reduce Inventory
+            if ($costTotal > 0) {
+                // Dr. COGS (expense the returned goods)
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $cogsAccount->id,
+                    'debit' => $costTotal,
+                    'credit' => 0,
+                    'notes' => 'Beban Retur - ' . $purchaseReturn->return_no,
+                ]);
+
+                // Cr. Persediaan
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $inventoryAccount->id,
+                    'debit' => 0,
+                    'credit' => $costTotal,
+                    'notes' => 'Pengurangan Persediaan - ' . $purchaseReturn->return_no,
+                ]);
+            }
+
+            // Post journal
+            $entry->post();
+
+            DB::commit();
+            return $entry;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
 
     /**
      * Post supplier payment journal automatically
@@ -787,36 +1007,44 @@ public function processReceivablePayment($receivableId, $data)
         $receivable->save();
 
         // 3. Create Journal Entry (Cash/Bank Debit, Accounts Receivable Credit)
-        // Assume Cash account for now or mapped account
-        // Debit: Cash (Asset)
-        // Credit: Accounts Receivable (Asset - Decrease)
+        $paymentAccount = match($data['payment_method'] ?? 'cash') {
+            'cash' => Account::where('code', '1-1100')->first(), // Kas
+            'transfer' => Account::where('code', '1-1200')->first(), // Bank
+            default => Account::where('code', '1-1100')->first(),
+        };
         
-        // Use standard account codes (Simplified for now)
-        // 1-10001 : Kas Besar (Cash)
-        // 1-10004 : Piutang Usaha (AR)
+        $receivableAccount = Account::where('code', '1-1300')->first(); // Piutang Usaha
 
-        /* 
-         * Note: In a real system you'd fetch these IDs from settings or Chart of Accounts.
-         * For now we'll skip detailed mapping if Accounts are not strictly enforced, 
-         * or implement a basic journal if needed.
-         * 
-         * Let's defer strict Journal Entry creation unless specifically requested to ensure
-         * we don't break flow if Accounts are missing. 
-         * However, user asked for "Financial Summary" integration previously, so we should try.
-         */
-        
-        // Check if JournalEntry model exists and is ready
-        if (class_exists(\App\Models\JournalEntry::class)) {
-             \App\Models\JournalEntry::create([
-                'entry_number' => \App\Models\JournalEntry::generateEntryNumber(),
+        if ($paymentAccount && $receivableAccount) {
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
                 'user_id' => auth()->id() ?? 1,
                 'date' => now(),
                 'description' => 'Pelunasan Piutang - ' . ($receivable->customer->name ?? 'Customer'),
                 'source' => 'receivable_payment',
                 'source_id' => $payment->id,
-                'is_posted' => true,
-                // Lines would go here: Debit Cash, Credit AR
             ]);
+
+            // Dr. Kas/Bank
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $paymentAccount->id,
+                'debit' => $data['amount'],
+                'credit' => 0,
+                'notes' => 'Pelunasan Piutang - ' . ($receivable->customer->name ?? 'Customer'),
+            ]);
+
+            // Cr. Piutang Usaha
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $receivableAccount->id,
+                'debit' => 0,
+                'credit' => $data['amount'],
+                'notes' => 'Pengurangan Piutang - ' . ($receivable->customer->name ?? 'Customer'),
+            ]);
+
+            // Post journal
+            $entry->post();
         }
 
         \DB::commit();

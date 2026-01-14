@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Add 'receivable_payment' and 'payable_payment' to the enum
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual', 'opening_balance', 'expense', 'receivable_payment', 'payable_payment') DEFAULT 'manual'");
+        // Add 'sales_return', 'purchase_return', 'supplier_payment' to the enum
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual', 'opening_balance', 'expense', 'supplier_payment', 'receivable_payment', 'payable_payment', 'sales_return', 'purchase_return') DEFAULT 'manual'");
     }
 
     /**

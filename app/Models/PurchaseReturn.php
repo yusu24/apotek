@@ -31,4 +31,9 @@ class PurchaseReturn extends Model
     {
         return $this->hasMany(PurchaseReturnItem::class);
     }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'purchase_return')->where('source_id', $this->id);
+    }
 }

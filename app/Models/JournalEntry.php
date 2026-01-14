@@ -169,6 +169,10 @@ class JournalEntry extends Model
             'sale' => \App\Models\Sale::with(['saleItems.product', 'saleItems.unit'])->find($this->source_id),
             'purchase' => \App\Models\GoodsReceipt::with(['items.product', 'items.unit', 'purchaseOrder.supplier'])->find($this->source_id),
             'expense' => \App\Models\Expense::with('account', 'user')->find($this->source_id),
+            'sales_return' => \App\Models\SalesReturn::with(['items.product', 'sale'])->find($this->source_id),
+            'purchase_return' => \App\Models\PurchaseReturn::with(['items.product', 'supplier'])->find($this->source_id),
+            'receivable_payment' => \App\Models\ReceivablePayment::with(['receivable.customer'])->find($this->source_id),
+            'supplier_payment' => \App\Models\SupplierPayment::with(['goodsReceipt'])->find($this->source_id),
             default => null,
         };
     }
@@ -186,6 +190,10 @@ class JournalEntry extends Model
             'sale' => route('reports.sales') . '?sale_id=' . $this->source_id,
             'purchase' => route('procurement.goods-receipts.index'),
             'expense' => route('finance.expenses'),
+            'sales_return' => route('reports.sales'),
+            'purchase_return' => route('procurement.goods-receipts.index'),
+            'receivable_payment' => route('finance.receivables'),
+            'supplier_payment' => route('finance.payables'),
             default => null,
         };
     }
@@ -195,6 +203,10 @@ class JournalEntry extends Model
      */
     public function hasViewableSource(): bool
     {
-        return $this->source_id && in_array($this->source, ['sale', 'purchase', 'expense']);
+        return $this->source_id && in_array($this->source, [
+            'sale', 'purchase', 'expense', 
+            'sales_return', 'purchase_return', 
+            'receivable_payment', 'supplier_payment'
+        ]);
     }
 }

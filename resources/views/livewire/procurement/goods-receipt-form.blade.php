@@ -194,9 +194,7 @@
                                         <div class="text-sm font-normal text-gray-800">{{ $item['product_name'] }}</div>
                                         @php $selectedProduct = $products->firstWhere('id', $item['product_id']); @endphp
                                         <div class="text-[10px] text-gray-500 mt-0.5">{{ $selectedProduct->barcode ?? '-' }}</div>
-                                        @if(!empty($item['po_info']))
-                                            <div class="text-[9px] text-blue-600 font-bold uppercase tracking-wider bg-blue-50 inline-block px-1.5 py-0.5 rounded mt-1">{{ $item['po_info'] }}</div>
-                                        @endif
+
                                         <input type="hidden" wire:model="items.{{ $index }}.product_id">
                                     @else
                                         <select wire:model="items.{{ $index }}.product_id" class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-normal">

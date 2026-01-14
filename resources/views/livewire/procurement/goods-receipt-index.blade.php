@@ -6,22 +6,24 @@
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="mb-4 flex flex-col sm:flex-row gap-4">
-            <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-medium flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0 w-full sm:w-auto">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span class="inline">Buat Penerimaan</span>
-            </a>
-            
-            <div class="flex-1 flex gap-4">
+        <div class="mb-4 flex flex-row justify-between items-center gap-4">
+            <div class="flex flex-1 sm:flex-none">
                 <input type="text" wire:model.live="search" placeholder="Cari No Surat Jalan / Supplier..." 
-                    class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    class="w-full sm:w-48 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3">
+            </div>
+
+            <div class="shrink-0">
+                <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
+                    class="bg-blue-600 text-white p-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap" title="Buat Penerimaan">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span class="hidden sm:inline">Buat Penerimaan</span>
+                </a>
             </div>
         </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                <thead class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase">
                     <tr>
                         <th class="px-6 py-4 text-left border-b border-gray-100">No. Surat Jalan</th>
                         <th class="px-6 py-4 text-left border-b border-gray-100">Tanggal</th>
@@ -48,7 +50,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex flex-col gap-1">
-                                    <span class="inline-flex items-center w-fit px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-{{ $gr->payment_status_color }}-100 text-{{ $gr->payment_status_color }}-800">
+                                    <span class="inline-flex items-center w-fit px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-{{ $gr->payment_status_color }}-100 text-{{ $gr->payment_status_color }}-800">
                                         {{ $gr->payment_status_label }}
                                     </span>
                                     @if($gr->payment_status !== 'paid' && $gr->due_date)

@@ -6,13 +6,13 @@
             <p class="text-sm text-gray-500 mt-1">Analisis profitabilitas berdasarkan harga beli dan harga jual</p>
         </div>
         <div class="flex gap-2">
-            <button wire:click="exportExcel" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
+            <button wire:click="exportExcel" class="p-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Export Excel
+                <span class="hidden sm:inline">Export Excel</span>
             </button>
-            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
+            <button onclick="window.print()" class="p-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Print">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z"></path></svg>
-                Print
+                <span class="hidden sm:inline">Print</span>
             </button>
         </div>
     </div>
@@ -78,7 +78,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th wire:click="sortByColumn('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
@@ -88,8 +88,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                        <th wire:click="sortByColumn('last_buy_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
+                        <th wire:click="sortByColumn('last_buy_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Harga Beli
                                 @if($sortBy === 'last_buy_price')
@@ -99,7 +99,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('sell_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('sell_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Harga Jual
                                 @if($sortBy === 'sell_price')
@@ -109,7 +109,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('margin_amount')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('margin_amount')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Margin (Rp)
                                 @if($sortBy === 'margin_amount')
@@ -119,7 +119,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('margin_percentage')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('margin_percentage')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Margin (%)
                                 @if($sortBy === 'margin_percentage')

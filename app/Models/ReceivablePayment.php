@@ -32,4 +32,9 @@ class ReceivablePayment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function journalEntries()
+    {
+        return \App\Models\JournalEntry::where('source', 'receivable_payment')->where('source_id', $this->id);
+    }
 }

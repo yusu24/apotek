@@ -28,7 +28,11 @@
                     <div class="flex items-center">
                         <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Tanggal <span class="text-red-500">*</span></label>
                         <div class="flex-1 max-w-xs">
-                            <input type="date" wire:model="date" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" {{ $isReadOnly ? 'readonly' : '' }}>
+                            <input type="text" wire:model="date" 
+                                   placeholder="dd/mm/yyyy" 
+                                   class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal {{ $isReadOnly ? 'bg-gray-100 pointer-events-none' : 'bg-gray-50' }} py-1.5 h-8" 
+                                   {{ $isReadOnly ? 'readonly' : '' }}
+                                   maxlength="10">
                             @error('date') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -97,13 +101,35 @@
 
                 @if(!$isReadOnly)
                 <!-- Product Search Box Below Tabs (Livewire Based) -->
-                <div x-show="activeTab === 'items'" class="relative w-full py-3" x-data="{ open: false }">
+                <div x-show="activeTab === 'items'" class="relative w-full py-3" 
+                     x-data="{ 
+                         open: false,
+                         highlightedIndex: 0,
+                         search: @entangle('productSearch').live,
+                         selectItem(productId) {
+                             if (productId) {
+                                 $wire.openModal(null, productId);
+                                 this.open = false;
+                                 this.highlightedIndex = 0;
+                                 this.$refs.searchInput.blur();
+                             }
+                         }
+                     }"
+                     @click.outside="open = false; highlightedIndex = 0">
                     <div class="relative max-w-xl">
                         <input type="text" 
-                            wire:model.live.debounce.300ms="productSearch"
+                            x-ref="searchInput"
+                            x-model="search"
                             @focus="open = true"
-                            @click.away="open = false"
-                            @keydown.escape="open = false"
+                            @input="open = true; highlightedIndex = 0"
+                            @keydown.arrow-down.prevent="highlightedIndex = (highlightedIndex + 1) % {{ min(count($searchResults), 10) }}; open = true"
+                            @keydown.arrow-up.prevent="highlightedIndex = (highlightedIndex - 1 + {{ min(count($searchResults), 10) }}) % {{ min(count($searchResults), 10) }}; open = true"
+                            @keydown.enter.prevent="if(open && search.length > 0) { 
+                                $refs['dropdown-item-' + highlightedIndex]?.click(); 
+                            } else {
+                                open = true;
+                            }"
+                            @keydown.escape="open = false; $refs.searchInput.blur()"
                             class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-10 pr-4"
                             placeholder="Cari produk atau scan barcode untuk menambah item...">
                         
@@ -114,18 +140,24 @@
                         <!-- Dropdown List -->
                         @if(!empty($productSearch))
                         <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
                              class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
                             <ul class="py-1">
-                                @forelse($searchResults as $p)
-                                    <li wire:click="openModal(null, {{ $p->id }})" @click="open = false"
-                                        class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors">
+                                @forelse($searchResults as $index => $p)
+                                    <li id="dropdown-item-{{ $index }}"
+                                        x-ref="dropdown-item-{{ $index }}"
+                                        @click="selectItem({{ $p->id }})"
+                                        class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50"
+                                        :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
                                         <div>
                                             <div class="text-sm font-medium text-gray-800">{{ $p->name }}</div>
                                             <div class="text-xs text-gray-500">{{ $p->barcode }}</div>
                                         </div>
                                     </li>
                                 @empty
-                                    <li class="px-4 py-2 text-sm text-gray-500">Produk tidak ditemukan.</li>
+                                    <li class="px-4 py-2 text-sm text-gray-500 text-center">Produk tidak ditemukan.</li>
                                 @endforelse
                             </ul>
                         </div>

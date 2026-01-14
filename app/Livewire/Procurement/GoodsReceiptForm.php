@@ -346,7 +346,8 @@ class GoodsReceiptForm extends Component
         // Custom validation: Check if Qty Received > PO Qty (if applicable)
         if ($this->purchase_order_id) {
             foreach ($this->items as $index => $item) {
-                // 1. Qty validation
+                // 1. Qty validation - REMOVED to allow flexible receiving
+                /*
                 if (isset($item['max_qty_allowed'])) {
                     $baseReceivedQty = $item['qty_received'] * ($item['conversion_factor'] ?? 1);
                     $poItem = \App\Models\PurchaseOrderItem::where('purchase_order_id', $this->purchase_order_id)
@@ -364,6 +365,7 @@ class GoodsReceiptForm extends Component
                         }
                     }
                 }
+                */
 
                 // 2. Unit validation
                 if (isset($item['po_unit_id']) && $item['unit_id'] != $item['po_unit_id']) {

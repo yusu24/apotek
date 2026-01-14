@@ -37,10 +37,67 @@
     </div>
 
     <div class="meta border-b">
-        <div>No: {{ $sale->invoice_no }}</div>
-        <div>Tgl: {{ $sale->date->format('d/m/Y H:i') }}</div>
-        <div>Kasir: {{ $sale->user->name }}</div>
+        <table style="font-size: 9px;">
+            <tr>
+                <td style="width: 35%;">No</td>
+                <td>: {{ $sale->invoice_no }}</td>
+            </tr>
+            <tr>
+                <td>Tanggal</td>
+                <td>: {{ $sale->date->format('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <td>Waktu</td>
+                <td>: {{ $sale->date->format('H:i') }}</td>
+            </tr>
+            <tr>
+                <td>Kasir</td>
+                <td>: {{ $sale->user->name }}</td>
+            </tr>
+        </table>
     </div>
+
+    @if($sale->patient_name)
+    <div class="meta border-b" style="padding-top: 5px;">
+        <div style="font-weight: bold; margin-bottom: 3px;">DATA PASIEN</div>
+        <table style="font-size: 9px;">
+            <tr>
+                <td style="width: 30%;">Nama</td>
+                <td>: {{ $sale->patient_name }}</td>
+            </tr>
+            @if($sale->patient_doctor_name)
+            <tr>
+                <td>Dokter</td>
+                <td>: {{ $sale->patient_doctor_name }}</td>
+            </tr>
+            @endif
+            @if($sale->patient_birth_date)
+            <tr>
+                <td>Tgl Lahir</td>
+                <td>: {{ \Carbon\Carbon::parse($sale->patient_birth_date)->format('d/m/Y') }}</td>
+            </tr>
+            @endif
+            @if($sale->patient_phone)
+            <tr>
+                <td>Telepon</td>
+                <td>: {{ $sale->patient_phone }}</td>
+            </tr>
+            @endif
+            @if($sale->patient_address)
+            <tr>
+                <td>Alamat</td>
+                <td>: {{ $sale->patient_address }}</td>
+            </tr>
+            @endif
+            @if($sale->patient_email)
+            <tr>
+                <td>Email</td>
+                <td>: {{ $sale->patient_email }}</td>
+            </tr>
+            @endif
+        </table>
+    </div>
+    @endif
 
     <div class="items">
         <table>

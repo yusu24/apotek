@@ -11,6 +11,7 @@ use App\Models\Batch;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
+use App\Services\AccountingService;
 
 class SalesReturnList extends Component
 {
@@ -165,6 +166,15 @@ class SalesReturnList extends Component
                 'description' => "Membuat retur penjualan: {$salesReturn->return_no} untuk Invoice: {$this->selectedSale->invoice_no}",
                 'new_values' => $salesReturn->toArray()
             ]);
+
+            // Create Journal Entry
+            try {
+                $accountingService = new AccountingService();
+                $accountingService->postSalesReturnJournal($salesReturn->id);
+            } catch (\Exception $e) {
+                \Log::error('Failed to post sales return journal: ' . $e->getMessage());
+                // Don't fail the transaction, just log the error
+            }
 
             DB::commit();
             session()->flash('message', 'Retur penjualan berhasil disimpan.');

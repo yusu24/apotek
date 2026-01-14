@@ -46,7 +46,7 @@ class PurchaseOrderForm extends Component
             $this->purchaseOrder = \App\Models\PurchaseOrder::with('items')->findOrFail($id);
             $this->po_number = $this->purchaseOrder->po_number;
             $this->supplier_id = $this->purchaseOrder->supplier_id;
-            $this->date = $this->purchaseOrder->date;
+            $this->date = \Carbon\Carbon::parse($this->purchaseOrder->date)->format('d/m/Y');
             $this->notes = $this->purchaseOrder->notes;
             $this->status = $this->purchaseOrder->status;
 
@@ -66,7 +66,7 @@ class PurchaseOrderForm extends Component
                 $this->isReadOnly = true;
             }
         } else {
-            $this->date = date('Y-m-d');
+            $this->date = date('d/m/Y');
             $this->po_number = 'PO-' . date('Ymd') . '-' . rand(100, 999);
             // No initial empty item needed if using modal
             // $this->items = []; 
@@ -280,10 +280,16 @@ class PurchaseOrderForm extends Component
 
     public function save()
     {
+        // Convert dd/mm/yyyy to Y-m-d for validation and storage
+        $dateForDb = $this->date;
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $this->date, $matches)) {
+            $dateForDb = $matches[3] . '-' . $matches[2] . '-' . $matches[1];
+        }
+
         $this->validate([
             'po_number' => 'required|unique:purchase_orders,po_number,' . ($this->purchaseOrder?->id),
             'supplier_id' => 'required',
-            'date' => 'required|date',
+            'date' => 'required',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.qty' => 'required|numeric|min:1',
@@ -295,7 +301,7 @@ class PurchaseOrderForm extends Component
             $po = $this->purchaseOrder;
             $po->update([
                 'supplier_id' => $this->supplier_id,
-                'date' => $this->date,
+                'date' => $dateForDb,
                 'status' => $this->status,
                 'notes' => $this->notes,
                 'total_amount' => $total_amount,
@@ -307,7 +313,7 @@ class PurchaseOrderForm extends Component
                 'po_number' => $this->po_number,
                 'supplier_id' => $this->supplier_id,
                 'user_id' => auth()->id(),
-                'date' => $this->date,
+                'date' => $dateForDb,
                 'status' => $this->status,
                 'notes' => $this->notes,
                 'total_amount' => $total_amount,

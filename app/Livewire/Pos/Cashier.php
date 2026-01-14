@@ -62,6 +62,15 @@ class Cashier extends Component
     public $newCustomerAddress = '';
     public $tempoDuration = 30; // Default 30 days
     public $showDpp = false; // Toggle to show DPP in summary
+    
+    // Patient Information
+    public $includePatientInfo = false;
+    public $patientName = '';
+    public $patientDoctorName = '';
+    public $patientBirthDate = '';
+    public $patientAddress = '';
+    public $patientPhone = '';
+    public $patientEmail = '';
 
 
     public function loadPendingOrders()
@@ -269,6 +278,17 @@ class Cashier extends Component
     {
         $this->selectedCustomerId = null;
         $this->selectedCustomerName = null;
+    }
+
+    public function resetPatientInfo()
+    {
+        $this->includePatientInfo = false;
+        $this->patientName = '';
+        $this->patientDoctorName = '';
+        $this->patientBirthDate = '';
+        $this->patientAddress = '';
+        $this->patientPhone = '';
+        $this->patientEmail = '';
     }
 
     public function saveNewCustomer()
@@ -738,6 +758,13 @@ class Cashier extends Component
                 'change_amount' => $this->change_amount,
                 'notes' => $this->global_notes,
                 'status' => $status,
+                // Patient Information
+                'patient_name' => $this->includePatientInfo ? $this->patientName : null,
+                'patient_doctor_name' => $this->includePatientInfo ? $this->patientDoctorName : null,
+                'patient_birth_date' => $this->includePatientInfo && $this->patientBirthDate ? $this->patientBirthDate : null,
+                'patient_address' => $this->includePatientInfo ? $this->patientAddress : null,
+                'patient_phone' => $this->includePatientInfo ? $this->patientPhone : null,
+                'patient_email' => $this->includePatientInfo ? $this->patientEmail : null,
             ]);
 
             // Create Receivable Record if Tempo
@@ -833,6 +860,7 @@ class Cashier extends Component
             $this->showPaymentModal = false;
             $this->cart = [];
             $this->resetCustomer();
+            $this->resetPatientInfo();
             $this->calculateTotal();
             $this->generateInvoiceNo(); // Generate new invoice for next order
 

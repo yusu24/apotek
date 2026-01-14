@@ -12,6 +12,7 @@ use App\Models\StockMovement;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
+use App\Services\AccountingService;
 
 class PurchaseReturnList extends Component
 {
@@ -161,6 +162,15 @@ class PurchaseReturnList extends Component
                 'description' => "Membuat retur pembelian: {$purchaseReturn->return_no}",
                 'new_values' => $purchaseReturn->toArray()
             ]);
+
+            // Create Journal Entry
+            try {
+                $accountingService = new AccountingService();
+                $accountingService->postPurchaseReturnJournal($purchaseReturn->id);
+            } catch (\Exception $e) {
+                \Log::error('Failed to post purchase return journal: ' . $e->getMessage());
+                // Don't fail the transaction, just log the error
+            }
 
             DB::commit();
             session()->flash('message', 'Retur pembelian berhasil disimpan.');

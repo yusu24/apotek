@@ -108,6 +108,13 @@ class AccountSeeder extends Seeder
                 'is_system' => true,
             ],
             [
+                'code' => '4-1100',
+                'name' => 'Retur Penjualan',
+                'type' => 'revenue',
+                'category' => 'sales',
+                'is_system' => true,
+            ],
+            [
                 'code' => '4-2000',
                 'name' => 'Pendapatan Lain-lain',
                 'type' => 'revenue',
@@ -119,6 +126,13 @@ class AccountSeeder extends Seeder
             [
                 'code' => '5-1000',
                 'name' => 'Harga Pokok Penjualan (COGS)',
+                'type' => 'expense',
+                'category' => 'cogs',
+                'is_system' => true,
+            ],
+            [
+                'code' => '5-1100',
+                'name' => 'Retur Pembelian',
                 'type' => 'expense',
                 'category' => 'cogs',
                 'is_system' => true,

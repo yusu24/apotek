@@ -64,18 +64,69 @@
             @endif
         </div>
 
+
         <div class="meta border-b pb-2">
-            <table style="font-size: {{ $isA4 ? '12px' : '10px' }};">
+            <table style="font-size: {{ $isA4 ? '11px' : '9px' }};">
                 <tr>
-                    <td>No: {{ $sale->invoice_no }}</td>
-                    <td class="text-right">Tgl: {{ $sale->date }}</td>
+                    <td style="width: {{ $isA4 ? '30%' : '35%' }};">No</td>
+                    <td>: {{ $sale->invoice_no }}</td>
                 </tr>
                 <tr>
-                    <td>Kasir: {{ $sale->user->name }}</td>
-                    <td class="text-right">{{ $sale->created_at->format('H:i') }}</td>
+                    <td>Tanggal</td>
+                    <td>: {{ $sale->date }}</td>
+                </tr>
+                <tr>
+                    <td>Waktu</td>
+                    <td>: {{ $sale->created_at->format('H:i') }}</td>
+                </tr>
+                <tr>
+                    <td>Kasir</td>
+                    <td>: {{ $sale->user->name }}</td>
                 </tr>
             </table>
         </div>
+
+        @if($sale->patient_name)
+        <div class="meta border-b pb-2 mt-2">
+            <div style="font-size: {{ $isA4 ? '12px' : '10px' }}; font-weight: bold; margin-bottom: 3px;">DATA PASIEN</div>
+            <table style="font-size: {{ $isA4 ? '11px' : '9px' }};">
+                <tr>
+                    <td style="width: {{ $isA4 ? '30%' : '35%' }};">Nama</td>
+                    <td>: {{ $sale->patient_name }}</td>
+                </tr>
+                @if($sale->patient_doctor_name)
+                <tr>
+                    <td>Dokter</td>
+                    <td>: {{ $sale->patient_doctor_name }}</td>
+                </tr>
+                @endif
+                @if($sale->patient_birth_date)
+                <tr>
+                    <td>Tgl Lahir</td>
+                    <td>: {{ formatDate($sale->patient_birth_date) }}</td>
+                </tr>
+                @endif
+                @if($sale->patient_phone)
+                <tr>
+                    <td>Telepon</td>
+                    <td>: {{ $sale->patient_phone }}</td>
+                </tr>
+                @endif
+                @if($sale->patient_address)
+                <tr>
+                    <td>Alamat</td>
+                    <td>: {{ $sale->patient_address }}</td>
+                </tr>
+                @endif
+                @if($sale->patient_email)
+                <tr>
+                    <td>Email</td>
+                    <td>: {{ $sale->patient_email }}</td>
+                </tr>
+                @endif
+            </table>
+        </div>
+        @endif
 
         <div class="items">
             <table>

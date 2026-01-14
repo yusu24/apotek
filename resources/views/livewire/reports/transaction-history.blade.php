@@ -7,19 +7,20 @@
     </div>
             
     <!-- Filter Bar (Always Visible) -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div class="flex flex-wrap items-center gap-3">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
             <!-- Product Search -->
-            <div class="w-64 relative">
+            <div class="lg:col-span-4 relative">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Cari Produk</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
-                    <input wire:model.live.debounce.300ms="searchProduct" type="text" placeholder="Cari produk..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-medium">
+                    <input wire:model.live.debounce.300ms="searchProduct" type="text" placeholder="Banyak produk..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-medium">
                 </div>
 
                 @if(count($searchresults) > 0)
-                    <div class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden max-h-60 overflow-y-auto">
+                    <div class="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden max-h-60 overflow-y-auto">
                         @foreach($searchresults as $product)
                             <button wire:click="selectProduct({{ $product->id }})" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-left transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
                                 <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -35,23 +36,30 @@
                 @endif
             </div>
 
-            <!-- Date Filters (Always Visible) -->
-            <div class="flex items-center gap-2">
-                <input type="date" wire:model.live="startDate" class="px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
-                <span class="text-gray-400 text-sm">—</span>
-                <input type="date" wire:model.live="endDate" class="px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+            <!-- Date Filters -->
+            <div class="lg:col-span-4">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Periode Transaksi</label>
+                <div class="grid grid-cols-2 gap-2 items-center">
+                    <input type="date" wire:model.live="startDate" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+                    <input type="date" wire:model.live="endDate" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+                </div>
             </div>
             
-            <select wire:model.live="perPage" class="px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold text-gray-700">
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-            </select>
-            
-            <button wire:click="resetFilters" class="btn btn-secondary">
-                Reset
-            </button>
+            <div class="md:col-span-1 lg:col-span-2">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Tampilkan</label>
+                <select wire:model.live="perPage" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold text-gray-700">
+                    <option value="25">25 Data</option>
+                    <option value="50">50 Data</option>
+                    <option value="100">100 Data</option>
+                    <option value="200">200 Data</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-1 lg:col-span-2">
+                <button wire:click="resetFilters" class="w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors text-sm">
+                    Reset Filter
+                </button>
+            </div>
         </div>
 
         <!-- Selected Products Tags -->
@@ -90,7 +98,7 @@
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left">
                                     <thead>
-                                        <tr class="text-xs font-medium uppercase text-gray-500 tracking-wider">
+                                        <tr class="text-xs font-medium uppercase text-gray-500">
                                             <th class="px-4 py-3">Tanggal</th>
                                             <th class="px-4 py-3">Tipe</th>
                                             <th class="px-4 py-3 text-right">Qty</th>
@@ -150,7 +158,7 @@
                             </div>
                             @if(count($history) > 0)
                                 <div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 text-center">
-                                    <a href="{{ route('inventory.history', $p['id']) }}" wire:navigate class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors uppercase tracking-widest">
+                                    <a href="{{ route('inventory.history', $p['id']) }}" wire:navigate class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors uppercase">
                                         Lihat Histori Lengkap &rarr;
                                     </a>
                                 </div>

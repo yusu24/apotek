@@ -115,23 +115,12 @@
                                     <!-- Price & Unit Display/Selector -->
                                     <div class="flex flex-wrap items-center gap-2 mt-1">
                                         <div class="flex items-center gap-1">
-                                            <span class="text-[10px] font-bold text-gray-400">@</span>
-                                            <span class="text-xs font-bold text-blue-700">{{ number_format($item['price'], 0, ',', '.') }}</span>
+                                            <span class="text-[10px] font-normal text-gray-400">@</span>
+                                            <span class="text-xs font-normal text-blue-700">{{ number_format($item['price'], 0, ',', '.') }}</span>
                                         </div>
-                                        
-                                        <!-- Unit Selector -->
-                                        <select 
-                                            wire:change="updateItemUnit({{ $id }}, $event.target.value)"
-                                            class="text-[10px] py-0.5 px-1 bg-gray-50 border-gray-200 rounded text-gray-600 focus:ring-0 focus:border-blue-400 cursor-pointer">
-                                            @foreach($item['available_units'] as $uId => $uData)
-                                                <option value="{{ $uId }}" {{ $item['unit_id'] == $uId ? 'selected' : '' }}>
-                                                    {{ $uData['name'] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
 
                                         @if(($item['discount_percent'] ?? 0) > 0)
-                                            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1 rounded uppercase">
+                                            <span class="text-[10px] text-amber-600 font-normal bg-amber-50 px-1 rounded uppercase">
                                                 -{{ $item['discount_percent'] }}%
                                             </span>
                                         @endif
@@ -144,7 +133,7 @@
                                             }
                                         @endphp
                                         @if($isWholesale)
-                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-bold uppercase tracking-tighter">Grosir</span>
+                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-normal uppercase tracking-tighter">Grosir</span>
                                         @endif
                                     </div>
 
@@ -601,6 +590,75 @@
                             </div>
                         </div>
                     @endif
+
+                    <!-- Patient Information Section -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4" x-data="{ showPatient: @entangle('includePatientInfo').live }">
+                        <div class="flex items-center gap-3 mb-3">
+                            <input type="checkbox" 
+                                   id="includePatient" 
+                                   wire:model.live="includePatientInfo"
+                                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="includePatient" class="text-sm font-bold text-blue-900 cursor-pointer">
+                                Tambahkan Data Pasien
+                            </label>
+                        </div>
+                        
+                        <div x-show="showPatient" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="space-y-3">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Pasien</label>
+                                    <input type="text" 
+                                           wire:model="patientName"
+                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="Nama lengkap pasien">
+                                </div>
+                                
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Dokter</label>
+                                    <input type="text" 
+                                           wire:model="patientDoctorName"
+                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="Nama dokter yang meresepkan">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
+                                    <input type="date" 
+                                           wire:model="patientBirthDate"
+                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                           max="{{ date('Y-m-d') }}">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">No. Telepon</label>
+                                    <input type="text" 
+                                           wire:model="patientPhone"
+                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="08xx-xxxx-xxxx">
+                                </div>
+                                
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Alamat</label>
+                                    <textarea wire:model="patientAddress"
+                                              rows="2"
+                                              class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                              placeholder="Alamat lengkap pasien"></textarea>
+                                </div>
+                                
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Email (Opsional)</label>
+                                    <input type="email" 
+                                           wire:model="patientEmail"
+                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="email@example.com">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Cash Input (Only for Cash) -->
                     @if($payment_method == 'cash')

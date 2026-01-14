@@ -6,14 +6,21 @@
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="mb-4 flex flex-row gap-4">
+        <div class="mb-4 flex items-center justify-between gap-4">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input type="text" wire:model.live="search" placeholder="Cari kategori..." 
+                    class="w-full md:w-64 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+                    style="padding-left: 2.75rem !important;">
+            </div>
+
             <button wire:click="openModal"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>Tambah Kategori</span>
+                class="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0" title="Tambah Kategori">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span class="hidden sm:inline">Tambah Kategori</span>
             </button>
-            <input type="text" wire:model.live="search" placeholder="Cari kategori..." 
-                class="w-64 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div class="overflow-x-auto">

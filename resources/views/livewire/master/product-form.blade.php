@@ -1,15 +1,14 @@
-<div class="p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
+<div class="p-3 sm:p-6">
+    <div class="flex justify-between items-center mb-4 sm:mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">
             {{ $product_id ? 'Edit Produk' : 'Tambah Produk' }}
         </h2>
-        <a href="{{ route('products.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center gap-1">
+        <a href="{{ route('products.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-bold flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition" title="Kembali ke Daftar Produk">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6">
         <form wire:submit="save">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Obat -->
@@ -164,6 +163,7 @@
 
                         <!-- Controls -->
                         <div class="flex-1 space-y-3">
+                            <p class="text-xs text-gray-500 italic">📷 Upload gambar produk (Format: JPG, PNG. Maksimal: 2MB)</p>
                             <input type="file" wire:model="image" accept="image/*" class="block w-full text-sm text-gray-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
@@ -171,7 +171,6 @@
                                 file:bg-blue-50 file:text-blue-700
                                 hover:file:bg-blue-100
                             "/>
-                            <p class="text-xs text-gray-500">Format: JPG, PNG. Maks: 2MB.</p>
                             @error('image') <span class="text-red-500 text-sm italic block">{{ $message }}</span> @enderror
 
                             @if($current_image_path && !$delete_image && !$image)
@@ -190,11 +189,11 @@
                 @endif
             </div>
 
-            <div class="mt-8 flex justify-end gap-3 border-t pt-6">
-                <a href="{{ route('products.index') }}" wire:navigate class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
+            <div class="mt-8 flex flex-col sm:flex-row justify-end gap-3 border-t pt-6">
+                <a href="{{ route('products.index') }}" wire:navigate class="w-full sm:w-auto px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
                     Batal
                 </a>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
+                <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
                     {{ $product_id ? 'Update' : 'Simpan' }}
                 </button>
             </div>

@@ -821,7 +821,7 @@
                                     value="{{ $item['qty'] }}"
                                     class="w-8 text-center bg-transparent border-none text-sm font-bold p-0 focus:ring-0" 
                                     readonly>
-                             <button wire:click="updateQty({{ $id }}, {{ $item['qty'] + 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600">
+                             <button wire:click="updateQty({{ $id }}, {{ (float)$item['qty'] + 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600">
                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                              </button>
                          </div>

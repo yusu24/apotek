@@ -48,6 +48,11 @@ class UserForm extends Component
         'manage suppliers' => false,
         'manage pos settings' => false,
         'manage opening balances' => false,
+        'manage sales returns' => false,
+        'manage purchase returns' => false,
+        'view trial balance' => false,
+        'view product margin report' => false,
+        'view stock movements' => false,
         'import_master_data' => false,
     ];
 

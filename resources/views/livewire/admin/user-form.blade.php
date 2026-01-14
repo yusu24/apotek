@@ -110,9 +110,9 @@
                             </h4>
                             <div class="space-y-4">
                                 @php
-                                    $stockItems = [
                                         'view stock' => 'Stok & Opname',
                                         'adjust stock' => 'Penyesuaian Stok',
+                                        'view stock movements' => 'Riwayat Mutasi Stok',
                                         'view purchase orders' => 'Pesanan (PO)',
                                         'view goods receipts' => 'Penerimaan Pesanan'
                                     ];
@@ -152,11 +152,12 @@
                             </h4>
                             <div class="space-y-4">
                                 @php
-                                    $financeItems = [
                                         'view profit loss' => 'Laporan Laba Rugi',
                                         'view income statement' => 'Laporan Arus Kas',
                                         'view balance sheet' => 'Laporan Neraca',
+                                        'view trial balance' => 'Neraca Saldo',
                                         'view ppn report' => 'Laporan PPN',
+                                        'view product margin report' => 'Laporan Margin Produk',
                                         'view ap aging report' => 'Laporan Umur Hutang',
                                         'manage opening balances' => 'Neraca Awal (Saldo Awal)',
                                         'view general ledger' => 'Buku Besar'

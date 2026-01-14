@@ -105,10 +105,11 @@ class RoleSeeder extends Seeder
             'view activity logs',
             'manage security',
             
-            // System Maintenance
-            'backup database',
-            'restore database',
             'system maintenance',
+            'manage sales returns',
+            'manage purchase returns',
+            'view trial balance',
+            'import_master_data',
         ];
 
         foreach ($permissions as $permission) {

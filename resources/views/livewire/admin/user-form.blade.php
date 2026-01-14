@@ -109,14 +109,15 @@
                                 Stok & Pengadaan
                             </h4>
                             <div class="space-y-4">
-                                @php
-                                        'view stock' => 'Stok & Opname',
-                                        'adjust stock' => 'Penyesuaian Stok',
-                                        'view stock movements' => 'Riwayat Mutasi Stok',
-                                        'view purchase orders' => 'Pesanan (PO)',
-                                        'view goods receipts' => 'Penerimaan Pesanan'
-                                    ];
-                                @endphp
+                                    @php
+                                        $stockItems = [
+                                            'view stock' => 'Stok & Opname',
+                                            'adjust stock' => 'Penyesuaian Stok',
+                                            'view stock movements' => 'Riwayat Mutasi Stok',
+                                            'view purchase orders' => 'Pesanan (PO)',
+                                            'view goods receipts' => 'Penerimaan Pesanan'
+                                        ];
+                                    @endphp
                                 @foreach($stockItems as $perm => $label)
                                 <label class="flex items-center group cursor-pointer {{ $role_name === 'super-admin' ? 'opacity-50' : '' }}">
                                     <input type="checkbox" wire:model="menu_permissions.{{ $perm }}" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 transition cursor-pointer" {{ $role_name === 'super-admin' ? 'checked' : '' }}>
@@ -152,6 +153,7 @@
                             </h4>
                             <div class="space-y-4">
                                 @php
+                                    $financeItems = [
                                         'view profit loss' => 'Laporan Laba Rugi',
                                         'view income statement' => 'Laporan Arus Kas',
                                         'view balance sheet' => 'Laporan Neraca',

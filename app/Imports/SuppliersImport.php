@@ -9,11 +9,6 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class SuppliersImport implements ToModel, WithHeadingRow, WithValidation
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
     public function model(array $row)
     {
         return new Supplier([
@@ -27,7 +22,8 @@ class SuppliersImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'nama_supplier' => 'required|string',
+            'nama_supplier' => 'required|string|max:255',
+            'telepon'       => 'nullable|string|max:20',
         ];
     }
 }

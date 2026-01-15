@@ -8,7 +8,7 @@ use App\Services\AccountingService;
 class AgingReport extends Component
 {
     public $reportData = null;
-    public $activeTab = 'all'; // all, 0-30, 31-60, 61-90, >90
+    public $activeTab = 'all'; // all, 0-7, 8-15, 16-30, 31-45, 45+
     public $type = 'ap'; // ap (Hutang), ar (Piutang)
     public $showPaid = false; // Toggle to show paid records
 
@@ -101,8 +101,10 @@ class AgingReport extends Component
 
     public function exportPdf()
     {
-        // Parameterize export route if needed later
-        return redirect()->route('pdf.ap-aging-report'); 
+        return redirect()->route('pdf.aging-report', [
+            'type' => $this->type,
+            'showPaid' => $this->showPaid
+        ]); 
     }
 
     public function render()

@@ -78,11 +78,11 @@
                         </div>
 
                         <!-- Date Range Selection -->
-                        <div class="flex flex-1 items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2 w-full sm:w-auto overflow-x-auto">
+                        <div class="flex flex-none items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2 w-auto overflow-x-auto">
                             <span class="text-xs font-bold text-gray-400 uppercase pl-1 whitespace-nowrap">Exp:</span>
-                            <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-36">
+                            <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-32">
                             <span class="text-gray-300">/</span>
-                            <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-36">
+                            <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-32">
                         </div>
 
                         <!-- Print Button -->

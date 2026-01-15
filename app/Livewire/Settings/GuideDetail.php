@@ -124,7 +124,7 @@ class GuideDetail extends Component
             'stock' => [
                 'title' => 'Stok & Inventori',
                 'image' => 'guide_stock.png',
-                'description' => 'Kelola persediaan barang dengan sistem batch dan expired date. Modul ini memastikan Anda menjual produk dengan prinsip FEFO (First Expired First Out).',
+                'description' => 'Kelola persediaan barang dengan sistem batch dan expired date. Modul ini memastikan Anda menjual produk with prinsip FEFO (First Expired First Out).',
                 'screenshots' => [],
                 'golden_rules' => [
                     'Jangan biarkan produk **Expired** tetap berada di rak display.',
@@ -299,13 +299,44 @@ class GuideDetail extends Component
                     ['label' => 'Cetak Panduan', 'func' => 'Mencetak buku panduan untuk dokumentasi fisik apotek.']
                 ],
                 'procedures' => [
-                    ['title' => 'Setup Awal Aplikasi', 'desc' => '1. Login dengan akun admin.\\n2. Buka Settings → Pengaturan Toko, isi data apotek.\\n3. Buka Finance → Saldo Awal, input saldo kas dan bank.\\n4. Klik Simpan Saldo Awal.'],
+                    ['title' => 'Setup Awal Aplikasi', 'desc' => '1. Login with akun admin.\\n2. Buka Settings → Pengaturan Toko, isi data apotek.\\n3. Buka Finance → Saldo Awal, input saldo kas dan bank.\\n4. Klik Simpan Saldo Awal.'],
                     ['title' => 'Input Data Produk Pertama', 'desc' => '1. Buat kategori di Master → Kategori.\\n2. Tambah satuan di Master → Master Satuan.\\n3. Tambah supplier di Master → Supplier.\\n4. Buat produk di Master → Data Obat/Produk.\\n5. Isi nama, barcode, kategori, satuan, dan harga jual.'],
                     ['title' => 'Penerimaan Barang Pertama', 'desc' => '1. Buat PO di Procurement → Purchase Order (opsional).\\n2. Buka Procurement → Penerimaan Barang.\\n3. Isi No. Surat Jalan dan pilih metode pembayaran.\\n4. Input detail: batch, exp date, qty, dan harga beli.\\n5. Klik Proses Penerimaan & Update Stok.'],
                     ['title' => 'Transaksi Penjualan Pertama', 'desc' => '1. Buka menu Kasir (POS).\\n2. Scan barcode atau pilih produk.\\n3. Atur qty jika perlu.\\n4. Klik Bayar Sekarang.\\n5. Input uang diterima dan klik Selesai.'],
                     ['title' => 'Melihat Laporan Keuangan', 'desc' => '1. Buka Finance → Laba Rugi.\\n2. Pilih periode (bulan/tahun).\\n3. Review pendapatan, HPP, beban, dan laba bersih.\\n4. Export PDF jika perlu untuk arsip.']
                 ],
                 'form_fields' => []
+            ],
+            'import-migration' => [
+                'title' => 'Migrasi Data (Excel)',
+                'image' => 'guide_migration.png',
+                'description' => 'Fitur Migrasi Data memungkinkan Anda untuk memindahkan data dari sistem lama atau file Excel ke dalam aplikasi Apotek ini secara massal. Mendukung data Supplier, Pelanggan, Produk, Stok Awal, dan Daftar Akun (COA).',
+                'screenshots' => [],
+                'golden_rules' => [
+                    'Selalu gunakan **Template Excel** yang disediakan oleh sistem.',
+                    'Jangan merubah **Nama Kolom** (Header) pada baris pertama file Excel.',
+                    'Pastikan format data (terutama angka dan tanggal) sesuai contoh di template.',
+                    'Gunakan fitur **Import COA** sebelum melakukan import data lainnya jika terdapat referensi akun.'
+                ],
+                'sub_menus' => [
+                    ['name' => 'Import Supplier', 'func' => 'Memasukkan data kontak dan alamat pemasok obat.'],
+                    ['name' => 'Import Pelanggan', 'func' => 'Memasukkan database pelanggan tetap untuk transaksi POS.'],
+                    ['name' => 'Import COA (Akun)', 'func' => 'Menyusun Chart of Accounts / Daftar Akun untuk laporan keuangan.'],
+                    ['name' => 'Import Produk', 'func' => 'Memasukkan data obat-obatan, barcode, dan kategori secara massal.'],
+                    ['name' => 'Import Stok', 'func' => 'Menambah saldo awal persediaan barang per batch dan expired date.']
+                ],
+                'buttons' => [
+                    ['label' => 'Template Excel', 'func' => 'Mengunduh file contoh untuk diisi dengan data Anda.'],
+                    ['label' => 'Pilih File', 'func' => 'Menjelajahi komputer untuk memilih file Excel yang akan diunggah.'],
+                    ['label' => 'Import', 'func' => 'Memulai proses pemindahan data ke sistem. Tunggu hingga muncul notifikasi sukses.']
+                ],
+                'procedures' => [
+                    ['title' => 'Langkah Migrasi Data', 'desc' => '1. Pergi ke halaman manajemen terkait (misal: Master → Supplier).\n2. Klik tombol "Import Excel".\n3. Klik "Download Template" untuk mendapatkan format yang benar.\n4. Isi template tersebut (Copy-Paste dari data lama Anda).\n5. Kembali ke aplikasi, klik "Import Excel" lagi.\n6. Pilih file yang sudah diisi, lalu klik "Import".'],
+                    ['title' => 'Menangani Gagal Import', 'desc' => 'Jika terjadi error, sistem akan menampilkan baris mana yang bermasalah. Perbaiki data di file Excel Anda (misal: format telepon salah atau kode akun duplikat), simpan, dan coba import kembali.']
+                ],
+                'form_fields' => [
+                    ['name' => 'File Excel', 'description' => 'File dengan ekstensi .xlsx yang berisi data migrasi.', 'required' => true]
+                ]
             ],
         ];
 

@@ -99,6 +99,15 @@ class UserGuide extends Component
                 'color' => 'emerald',
                 'category' => 'Panduan'
             ],
+            [
+                'title' => 'Migrasi Data (Excel)',
+                'slug' => 'import-migration',
+                'description' => 'Panduan migrasi data master (Supplier, Pelanggan, Akun) dari sistem lama menggunakan template Excel.',
+                'updated_at' => '15 Jan 2026',
+                'icon' => 'arrow-down-on-square-stack',
+                'color' => 'amber',
+                'category' => 'Migrasi'
+            ],
         ];
 
         $guides = $allGuides;

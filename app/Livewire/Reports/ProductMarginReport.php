@@ -44,24 +44,92 @@ class ProductMarginReport extends Component
     public function getProductsWithMarginProperty()
     {
         $query = Product::with(['category', 'unit'])
-            ->select('products.*')
-            ->leftJoin('goods_receipt_items', function($join) {
-                $join->on('products.id', '=', 'goods_receipt_items.product_id')
-                    ->whereRaw('goods_receipt_items.id = (
-                        SELECT id FROM goods_receipt_items pi2 
-                        WHERE pi2.product_id = products.id 
-                        ORDER BY pi2.created_at DESC 
-                        LIMIT 1
-                    )');
-            })
-            ->selectRaw('goods_receipt_items.buy_price as last_buy_price')
-            ->selectRaw('products.sell_price')
-            ->selectRaw('(products.sell_price - COALESCE(goods_receipt_items.buy_price, 0)) as margin_amount')
-            ->selectRaw('CASE 
-                WHEN goods_receipt_items.buy_price > 0 
-                THEN ((products.sell_price - goods_receipt_items.buy_price) / goods_receipt_items.buy_price * 100) 
+            ->select([
+                'products.id',
+                'products.name',
+                'products.barcode',
+                'products.sell_price',
+                'products.category_id',
+                'products.unit_id',
+            ])
+            ->selectRaw('
+                COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) as last_buy_price
+            ')
+            ->selectRaw('
+                (products.sell_price - COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                )) as margin_amount
+            ')
+            ->selectRaw('
+                CASE 
+                WHEN COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) > 0 
+                THEN ((products.sell_price - COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                )) / COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) * 100) 
                 ELSE 0 
-            END as margin_percentage');
+                END as margin_percentage
+            ');
 
         // Search
         if ($this->search) {

@@ -11,12 +11,11 @@ class Batch extends Model
 
     protected $fillable = [
         'product_id', 'batch_no', 'expired_date', 'stock_in', 
-        'stock_current', 'buy_price', 'sell_price'
+        'stock_current', 'buy_price'
     ];
 
     protected $casts = [
         'buy_price' => 'float',
-        'sell_price' => 'float',
         'stock_initial' => 'integer',
         'stock_current' => 'integer',
         'expired_date' => 'date',

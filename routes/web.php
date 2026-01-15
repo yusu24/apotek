@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('profile', 'profile')
         ->name('profile');
 
-    // Master Data (Protected by role via middleware or component logic later)
+    // Master Data
     Route::get('/products', App\Livewire\Master\ProductIndex::class)->name('products.index');
     Route::get('/products/create', App\Livewire\Master\ProductForm::class)->name('products.create');
     Route::get('/products/{id}/edit', App\Livewire\Master\ProductForm::class)->name('products.edit');
@@ -36,15 +36,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('master.units')
         ->middleware('permission:manage master data');
     Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)->name('master.suppliers');
+    Route::get('/master/customers', App\Livewire\Master\CustomerManagement::class)->name('master.customers');
 
-    // Make sure to add this inside the auth middleware group
+
     Route::controller(App\Http\Controllers\ImportController::class)->group(function () {
         Route::get('/import/download-product-template', 'downloadProductTemplate')->name('import.download-product-template');
         Route::get('/import/download-supplier-template', 'downloadSupplierTemplate')->name('import.download-supplier-template');
         Route::get('/import/download-stock-template', 'downloadStockTemplate')->name('import.download-stock-template');
+        Route::get('/import/download-customer-template', 'downloadCustomerTemplate')->name('import.download-customer-template');
+        Route::get('/import/download-account-template', 'downloadAccountTemplate')->name('import.download-account-template');
+        
         Route::post('/import/products', 'importProducts')->name('import.products');
         Route::post('/import/suppliers', 'importSuppliers')->name('import.suppliers');
         Route::post('/import/stock', 'importStock')->name('import.stock');
+        Route::post('/import/customers', 'importCustomers')->name('import.customers');
+        Route::post('/import/accounts', 'importAccounts')->name('import.accounts');
     });
 
 
@@ -83,6 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('opening-balance')
             ->middleware('permission:manage opening balances');
         Route::get('/trial-balance', App\Livewire\Reports\TrialBalance::class)->name('trial-balance');
+        Route::get('/cash-flow', App\Livewire\Reports\CashFlow::class)->name('cash-flow');
     });
     // Accounting
     Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
@@ -109,8 +116,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/goods-receipt/{id}', [App\Http\Controllers\PdfController::class, 'exportGoodsReceipt'])->name('pdf.goods-receipt');
     Route::get('/pdf/stock-history/{productId}', [App\Http\Controllers\PdfController::class, 'exportStockHistory'])->name('pdf.stock-history');
     Route::get('/pdf/ppn-report', [App\Http\Controllers\PdfController::class, 'exportPpnReport'])->name('pdf.ppn-report');
-    Route::get('/pdf/ap-aging-report', [App\Http\Controllers\PdfController::class, 'exportApAgingReport'])->name('pdf.ap-aging-report');
+    Route::get('/pdf/aging-report', [App\Http\Controllers\PdfController::class, 'exportAgingReport'])->name('pdf.aging-report');
     Route::get('/pdf/user-manual', [App\Http\Controllers\PdfController::class, 'exportUserManual'])->name('pdf.user-manual');
+    Route::get('/pdf/cash-flow', [App\Http\Controllers\PdfController::class, 'exportCashFlow'])->name('pdf.cash-flow');
+    Route::get('/pdf/profit-loss', [App\Http\Controllers\PdfController::class, 'exportIncomeStatement'])->name('pdf.profit-loss');
+    Route::get('/pdf/balance-sheet', [App\Http\Controllers\PdfController::class, 'exportBalanceSheet'])->name('pdf.balance-sheet');
+    Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
 
 
     // Settings (Super Admin only)

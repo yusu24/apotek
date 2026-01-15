@@ -24,12 +24,17 @@ class PdfController extends Controller
             'user'
         ])->findOrFail($id);
 
+        $apotekName = \App\Models\Setting::get('store_name');
+        if (!$apotekName || $apotekName === 'Laravel') {
+            $apotekName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
         // Prepare data for PDF
         $data = [
             'receipt' => $receipt,
             'printedBy' => auth()->user()->name,
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
-            'apotekName' => 'Apotek',
+            'apotekName' => $apotekName,
         ];
 
         // Generate PDF
@@ -99,6 +104,11 @@ class PdfController extends Controller
         // Format period for header
         $period = $this->formatPeriod($startDate, $endDate);
 
+        $apotekName = \App\Models\Setting::get('store_name');
+        if (!$apotekName || $apotekName === 'Laravel') {
+            $apotekName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
         // Prepare data for PDF
         $data = [
             'product' => $product,
@@ -111,7 +121,7 @@ class PdfController extends Controller
             'filterType' => $filterType,
             'printedBy' => auth()->user()->name,
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
-            'apotekName' => 'Apotek',
+            'apotekName' => $apotekName,
         ];
 
         // Generate PDF
@@ -151,11 +161,25 @@ class PdfController extends Controller
         
         $monthName = Carbon::create($year, $month)->format('F Y');
         
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
         $pdf = PDF::loadView('pdf.ppn-report', [
             'data' => $data,
             'year' => $year,
             'month' => $month,
-            'monthName' => $monthName
+            'monthName' => $monthName,
+            'store' => $store,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
         ]);
         
         $filename = 'Laporan-PPN-' . $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '.pdf';
@@ -164,20 +188,39 @@ class PdfController extends Controller
     }
 
     /**
-     * Export AP Aging Report to PDF
+     * Export Aging Report (AR/AP) to PDF
      */
-    public function exportApAgingReport()
+    public function exportAgingReport(Request $request)
     {
+        $type = $request->get('type', 'ap');
+        $includePaid = $request->get('showPaid', false);
+
         $accountingService = new \App\Services\AccountingService();
-        $reportData = $accountingService->getApAgingReport();
+        $reportData = $accountingService->getGroupedAgingReport($type, $includePaid);
         
-        $pdf = PDF::loadView('pdf.ap-aging-report', [
-            'data' => $reportData,
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.aging-report', [
+            'reportData' => $reportData,
+            'store' => $store,
+            'type' => $type,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
         ]);
         
-        $filename = 'Laporan-Umur-Hutang-' . Carbon::now()->format('Y-m-d') . '.pdf';
+        $title = $type === 'ar' ? 'Piutang' : 'Hutang';
+        $filename = 'Laporan-Aging-' . $title . '-' . Carbon::now()->format('Ymd') . '.pdf';
         
-        return $pdf->setPaper('a4', 'landscape')->download($filename);
+        return $pdf->setPaper('a4', 'landscape')->stream($filename);
     }
 
     /**
@@ -199,11 +242,17 @@ class PdfController extends Controller
         // Convert markdown to HTML (basic conversion)
         $html = $this->convertMarkdownToHtml($markdown);
         
+        $apotekName = \App\Models\Setting::get('store_name');
+        if (!$apotekName || $apotekName === 'Laravel') {
+            $apotekName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
         // Prepare data for PDF
         $data = [
             'content' => $html,
             'printedBy' => auth()->user()->name,
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+            'apotekName' => $apotekName,
         ];
         
         // Generate PDF
@@ -245,5 +294,149 @@ class PdfController extends Controller
         $html = nl2br($html);
         
         return $html;
+    }
+
+    /**
+     * Export Cash Flow Report to PDF
+     */
+    public function exportCashFlow(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+
+        $accountingService = new \App\Services\AccountingService();
+        $data = $accountingService->getCashFlowStatement($startDate, $endDate);
+        
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.cash-flow', [
+            'data' => $data,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Laporan-Arus-Kas-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Income Statement (Profit & Loss) to PDF
+     */
+    public function exportIncomeStatement(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+
+        $accountingService = new \App\Services\AccountingService();
+        $reportData = $accountingService->getIncomeStatement($startDate, $endDate);
+        
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.income-statement', [
+            'reportData' => $reportData,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Laporan-Laba-Rugi-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Balance Sheet to PDF
+     */
+    public function exportBalanceSheet(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+
+        $accountingService = new \App\Services\AccountingService();
+        $reportData = $accountingService->getBalanceSheet($startDate, $endDate);
+        
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.balance-sheet', [
+            'reportData' => $reportData,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Neraca-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+    /**
+     * Export General Ledger to PDF
+     */
+    public function exportLedger(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+        $accountId = $request->get('accountId');
+
+        $accountingService = new \App\Services\AccountingService();
+        $reportData = $accountingService->getLedgerReport($startDate, $endDate, $accountId);
+        
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.ledger', [
+            'reportData' => $reportData,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Buku-Besar-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'landscape')->stream($filename);
     }
 }

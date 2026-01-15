@@ -840,15 +840,17 @@ class AccountingService
             ->get();
             
         $agingData = [
-            '0-30' => [],
-            '31-60' => [],
-            '61-90' => [],
-            '>90' => [],
+            '0-7' => [],
+            '8-15' => [],
+            '16-30' => [],
+            '31-45' => [],
+            '45+' => [],
             'summary' => [
-                '0-30' => 0,
-                '31-60' => 0,
-                '61-90' => 0,
-                '>90' => 0,
+                '0-7' => 0,
+                '8-15' => 0,
+                '16-30' => 0,
+                '31-45' => 0,
+                '45+' => 0,
                 'total' => 0
             ]
         ];
@@ -872,25 +874,28 @@ class AccountingService
                 'status' => $receipt->payment_status
             ];
             
-            if ($age <= 30) {
-                $agingData['0-30'][] = $item;
-                $agingData['summary']['0-30'] += $outstanding;
-            } elseif ($age <= 60) {
-                $agingData['31-60'][] = $item;
-                $agingData['summary']['31-60'] += $outstanding;
-            } elseif ($age <= 90) {
-                $agingData['61-90'][] = $item;
-                $agingData['summary']['61-90'] += $outstanding;
+            if ($age <= 7) {
+                $agingData['0-7'][] = $item;
+                $agingData['summary']['0-7'] += $outstanding;
+            } elseif ($age <= 15) {
+                $agingData['8-15'][] = $item;
+                $agingData['summary']['8-15'] += $outstanding;
+            } elseif ($age <= 30) {
+                $agingData['16-30'][] = $item;
+                $agingData['summary']['16-30'] += $outstanding;
+            } elseif ($age <= 45) {
+                $agingData['31-45'][] = $item;
+                $agingData['summary']['31-45'] += $outstanding;
             } else {
-                $agingData['>90'][] = $item;
-                $agingData['summary']['>90'] += $outstanding;
+                $agingData['45+'][] = $item;
+                $agingData['summary']['45+'] += $outstanding;
             }
             
             $agingData['summary']['total'] += $outstanding;
         }
         
         // Sort each bucket by age descending (oldest first)
-        foreach (['0-30', '31-60', '61-90', '>90'] as $key) {
+        foreach (['0-7', '8-15', '16-30', '31-45', '45+'] as $key) {
             usort($agingData[$key], function($a, $b) {
                 return $b['age'] <=> $a['age'];
             });
@@ -914,15 +919,17 @@ public function getArAgingReport($includePaid = false)
         ->get();
         
     $agingData = [
-        '0-30' => [],
-        '31-60' => [],
-        '61-90' => [],
-        '>90' => [],
+        '0-7' => [],
+        '8-15' => [],
+        '16-30' => [],
+        '31-45' => [],
+        '45+' => [],
         'summary' => [
-            '0-30' => 0,
-            '31-60' => 0,
-            '61-90' => 0,
-            '>90' => 0,
+            '0-7' => 0,
+            '8-15' => 0,
+            '16-30' => 0,
+            '31-45' => 0,
+            '45+' => 0,
             'total' => 0
         ]
     ];
@@ -954,25 +961,28 @@ public function getArAgingReport($includePaid = false)
             'status' => $receivable->status
         ];
         
-        if ($age <= 30) {
-            $agingData['0-30'][] = $item;
-            $agingData['summary']['0-30'] += $outstanding;
-        } elseif ($age <= 60) {
-            $agingData['31-60'][] = $item;
-            $agingData['summary']['31-60'] += $outstanding;
-        } elseif ($age <= 90) {
-            $agingData['61-90'][] = $item;
-            $agingData['summary']['61-90'] += $outstanding;
+        if ($age <= 7) {
+            $agingData['0-7'][] = $item;
+            $agingData['summary']['0-7'] += $outstanding;
+        } elseif ($age <= 15) {
+            $agingData['8-15'][] = $item;
+            $agingData['summary']['8-15'] += $outstanding;
+        } elseif ($age <= 30) {
+            $agingData['16-30'][] = $item;
+            $agingData['summary']['16-30'] += $outstanding;
+        } elseif ($age <= 45) {
+            $agingData['31-45'][] = $item;
+            $agingData['summary']['31-45'] += $outstanding;
         } else {
-            $agingData['>90'][] = $item;
-            $agingData['summary']['>90'] += $outstanding;
+            $agingData['45+'][] = $item;
+            $agingData['summary']['45+'] += $outstanding;
         }
         
         $agingData['summary']['total'] += $outstanding;
     }
     
     // Sort each bucket by age descending (oldest first)
-    foreach (['0-30', '31-60', '61-90', '>90'] as $key) {
+    foreach (['0-7', '8-15', '16-30', '31-45', '45+'] as $key) {
         usort($agingData[$key], function($a, $b) {
             return $b['age'] <=> $a['age'];
         });
@@ -980,6 +990,130 @@ public function getArAgingReport($includePaid = false)
     
     return $agingData;
 }
+
+/**
+ * Get Grouped Aging Report for PDF
+ */
+public function getGroupedAgingReport($type = 'ar', $includePaid = false)
+{
+    $buckets = [
+        '7' => ['label' => '<=7', 'max' => 7],
+        '15' => ['label' => '<=15', 'max' => 15],
+        '30' => ['label' => '<=30', 'max' => 30],
+        '45' => ['label' => '<=45', 'max' => 45],
+        'plus' => ['label' => '>45', 'max' => 999999],
+    ];
+
+    $groupedData = [];
+    $totalSummary = array_fill_keys(array_keys($buckets), 0);
+    $totalSummary['total'] = 0;
+
+    if ($type === 'ar') {
+        $statuses = ['partial', 'unpaid'];
+        if ($includePaid) $statuses[] = 'paid';
+        
+        $items = \App\Models\Receivable::with(['customer', 'sale'])
+            ->whereIn('status', $statuses)
+            ->get();
+            
+        foreach ($items as $item) {
+            $age = $item->created_at->diffInDays(now());
+            $outstanding = $item->remaining_balance;
+            if (!$includePaid && $outstanding <= 0.01) continue;
+
+            $entityId = $item->customer_id ?? 0;
+            $entityName = $item->customer->name ?? 'Unknown';
+            
+            if (!isset($groupedData[$entityId])) {
+                $groupedData[$entityId] = [
+                    'entity_id' => $entityId,
+                    'code' => 'C-' . str_pad($entityId, 5, '0', STR_PAD_LEFT),
+                    'name' => $entityName,
+                    'limit' => -1,
+                    'total' => 0,
+                    'buckets' => array_fill_keys(array_keys($buckets), 0),
+                    'invoices' => []
+                ];
+            }
+
+            $bucketKey = $this->getBucketKeyForGrouped($age);
+            $groupedData[$entityId]['buckets'][$bucketKey] += $outstanding;
+            
+            $groupedData[$entityId]['invoices'][] = [
+                'number' => $item->sale->invoice_no ?? '-',
+                'date' => $item->created_at->format('d/m/Y'),
+                'age' => $age,
+                'amount' => $outstanding,
+                'bucket' => $bucketKey
+            ];
+        }
+    } else {
+        $statuses = ['pending', 'partial'];
+        if ($includePaid) $statuses[] = 'paid';
+        
+        $items = \App\Models\GoodsReceipt::with('purchaseOrder.supplier')
+            ->whereIn('payment_status', $statuses)
+            ->get();
+            
+        foreach ($items as $item) {
+            $age = \Carbon\Carbon::parse($item->received_date)->diffInDays(now());
+            $outstanding = $item->total_amount - $item->paid_amount;
+            if (!$includePaid && $outstanding <= 0.01) continue;
+
+            $entityId = $item->purchaseOrder->supplier_id ?? 0;
+            $entityName = $item->purchaseOrder->supplier->name ?? 'Unknown';
+            
+            if (!isset($groupedData[$entityId])) {
+                $groupedData[$entityId] = [
+                    'entity_id' => $entityId,
+                    'code' => 'S-' . str_pad($entityId, 5, '0', STR_PAD_LEFT),
+                    'name' => $entityName,
+                    'limit' => -1,
+                    'total' => 0,
+                    'buckets' => array_fill_keys(array_keys($buckets), 0),
+                    'invoices' => []
+                ];
+            }
+
+            $bucketKey = $this->getBucketKeyForGrouped($age);
+            $groupedData[$entityId]['buckets'][$bucketKey] += $outstanding;
+            
+            $groupedData[$entityId]['invoices'][] = [
+                'number' => $item->delivery_note_number,
+                'date' => \Carbon\Carbon::parse($item->received_date)->format('d/m/Y'),
+                'age' => $age,
+                'amount' => $outstanding,
+                'bucket' => $bucketKey
+            ];
+        }
+    }
+
+    // Calculate entity totals and global summary
+    foreach ($groupedData as &$entity) {
+        $entity['total'] = array_sum($entity['buckets']);
+        foreach ($entity['buckets'] as $k => $v) {
+            $totalSummary[$k] += $v;
+        }
+        $totalSummary['total'] += $entity['total'];
+    }
+
+    return [
+        'buckets' => $buckets,
+        'groupedData' => $groupedData,
+        'totalSummary' => $totalSummary,
+        'type' => $type
+    ];
+}
+
+private function getBucketKeyForGrouped($age)
+{
+    if ($age <= 7) return '7';
+    if ($age <= 15) return '15';
+    if ($age <= 30) return '30';
+    if ($age <= 45) return '45';
+    return 'plus';
+}
+
 
 /**
  * Process Receivable Payment
@@ -1064,4 +1198,215 @@ public function processReceivablePayment($receivableId, $data)
         \DB::rollBack();
         throw $e;
     }
-}    }
+    }
+
+    /**
+     * Generate Cash Flow Statement (Direct Method approximation)
+     */
+    public function getCashFlowStatement($startDate = null, $endDate = null): array
+    {
+        $startDate = $startDate ?? now()->startOfMonth()->format('Y-m-d');
+        $endDate = $endDate ?? now()->endOfMonth()->format('Y-m-d');
+
+        // Get Cash and Bank accounts IDs
+        $cashBankAccountIds = Account::whereIn('category', ['cash', 'bank'])
+             ->orWhere('code', 'LIKE', '1-1%') // Fallback assumption for assets
+             ->pluck('id');
+
+        // 1. Operating Activities
+        
+        // Receipts from customers (Sales - Returns)
+        $salesReceipts = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->where('journal_entries.source', 'sale')
+            ->sum('journal_entry_lines.debit');
+            
+        // Include Receivable Payments as Receipts
+        $receivableReceipts = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->where('journal_entries.source', 'receivable_payment')
+            ->sum('journal_entry_lines.debit');
+            
+        $salesRefunds = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->where('journal_entries.source', 'sales_return')
+            ->sum('journal_entry_lines.credit');
+
+        $receiptsFromCustomers = ($salesReceipts + $receivableReceipts) - $salesRefunds;
+
+        // Payment to suppliers (Purchases + Supplier Payments - Returns)
+        $supplierPayments = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->whereIn('journal_entries.source', ['purchase', 'supplier_payment'])
+            ->sum('journal_entry_lines.credit');
+            
+        $purchaseRefunds = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->where('journal_entries.source', 'purchase_return')
+            ->sum('journal_entry_lines.debit');
+            
+        $paymentsToSuppliers = -($supplierPayments - $purchaseRefunds); // Outflow is negative
+
+        // Operating Expenses
+        $operatingExpenses = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->whereBetween('journal_entries.date', [$startDate, $endDate])
+            ->where('journal_entries.source', 'expense')
+            ->sum('journal_entry_lines.credit');
+            
+        $paymentsForExpenses = -($operatingExpenses); // Outflow is negative
+
+        // Other Operating (Manual entries affecting cash not caught above? For now 0)
+        $otherOperating = 0;
+
+        $netCashOperating = $receiptsFromCustomers + $paymentsToSuppliers + $paymentsForExpenses + $otherOperating;
+
+        // 2. Investing Activities
+        // Placeholder for asset purchases/sales logic
+        $purchaseAssets = 0;
+        $saleAssets = 0;
+        $otherInvesting = 0;
+        
+        $netCashInvesting = $purchaseAssets + $saleAssets + $otherInvesting;
+
+        // 3. Financing Activities
+        // Placeholder for loans/equity
+        $loans = 0;
+        $equity = 0; // Capital injection
+        
+        $netCashFinancing = $loans + $equity;
+
+        // Totals
+        $netIncrease = $netCashOperating + $netCashInvesting + $netCashFinancing;
+        
+        // Beginning Balance (Sum of all cash transactions before start date)
+        $beginningBalance = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->whereIn('journal_entry_lines.account_id', $cashBankAccountIds)
+            ->where('journal_entries.is_posted', true)
+            ->where('journal_entries.date', '<', $startDate)
+            ->select(DB::raw('SUM(debit) - SUM(credit) as balance'))
+            ->value('balance') ?? 0;
+
+        $endingBalance = $beginningBalance + $netIncrease;
+
+        return [
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            
+            // Operating
+            'receipts_from_customers' => $receiptsFromCustomers,
+            'payments_to_suppliers' => $paymentsToSuppliers,
+            'payments_for_expenses' => $paymentsForExpenses,
+            'other_operating' => $otherOperating,
+            'net_cash_operating' => $netCashOperating,
+            
+            // Investing
+            'purchase_assets' => $purchaseAssets,
+            'sale_assets' => $saleAssets,
+            'other_investing' => $otherInvesting,
+            'net_cash_investing' => $netCashInvesting,
+            
+            // Financing
+            'loans' => $loans,
+            'equity' => $equity,
+            'net_cash_financing' => $netCashFinancing,
+            
+            // Summary
+            'net_increase' => $netIncrease,
+            'beginning_balance' => $beginningBalance,
+            'ending_balance' => $endingBalance,
+        ];
+    }
+
+    /**
+     * Get General Ledger Report Data
+     * Supports single account or all accounts
+     */
+    public function getLedgerReport(string $startDate, string $endDate, ?int $accountId = null): array
+    {
+        $accounts = Account::active();
+        
+        if ($accountId) {
+            $accounts->where('id', $accountId);
+        }
+        
+        $accounts = $accounts->orderBy('code')->get();
+        $ledgerData = [];
+
+        foreach ($accounts as $account) {
+            $increaseOnDebit = in_array($account->type, ['asset', 'expense']);
+            
+            // 1. Calculate Opening Balance
+            $preLines = JournalEntryLine::whereHas('journalEntry', function($q) use ($startDate) {
+                    $q->whereDate('date', '<', $startDate)->where('is_posted', true);
+                })
+                ->where('account_id', $account->id)
+                ->get();
+
+            $openingBalance = 0;
+            foreach ($preLines as $line) {
+                if ($increaseOnDebit) {
+                    $openingBalance += ($line->debit - $line->credit);
+                } else {
+                    $openingBalance += ($line->credit - $line->debit);
+                }
+            }
+
+            // 2. Get Transaction Lines
+            $lines = JournalEntryLine::with('journalEntry')
+                ->whereHas('journalEntry', function($q) use ($startDate, $endDate) {
+                    $q->whereDate('date', '>=', $startDate)
+                      ->whereDate('date', '<=', $endDate)
+                      ->where('is_posted', true);
+                })
+                ->where('account_id', $account->id)
+                ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+                ->orderBy('journal_entries.date')
+                ->orderBy('journal_entries.id')
+                ->select('journal_entry_lines.*')
+                ->get();
+
+            // 3. Calculate Running Balance
+            $runningBalance = $openingBalance;
+            foreach ($lines as $line) {
+                if ($increaseOnDebit) {
+                    $runningBalance += ($line->debit - $line->credit);
+                } else {
+                    $runningBalance += ($line->credit - $line->debit);
+                }
+                $line->running_balance = $runningBalance;
+            }
+
+            $ledgerData[] = [
+                'account' => $account,
+                'opening_balance' => $openingBalance,
+                'lines' => $lines,
+                'ending_balance' => $runningBalance,
+            ];
+        }
+
+        return [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'data' => $ledgerData,
+        ];
+    }
+}

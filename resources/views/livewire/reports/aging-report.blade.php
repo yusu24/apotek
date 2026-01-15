@@ -6,7 +6,7 @@
         </div>
         <button wire:click="exportPdf" class="btn btn-lg btn-danger">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            Export PDF
+            Cetak PDF
         </button>
     </div>
 
@@ -26,7 +26,7 @@
     @if($reportData)
     {{-- Summary Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        @foreach(['0-30' => 'green', '31-60' => 'blue', '61-90' => 'yellow', '>90' => 'red'] as $key => $color)
+        @foreach(['0-7' => 'green', '8-15' => 'blue', '16-30' => 'yellow', '31-45' => 'orange', '45+' => 'red'] as $key => $color)
             <div class="bg-white rounded-lg shadow p-4 border-l-4 border-{{ $color }}-500 cursor-pointer hover:bg-gray-50 transition" wire:click="setActiveTab('{{ $key }}')">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xs font-bold text-gray-500 uppercase">{{ $key }} Hari</h3>
@@ -34,7 +34,7 @@
                         <svg class="w-4 h-4 text-{{ $color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                 </div>
-                <p class="text-xl font-bold text-gray-800">Rp {{ number_format($reportData['summary'][$key], 0, ',', '.') }}</p>
+                <p class="text-xl font-bold text-gray-800">Rp {{ number_format($reportData['summary'][$key] ?? 0, 0, ',', '.') }}</p>
                 <p class="text-xs mt-1 text-gray-500">Total Outstanding</p>
             </div>
         @endforeach
@@ -47,9 +47,9 @@
                 <label for="aging_period" class="block text-sm font-medium text-gray-700 mb-1">Pilih Jangka Waktu</label>
                 <select wire:model.live="activeTab" id="aging_period" class="block w-64 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                     <option value="all">Semua (Rp {{ number_format($reportData['summary']['total'], 0, ',', '.') }})</option>
-                    @foreach(['0-30', '31-60', '61-90', '>90'] as $key)
+                    @foreach(['0-7', '8-15', '16-30', '31-45', '45+'] as $key)
                         <option value="{{ $key }}">
-                            {{ $key === '>90' ? '> 90 Hari' : $key . ' Hari' }} 
+                            {{ $key === '45+' ? '> 45 Hari' : $key . ' Hari' }} 
                             (Rp {{ number_format($reportData['summary'][$key] ?? 0, 0, ',', '.') }})
                         </option>
                     @endforeach
@@ -92,13 +92,14 @@
                         $displayData = [];
                         if ($activeTab === 'all') {
                             $displayData = array_merge(
-                                $reportData['>90'], 
-                                $reportData['61-90'], 
-                                $reportData['31-60'], 
-                                $reportData['0-30']
+                                $reportData['45+'] ?? [], 
+                                $reportData['31-45'] ?? [], 
+                                $reportData['16-30'] ?? [], 
+                                $reportData['8-15'] ?? [],
+                                $reportData['0-7'] ?? []
                             );
                         } else {
-                            $displayData = $reportData[$activeTab];
+                            $displayData = $reportData[$activeTab] ?? [];
                         }
                     @endphp
 

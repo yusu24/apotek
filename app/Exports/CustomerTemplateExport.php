@@ -5,16 +5,15 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class SupplierTemplateExport implements FromArray, WithHeadings
+class CustomerTemplateExport implements FromArray, WithHeadings
 {
     public function array(): array
     {
         return [
             [
-                'CONTOH SUPPLIER A',
-                'Bapak Budi',
-                '08123456789',
-                'Jl. Contoh Alamat No. 123',
+                'CONTOH PELANGGAN A',
+                '08987654321',
+                'Jl. Melati No. 5',
             ],
         ];
     }
@@ -22,8 +21,7 @@ class SupplierTemplateExport implements FromArray, WithHeadings
     public function headings(): array
     {
         return [
-            'nama_supplier',
-            'kontak',
+            'nama_pelanggan',
             'telepon',
             'alamat',
         ];

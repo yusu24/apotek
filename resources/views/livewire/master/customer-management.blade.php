@@ -1,6 +1,5 @@
-<div class="h-full">
-    <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 h-full flex flex-col">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+<div class="p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">Kelola Pelanggan</h1>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daftar pelanggan / pasien terdaftar.</p>
@@ -117,7 +116,6 @@
             <div class="p-6 bg-gray-50/50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-700">
                 {{ $customers->links() }}
             </div>
-        </div>
     </div>
 
     <!-- Modal Form -->

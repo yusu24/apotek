@@ -8,9 +8,9 @@
             <div class="flex items-center gap-2 w-full sm:w-auto">
                 @can('import customers')
                 <div x-data="{ showImport: false }" class="relative">
-                    <button @click="showImport = !showImport" class="flex items-center justify-center p-2.5 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors border border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800" title="Import Excel">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        <span class="hidden sm:inline-block ml-2 text-sm font-semibold">Import Excel</span>
+                    <button @click="showImport = !showImport" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap w-fit shrink-0" title="Import Excel">
+                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <span class="hidden sm:inline">Import Excel</span>
                     </button>
 
                     <div x-show="showImport" @click.away="showImport = false" x-cloak class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 z-50">
@@ -19,11 +19,11 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilih File Excel (.xlsx)</label>
-                                    <input type="file" name="file" required class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400">
+                    <input type="file" name="file" required class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-400">
                                 </div>
                                 <div class="flex justify-between items-center pt-2">
                                     <a href="{{ route('import.download-customer-template') }}" class="text-xs text-blue-600 hover:underline dark:text-blue-400">Download Template</a>
-                                    <button type="submit" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-700 transition">Import Sekarang</button>
+                                    <button type="submit" class="bg-green-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-green-700 transition">Import Sekarang</button>
                                 </div>
                             </div>
                         </form>

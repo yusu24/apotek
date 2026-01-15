@@ -36,11 +36,11 @@
                 </a>
                 
                 @can('import_master_data')
-                <button x-data @click="$dispatch('open-import-modal')" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center gap-2 transition duration-200 text-sm">
+                <button x-data @click="$dispatch('open-import-modal')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center gap-2 transition duration-200 text-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                     </svg>
-                    Import Stok
+                    Import Excel
                 </button>
                 @endcan
             </div>
@@ -137,8 +137,8 @@
                         @csrf
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
-                                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
-                                    <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                                     </svg>
                                 </div>
@@ -164,8 +164,8 @@
                                                 file:mr-4 file:py-2 file:px-4
                                                 file:rounded-full file:border-0
                                                 file:text-sm file:font-semibold
-                                                file:bg-orange-50 file:text-orange-700
-                                                hover:file:bg-orange-100
+                                                file:bg-green-50 file:text-green-700
+                                                hover:file:bg-green-100
                                             "/>
                                         </div>
                                     </div>
@@ -173,7 +173,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto">Import Stok</button>
+                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
                             <button type="button" @click="openImport = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
                         </div>
                     </form>

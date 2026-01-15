@@ -90,7 +90,7 @@
                                     </button>
 
                                     <a href="{{ route('pdf.goods-receipt', $gr->id) }}" target="_blank"
-                                        class="text-gray-600 hover:text-gray-900 transition-colors duration-200" title="Cetak Surat Jalan">
+                                        class="text-red-600 hover:text-red-900 transition-colors duration-200" title="Cetak Surat Jalan">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                     </a>
                                 </div>
@@ -208,9 +208,9 @@
                     </div>
                     <div class="flex gap-3">
                         <a href="{{ route('pdf.goods-receipt', $selectedReceipt->id) }}" target="_blank"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-normal hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2 text-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                            Export PDF
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            <span>Cetak PDF</span>
                         </a>
                         <button type="button" wire:click="closeDetailModal" 
                             class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">

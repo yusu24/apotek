@@ -8,7 +8,7 @@
             <p class="text-sm text-gray-500 mt-1">Laporan Arus Kas Masuk & Keluar • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
-             <button wire:click="setThisMonth" class="btn btn-secondary">
+            <button wire:click="setThisMonth" class="btn btn-secondary">
                 Bulan Ini
             </button>
             <button wire:click="setLastMonth" class="btn btn-secondary">
@@ -22,8 +22,8 @@
 
     {{-- Period Filter --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-end">
-             <div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 items-end">
+            <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase text-[10px]">Mulai Tanggal</label>
                 <input type="date" wire:model.live="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
@@ -31,16 +31,16 @@
                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase text-[10px]">Sampai Tanggal</label>
                 <input type="date" wire:model.live="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 font-medium">
             </div>
-             <div class="flex gap-2">
-                  <a href="{{ route('pdf.cash-flow', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-lg btn-primary bg-gray-900 hover:bg-black text-white flex items-center gap-2 justify-center">
+            <div>
+                <a href="{{ route('pdf.cash-flow', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200 w-full md:w-auto">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    <span>Print / Download PDF</span>
+                    <span>Cetak PDF</span>
                 </a>
             </div>
         </div>
     </div>
 
-    @if(!empty($data))
+    @if(!empty($reportData))
     {{-- Summary Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         {{-- Operating --}}
@@ -51,7 +51,7 @@
                 </div>
                 <p class="text-[10px] font-bold uppercase opacity-80">Operasional</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($data['net_cash_operating']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_operating']) }}</p>
              <p class="text-[10px] text-white/60 mt-1 italic">Kas dari Operasional</p>
         </div>
 
@@ -63,7 +63,7 @@
                 </div>
                 <p class="text-[10px] font-bold uppercase opacity-80">Investasi</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($data['net_cash_investing']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_investing']) }}</p>
              <p class="text-[10px] text-white/60 mt-1 italic">Kas dari Investasi</p>
         </div>
 
@@ -75,19 +75,19 @@
                 </div>
                 <p class="text-[10px] font-bold uppercase opacity-80">Pendanaan</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($data['net_cash_financing']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_financing']) }}</p>
              <p class="text-[10px] text-white/60 mt-1 italic">Kas dari Pendanaan</p>
         </div>
 
         {{-- Net Increase --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: {{ $data['net_increase'] >= 0 ? '#059669' : '#b91c1c' }}; border-color: {{ $data['net_increase'] >= 0 ? '#047857' : '#991b1b' }};">
+        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: {{ $reportData['net_increase'] >= 0 ? '#059669' : '#b91c1c' }}; border-color: {{ $reportData['net_increase'] >= 0 ? '#047857' : '#991b1b' }};">
              <div class="flex items-center gap-3 mb-2">
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
                 <p class="text-[10px] font-bold uppercase opacity-80">Kenaikan Bersih</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($data['net_increase']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting($reportData['net_increase']) }}</p>
              <p class="text-[10px] text-white/60 mt-1 italic">Total Kenaikan/Penurunan</p>
         </div>
 
@@ -99,7 +99,7 @@
                 </div>
                 <p class="text-[10px] font-bold uppercase opacity-60">Saldo Akhir</p>
             </div>
-            <p class="text-xl font-bold text-gray-900">{{ format_accounting($data['ending_balance']) }}</p>
+            <p class="text-xl font-bold text-gray-900">{{ format_accounting($reportData['ending_balance']) }}</p>
              <p class="text-[10px] text-gray-500 mt-1 italic">Posisi Kas Akhir</p>
         </div>
     </div>
@@ -119,24 +119,24 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Penerimaan dari pelanggan</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['receipts_from_customers']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['receipts_from_customers']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pembayaran ke pemasok</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['payments_to_suppliers']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['payments_to_suppliers']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pengeluaran operasional</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['payments_for_expenses']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['payments_for_expenses']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pendapatan lainnya</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['other_operating']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['other_operating']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Operasional</span>
-                    <span class="text-lg font-bold text-blue-700">{{ format_accounting($data['net_cash_operating']) }}</span>
+                    <span class="text-lg font-bold text-blue-700">{{ format_accounting($reportData['net_cash_operating']) }}</span>
                 </div>
             </div>
 
@@ -147,16 +147,16 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Perolehan/Penjualan Aset</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['sale_assets'] + $data['purchase_assets']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['sale_assets'] + $reportData['purchase_assets']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Investasi Lainnya</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['other_investing']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['other_investing']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Investasi</span>
-                    <span class="text-lg font-bold text-amber-700">{{ format_accounting($data['net_cash_investing']) }}</span>
+                    <span class="text-lg font-bold text-amber-700">{{ format_accounting($reportData['net_cash_investing']) }}</span>
                 </div>
             </div>
 
@@ -167,16 +167,16 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pinjaman</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['loans']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['loans']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Ekuitas/Modal</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($data['equity']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['equity']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Pendanaan</span>
-                    <span class="text-lg font-bold text-indigo-700">{{ format_accounting($data['net_cash_financing']) }}</span>
+                    <span class="text-lg font-bold text-indigo-700">{{ format_accounting($reportData['net_cash_financing']) }}</span>
                 </div>
             </div>
             
@@ -184,15 +184,15 @@
             <div class="bg-gray-50 p-4 rounded-lg border-2 border-gray-200 mt-6">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-600">Saldo Kas Awal</span>
-                    <span class="text-base font-bold text-gray-800">{{ format_accounting($data['beginning_balance']) }}</span>
+                    <span class="text-base font-bold text-gray-800">{{ format_accounting($reportData['beginning_balance']) }}</span>
                 </div>
                  <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-600">Kenaikan/Penurunan Bersih</span>
-                    <span class="text-base font-bold text-{{ $data['net_increase'] >= 0 ? 'green' : 'red' }}-700">{{ format_accounting($data['net_increase']) }}</span>
+                    <span class="text-base font-bold text-{{ $reportData['net_increase'] >= 0 ? 'green' : 'red' }}-700">{{ format_accounting($reportData['net_increase']) }}</span>
                 </div>
                 <div class="flex justify-between items-center pt-3 border-t-2 border-gray-300">
                     <span class="text-lg font-bold text-gray-900 uppercase">Saldo Kas Akhir</span>
-                    <span class="text-xl font-bold text-gray-900">{{ format_accounting($data['ending_balance']) }}</span>
+                    <span class="text-xl font-bold text-gray-900">{{ format_accounting($reportData['ending_balance']) }}</span>
                 </div>
             </div>
 

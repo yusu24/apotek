@@ -35,7 +35,17 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
     */
     public function model(array $row)
     {
-        $this->currentRow++;
+        // Check if row is essentially empty
+        $isEmpty = true;
+        foreach ($row as $value) {
+            if ($value !== null && $value !== '') {
+                $isEmpty = false;
+                break;
+            }
+        }
+        if ($isEmpty) {
+            return null;
+        }
 
         // Helper to find column by multiple possible names
         $findColumn = function($possibleNames) use ($row) {

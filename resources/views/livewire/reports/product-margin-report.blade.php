@@ -6,11 +6,11 @@
             <p class="text-sm text-gray-500 mt-1">Analisis profitabilitas berdasarkan harga beli dan harga jual</p>
         </div>
         <div class="flex gap-2">
-            <button wire:click="exportExcel" class="p-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+            <button wire:click="exportExcel" class="p-2 sm:px-4 sm:py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 <span class="hidden sm:inline">Export Excel</span>
             </button>
-            <button onclick="window.print()" class="p-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Print">
+            <button onclick="window.print()" class="p-2 sm:px-4 sm:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Print">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z"></path></svg>
                 <span class="hidden sm:inline">Print</span>
             </button>
@@ -42,11 +42,11 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cari Produk</label>
-                <input type="text" wire:model.live.debounce.300ms="search" class="w-full rounded-lg border-gray-300" placeholder="Nama atau barcode...">
+                <input type="text" wire:model.live.debounce.300ms="search" class="w-full rounded-lg border-gray-300 text-sm py-2" placeholder="Nama atau barcode...">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300">
+                <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 text-sm py-2">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -55,7 +55,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Filter Margin</label>
-                <select wire:model.live="marginFilter" class="w-full rounded-lg border-gray-300">
+                <select wire:model.live="marginFilter" class="w-full rounded-lg border-gray-300 text-sm py-2">
                     <option value="all">Semua</option>
                     <option value="positive">Margin Positif</option>
                     <option value="negative">Margin Negatif</option>

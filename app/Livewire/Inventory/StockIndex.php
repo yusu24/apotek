@@ -51,4 +51,8 @@ class StockIndex extends Component
                 ->get(),
         ]);
     }
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\StockExport, 'Stok-Opname-' . date('d-m-Y') . '.xlsx');
+    }
 }

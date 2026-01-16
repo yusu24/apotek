@@ -19,24 +19,30 @@
     </div>
 
     {{-- Period Filter --}}
-    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
+    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 relative">
+        <div wire:loading wire:target="generateReport, setThisMonth, setLastMonth, setThisYear, startDate, endDate" class="absolute top-2 right-4 text-blue-600 text-sm font-bold italic flex items-center gap-2 bg-white/80 px-2 rounded opacity-90 z-20">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            Memperbarui data...
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Dari Tanggal</label>
-                <input type="date" wire:model="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <input type="date" wire:model.live="startDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <input type="date" wire:model.live="endDate" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="flex items-end gap-3">
                 <button wire:click="generateReport" class="btn btn-lg btn-primary">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Generate Laporan</span>
                 </button>
-                <a href="{{ route('pdf.balance-sheet', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    <span>Cetak PDF</span>
+                <a href="{{ route('pdf.balance-sheet', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Export PDF</span>
                 </a>
             </div>
         </div>

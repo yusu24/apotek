@@ -17,14 +17,19 @@ class GoodsReceiptIndex extends Component
     public $payment_amount = 0;
     public $payment_date = '';
     public $payment_method = 'cash';
+    public $bank_account_id = null; // New Property
     public $payment_notes = '';
     public $remaining_debt = 0;
+
+    public $accounts = []; // New Property
 
     public function mount()
     {
         if (!auth()->user()->can('view goods receipts')) {
             abort(403, 'Unauthorized');
         }
+        
+        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get();
     }
 
     public function showDetail($id)
@@ -47,6 +52,7 @@ class GoodsReceiptIndex extends Component
         $this->payment_amount = $this->remaining_debt;
         $this->payment_date = date('Y-m-d');
         $this->payment_method = 'cash';
+        $this->bank_account_id = null;
         $this->payment_notes = '';
         $this->showPaymentModal = true;
     }
@@ -55,6 +61,7 @@ class GoodsReceiptIndex extends Component
     {
         $this->showPaymentModal = false;
         $this->selectedId = null;
+        $this->bank_account_id = null;
     }
 
     public function savePayment()
@@ -63,31 +70,26 @@ class GoodsReceiptIndex extends Component
             'payment_amount' => 'required|numeric|min:1|max:' . $this->remaining_debt,
             'payment_date' => 'required|date',
             'payment_method' => 'required|in:cash,transfer',
+            'bank_account_id' => 'required_if:payment_method,transfer',
         ], [
             'payment_amount.max' => 'Jumlah bayar tidak boleh melebihi sisa hutang (Rp ' . number_format($this->remaining_debt, 0, ',', '.') . ')',
+            'bank_account_id.required_if' => 'Harap pilih akun bank untuk metode Transfer.',
         ]);
 
-        \Illuminate\Support\Facades\DB::transaction(function () {
-            $payment = \App\Models\SupplierPayment::create([
-                'goods_receipt_id' => $this->selectedId,
-                'payment_date' => $this->payment_date,
+        try {
+            $accountingService = new \App\Services\AccountingService();
+            $accountingService->processSupplierPayment($this->selectedId, [
                 'amount' => $this->payment_amount,
                 'payment_method' => $this->payment_method,
+                'account_id' => $this->bank_account_id,
+                'date' => $this->payment_date,
                 'notes' => $this->payment_notes,
-                'user_id' => auth()->id(),
             ]);
-
-            $gr = \App\Models\GoodsReceipt::find($this->selectedId);
-            $gr->updatePaymentStatus();
-
-            // Accounting integration
-            try {
-                $accountingService = new \App\Services\AccountingService();
-                $accountingService->postSupplierPaymentJournal($payment->id);
-            } catch (\Exception $e) {
-                \Log::error('Failed to post supplier payment journal: ' . $e->getMessage());
-            }
-        });
+        } catch (\Exception $e) {
+            \Log::error('Failed to process supplier payment: ' . $e->getMessage());
+            $this->addError('payment_amount', 'Gagal memproses pembayaran: ' . $e->getMessage());
+            return;
+        }
 
         $this->showPaymentModal = false;
         $this->selectedId = null;

@@ -56,4 +56,12 @@ class StockReport extends Component
             'totalStock' => $totalStock,
         ]);
     }
+
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\StockReportExport($this->search, $this->startExpiry, $this->endExpiry), 
+            'laporan-stok-'.date('Y-m-d').'.xlsx'
+        );
+    }
 }

@@ -8,21 +8,26 @@
             
     <!-- Filter Bar (Always Visible) -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
+        <div class="flex flex-col lg:flex-row gap-4 lg:items-end">
             <!-- Product Search -->
-            <div class="lg:col-span-4 relative">
+            <div class="flex-1 relative min-w-[200px]">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Cari Produk</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
-                    <input wire:model.live.debounce.300ms="searchProduct" type="text" placeholder="Banyak produk..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-medium">
+                    <input wire:model.live.debounce.300ms="searchProduct" 
+                        wire:keydown.arrow-down.prevent="incrementHighlight"
+                        wire:keydown.arrow-up.prevent="decrementHighlight"
+                        wire:keydown.enter="selectHighlighted"
+                        type="text" placeholder="Cari nama atau barcode..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-medium">
                 </div>
 
                 @if(count($searchresults) > 0)
                     <div class="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden max-h-60 overflow-y-auto">
-                        @foreach($searchresults as $product)
-                            <button wire:click="selectProduct({{ $product->id }})" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-left transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
+                        @foreach($searchresults as $index => $product)
+                            <button wire:click="selectProduct({{ $product->id }})" 
+                                class="w-full flex items-center gap-3 px-4 py-2.5 {{ $highlightIndex === $index ? 'bg-blue-100 dark:bg-blue-900/40' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20' }} text-left transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
                                 <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.628.283a2 2 0 01-1.186.12l-1.423-.284a2 2 0 00-1.25.123l-1.033.516a2 2 0 01-1.002.273H3.5"></path></svg>
                                 </div>
@@ -37,28 +42,35 @@
             </div>
 
             <!-- Date Filters -->
-            <div class="lg:col-span-4">
+            <div class="shrink-0 w-full md:w-auto">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Periode Transaksi</label>
-                <div class="grid grid-cols-2 gap-2 items-center">
-                    <input type="date" wire:model.live="startDate" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
-                    <input type="date" wire:model.live="endDate" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+                <div class="flex items-center gap-2">
+                    <input type="date" wire:model.live="startDate" class="w-full md:w-40 px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+                    <span class="text-gray-400">-</span>
+                    <input type="date" wire:model.live="endDate" class="w-full md:w-40 px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
                 </div>
             </div>
             
-            <div class="md:col-span-1 lg:col-span-2">
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Tampilkan</label>
-                <select wire:model.live="perPage" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold text-gray-700">
-                    <option value="25">25 Data</option>
-                    <option value="50">50 Data</option>
-                    <option value="100">100 Data</option>
-                    <option value="200">200 Data</option>
-                </select>
-            </div>
+            <!-- Page Size & Reset -->
+            <div class="flex items-end gap-2 shrink-0">
+                <div class="w-28 sm:w-32">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Tampilkan</label>
+                    <select wire:model.live="perPage" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold text-gray-700">
+                        <option value="25">25 Data</option>
+                        <option value="50">50 Data</option>
+                        <option value="100">100 Data</option>
+                        <option value="200">200 Data</option>
+                    </select>
+                </div>
 
-            <div class="md:col-span-1 lg:col-span-2">
-                <button wire:click="resetFilters" class="w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors text-sm">
-                    Reset Filter
-                </button>
+                <div class="shrink-0">
+                    <button wire:click="resetFilters" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors text-sm flex items-center justify-center gap-2 border border-transparent hover:border-gray-300 h-[38px]" title="Reset semua filter">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Reset</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -141,9 +153,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="px-6 py-10 text-center text-gray-400 italic">
-                                                    Belum ada riwayat transaksi.
-                                                </td>
+                                                <td colspan="4" class="px-6 py-10 text-center text-gray-400 italic">Data Tidak Ditemukan</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

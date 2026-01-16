@@ -4,10 +4,12 @@
             <h2 class="text-2xl font-bold text-gray-800">Laporan Umur Hutang & Piutang</h2>
             <p class="text-sm text-gray-500 mt-1">AP & AR Aging Report</p>
         </div>
-        <button wire:click="exportPdf" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            <span>Cetak PDF</span>
-        </button>
+        <a href="{{ route('pdf.aging-report', ['type' => $type, 'showPaid' => $showPaid]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span>Export PDF</span>
+        </a>
     </div>
 
 
@@ -82,9 +84,7 @@
                         @endif
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total Tagihan</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</th>
-                        @if($type === 'ar')
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                        @endif
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -157,11 +157,10 @@
                                 Rp {{ number_format($item['outstanding'], 0, ',', '.') }}
                             @endif
                         </td>
-                        @if($type === 'ar')
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                             @if($item['outstanding'] > 0)
-                                <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ $item['customer'] ?? 'Customer' }}')" 
-                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ $type === 'ap' ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer') }}')" 
+                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
                                     Bayar
                                 </button>
                             @else
@@ -171,7 +170,6 @@
                                 </span>
                             @endif
                         </td>
-                        @endif
                     </tr>
                     @empty
                     <tr>
@@ -188,55 +186,107 @@
 
     {{-- Payment Modal --}}
     @if($showPaymentModal)
-    <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" wire:click="closePaymentModal"></div>
+    <div wire:key="payment-modal-{{ $selectedItemId }}" class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="payment-modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" wire:click="closePaymentModal"></div>
 
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-md sm:w-full border border-gray-100 animate-fade-in-up">
+                <!-- Modal Header -->
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900" id="payment-modal-title">
+                        Pelunasan {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}
+                    </h3>
+                    <button wire:click="closePaymentModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
 
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <form wire:submit.prevent="paySettlement">
+                    <div class="p-6 space-y-4">
+                        <!-- Summary Info -->
+                        <div class="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50 space-y-3">
+                            <div>
+                                <span class="text-xs font-medium text-gray-500 block uppercase tracking-wide">{{ $type === 'ap' ? 'Supplier' : 'Customer' }}</span>
+                                <span class="text-sm font-bold text-gray-900 block">{{ $selectedEntityName }}</span>
+                            </div>
+                            <div>
+                                <span class="text-xs font-medium text-blue-500 block uppercase tracking-wide">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</span>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xs font-medium text-gray-500">Rp</span>
+                                    <span class="text-xl font-bold text-gray-900">{{ number_format($maxPaymentAmount, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                Pelunasan Piutang
-                            </h3>
-                            <div class="mt-2 text-sm text-gray-500 mb-4">
-                                <p>Customer: <span class="font-bold text-gray-800">{{ $selectedCustomerName }}</span></p>
-                                <p>Sisa Hutang: <span class="font-bold text-red-600">Rp {{ number_format($maxPaymentAmount, 0, ',', '.') }}</span></p>
+
+                        <!-- Amount Field -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-2">Jumlah Bayar</label>
+                            <div class="relative" x-data="money($wire.entangle('paymentAmount'))">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span class="text-sm font-medium text-gray-400">Rp</span>
+                                </div>
+                                <input type="text" x-bind="input"
+                                    class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-lg transition-all placeholder:text-gray-300"
+                                    placeholder="0">
+                            </div>
+                            @error('paymentAmount') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Date Field -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-2">Tanggal</label>
+                            <input type="date" wire:model="paymentDate" 
+                                class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-sm">
+                            @error('paymentDate') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Method & Bank Selection -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-2">Metode Pembayaran</label>
+                                <select wire:model.live="paymentMethod" 
+                                    class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900 text-sm">
+                                    <option value="cash">Tunai (Kas)</option>
+                                    <option value="transfer">Transfer Bank</option>
+                                </select>
                             </div>
 
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Jumlah Pembayaran</label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">Rp</span>
-                                        </div>
-                                        <input type="number" wire:model="paymentAmount" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="0">
-                                    </div>
-                                    @error('paymentAmount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Catatan (Opsional)</label>
-                                    <textarea wire:model="paymentNotes" rows="2" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
-                                </div>
+                            @if($paymentMethod === 'transfer')
+                            <div class="animate-fade-in-up">
+                                <label class="block text-xs font-medium text-gray-400 mb-2">Pilih Bank</label>
+                                <select wire:model="bankAccountId" 
+                                    class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-sm">
+                                    <option value="">-- Pilih Akun Bank --</option>
+                                    @foreach($accounts as $acc)
+                                        <option value="{{ $acc->id }}">{{ $acc->name }} ({{ $acc->code }})</option>
+                                    @endforeach
+                                </select>
+                                @error('bankAccountId') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                             </div>
+                            @endif
+                        </div>
+
+                        <!-- Notes Field -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-2">Catatan (Opsional)</label>
+                            <textarea wire:model="paymentNotes" rows="2" 
+                                class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                placeholder="Catatan pelunasan..."></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" wire:click="payReceivable" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Simpan Pembayaran
-                    </button>
-                    <button type="button" wire:click="closePaymentModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Batal
-                    </button>
-                </div>
+
+                    <!-- Modal Footer -->
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                        <button type="button" wire:click="closePaymentModal" 
+                            class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                            class="px-6 py-2.5 bg-green-600 text-white rounded-xl font-normal hover:bg-green-700 transition-all shadow-sm text-sm">
+                            Simpan Pembayaran
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

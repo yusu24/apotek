@@ -25,6 +25,7 @@ class SalesReturnList extends Component
     public $selectedSale = null;
     public $returnItems = [];
     public $notes = '';
+    public $highlightIndex = 0;
     
     // Detail Modal
     public $showDetailModal = false;
@@ -38,53 +39,88 @@ class SalesReturnList extends Component
 
     public function updatedInvoiceSearch()
     {
-        if (strlen($this->invoiceSearch) > 3) {
-            $this->selectedSale = Sale::with('saleItems.product', 'saleItems.batch')
-                ->where('invoice_no', $this->invoiceSearch)
-                ->first();
+        $this->highlightIndex = 0;
+        $this->selectedSale = null;
+    }
+
+    public function selectProduct($saleId) // Reusing name 'selectProduct' style but it's for Sale
+    {
+        $this->selectedSale = Sale::with('saleItems.product', 'saleItems.batch')
+            ->find($saleId);
             
-            if ($this->selectedSale) {
-                $this->returnItems = [];
-                
-                // Get already returned quantities for this sale
-                $returnedQuantities = SalesReturnItem::whereHas('salesReturn', function($q) {
-                    $q->where('sale_id', $this->selectedSale->id);
-                })
-                ->select('product_id', 'batch_id', DB::raw('SUM(quantity) as total_returned'))
-                ->groupBy('product_id', 'batch_id')
-                ->get()
-                ->keyBy(function($item) {
-                    return $item->product_id . '-' . ($item->batch_id ?: 'null');
-                });
+        if ($this->selectedSale) {
+            $this->returnItems = [];
+            
+            // Get already returned quantities for this sale
+            $returnedQuantities = SalesReturnItem::whereHas('salesReturn', function($q) {
+                $q->where('sale_id', $this->selectedSale->id);
+            })
+            ->select('product_id', 'batch_id', DB::raw('SUM(quantity) as total_returned'))
+            ->groupBy('product_id', 'batch_id')
+            ->get()
+            ->keyBy(function($item) {
+                return $item->product_id . '-' . ($item->batch_id ?: 'null');
+            });
 
-                foreach ($this->selectedSale->saleItems as $item) {
-                    $key = $item->product_id . '-' . ($item->batch_id ?: 'null');
-                    $alreadyReturned = isset($returnedQuantities[$key]) ? $returnedQuantities[$key]->total_returned : 0;
-                    $remainingQuantity = $item->quantity - $alreadyReturned;
+            foreach ($this->selectedSale->saleItems as $item) {
+                $key = $item->product_id . '-' . ($item->batch_id ?: 'null');
+                $alreadyReturned = isset($returnedQuantities[$key]) ? $returnedQuantities[$key]->total_returned : 0;
+                $remainingQuantity = $item->quantity - $alreadyReturned;
 
-                    // Only add if there's remaining quantity to return
-                    if ($remainingQuantity > 0) {
-                        $this->returnItems[$item->id] = [
-                            'quantity' => 0,
-                            'max_quantity' => $remainingQuantity,
-                            'price' => $item->sell_price,
-                            'product_id' => $item->product_id,
-                            'batch_id' => $item->batch_id,
-                            'name' => optional($item->product)->name ?? 'Produk Dihapus',
-                            'batch_no' => $item->batch ? $item->batch->batch_no : '-'
-                        ];
-                    }
+                // Only add if there's remaining quantity to return
+                if ($remainingQuantity > 0) {
+                    $this->returnItems[$item->id] = [
+                        'quantity' => 0,
+                        'max_quantity' => $remainingQuantity,
+                        'price' => $item->sell_price,
+                        'product_id' => $item->product_id,
+                        'batch_id' => $item->batch_id,
+                        'name' => optional($item->product)->name ?? 'Produk Dihapus',
+                        'batch_no' => $item->batch ? $item->batch->batch_no : '-'
+                    ];
                 }
+            }
 
-                if (empty($this->returnItems)) {
-                    $this->addError('invoiceSearch', 'Semua barang dalam invoice ini sudah diretur sepenuhnya.');
-                    $this->selectedSale = null;
-                }
-            } else {
+            if (empty($this->returnItems)) {
+                $this->addError('invoiceSearch', 'Semua barang dalam invoice ini sudah diretur sepenuhnya.');
                 $this->selectedSale = null;
-                $this->returnItems = [];
             }
         }
+        $this->invoiceSearch = $this->selectedSale ? $this->selectedSale->invoice_no : '';
+    }
+
+    public function incrementHighlight()
+    {
+        $count = count($this->invoiceResults);
+        if ($this->highlightIndex < $count - 1) {
+            $this->highlightIndex++;
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex > 0) {
+            $this->highlightIndex--;
+        }
+    }
+
+    public function selectHighlighted()
+    {
+        $results = $this->invoiceResults;
+        if (!empty($results) && isset($results[$this->highlightIndex])) {
+            $this->selectProduct($results[$this->highlightIndex]->id);
+        }
+    }
+
+    public function getInvoiceResultsProperty()
+    {
+        if (strlen($this->invoiceSearch) < 3) {
+            return [];
+        }
+
+        return Sale::where('invoice_no', 'like', '%' . $this->invoiceSearch . '%')
+            ->limit(5)
+            ->get();
     }
 
     public function openModal()
@@ -196,7 +232,8 @@ class SalesReturnList extends Component
             ->paginate(10);
 
         return view('livewire.inventory.sales-return-list', [
-            'returns' => $returns
+            'returns' => $returns,
+            'invoiceResults' => $this->invoiceResults
         ]);
     }
 }

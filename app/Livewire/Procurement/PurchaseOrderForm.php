@@ -15,6 +15,7 @@ class PurchaseOrderForm extends Component
     public $items = []; 
     public $suppliers = [];
     public $productSearch = '';
+    public $highlightIndex = 0;
 
     public $isReadOnly = false;
 
@@ -101,6 +102,7 @@ class PurchaseOrderForm extends Component
             $this->modalProductId = $productId;
             $this->updatedModalProductId($productId);
             $this->productSearch = ''; // Clear search
+            $this->highlightIndex = 0;
         }
         
         $this->calculateModalTotal();
@@ -336,19 +338,53 @@ class PurchaseOrderForm extends Component
         $this->redirect(route('procurement.purchase-orders.index'), navigate: true);
     }
 
+    public function updatedProductSearch()
+    {
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight()
+    {
+        $count = count($this->searchResults);
+
+        if ($this->highlightIndex < $count - 1) {
+            $this->highlightIndex++;
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex > 0) {
+            $this->highlightIndex--;
+        }
+    }
+
+    public function selectHighlighted()
+    {
+        $searchResults = $this->searchResults;
+
+        if (!empty($searchResults) && isset($searchResults[$this->highlightIndex])) {
+            $this->openModal(null, $searchResults[$this->highlightIndex]->id);
+        }
+    }
+
+    public function getSearchResultsProperty()
+    {
+        if (empty($this->productSearch)) {
+            return [];
+        }
+
+        $search = '%' . $this->productSearch . '%';
+        return \App\Models\Product::where(function ($q) use ($search) {
+            $q->where('name', 'like', $search)
+              ->orWhere('barcode', 'like', $search);
+        })->take(10)->get();
+    }
+
     public function render()
     {
         $productIds = collect($this->items)->pluck('product_id')->unique();
         $tableProducts = \App\Models\Product::whereIn('id', $productIds)->with(['unit', 'unitConversions.fromUnit'])->get();
-
-        $searchResults = [];
-        if (!empty($this->productSearch)) {
-            $search = '%' . $this->productSearch . '%';
-            $searchResults = \App\Models\Product::where(function($q) use ($search) {
-                $q->where('name', 'like', $search)
-                  ->orWhere('barcode', 'like', $search);
-            })->take(10)->get();
-        }
 
         $modalProductData = null;
         if ($this->modalProductId) {
@@ -357,7 +393,7 @@ class PurchaseOrderForm extends Component
 
         return view('livewire.procurement.purchase-order-form', [
             'tableProducts' => $tableProducts,
-            'searchResults' => $searchResults,
+            'searchResults' => $this->searchResults,
             'modalProductData' => $modalProductData
         ]);
     }

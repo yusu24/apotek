@@ -101,35 +101,13 @@
 
                 @if(!$isReadOnly)
                 <!-- Product Search Box Below Tabs (Livewire Based) -->
-                <div x-show="activeTab === 'items'" class="relative w-full py-3" 
-                     x-data="{ 
-                         open: false,
-                         highlightedIndex: 0,
-                         search: @entangle('productSearch').live,
-                         selectItem(productId) {
-                             if (productId) {
-                                 $wire.openModal(null, productId);
-                                 this.open = false;
-                                 this.highlightedIndex = 0;
-                                 this.$refs.searchInput.blur();
-                             }
-                         }
-                     }"
-                     @click.outside="open = false; highlightedIndex = 0">
+                <div x-show="activeTab === 'items'" class="relative w-full py-3">
                     <div class="relative max-w-xl">
                         <input type="text" 
-                            x-ref="searchInput"
-                            x-model="search"
-                            @focus="open = true"
-                            @input="open = true; highlightedIndex = 0"
-                            @keydown.arrow-down.prevent="highlightedIndex = (highlightedIndex + 1) % {{ min(count($searchResults), 10) }}; open = true"
-                            @keydown.arrow-up.prevent="highlightedIndex = (highlightedIndex - 1 + {{ min(count($searchResults), 10) }}) % {{ min(count($searchResults), 10) }}; open = true"
-                            @keydown.enter.prevent="if(open && search.length > 0) { 
-                                $refs['dropdown-item-' + highlightedIndex]?.click(); 
-                            } else {
-                                open = true;
-                            }"
-                            @keydown.escape="open = false; $refs.searchInput.blur()"
+                            wire:model.live.debounce.300ms="productSearch"
+                            wire:keydown.arrow-down.prevent="incrementHighlight"
+                            wire:keydown.arrow-up.prevent="decrementHighlight"
+                            wire:keydown.enter="selectHighlighted"
                             class="w-full text-sm rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-10 pr-4"
                             placeholder="Cari produk atau scan barcode untuk menambah item...">
                         
@@ -139,18 +117,11 @@
 
                         <!-- Dropdown List -->
                         @if(!empty($productSearch))
-                        <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 scale-95"
-                             x-transition:enter-end="opacity-100 scale-100"
-                             class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                        <div class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
                             <ul class="py-1">
                                 @forelse($searchResults as $index => $p)
-                                    <li id="dropdown-item-{{ $index }}"
-                                        x-ref="dropdown-item-{{ $index }}"
-                                        @click="selectItem({{ $p->id }})"
-                                        class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50"
-                                        :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
+                                    <li wire:click="openModal(null, {{ $p->id }})"
+                                        class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }}">
                                         <div>
                                             <div class="text-sm font-medium text-gray-800">{{ $p->name }}</div>
                                             <div class="text-xs text-gray-500">{{ $p->barcode }}</div>

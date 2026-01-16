@@ -21,6 +21,7 @@ use App\Models\Receivable;
 class Cashier extends Component
 {
     public $search = '';
+    public $highlightIndex = 0;
     public $cart = []; 
     // Structure: [id => [id, name, price, qty, unit, discount_amount, subtotal]]
     
@@ -62,6 +63,61 @@ class Cashier extends Component
     public $newCustomerAddress = '';
     public $tempoDuration = 30; // Default 30 days
     public $showDpp = false; // Toggle to show DPP in summary
+    public $customerHighlightIndex = 0;
+
+    public function updatedNewCustomerName()
+    {
+        $this->customerHighlightIndex = 0;
+    }
+
+    public function incrementCustomerHighlight()
+    {
+        $count = count($this->searchedCustomers);
+        if ($this->customerHighlightIndex < $count - 1) {
+            $this->customerHighlightIndex++;
+        }
+    }
+
+    public function decrementCustomerHighlight()
+    {
+        if ($this->customerHighlightIndex > 0) {
+            $this->customerHighlightIndex--;
+        }
+    }
+
+    public function selectHighlightedCustomer()
+    {
+        $customers = $this->searchedCustomers;
+        if (!empty($customers) && isset($customers[$this->customerHighlightIndex])) {
+            $this->selectExistingCustomer($customers[$this->customerHighlightIndex]['id']);
+        }
+    }
+
+    public function getSearchedCustomersProperty()
+    {
+        if (strlen($this->newCustomerName) < 2 || $this->selectedCustomerId) {
+            return [];
+        }
+
+        return Customer::where('name', 'like', '%' . $this->newCustomerName . '%')
+            ->orWhere('phone', 'like', '%' . $this->newCustomerName . '%')
+            ->limit(5)
+            ->get()
+            ->toArray();
+    }
+
+    public function selectExistingCustomer($id)
+    {
+        $customer = Customer::find($id);
+        if ($customer) {
+            $this->selectedCustomerId = $customer->id;
+            $this->selectedCustomerName = $customer->name;
+            $this->newCustomerName = $customer->name;
+            $this->newCustomerPhone = $customer->phone;
+            $this->newCustomerAddress = $customer->address;
+        }
+        $this->customerHighlightIndex = 0;
+    }
     
     // Patient Information
     public $includePatientInfo = false;
@@ -278,6 +334,9 @@ class Cashier extends Component
     {
         $this->selectedCustomerId = null;
         $this->selectedCustomerName = null;
+        $this->newCustomerName = '';
+        $this->newCustomerPhone = '';
+        $this->newCustomerAddress = '';
     }
 
     public function resetPatientInfo()
@@ -319,7 +378,34 @@ class Cashier extends Component
 
     public function updatedSearch()
     {
-        // Search happens in render
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight()
+    {
+        $count = count($this->products);
+        
+        if ($this->highlightIndex < $count - 1) {
+            $this->highlightIndex++;
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex > 0) {
+            $this->highlightIndex--;
+        }
+    }
+
+    public function selectHighlighted()
+    {
+        $products = $this->products;
+        
+        if (!empty($products) && isset($products[$this->highlightIndex])) {
+            $this->addToCart($products[$this->highlightIndex]->id);
+            $this->highlightIndex = 0;
+            $this->search = '';
+        }
     }
 
     public function updated($property, $value)
@@ -714,8 +800,10 @@ class Cashier extends Component
         }
 
         // Validate Tempo
-        if ($this->payment_method === 'tempo') {
-            if (!$this->selectedCustomerId) {
+    if ($this->payment_method === 'tempo') {
+        if ((float)$this->cash_amount >= $this->grand_total) {
+            $this->payment_method = 'cash';
+        } else if (!$this->selectedCustomerId) {
                 // If customer not selected, check if inline details are provided
                 if (!empty($this->newCustomerName)) {
                     $customer = \App\Models\Customer::create([
@@ -768,17 +856,20 @@ class Cashier extends Component
             ]);
 
             // Create Receivable Record if Tempo
-            if ($this->payment_method === 'tempo') {
-                \App\Models\Receivable::create([
-                    'sale_id' => $sale->id,
-                    'customer_id' => $this->selectedCustomerId,
-                    'amount' => $sale->grand_total,
-                    'paid_amount' => (float)$this->cash_amount, // DP
-                    'remaining_balance' => (float)$sale->grand_total - (float)$this->cash_amount,
-                    'due_date' => now()->addDays((int)$this->tempoDuration),
-                    'status' => ((float)$this->cash_amount >= $sale->grand_total) ? 'paid' : 'partial',
-                    'notes' => 'Tempo Payment for ' . $sale->invoice_no,
-                ]);
+            if ($sale->payment_method === 'tempo') {
+                $remaining = (float)$sale->grand_total - (float)$this->cash_amount;
+                if ($remaining > 0.01) {
+                    \App\Models\Receivable::create([
+                        'sale_id' => $sale->id,
+                        'customer_id' => $this->selectedCustomerId,
+                        'amount' => $sale->grand_total,
+                        'paid_amount' => (float)$this->cash_amount, // DP
+                        'remaining_balance' => $remaining,
+                        'due_date' => now()->addDays((int)($this->tempoDuration ?? 30)),
+                        'status' => ((float)$this->cash_amount > 0) ? 'partial' : 'unpaid',
+                        'notes' => 'Tempo Payment for ' . $sale->invoice_no,
+                    ]);
+                }
             }
 
             foreach ($this->cart as $item) {
@@ -872,22 +963,6 @@ class Cashier extends Component
                 \Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
             }
 
-            // Handle Tempo / Receivable
-            if ($this->payment_method === 'tempo') {
-                 $debtAmount = $this->grand_total - ((float)$this->cash_amount); // Cash amount can be DP
-                 if ($debtAmount > 0) {
-                     Receivable::create([
-                         'sale_id' => $sale->id,
-                         'customer_id' => $this->selectedCustomerId,
-                         'amount' => $this->grand_total,
-                         'paid_amount' => (float)$this->cash_amount,
-                         'remaining_balance' => $debtAmount,
-                         'status' => (float)$this->cash_amount > 0 ? 'partial' : 'unpaid',
-                         'due_date' => now()->addDays(30), // Default 30 days
-                         'notes' => 'Tempo transaction',
-                     ]);
-                 }
-            }
 
 
             if ($status === 'pending') {
@@ -907,26 +982,29 @@ class Cashier extends Component
 
 
 
-    public function render()
+    public function getProductsProperty()
     {
-        $categories = \App\Models\Category::all();
-
-        $products = Product::query()
-            ->with('unit')
+        return Product::query()
+            ->with(['unit', 'unitConversions'])
             ->withSum('batches as total_stock', 'stock_current')
             ->when($this->search, function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('barcode', 'like', '%' . $this->search . '%');
             })
-            ->when($this->selectedCategory && $this->selectedCategory !== 'all', function($q) {
+            ->when($this->selectedCategory && $this->selectedCategory !== 'all', function ($q) {
                 $q->where('category_id', $this->selectedCategory);
             })
             ->latest()
-            ->limit(24)
+            ->limit(!empty($this->search) ? 10 : 24)
             ->get();
+    }
+
+    public function render()
+    {
+        $categories = \App\Models\Category::all();
 
         return view('livewire.pos.cashier', [
-            'products' => $products,
+            'products' => $this->products,
             'categories' => $categories,
         ]);
     }

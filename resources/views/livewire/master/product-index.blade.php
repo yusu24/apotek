@@ -30,38 +30,43 @@
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="p-4 border-b bg-gray-50">
-            <!-- Row 1: Search, Category, and Add Button -->
-            <div class="flex flex-wrap gap-2 items-center">
-                <!-- Search Box -->
-                <div class="relative w-56">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
-                    <input type="text" wire:model.live="search" placeholder="Cari obat..." 
-                        class="block w-full pr-3 py-1.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm"
-                        style="padding-left: 2.75rem !important;">
-                </div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <!-- Search & Filters -->
+                <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto flex-1 md:items-center">
+                    <!-- Search Box -->
+                    <div class="relative w-full md:w-48">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" wire:model.live="search" placeholder="Cari obat..." 
+                            class="block w-full pr-3 py-1.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm"
+                            style="padding-left: 2.75rem !important;">
+                    </div>
 
-                <!-- Category Filter -->
-                <div class="relative">
-                    <select wire:model.live="category_id" class="appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
-                        <option value="">Semua</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                    <!-- Category Filter -->
+                    <div class="relative w-full md:w-32">
+                        <select wire:model.live="category_id" class="w-full appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
+                            <option value="">Semua Kategori</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Spacer -->
-                <div class="hidden md:block flex-1"></div>
-
-                <!-- Buttons Area -->
-                <div class="flex gap-2">
+                <!-- Right: Buttons -->
+                <div class="flex gap-2 w-full md:w-auto justify-end">
+                    <button wire:click="exportExcel" class="px-3 py-1.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Export Excel">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Export Excel</span>
+                    </button>
                     @can('import_master_data')
                     <button x-data @click="$dispatch('open-import-modal')" class="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Import Excel">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,7 +336,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
+                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
                             <button type="button" @click="openImport = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
                         </div>
                     </form>

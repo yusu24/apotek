@@ -307,21 +307,7 @@
                     <!-- Search Bar & Pending Button -->
                     <div class="flex gap-2 items-start">
                          <!-- Search Bar -->
-                        <div class="relative flex-1" 
-                                x-data="{ 
-                                open: false, 
-                            highlightedIndex: 0,
-                            search: @entangle('search').live,
-                            selectItem(id) {
-                                if (id) {
-                                    $wire.addToCart(id);
-                                    this.open = false;
-                                    this.highlightedIndex = 0;
-                                    this.$refs.searchInput.blur();
-                                }
-                            }
-                            }"
-                            @click.outside="open = false; highlightedIndex = 0">
+                        <div class="relative flex-1">
                         
                         <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -330,36 +316,21 @@
                         </span>
                         
                         <input type="text" 
-                            x-ref="searchInput"
-                            x-model="search"
-                            @focus="open = true"
-                            @input="open = true; highlightedIndex = 0"
-                            @keydown.arrow-down.prevent="highlightedIndex = (highlightedIndex + 1) % {{ min(count($products), 10) }}; open = true"
-                            @keydown.arrow-up.prevent="highlightedIndex = (highlightedIndex - 1 + {{ min(count($products), 10) }}) % {{ min(count($products), 10) }}; open = true"
-                            @keydown.enter.prevent="if(open && search.length > 0) { 
-                                $refs['dropdown-item-' + highlightedIndex]?.click(); 
-                            } else {
-                                open = true;
-                            }"
-                            @keydown.escape="open = false; $refs.searchInput.blur()"
+                            wire:model.live.debounce.300ms="search"
+                            wire:keydown.arrow-down.prevent="incrementHighlight"
+                            wire:keydown.arrow-up.prevent="decrementHighlight"
+                            wire:keydown.enter="selectHighlighted"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Cari produk / Scan barcode (F2)..." 
                             id="pos-search-input"
                             autocomplete="off">
 
                         <!-- Dropdown Results -->
-                        <div x-show="open && search.length > 0" 
-                                x-transition:enter="transition ease-out duration-100"
-                                x-transition:enter-start="opacity-0 scale-95"
-                                x-transition:enter-end="opacity-100 scale-100"
-                                class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
-                            
-                            @forelse($products->take(10) as $index => $product)
-                                <div id="dropdown-item-{{ $index }}"
-                                        x-ref="dropdown-item-{{ $index }}"
-                                        @click="selectItem({{ $product->id }})"
-                                        class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 hover:bg-blue-50 transition-colors"
-                                        :class="{ 'bg-blue-100': highlightedIndex === {{ $index }} }">
+                        @if(!empty($search) && count($products) > 0)
+                        <div class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
+                            @foreach($products->take(10) as $index => $product)
+                                <div wire:click="addToCart({{ $product->id }})"
+                                        class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }} transition-colors">
                                     <div class="flex-1 min-w-0 mr-3">
                                         <div class="font-bold text-gray-900 truncate">{{ $product->name }}</div>
                                         <div class="text-xs text-gray-500">Stok: {{ $product->total_stock }}</div>
@@ -368,12 +339,9 @@
                                         Rp {{ number_format($product->sell_price, 0, ',', '.') }}
                                     </div>
                                 </div>
-                            @empty
-                                <div class="p-4 text-center text-gray-500 text-sm">
-                                    Tidak ada produk ditemukan
-                                </div>
-                            @endforelse
+                            @endforeach
                         </div>
+                        @endif
                     </div>
 
                     <!-- Pending Orders Button -->
@@ -548,7 +516,28 @@
                                 <div class="bg-amber-100 border border-amber-300 rounded-lg p-3 mb-3">
                                     <p class="text-xs font-bold text-amber-800 mb-2">Data Pelanggan (Baru)</p>
                                     <div class="space-y-2">
-                                        <input type="text" wire:model="newCustomerName" placeholder="Nama Customer" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                                        <div class="relative">
+                                            <input type="text" 
+                                                wire:model.live.debounce.300ms="newCustomerName" 
+                                                wire:keydown.arrow-down.prevent="incrementCustomerHighlight"
+                                                wire:keydown.arrow-up.prevent="decrementCustomerHighlight"
+                                                wire:keydown.enter.prevent="selectHighlightedCustomer"
+                                                placeholder="Nama Customer" 
+                                                class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
+                                            
+                                            @if(!empty($this->searchedCustomers))
+                                                <div class="absolute z-50 mt-1 w-full bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+                                                    @foreach($this->searchedCustomers as $index => $customer)
+                                                        <button type="button" 
+                                                            wire:click="selectExistingCustomer({{ $customer['id'] }})"
+                                                            class="w-full px-4 py-2.5 text-left text-sm {{ $customerHighlightIndex === $index ? 'bg-blue-50 text-blue-700 font-bold' : 'hover:bg-gray-50 text-gray-700' }} transition-colors border-b border-gray-50 last:border-0">
+                                                            <div class="font-bold">{{ $customer['name'] }}</div>
+                                                            <div class="text-xs text-gray-500">{{ $customer['phone'] ?? '-' }}</div>
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                         <input type="text" wire:model="newCustomerPhone" placeholder="No HP" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500">
                                         <textarea wire:model="newCustomerAddress" placeholder="Alamat Lengkap" rows="2" class="w-full text-sm border-amber-300 rounded-md focus:ring-amber-500 focus:border-amber-500"></textarea>
                                     </div>
@@ -1054,6 +1043,10 @@
                 event.preventDefault();
                 @this.processPayment();
             }
+        });
+
+        window.addEventListener('cart-error', event => {
+            alert(event.detail.message);
         });
     </script>
 

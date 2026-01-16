@@ -44,7 +44,14 @@ class RoleSeeder extends Seeder
             'view suppliers',
             'manage suppliers',
             'manage product units',
+            'manage suppliers',
+            'manage product units',
             'upload product images',
+            'view customers',
+            'create customers',
+            'edit customers',
+            'delete customers',
+            'import customers',
             
             // Inventory & Stock
             'manage inventory',

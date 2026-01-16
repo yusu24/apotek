@@ -60,7 +60,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">Data retur tidak ditemukan.</td>
+                            <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -91,9 +91,32 @@
                     </div>
 
                     <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                        <div>
+                        <div class="relative">
                             <label class="block text-sm font-normal text-gray-700 mb-2">Cari No. Invoice <span class="text-red-500">*</span></label>
-                            <input type="text" wire:model.live="invoiceSearch" placeholder="Masukkan Nomor Invoice (cth: INV/...)" class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                            <input type="text" 
+                                wire:model.live.debounce.300ms="invoiceSearch" 
+                                wire:keydown.arrow-down.prevent="incrementHighlight"
+                                wire:keydown.arrow-up.prevent="decrementHighlight"
+                                wire:keydown.enter="selectHighlighted"
+                                placeholder="Masukkan Nomor Invoice (cth: INV/...)" 
+                                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                            
+                            @if(count($invoiceResults) > 0)
+                                <div class="absolute z-[110] mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden max-h-60 overflow-y-auto">
+                                    @foreach($invoiceResults as $index => $sale)
+                                        <button wire:click="selectProduct({{ $sale->id }})" 
+                                            class="w-full flex items-center gap-3 px-4 py-3 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }} text-left transition-colors border-b border-gray-100 last:border-0">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-sm font-bold text-gray-900 truncate">{{ $sale->invoice_no }}</div>
+                                                <div class="text-xs text-gray-500">{{ $sale->date->format('d/m/Y') }} • Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</div>
+                                            </div>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
                             <p class="mt-1 text-xs text-gray-500 italic">Masukkan minimal 4 karakter untuk mencari.</p>
                         </div>
 

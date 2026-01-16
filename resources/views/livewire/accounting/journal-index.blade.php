@@ -126,9 +126,7 @@
                         @endforeach
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">
-                                Tidak ada jurnal yang ditemukan.
-                            </td>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
                         </tr>
                     @endforelse
                 </tbody>

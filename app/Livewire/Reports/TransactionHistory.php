@@ -18,6 +18,7 @@ class TransactionHistory extends Component
     public $startDate;
     public $endDate;
     public $perPage = 50;
+    public $highlightIndex = 0;
 
     public function mount()
     {
@@ -41,7 +42,37 @@ class TransactionHistory extends Component
             ];
         }
         $this->searchProduct = '';
+        $this->highlightIndex = 0;
         $this->resetPage();
+    }
+
+    public function updatedSearchProduct()
+    {
+        $this->highlightIndex = 0;
+    }
+
+    public function incrementHighlight()
+    {
+        $count = count($this->searchResults);
+        if ($this->highlightIndex < $count - 1) {
+            $this->highlightIndex++;
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex > 0) {
+            $this->highlightIndex--;
+        }
+    }
+
+    public function selectHighlighted()
+    {
+        $searchresults = $this->searchResults;
+
+        if (!empty($searchresults) && isset($searchresults[$this->highlightIndex])) {
+            $this->selectProduct($searchresults[$this->highlightIndex]->id);
+        }
     }
 
     public function removeProduct($productId)
@@ -90,18 +121,22 @@ class TransactionHistory extends Component
         return $query->latest()->paginate($this->perPage, ['*'], 'page_' . $productId);
     }
 
-    public function render()
+    public function getSearchResultsProperty()
     {
-        $searchresults = [];
-        if (strlen($this->searchProduct) > 2) {
-            $searchresults = Product::where('name', 'like', '%'.$this->searchProduct.'%')
-                ->orWhere('barcode', 'like', '%'.$this->searchProduct.'%')
-                ->limit(5)
-                ->get();
+        if (strlen($this->searchProduct) < 2) {
+            return [];
         }
 
+        return Product::where('name', 'like', '%' . $this->searchProduct . '%')
+            ->orWhere('barcode', 'like', '%' . $this->searchProduct . '%')
+            ->limit(5)
+            ->get();
+    }
+
+    public function render()
+    {
         return view('livewire.reports.transaction-history', [
-            'searchresults' => $searchresults,
+            'searchresults' => $this->searchResults,
         ]);
     }
 }

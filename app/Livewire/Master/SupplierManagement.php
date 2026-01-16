@@ -145,4 +145,8 @@ class SupplierManagement extends Component
 
         session()->flash('message', 'Supplier berhasil dihapus.');
     }
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\SuppliersExport, 'Data-Supplier-' . date('d-m-Y') . '.xlsx');
+    }
 }

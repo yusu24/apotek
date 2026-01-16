@@ -439,4 +439,59 @@ class PdfController extends Controller
         
         return $pdf->setPaper('a4', 'landscape')->stream($filename);
     }
+    /**
+     * Export Stock Report Summary to PDF (Laporan Barang)
+     */
+    public function exportStockReport(Request $request)
+    {
+        // Fetch products with active batches
+        $products = Product::with(['unit', 'batches' => function($query) {
+            $query->where('stock_current', '>', 0);
+        }])->get();
+
+        // Calculate totals for each product
+        $products->transform(function($product) {
+            $totalStock = $product->batches->sum('stock_current');
+            $totalValue = $product->batches->sum(function($batch) {
+                return $batch->stock_current * $batch->buy_price;
+            });
+            
+            $product->total_stock = $totalStock;
+            $product->total_value = $totalValue;
+            $product->avg_buy_price = $totalStock > 0 ? $totalValue / $totalStock : 0;
+            
+            return $product;
+        });
+
+        // Filter out products with 0 stock if needed, or keep all. 
+        // For "Laporan Barang", usually we want to see what we have. 
+        // Let's keep those with stock > 0 for a cleaner report, or as per standard practice.
+        // The reference image shows items with stock. Let's filter > 0 to match "Inventory Report" typical usage,
+        // unless implies "Master Data". Given "Stock" and "Saldo", implies Inventory Value.
+        $products = $products->filter(function($product) {
+            return $product->total_stock > 0;
+        });
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.stock-report', [
+            'products' => $products,
+            'store' => $store,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+
+        $filename = 'Laporan-Barang-' . Carbon::now()->format('Ymd') . '.pdf';
+
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
 }

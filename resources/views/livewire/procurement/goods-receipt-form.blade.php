@@ -120,13 +120,13 @@
         <!-- Items Table Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="p-4 border-b border-gray-200 bg-gray-50/50 h-16 flex items-center">
-                <div class="relative w-full max-w-xl" x-data="{ open: false }">
+                <div class="relative w-full max-w-xl">
                     <div class="relative">
                         <input type="text" 
                             wire:model.live.debounce.300ms="productSearch"
-                            @focus="open = true"
-                            @click.away="open = false"
-                            @keydown.escape="open = false"
+                            wire:keydown.arrow-down.prevent="incrementHighlight"
+                            wire:keydown.arrow-up.prevent="decrementHighlight"
+                            wire:keydown.enter="selectHighlighted"
                             class="w-full text-xs rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-10 pr-4"
                             placeholder="Cari produk atau scan barcode untuk menambah item...">
                         
@@ -136,22 +136,19 @@
                     </div>
 
                     <!-- Dropdown List -->
-                    @if(!empty($productSearch))
-                    <div x-show="open" 
-                         class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                    @if(!empty($productSearch) && count($searchResults) > 0)
+                    <div class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
                         <ul class="py-1">
-                            @forelse($searchResults as $p)
-                                <li wire:click="selectProduct({{ $p->id }})" @click="open = false"
-                                    class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
+                            @foreach($searchResults as $index => $p)
+                                <li wire:click="selectProduct({{ $p->id }})"
+                                    class="px-4 py-2 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }} cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
                                     <div>
                                         <div class="text-xs font-bold text-gray-800">{{ $p->name }}</div>
                                         <div class="text-[10px] text-gray-500">{{ $p->barcode }}</div>
                                     </div>
                                     <svg class="w-4 h-4 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 </li>
-                            @empty
-                                <li class="px-4 py-3 text-xs text-gray-500 text-center italic">Produk tidak ditemukan.</li>
-                            @endforelse
+                            @endforeach
                         </ul>
                     </div>
                     @endif
@@ -178,9 +175,9 @@
                         @foreach($items as $index => $item)
                             <tr wire:key="item-{{ $index }}" 
                                 x-data="{ 
-                                    qty: $wire.entangle('items.{{ $index }}.qty_received'), 
-                                    buy_price: $wire.entangle('items.{{ $index }}.buy_price'), 
-                                    sell_price: $wire.entangle('items.{{ $index }}.sell_price'),
+                                    qty: $wire.entangle('items.{{ $index }}.qty_received').live, 
+                                    buy_price: $wire.entangle('items.{{ $index }}.buy_price').live, 
+                                    sell_price: $wire.entangle('items.{{ $index }}.sell_price').live,
                                     get margin() {
                                         let buy = parseFloat(this.buy_price) || 0;
                                         let sell = parseFloat(this.sell_price) || 0;
@@ -276,7 +273,7 @@
                     </tbody>
                     <tfoot class="bg-gray-50/50 border-t border-gray-100">
                         <tr>
-                            <td colspan="4" class="px-6 py-4">
+                            <td colspan="7" class="px-6 py-4">
                                 <div class="flex items-center justify-start gap-4">
                                     <p class="text-[10px] text-yellow-700 italic flex items-center gap-1">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -284,11 +281,13 @@
                                     </p>
                                 </div>
                             </td>
-                            <td colspan="4" class="px-6 py-4">
-                                <div class="flex items-center justify-end gap-3 text-sm">
-                                    <span class="text-gray-500 font-medium tracking-tight whitespace-nowrap">Total Nilai Penerimaan:</span>
-                                    <span class="text-blue-700 bg-blue-50 px-4 py-1.5 rounded-lg font-bold border border-blue-100 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <td colspan="3" class="px-6 py-4 text-right">
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Total Nilai Penerimaan</span>
+                                    <span class="text-xl font-bold text-blue-700 bg-blue-50 px-6 py-2 rounded-xl border-2 border-blue-100 shadow-sm flex items-center gap-3">
+                                        <div class="p-1.5 bg-blue-600 rounded-lg text-white">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        </div>
                                         Rp {{ number_format(collect($items)->sum(fn($i) => (float)($i['qty_received'] ?? 0) * (float)($i['buy_price'] ?? 0)), 0, ',', '.') }}
                                     </span>
                                 </div>

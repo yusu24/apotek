@@ -90,8 +90,10 @@
                                     </button>
 
                                     <a href="{{ route('pdf.goods-receipt', $gr->id) }}" target="_blank"
-                                        class="text-red-600 hover:text-red-900 transition-colors duration-200" title="Cetak Surat Jalan">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                       class="text-green-600 hover:text-green-900 transition-colors duration-200" title="Cetak Surat Jalan">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
                                     </a>
                                 </div>
                             </td>
@@ -208,9 +210,11 @@
                     </div>
                     <div class="flex gap-3">
                         <a href="{{ route('pdf.goods-receipt', $selectedReceipt->id) }}" target="_blank"
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                            <span>Cetak PDF</span>
+                            class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span>Export PDF</span>
                         </a>
                         <button type="button" wire:click="closeDetailModal" 
                             class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">
@@ -276,13 +280,27 @@
                             <!-- Method Field -->
                             <div>
                                 <label class="block text-xs font-medium text-gray-400 mb-2">Metode</label>
-                                <select wire:model="payment_method" 
+                                <select wire:model.live="payment_method" 
                                     class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold text-gray-900 text-sm">
                                     <option value="cash">CASH</option>
                                     <option value="transfer">TRANSFER</option>
                                 </select>
                                 @error('payment_method') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                             </div>
+
+                            @if($payment_method === 'transfer')
+                            <div class="col-span-2 sm:col-span-1 animate-fade-in-up">
+                                <label class="block text-xs font-medium text-gray-400 mb-2">Pilih Bank</label>
+                                <select wire:model="bank_account_id" 
+                                    class="w-full px-3 py-2 border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-sm">
+                                    <option value="">-- Pilih Akun Bank --</option>
+                                    @foreach($accounts as $acc)
+                                        <option value="{{ $acc->id }}">{{ $acc->name }} ({{ $acc->code }})</option>
+                                    @endforeach
+                                </select>
+                                @error('bank_account_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                            </div>
+                            @endif
                         </div>
 
                         <!-- Notes Field -->

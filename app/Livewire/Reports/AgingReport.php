@@ -14,11 +14,16 @@ class AgingReport extends Component
 
     // Payment Modal Properties
     public $showPaymentModal = false;
-    public $selectedReceivableId = null;
+    public $selectedItemId = null; // Mixed use for Receivable or GoodsReceipt
     public $paymentAmount = 0;
+    public $paymentMethod = 'cash';
+    public $bankAccountId = null; // New Property
+    public $paymentDate = ''; // New Property
     public $paymentNotes = '';
     public $maxPaymentAmount = 0;
-    public $selectedCustomerName = '';
+    public $selectedEntityName = '';
+
+    public $accounts = []; // New Property
 
     public function mount()
     {
@@ -26,6 +31,7 @@ class AgingReport extends Component
             abort(403, 'Unauthorized');
         }
 
+        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get();
         $this->generateReport();
     }
 
@@ -55,12 +61,14 @@ class AgingReport extends Component
         }
     }
 
-    public function openPaymentModal($receivableId, $amount, $customerName)
+    public function openPaymentModal($id, $amount, $entityName)
     {
-        $this->selectedReceivableId = $receivableId;
+        $this->selectedItemId = $id;
         $this->maxPaymentAmount = $amount; // Remaining balance
         $this->paymentAmount = $amount; // Default to full payment
-        $this->selectedCustomerName = $customerName;
+        $this->selectedEntityName = $entityName;
+        $this->paymentMethod = 'cash';
+        $this->paymentDate = date('Y-m-d'); // Default to today
         $this->paymentNotes = '';
         $this->showPaymentModal = true;
     }
@@ -68,22 +76,36 @@ class AgingReport extends Component
     public function closePaymentModal()
     {
         $this->showPaymentModal = false;
-        $this->reset(['selectedReceivableId', 'paymentAmount', 'paymentNotes', 'maxPaymentAmount', 'selectedCustomerName']);
+        $this->reset(['selectedItemId', 'paymentAmount', 'paymentNotes', 'maxPaymentAmount', 'selectedEntityName', 'paymentDate']);
     }
 
-    public function payReceivable()
+    public function paySettlement()
     {
         $this->validate([
-            'paymentAmount' => 'required|numeric|min:1|max:' . $this->maxPaymentAmount,
+            'paymentAmount' => 'required|numeric|min:1|max:' . ($this->maxPaymentAmount + 0.01),
+            'paymentDate' => 'required|date',
         ]);
 
         try {
             $accountingService = new AccountingService();
-            $accountingService->processReceivablePayment($this->selectedReceivableId, [
-                'amount' => $this->paymentAmount,
-                'notes' => $this->paymentNotes,
-                'payment_method' => 'cash' // Default to cash for now
-            ]);
+            
+            if ($this->type === 'ar') {
+                $accountingService->processReceivablePayment($this->selectedItemId, [
+                    'amount' => $this->paymentAmount,
+                    'notes' => $this->paymentNotes,
+                    'payment_method' => $this->paymentMethod,
+                    'account_id' => $this->bankAccountId,
+                    'date' => $this->paymentDate,
+                ]);
+            } else {
+                $accountingService->processSupplierPayment($this->selectedItemId, [
+                    'amount' => $this->paymentAmount,
+                    'notes' => $this->paymentNotes,
+                    'payment_method' => $this->paymentMethod,
+                    'account_id' => $this->bankAccountId,
+                    'date' => $this->paymentDate,
+                ]);
+            }
 
             $this->js("alert('Pembayaran berhasil disimpan!')");
             $this->closePaymentModal();

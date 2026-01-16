@@ -12,6 +12,7 @@ class ReceivablePayment extends Model
     protected $fillable = [
         'receivable_id',
         'user_id',
+        'account_id', // Added
         'amount',
         'payment_method',
         'notes',
@@ -22,6 +23,11 @@ class ReceivablePayment extends Model
         'amount' => 'decimal:2',
         'paid_at' => 'datetime'
     ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 
     public function receivable()
     {

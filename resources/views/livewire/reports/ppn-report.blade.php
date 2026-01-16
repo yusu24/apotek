@@ -4,34 +4,40 @@
             <h2 class="text-2xl font-bold text-gray-800">Laporan PPN</h2>
             <p class="text-sm text-gray-500 mt-1">Pajak Pertambahan Nilai (Keluaran & Masukan)</p>
         </div>
-        <button wire:click="exportPdf" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            <span>Cetak PDF</span>
-        </button>
+        <a href="{{ route('pdf.ppn-report', ['month' => $month, 'year' => $year]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span>Export PDF</span>
+        </a>
     </div>
 
     {{-- Filter Section --}}
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6 mb-6 relative">
+        <div wire:loading wire:target="generateReport, month, year" class="absolute top-2 right-4 text-blue-600 text-sm font-bold italic flex items-center gap-2 bg-white/80 px-2 rounded opacity-90 z-20">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            Memperbarui data...
+        </div>
         <h3 class="text-lg font-bold text-gray-900 mb-4">Filter Periode</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
+        <div class="flex flex-col md:flex-row items-end gap-4">
+            <div class="w-full md:w-auto">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Bulan</label>
-                <select wire:model="month" class="w-full border-gray-300 rounded-lg shadow-sm">
+                <select wire:model.live="month" class="w-full md:w-32 border-gray-300 rounded-lg shadow-sm text-sm py-2">
                     @foreach($months as $key => $name)
                         <option value="{{ $key }}">{{ $name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div>
+            <div class="w-full md:w-auto">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
-                <select wire:model="year" class="w-full border-gray-300 rounded-lg shadow-sm">
+                <select wire:model.live="year" class="w-full md:w-24 border-gray-300 rounded-lg shadow-sm text-sm py-2">
                     @foreach($years as $y)
                         <option value="{{ $y }}">{{ $y }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="flex items-end">
-                <button wire:click="generateReport" class="btn btn-primary w-full">
+            <div class="w-full md:w-auto">
+                <button wire:click="generateReport" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm font-bold text-sm transition duration-200">
                     Generate
                 </button>
             </div>
@@ -118,9 +124,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">
-                            Tidak ada transaksi penjualan dengan PPN pada periode ini.
-                        </td>
+                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -168,9 +172,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">
-                            Tidak ada transaksi pembelian dengan PPN pada periode ini.
-                        </td>
+                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
                     </tr>
                     @endforelse
                 </tbody>

@@ -78,19 +78,34 @@
                         </div>
 
                         <!-- Date Range Selection -->
-                        <div class="flex flex-none items-center gap-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg px-2 w-auto overflow-x-auto">
-                            <span class="text-xs font-bold text-gray-400 uppercase pl-1 whitespace-nowrap">Exp:</span>
-                            <input wire:model.live="startExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-32">
-                            <span class="text-gray-300">/</span>
-                            <input wire:model.live="endExpiry" type="date" class="bg-transparent border-none text-sm text-gray-900 dark:text-white focus:ring-0 p-1.5 w-28 sm:w-32">
+                        <div class="shrink-0 w-full md:w-auto">
+                            <!-- Label hidden visually on small screens if needed, or kept for consistency -->
+                            {{-- <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Periode Kadaluwarsa</label> --}}
+                            <div class="flex items-center gap-2">
+                                <div class="relative">
+                                    <input wire:model.live="startExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900" placeholder="Dari">
+                                </div>
+                                <span class="text-gray-400">-</span>
+                                <div class="relative">
+                                    <input wire:model.live="endExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900" placeholder="Sampai">
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Print Button -->
-                        <div class="flex-shrink-0 ml-auto self-end sm:self-center">
-                            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                <span class="hidden sm:inline">Cetak Pdf</span>
+                        <!-- Export Buttons -->
+                        <div class="flex-shrink-0 ml-auto self-end sm:self-center flex gap-2">
+                             <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span class="hidden sm:inline">Export Excel</span>
                             </button>
+                            <a href="{{ route('pdf.stock-report') }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span class="hidden sm:inline">Export PDF</span>
+                            </a>
                         </div>
                     </div>
                 </div>

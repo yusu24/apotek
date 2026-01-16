@@ -15,7 +15,7 @@
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Total Cash & Bank -->
-        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group border-2 border-white dark:border-gray-800" style="background-color: #1e40af;">
+        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #1e40af;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-blue-800">
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Total Debt -->
-        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group border-2 border-white dark:border-gray-800" style="background-color: #b91c1c;">
+        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #b91c1c;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-red-800">
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Net Balance -->
-        <div class="rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden group border-2 border-white dark:border-gray-800" style="background-color: #000000 !important;">
+        <div class="rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #000000 !important;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-black">

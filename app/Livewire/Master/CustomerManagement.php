@@ -120,4 +120,8 @@ class CustomerManagement extends Component
             'customers' => $customers
         ]);
     }
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\CustomersExport, 'Data-Pelanggan-' . date('d-m-Y') . '.xlsx');
+    }
 }

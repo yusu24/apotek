@@ -31,6 +31,13 @@ class BalanceSheet extends Component
         $this->reportData = $accountingService->getBalanceSheet($this->startDate, $this->endDate);
     }
 
+    public function updated($propertyName)
+    {
+        if (in_array($propertyName, ['startDate', 'endDate'])) {
+            $this->generateReport();
+        }
+    }
+
     public function setThisMonth()
     {
         $this->startDate = now()->startOfMonth()->format('Y-m-d');

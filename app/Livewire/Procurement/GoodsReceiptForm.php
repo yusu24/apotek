@@ -22,7 +22,7 @@ class GoodsReceiptForm extends Component
     public $po_id; // For query string
     
     public $productSearch = '';
-    public $searchResults = [];
+    public $highlightIndex = 0;
     
     public $isEdit = false;
     public $receiptId;
@@ -36,7 +36,7 @@ class GoodsReceiptForm extends Component
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
         $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
-        $this->accounts = \App\Models\Account::where('type', 'bank')->get(); // Load Bank Accounts
+        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get(); // Load Bank Accounts
         
         if ($id) {
             $this->isEdit = true;
@@ -176,17 +176,32 @@ class GoodsReceiptForm extends Component
         ];
     }
 
-    public function updatedProductSearch($value)
+    public function updatedProductSearch()
     {
-        if (strlen($value) < 2) {
-            $this->searchResults = [];
-            return;
-        }
+        $this->highlightIndex = 0;
+    }
 
-        $this->searchResults = \App\Models\Product::where('name', 'like', '%' . $value . '%')
-            ->orWhere('barcode', 'like', '%' . $value . '%')
-            ->limit(10)
-            ->get();
+    public function incrementHighlight()
+    {
+        $count = count($this->searchResults);
+        if ($this->highlightIndex < $count - 1) {
+            $this->highlightIndex++;
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        if ($this->highlightIndex > 0) {
+            $this->highlightIndex--;
+        }
+    }
+
+    public function selectHighlighted()
+    {
+        $searchResults = $this->searchResults;
+        if (!empty($searchResults) && isset($searchResults[$this->highlightIndex])) {
+            $this->selectProduct($searchResults[$this->highlightIndex]->id);
+        }
     }
 
     public function selectProduct($productId)
@@ -579,8 +594,22 @@ class GoodsReceiptForm extends Component
         $this->redirect(route('procurement.goods-receipts.index'), navigate: true);
     }
 
+    public function getSearchResultsProperty()
+    {
+        if (strlen($this->productSearch) < 1) {
+            return [];
+        }
+
+        return \App\Models\Product::where('name', 'like', '%' . $this->productSearch . '%')
+            ->orWhere('barcode', 'like', '%' . $this->productSearch . '%')
+            ->limit(10)
+            ->get();
+    }
+
     public function render()
     {
-        return view('livewire.procurement.goods-receipt-form');
+        return view('livewire.procurement.goods-receipt-form', [
+            'searchResults' => $this->searchResults
+        ]);
     }
 }

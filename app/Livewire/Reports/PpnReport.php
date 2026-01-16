@@ -29,6 +29,13 @@ class PpnReport extends Component
         $this->reportData = $taxService->getMonthlySummary($this->year, $this->month);
     }
 
+    public function updated($propertyName)
+    {
+        if (in_array($propertyName, ['month', 'year'])) {
+            $this->generateReport();
+        }
+    }
+
     public function exportPdf()
     {
         return redirect()->route('pdf.ppn-report', [

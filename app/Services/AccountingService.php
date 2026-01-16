@@ -108,14 +108,42 @@ class AccountingService
             ]);
 
             // Entry 1: Record Sale Revenue
-            // Dr. Kas
-            JournalEntryLine::create([
-                'journal_entry_id' => $entry->id,
-                'account_id' => $cashAccount->id,
-                'debit' => $sale->grand_total,
-                'credit' => 0,
-                'notes' => 'Penjualan ' . $sale->invoice_no,
-            ]);
+            // Dr. Kas & Dr. Piutang (if tempo)
+            $receivableAccount = Account::where('code', '1-1300')->first(); // Piutang Usaha
+            
+            if ($sale->payment_method === 'tempo' && $receivableAccount) {
+                $cashPortion = (float)$sale->cash_amount;
+                $receivablePortion = (float)$sale->grand_total - $cashPortion;
+
+                if ($cashPortion > 0) {
+                    JournalEntryLine::create([
+                        'journal_entry_id' => $entry->id,
+                        'account_id' => $cashAccount->id,
+                        'debit' => $cashPortion,
+                        'credit' => 0,
+                        'notes' => 'DP Penjualan ' . $sale->invoice_no,
+                    ]);
+                }
+
+                if ($receivablePortion > 0) {
+                    JournalEntryLine::create([
+                        'journal_entry_id' => $entry->id,
+                        'account_id' => $receivableAccount->id,
+                        'debit' => $receivablePortion,
+                        'credit' => 0,
+                        'notes' => 'Piutang Penjualan ' . $sale->invoice_no,
+                    ]);
+                }
+            } else {
+                // Regular Cash Sale
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $cashAccount->id,
+                    'debit' => $sale->grand_total,
+                    'credit' => 0,
+                    'notes' => 'Penjualan ' . $sale->invoice_no,
+                ]);
+            }
 
             // Cr. Penjualan
             JournalEntryLine::create([
@@ -292,12 +320,19 @@ class AccountingService
             $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
             
             // Determine payment account based on payment method
-            $paymentAccount = match($goodsReceipt->payment_method) {
-                'cash' => Account::where('code', '1-1100')->first(), // Kas
-                'transfer' => Account::where('code', '1-1200')->first(), // Bank
-                'due_date' => Account::where('code', '2-1200')->first(), // Utang Jatuh Tempo
-                default => Account::where('code', '1-1100')->first(),
-            };
+            $paymentAccount = null;
+            if ($goodsReceipt->payment_method === 'transfer' && $goodsReceipt->bank_account_id) {
+                $paymentAccount = Account::find($goodsReceipt->bank_account_id);
+            }
+
+            if (!$paymentAccount) {
+                $paymentAccount = match($goodsReceipt->payment_method) {
+                    'cash' => Account::where('code', '1-1100')->first(), // Kas
+                    'transfer' => Account::where('code', '1-1200')->first(), // Bank (Fallback)
+                    'due_date' => Account::where('code', '2-1200')->first(), // Utang Jatuh Tempo
+                    default => Account::where('code', '1-1100')->first(),
+                };
+            }
 
             if (!$inventoryAccount || !$paymentAccount) {
                 $missing = [];
@@ -480,11 +515,18 @@ class AccountingService
             // Get accounts
             $payableAccount = Account::where('code', '2-1200')->first(); // Utang Jatuh Tempo
             
-            $paymentAccount = match($payment->payment_method) {
-                'cash' => Account::where('code', '1-1100')->first(), // Kas
-                'transfer' => Account::where('code', '1-1200')->first(), // Bank
-                default => Account::where('code', '1-1100')->first(),
-            };
+            $paymentAccount = null;
+            if ($payment->payment_method === 'transfer' && $payment->account_id) {
+                $paymentAccount = Account::find($payment->account_id);
+            }
+
+            if (!$paymentAccount) {
+                $paymentAccount = match($payment->payment_method) {
+                    'cash' => Account::where('code', '1-1100')->first(), // Kas
+                    'transfer' => Account::where('code', '1-1200')->first(), // Bank
+                    default => Account::where('code', '1-1100')->first(),
+                };
+            }
 
             if (!$payableAccount || !$paymentAccount) {
                 $missing = [];
@@ -1151,11 +1193,18 @@ public function processReceivablePayment($receivableId, $data)
         $receivable->save();
 
         // 3. Create Journal Entry (Cash/Bank Debit, Accounts Receivable Credit)
-        $paymentAccount = match($data['payment_method'] ?? 'cash') {
-            'cash' => Account::where('code', '1-1100')->first(), // Kas
-            'transfer' => Account::where('code', '1-1200')->first(), // Bank
-            default => Account::where('code', '1-1100')->first(),
-        };
+        $paymentAccount = null;
+        if (($data['payment_method'] ?? 'cash') === 'transfer' && !empty($data['account_id'])) {
+            $paymentAccount = Account::find($data['account_id']);
+        }
+
+        if (!$paymentAccount) {
+            $paymentAccount = match($data['payment_method'] ?? 'cash') {
+                'cash' => Account::where('code', '1-1100')->first(), // Kas
+                'transfer' => Account::where('code', '1-1200')->first(), // Bank (Fallback)
+                default => Account::where('code', '1-1100')->first(),
+            };
+        }
         
         $receivableAccount = Account::where('code', '1-1300')->first(); // Piutang Usaha
 
@@ -1198,6 +1247,91 @@ public function processReceivablePayment($receivableId, $data)
         \DB::rollBack();
         throw $e;
     }
+    }
+
+    /**
+     * Process Supplier Payment (Hutang)
+     */
+    public function processSupplierPayment($goodsReceiptId, $data)
+    {
+        $gr = \App\Models\GoodsReceipt::findOrFail($goodsReceiptId);
+        $outstanding = $gr->total_amount - $gr->paid_amount;
+
+        if ($data['amount'] > $outstanding + 0.01) {
+            throw new \Exception('Jumlah pembayaran melebihi sisa hutang.');
+        }
+
+        \DB::beginTransaction();
+        try {
+            // 1. Create Payment Record
+            $payment = \App\Models\SupplierPayment::create([
+                'goods_receipt_id' => $gr->id,
+                'user_id' => auth()->id() ?? 1,
+                'amount' => $data['amount'],
+                'payment_method' => $data['payment_method'] ?? 'cash',
+                'account_id' => $data['account_id'] ?? null,
+                'payment_date' => $data['date'] ?? now(),
+                'notes' => $data['notes'] ?? null,
+            ]);
+
+            // 2. Update GR Balance and Status
+            $gr->updatePaymentStatus();
+
+            // 3. Create Journal Entry (Accounts Payable Debit, Cash/Bank Credit)
+            $paymentAccount = null;
+            if (($data['payment_method'] ?? 'cash') === 'transfer' && !empty($data['account_id'])) {
+                $paymentAccount = Account::find($data['account_id']);
+            }
+
+            if (!$paymentAccount) {
+                $paymentAccount = match($data['payment_method'] ?? 'cash') {
+                    'cash' => Account::where('code', '1-1100')->first(), // Kas
+                    'transfer' => Account::where('code', '1-1200')->first(), // Bank (Fallback)
+                    default => Account::where('code', '1-1100')->first(),
+                };
+            }
+            
+            $payableAccount = Account::where('code', '2-1200')->first(); // Utang Jatuh Tempo
+
+            if ($paymentAccount && $payableAccount) {
+                $entry = JournalEntry::create([
+                    'entry_number' => JournalEntry::generateEntryNumber(),
+                    'user_id' => auth()->id() ?? 1,
+                    'date' => $data['date'] ?? now(),
+                    'description' => 'Pelunasan Hutang - ' . ($gr->purchaseOrder->supplier->name ?? 'Supplier'),
+                    'source' => 'supplier_payment',
+                    'source_id' => $payment->id,
+                ]);
+
+                // Dr. Utang Jatuh Tempo
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $payableAccount->id,
+                    'debit' => $data['amount'],
+                    'credit' => 0,
+                    'notes' => 'Pelunasan Hutang - ' . ($gr->purchaseOrder->supplier->name ?? 'Supplier'),
+                ]);
+
+                // Cr. Kas/Bank
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $paymentAccount->id,
+                    'debit' => 0,
+                    'credit' => $data['amount'],
+                    'notes' => 'Pembayaran Hutang - ' . ($gr->purchaseOrder->supplier->name ?? 'Supplier'),
+                ]);
+
+                // Post journal
+                $entry->post();
+            }
+
+            \DB::commit();
+            return $payment;
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            throw $e;
+        }
     }
 
     /**

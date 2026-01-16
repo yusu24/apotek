@@ -148,4 +148,8 @@ class ProductIndex extends Component
             session()->flash('error', 'Gagal menghapus produk: ' . $e->getMessage());
         }
     }
+    public function exportExcel()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ProductsExport, 'Data-Obat-' . date('d-m-Y') . '.xlsx');
+    }
 }

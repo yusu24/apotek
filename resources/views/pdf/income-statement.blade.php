@@ -66,20 +66,14 @@
     </style>
 </head>
 <body>
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
-        <tr>
-            <td align="center" style="text-align: center; vertical-align: middle;">
-                <center>
-                    <div class="store-name" style="font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center;">{{ $store['name'] }}</div>
-                    <div class="report-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center;">LABA RUGI</div>
-                    <div class="period" style="font-size: 10pt; margin-top: 5px; color: #666; text-align: center;">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                    </div>
-                    <div class="currency" style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam IDR)</div>
-                </center>
-            </td>
-        </tr>
-    </table>
+    <div style="width: 100%; text-align: center !important; margin-bottom: 20px; display: block; position: relative;">
+        <h1 style="margin: 0; padding: 0; font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center !important; color: #000;">{{ $store['name'] }}</h1>
+        <h2 style="margin: 5px 0; padding: 0; font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center !important;">LABA RUGI</h2>
+        <p style="margin: 2px 0; padding: 0; font-size: 10pt; color: #666; text-align: center !important;">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+        </p>
+        <p style="margin: 2px 0; padding: 0; font-size: 9pt; font-style: italic; color: #666; text-align: center !important;">(dalam IDR)</p>
+    </div>
 
     <table>
         <thead>

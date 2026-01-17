@@ -4,76 +4,88 @@
     <meta charset="UTF-8">
     <title>Laporan Laba Rugi</title>
     <style>
-        @page { margin: 20px 40px; }
-        body { font-family: sans-serif; font-size: 9pt; color: #000; margin: 0; padding: 0; }
+        body { font-family: sans-serif; font-size: 10pt; color: #333; }
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
         .header-table td { text-align: center; }
         .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; }
         .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; }
         .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; }
-        .currency { font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        th, td { padding: 4px 5px; vertical-align: top; }
-        
-        thead th { 
-            background-color: #00BFFF; /* Cyan color matching image */
-            color: white; 
-            text-align: left; 
-            font-weight: normal; 
-            padding: 5px 10px;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px 10px; }
+        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
         
         .section-header { 
+            background-color: #f3f4f6; 
             font-weight: bold; 
-            background-color: #f9fafb;
-            padding-top: 10px;
+            padding-top: 15px; 
+            padding-bottom: 5px;
+            color: #111;
+            border-bottom: 1px solid #ddd;
         }
         
-        .account-row td { padding-left: 20px; }
+        .account-row td { padding-left: 20px; border-bottom: 1px solid #eee; }
         
         .subtotal-row td { 
             font-weight: bold; 
-            border-top: 1px solid #ccc;
+            background-color: #fce7f3; /* Light pink for expense subtotal */
+            color: #be123c;
+            border-top: 1px solid #fecdd3;
+            padding-top: 5px;
+            padding-bottom: 10px;
+        }
+
+        /* Specific style for Revenue total if needed different */
+        .revenue-total-row td {
+            font-weight: bold;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border-top: 1px solid #bae6fd;
             padding-top: 5px;
             padding-bottom: 10px;
         }
         
         .section-total-row td {
             font-weight: bold;
-            padding-top: 5px;
-            padding-bottom: 10px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            background-color: #f0f9ff;
+            color: #0e7490;
         }
 
         .grand-total-row td {
             font-weight: bold;
-            border-top: 1px solid #000;
-            padding-top: 5px;
+            font-size: 12pt;
+            background-color: #333; /* Dark background like Cash Flow */
+            color: white;
+            padding: 10px;
         }
         
         .text-right { text-align: right; }
         
         .footer { 
-            position: fixed; 
-            bottom: 0px; 
-            left: 0px; 
-            right: 0px; 
-            height: 20px; 
-            font-size: 8pt;
-            border-top: 1px solid #000;
-            padding-top: 2px;
+            margin-top: 50px; 
+            border-top: 1px solid #eee; 
+            padding-top: 10px; 
+            font-size: 8pt; 
+            color: #999; 
+            display: flex; 
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
-    <div style="width: 100%; text-align: center !important; margin-bottom: 20px; display: block; position: relative;">
-        <h1 style="margin: 0; padding: 0; font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center !important; color: #000;">{{ $store['name'] }}</h1>
-        <h2 style="margin: 5px 0; padding: 0; font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center !important;">LABA RUGI</h2>
-        <p style="margin: 2px 0; padding: 0; font-size: 10pt; color: #666; text-align: center !important;">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-        </p>
-        <p style="margin: 2px 0; padding: 0; font-size: 9pt; font-style: italic; color: #666; text-align: center !important;">(dalam IDR)</p>
-    </div>
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="report-title">LABA RUGI</div>
+                <div class="period">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
+                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam IDR)</div>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

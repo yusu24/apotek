@@ -66,14 +66,20 @@
     </style>
 </head>
 <body>
-    <div style="text-align: center; width: 100%; margin-bottom: 25px;">
-        <div class="store-name" style="font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px;">{{ $store['name'] }}</div>
-        <div class="report-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555;">LABA RUGI</div>
-        <div class="period" style="font-size: 10pt; margin-top: 5px; color: #666;">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-        </div>
-        <div class="currency" style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam IDR)</div>
-    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+        <tr>
+            <td align="center" style="text-align: center; vertical-align: middle;">
+                <center>
+                    <div class="store-name" style="font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center;">{{ $store['name'] }}</div>
+                    <div class="report-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center;">LABA RUGI</div>
+                    <div class="period" style="font-size: 10pt; margin-top: 5px; color: #666; text-align: center;">
+                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                    </div>
+                    <div class="currency" style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam IDR)</div>
+                </center>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

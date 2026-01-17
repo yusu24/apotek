@@ -68,9 +68,9 @@
 <body>
     <table class="header-table">
         <tr>
-            <td>
+            <td align="center" style="text-align: center;">
                 <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LAPORAN</div>
+                <div class="report-title">LABA RUGI</div>
                 <div class="period">
                     Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
                 </div>
@@ -119,7 +119,7 @@
                 <td class="text-right">{{ number_format($reportData['gross_profit'], 2, ',', '.') }}</td>
             </tr>
 
-            {{-- Beban Umum dan Administrasi --}}
+            {{-- Beban Operasional --}}
             <tr class="section-header"><td colspan="2">Beban Operasional</td></tr>
              @foreach($reportData['operating_expense_accounts'] as $account)
                  <tr class="account-row">
@@ -155,7 +155,7 @@
 
             {{-- Beban Pajak --}}
             @if(isset($reportData['tax_accounts']) && $reportData['tax_accounts']->count() > 0)
-                <tr class="section-header"><td colspan="2">Beban Pajak</td></tr>
+                <tr class="section-header"><td colspan="2">Beban Pajak (PPh)</td></tr>
                 @foreach($reportData['tax_accounts'] as $account)
                      <tr class="account-row">
                         <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
@@ -163,7 +163,7 @@
                     </tr>
                 @endforeach
                  <tr class="subtotal-row">
-                    <td>Total Beban Pajak</td>
+                    <td>Total Beban Pajak (PPh)</td>
                     <td class="text-right">( {{ number_format($reportData['total_tax_expenses'], 2, ',', '.') }} )</td>
                 </tr>
             @endif

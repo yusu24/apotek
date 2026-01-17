@@ -13,12 +13,13 @@ class TransactionHistory extends Component
 {
     use WithPagination;
 
-    public $searchProduct = '';
-    public $selectedProducts = [];
+    public $search = '';
+    public $type = 'all'; // all, sale, purchase, adjustment, return, return-supplier
     public $startDate;
     public $endDate;
     public $perPage = 50;
-    public $highlightIndex = 0;
+    public $sortBy = 'created_at';
+    public $sortDirection = 'desc';
 
     public function mount()
     {
@@ -31,63 +32,13 @@ class TransactionHistory extends Component
         $this->endDate = now()->format('Y-m-d');
     }
 
-    public function selectProduct($productId)
+    public function updatedSearch()
     {
-        $product = Product::find($productId);
-        if ($product && !collect($this->selectedProducts)->contains('id', $productId)) {
-            $this->selectedProducts[] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'barcode' => $product->barcode,
-            ];
-        }
-        $this->searchProduct = '';
-        $this->highlightIndex = 0;
         $this->resetPage();
     }
 
-    public function updatedSearchProduct()
+    public function updatedType()
     {
-        $this->highlightIndex = 0;
-    }
-
-    public function incrementHighlight()
-    {
-        $count = count($this->searchResults);
-        if ($this->highlightIndex < $count - 1) {
-            $this->highlightIndex++;
-        }
-    }
-
-    public function decrementHighlight()
-    {
-        if ($this->highlightIndex > 0) {
-            $this->highlightIndex--;
-        }
-    }
-
-    public function selectHighlighted()
-    {
-        $searchresults = $this->searchResults;
-
-        if (!empty($searchresults) && isset($searchresults[$this->highlightIndex])) {
-            $this->selectProduct($searchresults[$this->highlightIndex]->id);
-        }
-    }
-
-    public function removeProduct($productId)
-    {
-        $this->selectedProducts = collect($this->selectedProducts)
-            ->filter(fn($p) => $p['id'] != $productId)
-            ->values()
-            ->all();
-    }
-
-    public function resetFilters()
-    {
-        $this->startDate = now()->subDays(30)->format('Y-m-d');
-        $this->endDate = now()->format('Y-m-d');
-        $this->perPage = 50;
         $this->resetPage();
     }
 
@@ -106,37 +57,90 @@ class TransactionHistory extends Component
         $this->resetPage();
     }
 
-    public function getHistory($productId)
+    public function resetFilters()
     {
-        $query = StockMovement::where('product_id', $productId)
-            ->with(['batch', 'user']);
-
-        if ($this->startDate) {
-            $query->whereDate('created_at', '>=', $this->startDate);
-        }
-        if ($this->endDate) {
-            $query->whereDate('created_at', '<=', $this->endDate);
-        }
-
-        return $query->latest()->paginate($this->perPage, ['*'], 'page_' . $productId);
+        $this->search = '';
+        $this->type = 'all';
+        $this->startDate = now()->subDays(30)->format('Y-m-d');
+        $this->endDate = now()->format('Y-m-d');
+        $this->perPage = 50;
+        $this->sortBy = 'created_at';
+        $this->sortDirection = 'desc';
+        $this->resetPage();
     }
 
-    public function getSearchResultsProperty()
+    public function sortByColumn($column)
     {
-        if (strlen($this->searchProduct) < 2) {
-            return [];
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public function getTransactionsProperty()
+    {
+        $query = StockMovement::with(['product', 'batch', 'user']);
+
+        // Apply sorting
+        if ($this->sortBy === 'product') {
+            $query->join('products', 'products.id', '=', 'stock_movements.product_id')
+                ->select('stock_movements.*')
+                ->orderBy('products.name', $this->sortDirection);
+        } elseif ($this->sortBy === 'created_at') {
+            $query->orderBy('stock_movements.created_at', $this->sortDirection);
+        } else {
+            $query->orderBy($this->sortBy, $this->sortDirection);
         }
 
-        return Product::where('name', 'like', '%' . $this->searchProduct . '%')
-            ->orWhere('barcode', 'like', '%' . $this->searchProduct . '%')
-            ->limit(5)
-            ->get();
+        if ($this->startDate) {
+            $query->whereDate('stock_movements.created_at', '>=', $this->startDate);
+        }
+        
+        if ($this->endDate) {
+            $query->whereDate('stock_movements.created_at', '<=', $this->endDate);
+        }
+
+        if ($this->type !== 'all') {
+            if ($this->type === 'sale') {
+                $query->whereIn('type', ['sale', 'return']); // Include customer returns in sales context? Or strictly sale? Code mostly uses 'sale'. 
+                // Let's stick to exact type match if user wants specific.
+                // But for "Penjualan", usually includes Sale.
+                $query->where('type', 'sale');
+            } elseif ($this->type === 'purchase') {
+                $query->whereIn('type', ['in']); // 'in' is often purchase/receipt
+            } elseif ($this->type === 'return') {
+                $query->whereIn('type', ['return', 'return-supplier']);
+            } else {
+                $query->where('type', $this->type);
+            }
+        }
+
+        if ($this->search) {
+            $query->whereHas('product', function($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('barcode', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        return $query->paginate($this->perPage);
+    }
+
+    public function exportPdf()
+    {
+        return redirect()->route('pdf.transaction-history', [
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate,
+            'type' => $this->type,
+            'search' => $this->search,
+        ]);
     }
 
     public function render()
     {
         return view('livewire.reports.transaction-history', [
-            'searchresults' => $this->searchResults,
+            'transactions' => $this->transactions,
         ]);
     }
 }

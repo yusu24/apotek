@@ -70,7 +70,7 @@
         <tr>
             <td>
                 <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LABA RUGI</div>
+                <div class="report-title">LAPORAN</div>
                 <div class="period">
                     Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
                 </div>
@@ -100,8 +100,8 @@
                 <td class="text-right">{{ number_format($reportData['total_revenue'], 2, ',', '.') }}</td>
             </tr>
 
-            {{-- Beban Pokok Pendapatan --}}
-            <tr class="section-header"><td colspan="2">Beban Pokok Pendapatan</td></tr>
+            {{-- Harga Pokok Penjualan (HPP) --}}
+            <tr class="section-header"><td colspan="2">Harga Pokok Penjualan (HPP)</td></tr>
             @foreach($reportData['cogs_accounts'] as $account)
                  <tr class="account-row">
                     <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
@@ -109,7 +109,7 @@
                 </tr>
             @endforeach
              <tr class="subtotal-row">
-                <td>Total dari Beban Pokok Pendapatan</td>
+                <td>Total HPP</td>
                 <td class="text-right">( {{ number_format($reportData['total_cogs'], 2, ',', '.') }} )</td>
             </tr>
 
@@ -120,7 +120,7 @@
             </tr>
 
             {{-- Beban Umum dan Administrasi --}}
-            <tr class="section-header"><td colspan="2">Beban Umum dan Administrasi</td></tr>
+            <tr class="section-header"><td colspan="2">Beban Operasional</td></tr>
              @foreach($reportData['operating_expense_accounts'] as $account)
                  <tr class="account-row">
                     <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
@@ -128,33 +128,48 @@
                 </tr>
             @endforeach
             <tr class="subtotal-row">
-                <td>Total dari Beban Umum dan Administrasi</td>
+                <td>Total Beban Operasional</td>
                 <td class="text-right">( {{ number_format($reportData['total_operating_expenses'], 2, ',', '.') }} )</td>
             </tr>
 
-            {{-- Pendapatan (Beban Lain-lain) title only to match image logic if needed contextually --}}
-             <tr class="section-header"><td colspan="2">Pendapatan (Beban Lain-lain)</td></tr>
-             
+            {{-- Beban Lain-lain --}}
              @if($reportData['other_expense_accounts']->count() > 0)
-                <tr class="section-header" style="padding-left: 10px;"><td colspan="2" style="font-weight: normal; font-style: italic;">Beban Lain-Lain</td></tr>
+                 <tr class="section-header"><td colspan="2">Beban Lain-Lain</td></tr>
                 @foreach($reportData['other_expense_accounts'] as $account)
                      <tr class="account-row">
                         <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                        <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td> {{-- Usually negative --}}
+                        <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
                     </tr>
                 @endforeach
+                 <tr class="subtotal-row">
+                    <td>Total Beban Lain-lain</td>
+                    <td class="text-right">( {{ number_format($reportData['total_other_expenses'], 2, ',', '.') }} )</td>
+                </tr>
              @endif
-            
-             <tr class="subtotal-row">
-                <td>Total dari Pendapatan (Beban Lain-lain)</td>
-                <td class="text-right">{{ number_format($reportData['total_other_expenses'] * -1, 2, ',', '.') }}</td>
+             
+            {{-- Laba Sebelum Pajak --}}
+            <tr class="section-total-row">
+                <td>Laba Sebelum Pajak</td>
+                <td class="text-right">{{ number_format($reportData['net_income_before_tax'] ?? $reportData['net_income'], 2, ',', '.') }}</td>
             </tr>
 
-            {{-- EBITDA - Assuming we don't calculate Depreciation separately yet, using Net Income logic for now --}}
-            {{-- For simplicity matching current logic to image structure --}}
-            
+            {{-- Beban Pajak --}}
+            @if(isset($reportData['tax_accounts']) && $reportData['tax_accounts']->count() > 0)
+                <tr class="section-header"><td colspan="2">Beban Pajak</td></tr>
+                @foreach($reportData['tax_accounts'] as $account)
+                     <tr class="account-row">
+                        <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
+                        <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
+                    </tr>
+                @endforeach
+                 <tr class="subtotal-row">
+                    <td>Total Beban Pajak</td>
+                    <td class="text-right">( {{ number_format($reportData['total_tax_expenses'], 2, ',', '.') }} )</td>
+                </tr>
+            @endif
+
              <tr class="grand-total-row">
-                <td>EAT (Earnings After Tax Expense)</td>
+                <td>Laba Bersih</td>
                 <td class="text-right">{{ number_format($reportData['net_income'], 2, ',', '.') }}</td>
             </tr>
 

@@ -1,14 +1,14 @@
 <div class="p-6">
     <div class="flex justify-between items-start mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">
-                Laporan Laba Rugi
+                <h2 class="text-2xl font-bold text-gray-800">
+                Laporan
             </h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Kinerja Keuangan & Analisis Laba</p>
         </div>
         <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
             </svg>
             <span>Export PDF</span>
         </a>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         {{-- Penjualan Bersih --}}
         <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #4338ca; border-color: #3730a3;">
             <div class="flex items-center gap-3 mb-2">
@@ -90,7 +90,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold uppercase opacity-80">Laba Kotor</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Gross Profit Margin (Laba Kotor)</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($grossProfit, 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Penjualan - HPP</p>
@@ -102,10 +102,22 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold uppercase opacity-80">Total Beban</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Operating Expense (Beban)</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($expenses, 0, ',', '.') }}</p>
             <p class="text-[10px] text-white/60 mt-1 italic">Operasional & Lainnya</p>
+        </div>
+
+        {{-- Laba Sebelum Pajak --}}
+        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #d97706; border-color: #b45309;">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="p-2 bg-white/20 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                </div>
+                <p class="text-[10px] font-bold uppercase opacity-80">Pre-Tax Profit (Laba Link. Pajak)</p>
+            </div>
+            <p class="text-xl font-bold">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</p>
+            <p class="text-[10px] text-white/60 mt-1 italic">Sebelum Potong Pajak</p>
         </div>
 
         {{-- Laba Bersih --}}
@@ -114,10 +126,10 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 </div>
-                <p class="text-[10px] font-bold uppercase opacity-80">Laba Bersih</p>
+                <p class="text-[10px] font-bold uppercase opacity-80">Net Profit Margin (Laba Bersih)</p>
             </div>
             <p class="text-xl font-bold">Rp {{ number_format($netProfit, 0, ',', '.') }}</p>
-            <p class="text-[10px] text-white/60 mt-1 italic">Hasil Akhir</p>
+            <p class="text-[10px] text-white/60 mt-1 italic">Setelah Pajak</p>
         </div>
     </div>
 
@@ -237,6 +249,41 @@
                 </table>
             </div>
         </div>
+        
+        <!-- Tax Expenses Detail -->
+        @if($taxDetails->count() > 0)
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+                <h3 class="font-bold text-gray-800">Detail Beban Pajak (PPh)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-white border-b text-gray-500 font-bold">
+                        <tr>
+                            <th class="px-6 py-4">Tanggal</th>
+                            <th class="px-6 py-4">Keterangan</th>
+                            <th class="px-6 py-4 text-right">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        @foreach($taxDetails as $tax)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($tax->date)->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4">{{ $tax->description }}</td>
+                            <td class="px-6 py-4 text-right font-bold text-rose-600">Rp {{ number_format($tax->amount, 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
+                        <tr>
+                            <td colspan="2" class="px-6 py-4">TOTAL PAJAK</td>
+                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp {{ number_format($taxExpenses, 0, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        @endif
     </div>
     
     <!-- Footer Summary -->
@@ -266,6 +313,14 @@
                     <div class="flex justify-between">
                         <span class="opacity-60">Beban Ops</span>
                         <span class="text-rose-400">- Rp {{ number_format($expenses, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="border-t border-gray-700 my-1 pt-1 flex justify-between">
+                        <span class="opacity-80">Laba Sblm Pajak</span>
+                        <span class="{{ $netProfitBeforeTax >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="opacity-60">Beban Pajak PPh</span>
+                        <span class="text-rose-400">- Rp {{ number_format($taxExpenses, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>

@@ -444,10 +444,27 @@ class PdfController extends Controller
      */
     public function exportStockReport(Request $request)
     {
+        $search = $request->get('search');
+        $categoryFilter = $request->get('category');
+        $stockStatus = $request->get('stockStatus');
+
         // Fetch products with active batches
-        $products = Product::with(['unit', 'batches' => function($query) {
+        $query = Product::with(['unit', 'batches' => function($query) {
             $query->where('stock_current', '>', 0);
-        }])->get();
+        }]);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('barcode', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($categoryFilter) {
+            $query->where('category_id', $categoryFilter);
+        }
+
+        $products = $query->get();
 
         // Calculate totals for each product
         $products->transform(function($product) {
@@ -463,11 +480,14 @@ class PdfController extends Controller
             return $product;
         });
 
-        // Filter out products with 0 stock if needed, or keep all. 
-        // For "Laporan Barang", usually we want to see what we have. 
-        // Let's keep those with stock > 0 for a cleaner report, or as per standard practice.
-        // The reference image shows items with stock. Let's filter > 0 to match "Inventory Report" typical usage,
-        // unless implies "Master Data". Given "Stock" and "Saldo", implies Inventory Value.
+        // Filter by stock status if needed
+        if ($stockStatus === 'low') {
+            $products = $products->filter(function($product) {
+                return $product->total_stock <= $product->min_stock;
+            });
+        }
+
+        // Filter out products with 0 stock to match screen view
         $products = $products->filter(function($product) {
             return $product->total_stock > 0;
         });
@@ -492,6 +512,71 @@ class PdfController extends Controller
 
         $filename = 'Laporan-Barang-' . Carbon::now()->format('Ymd') . '.pdf';
 
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+    /**
+     * Export Transaction History to PDF
+     */
+    public function exportTransactionHistory(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->subDays(30)->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->format('Y-m-d'));
+        $type = $request->get('type', 'all');
+        $search = $request->get('search');
+
+        $query = StockMovement::with(['product'])
+            ->orderBy('created_at', 'desc'); // Order by latest
+
+        // Apply same filters
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+        if ($type !== 'all') {
+            if ($type === 'sale') {
+                $query->where('type', 'sale');
+            } elseif ($type === 'purchase') {
+                $query->whereIn('type', ['in']);
+            } elseif ($type === 'return') {
+                $query->whereIn('type', ['return', 'return-supplier']);
+            } else {
+                $query->where('type', $type);
+            }
+        }
+        if ($search) {
+            $query->whereHas('product', function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('barcode', 'like', '%' . $search . '%');
+            });
+        }
+
+        $transactions = $query->limit(500)->get();
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.transaction-history', [
+            'transactions' => $transactions,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'type' => $type,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Riwayat-Transaksi-' . Carbon::now()->format('Ymd_His') . '.pdf';
+        
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
 }

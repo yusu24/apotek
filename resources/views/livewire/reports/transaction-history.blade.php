@@ -1,189 +1,169 @@
 <div class="p-6 space-y-6">
-    <div class="no-print">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-            {{ __('Riwayat Transaksi Produk') }}
-        </h2>
-        <p class="text-sm text-gray-500 font-medium mt-1">Pantau pergerakan stok dan riwayat penjualan setiap produk.</p>
+    <div class="no-print flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                {{ __('Riwayat Transaksi') }}
+            </h2>
+            <p class="text-sm text-gray-500 font-medium mt-1">Pantau semua pergerakan stok dan transaksi.</p>
+        </div>
+        <a href="{{ route('pdf.transaction-history', ['startDate' => $startDate, 'endDate' => $endDate, 'type' => $type, 'search' => $search]) }}" 
+           target="_blank"
+           class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+            <span class="hidden sm:inline">Export PDF</span>
+        </a>
     </div>
             
-    <!-- Filter Bar (Always Visible) -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
-        <div class="flex flex-col lg:flex-row gap-4 lg:items-end">
-            <!-- Product Search -->
-            <div class="flex-1 relative min-w-[200px]">
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Cari Produk</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
-                    <input wire:model.live.debounce.300ms="searchProduct" 
-                        wire:keydown.arrow-down.prevent="incrementHighlight"
-                        wire:keydown.arrow-up.prevent="decrementHighlight"
-                        wire:keydown.enter="selectHighlighted"
-                        type="text" placeholder="Cari nama atau barcode..." class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-medium">
-                </div>
-
-                @if(count($searchresults) > 0)
-                    <div class="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden max-h-60 overflow-y-auto">
-                        @foreach($searchresults as $index => $product)
-                            <button wire:click="selectProduct({{ $product->id }})" 
-                                class="w-full flex items-center gap-3 px-4 py-2.5 {{ $highlightIndex === $index ? 'bg-blue-100 dark:bg-blue-900/40' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20' }} text-left transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
-                                <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.628.283a2 2 0 01-1.186.12l-1.423-.284a2 2 0 00-1.25.123l-1.033.516a2 2 0 01-1.002.273H3.5"></path></svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ $product->name }}</div>
-                                    <div class="text-xs text-gray-500 truncate">{{ $product->barcode }}</div>
-                                </div>
-                            </button>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-
-            <!-- Date Filters -->
-            <div class="shrink-0 w-full md:w-auto">
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Periode Transaksi</label>
-                <div class="flex items-center gap-2">
-                    <input type="date" wire:model.live="startDate" class="w-full md:w-40 px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
-                    <span class="text-gray-400">-</span>
-                    <input type="date" wire:model.live="endDate" class="w-full md:w-40 px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center">
+            <!-- Date Filters (Row 1 on Mobile, Left on Desktop) -->
+            <div class="flex items-center gap-2 w-full md:w-auto order-1">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Periode</label>
+                <div class="flex items-center gap-1.5 flex-1 md:flex-none">
+                    <input type="date" wire:model.live="startDate" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                    <span class="text-gray-400 font-bold">-</span>
+                    <input type="date" wire:model.live="endDate" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
             </div>
-            
-            <!-- Page Size & Reset -->
-            <div class="flex items-end gap-2 shrink-0">
-                <div class="w-28 sm:w-32">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Tampilkan</label>
-                    <select wire:model.live="perPage" class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-bold text-gray-700">
-                        <option value="25">25 Data</option>
-                        <option value="50">50 Data</option>
-                        <option value="100">100 Data</option>
-                        <option value="200">200 Data</option>
-                    </select>
-                </div>
 
-                <div class="shrink-0">
-                    <button wire:click="resetFilters" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors text-sm flex items-center justify-center gap-2 border border-transparent hover:border-gray-300 h-[38px]" title="Reset semua filter">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                        </svg>
-                        <span class="hidden sm:inline">Reset</span>
-                    </button>
-                </div>
+            <!-- Search (Row 2 on Mobile, Center on Desktop) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Produk</label>
+                <input wire:model.live.debounce.300ms="search" 
+                    type="text" placeholder="Nama atau barcode..." 
+                    class="w-full md:w-64 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
+
+            <!-- Reset (Row 2 on Mobile, Right on Desktop) -->
+            <div class="order-3 md:ml-auto">
+                <button wire:click="resetFilters" class="px-3 md:px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 shadow-sm font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Reset semua filter">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span class="hidden md:inline">Reset Filter</span>
+                </button>
             </div>
         </div>
-
-        <!-- Selected Products Tags -->
-        @if(count($selectedProducts) > 0)
-            <div class="mt-3 flex flex-wrap gap-2">
-                @foreach($selectedProducts as $p)
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-bold text-xs border border-blue-100 dark:border-blue-800">
-                        {{ $p['name'] }}
-                        <button wire:click="removeProduct({{ $p['id'] }})" class="hover:text-red-500 transition-colors">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </span>
-                @endforeach
-            </div>
-        @endif
     </div>
 
-    <!-- History Cards (Only show when products selected) -->
-
-            @if(count($selectedProducts) > 0)
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                    @foreach($selectedProducts as $p)
-                        <div class="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 h-fit" wire:key="history-{{ $p['id'] }}">
-                            @php $history = $this->getHistory($p['id']); @endphp
-                            <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50 flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">{{ $p['name'] }}</h4>
-                                    <p class="text-xs text-gray-500">{{ $p['barcode'] }}</p>
-                                    <p class="text-[10px] text-blue-600 font-bold mt-1">{{ $history->total() }} transaksi ditemukan</p>
-                                </div>
-                                <button wire:click="removeProduct({{ $p['id'] }})" class="text-gray-400 hover:text-red-500">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
-                            
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left">
-                                    <thead>
-                                        <tr class="text-xs font-medium uppercase text-gray-500">
-                                            <th class="px-4 py-3">Tanggal</th>
-                                            <th class="px-4 py-3">Tipe</th>
-                                            <th class="px-4 py-3 text-right">Qty</th>
-                                            <th class="px-4 py-3">Ref / Batch</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
-                                        @forelse($history as $item)
-                                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors">
-                                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                                    {{ $item->created_at->format('d/m/y H:i') }}
-                                                </td>
-                                                <td class="px-4 py-4 text-sm">
-                                                    @php
-                                                        $colors = [
-                                                            'sale' => 'text-blue-600 bg-blue-50 dark:bg-blue-900/20',
-                                                            'in' => 'text-green-600 bg-green-50 dark:bg-green-900/20',
-                                                            'adjustment' => 'text-amber-600 bg-amber-50 dark:bg-amber-900/20',
-                                                            'return' => 'text-red-600 bg-red-50 dark:bg-red-900/20',
-                                                        ];
-                                                        $typeColor = $colors[$item->type] ?? 'text-gray-600 bg-gray-50';
-                                                    @endphp
-                                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ $typeColor }}">
-                                                        {{ $item->type }}
-                                                    </span>
-                                                </td>
-                                                <td class="px-4 py-4 text-right text-sm text-gray-900 dark:text-white">
-                                                    <span class="font-bold {{ in_array($item->type, ['sale', 'return-supplier']) ? 'text-red-600' : 'text-green-600' }}">
-                                                        {{ in_array($item->type, ['sale', 'return-supplier']) ? '-' : '+' }}{{ number_format($item->quantity, 0) }}
-                                                    </span>
-                                                </td>
-                                                <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                                    <div class="truncate max-w-[100px]" title="{{ $item->doc_ref }}">
-                                                        {{ $item->doc_ref ?: '-' }}
-                                                    </div>
-                                                    <div class="text-[11px] font-mono text-gray-400">
-                                                        {{ $item->batch->batch_no ?? '-' }}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="4" class="px-6 py-10 text-center text-gray-400 italic">Data Tidak Ditemukan</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                                
-                                <!-- Pagination -->
-                                @if(count($history) > 0)
-                                    <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
-                                        {{ $history->links() }}
-                                    </div>
+    <!-- Data Table -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-900/50">
+                    <tr class="text-xs font-bold uppercase text-gray-500 tracking-wider">
+                        <th wire:click="sortByColumn('created_at')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Tanggal
+                                @if($sortBy === 'created_at')
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
+                                    </svg>
                                 @endif
                             </div>
-                            @if(count($history) > 0)
-                                <div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 text-center">
-                                    <a href="{{ route('inventory.history', $p['id']) }}" wire:navigate class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors uppercase">
-                                        Lihat Histori Lengkap &rarr;
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <!-- Blank State -->
-                <div class="flex flex-col items-center justify-center py-24 text-gray-400 space-y-4">
-                    <div class="w-24 h-24 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <p class="font-medium">Belum ada produk yang dipilih untuk dipantau.</p>
-                </div>
-            @endif
+                        </th>
+                        <th wire:click="sortByColumn('product')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Produk
+                                @if($sortBy === 'product')
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('type')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Tipe
+                                @if($sortBy === 'type')
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th class="px-6 py-4">Ref / Batch</th>
+                        <th wire:click="sortByColumn('quantity')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100/50 transition-colors">
+                            <div class="flex items-center justify-end gap-1">
+                                Qty
+                                @if($sortBy === 'quantity')
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th class="px-6 py-4">Admin</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
+                    @forelse($transactions as $item)
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                <div class="font-medium text-gray-900 dark:text-white">{{ $item->created_at->format('d/m/Y') }}</div>
+                                <div class="text-xs">{{ $item->created_at->format('H:i') }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-bold text-gray-900 dark:text-white">{{ $item->product->name ?? '-' }}</div>
+                                <div class="text-xs text-gray-500">{{ $item->product->barcode ?? '-' }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                @php
+                                    $colors = [
+                                        'sale' => 'text-blue-700 bg-blue-50 border-blue-100',
+                                        'in' => 'text-green-700 bg-green-50 border-green-100',
+                                        'adjustment' => 'text-amber-700 bg-amber-50 border-amber-100',
+                                        'return' => 'text-purple-700 bg-purple-50 border-purple-100',
+                                        'return-supplier' => 'text-red-700 bg-red-50 border-red-100',
+                                    ];
+                                    $typeColor = $colors[$item->type] ?? 'text-gray-700 bg-gray-50 border-gray-100';
+                                    
+                                    $labels = [
+                                        'sale' => 'Penjualan',
+                                        'in' => 'Masuk (Beli)',
+                                        'adjustment' => 'Opname',
+                                        'return' => 'Retur Jual',
+                                        'return-supplier' => 'Retur Beli',
+                                    ];
+                                    $label = $labels[$item->type] ?? ucfirst($item->type);
+                                @endphp
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase border {{ $typeColor }}">
+                                    {{ $label }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                <div class="font-mono text-xs">{{ $item->doc_ref ?: '-' }}</div>
+                                @if($item->batch)
+                                    <div class="text-[10px] text-gray-400 mt-0.5">Batch: {{ $item->batch->batch_no }}</div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="text-sm font-bold {{ $item->quantity < 0 ? 'text-red-600' : 'text-green-600' }}">
+                                    {{ $item->quantity > 0 ? '+' : '' }}{{ number_format($item->quantity, 0) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ $item->user->name ?? '-' }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400 italic">
+                                Tidak ada transaksi yang ditemukan pada periode ini.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        @if($transactions->hasPages())
+            <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
+                {{ $transactions->links() }}
+            </div>
+        @endif
     </div>
 </div>

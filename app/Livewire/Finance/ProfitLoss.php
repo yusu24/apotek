@@ -102,17 +102,28 @@ class ProfitLoss extends Component
             return (float) $item->quantity * (float) $item->cost_price;
         });
 
-        // 3. Expenses (Beban Operasional) - Detailed records for table
-        $expenseDetails = Expense::whereDate('date', '>=', $this->startDate)
+        // 3. Expenses (Beban Operasional & Pajak)
+        $allExpenses = Expense::whereDate('date', '>=', $this->startDate)
             ->whereDate('date', '<=', $this->endDate)
             ->orderBy('date', 'desc')
             ->get();
 
-        $expenses = (float) $expenseDetails->sum('amount');
+        $taxKeywords = ['pajak', 'tax', 'beban pajak', 'income tax', 'pph', 'pajak penghasilan'];
+        
+        $taxExpenseDetails = $allExpenses->filter(function($expense) use ($taxKeywords) {
+            return in_array(strtolower($expense->category), $taxKeywords) || 
+                   \Illuminate\Support\Str::contains(strtolower($expense->description), 'pajak penghasilan');
+        });
+        
+        $operatingExpenseDetails = $allExpenses->diff($taxExpenseDetails);
+
+        $operatingExpenses = (float) $operatingExpenseDetails->sum('amount');
+        $taxExpenses = (float) $taxExpenseDetails->sum('amount');
 
         // 4. Final Calculations
         $grossProfit = $revenue - $cogs;
-        $netProfit = $grossProfit - $expenses;
+        $netProfitBeforeTax = $grossProfit - $operatingExpenses;
+        $netProfit = $netProfitBeforeTax - $taxExpenses;
         
         return [
             'revenue' => $revenue, // Net Sales
@@ -120,12 +131,16 @@ class ProfitLoss extends Component
             'totalDiscount' => $totalDiscount,
             'grandTotal' => $grandTotal,
             'cogs' => $cogs,
-            'expenses' => $expenses,
+            'operatingExpenses' => $operatingExpenses, // Replaces 'expenses' for clarity
+            'expenses' => $operatingExpenses, // Keep backward compatibility just in case, but view uses this for Operating
+            'taxExpenses' => $taxExpenses,
             'grossProfit' => $grossProfit,
+            'netProfitBeforeTax' => $netProfitBeforeTax,
             'netProfit' => $netProfit,
             'salesDetails' => $sales,
             'cogsDetails' => $cogsDetails,
-            'expenseDetails' => $expenseDetails,
+            'expenseDetails' => $operatingExpenseDetails,
+            'taxDetails' => $taxExpenseDetails,
         ];
     }
 

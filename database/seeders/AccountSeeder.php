@@ -46,14 +46,14 @@ class AccountSeeder extends Seeder
             
             // Fixed Assets
             [
-                'code' => '1-2000',
+                'code' => '1-3100',
                 'name' => 'Peralatan',
                 'type' => 'asset',
                 'category' => 'fixed_asset',
                 'is_system' => false,
             ],
             [
-                'code' => '1-2100',
+                'code' => '1-3110',
                 'name' => 'Akumulasi Penyusutan Peralatan',
                 'type' => 'asset',
                 'category' => 'fixed_asset',

@@ -51,6 +51,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/import/stock', 'importStock')->name('import.stock');
         Route::post('/import/customers', 'importCustomers')->name('import.customers');
         Route::post('/import/accounts', 'importAccounts')->name('import.accounts');
+        
+        Route::get('/import/download-expense-category-template', 'downloadExpenseCategoryTemplate')->name('import.download-expense-category-template');
+        Route::post('/import/expense-categories', 'importExpenseCategories')->name('import.expense-categories');
     });
 
 
@@ -90,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware('permission:manage opening balances');
         Route::get('/trial-balance', App\Livewire\Reports\TrialBalance::class)->name('trial-balance');
         Route::get('/cash-flow', App\Livewire\Reports\CashFlow::class)->name('cash-flow');
+        Route::get('/assets', App\Livewire\Finance\AssetIndex::class)->name('assets');
     });
     // Accounting
     Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
@@ -123,6 +127,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/balance-sheet', [App\Http\Controllers\PdfController::class, 'exportBalanceSheet'])->name('pdf.balance-sheet');
     Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
     Route::get('/pdf/stock-report', [App\Http\Controllers\PdfController::class, 'exportStockReport'])->name('pdf.stock-report');
+    Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');
+
+    // Excel Exports
+    Route::get('/excel/aging-report', [App\Http\Controllers\ExcelController::class, 'exportAgingReport'])->name('excel.aging-report');
+    Route::get('/excel/general-ledger', [App\Http\Controllers\ExcelController::class, 'exportGeneralLedger'])->name('excel.general-ledger');
+    Route::get('/excel/income-statement', [App\Http\Controllers\ExcelController::class, 'exportIncomeStatement'])->name('excel.income-statement');
 
 
     // Settings (Super Admin only)

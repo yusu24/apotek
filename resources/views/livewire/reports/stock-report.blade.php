@@ -77,32 +77,48 @@
                             </div>
                         </div>
 
+                        <!-- Category Filter -->
+                        <div class="flex-shrink-0 w-full sm:w-40 leading-none">
+                            <select wire:model.live="categoryFilter" class="block w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none h-[38px]">
+                                <option value="">Semua Kategori</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Stock Status Filter -->
+                        <div class="flex-shrink-0 w-full sm:w-40 leading-none">
+                            <select wire:model.live="stockStatus" class="block w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none h-[38px]">
+                                <option value="all">Semua Status</option>
+                                <option value="low">Stok Menipis</option>
+                            </select>
+                        </div>
+
                         <!-- Date Range Selection -->
                         <div class="shrink-0 w-full md:w-auto">
-                            <!-- Label hidden visually on small screens if needed, or kept for consistency -->
-                            {{-- <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">Periode Kadaluwarsa</label> --}}
                             <div class="flex items-center gap-2">
                                 <div class="relative">
-                                    <input wire:model.live="startExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900" placeholder="Dari">
+                                    <input wire:model.live="startExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 h-[38px]" placeholder="Dari">
                                 </div>
                                 <span class="text-gray-400">-</span>
                                 <div class="relative">
-                                    <input wire:model.live="endExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900" placeholder="Sampai">
+                                    <input wire:model.live="endExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 h-[38px]" placeholder="Sampai">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Export Buttons -->
                         <div class="flex-shrink-0 ml-auto self-end sm:self-center flex gap-2">
-                             <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+                         <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="hidden sm:inline">Export Excel</span>
+                        </button>
+                            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                <span class="hidden sm:inline">Export Excel</span>
-                            </button>
-                            <a href="{{ route('pdf.stock-report') }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                 </svg>
                                 <span class="hidden sm:inline">Export PDF</span>
                             </a>

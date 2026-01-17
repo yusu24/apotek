@@ -32,6 +32,7 @@ class ProductPerformance extends Component
             ->whereHas('sale', function ($q) use ($startDate) {
                 $q->where('created_at', '>=', $startDate)->where('status', 'completed');
             })
+            ->whereHas('product') // Only include items with existing products
             ->groupBy('product_id')
             ->orderByDesc('total_qty')
             ->with('product')
@@ -43,6 +44,7 @@ class ProductPerformance extends Component
              ->whereHas('sale', function ($q) use ($startDate) {
                 $q->where('created_at', '>=', $startDate)->where('status', 'completed');
             })
+            ->whereHas('product') // Only include items with existing products
             ->groupBy('product_id')
             ->orderBy('total_qty', 'asc')
             ->with('product')
@@ -53,7 +55,8 @@ class ProductPerformance extends Component
             'topSellingChart' => [
                 'labels' => $topSelling->pluck('product.name')->toArray(),
                 'abbreviations' => $topSelling->map(function($item) {
-                    return collect(explode(' ', $item->product->name))
+                    $name = $item->product?->name ?? 'Unknown';
+                    return collect(explode(' ', $name))
                         ->map(fn($word) => strtoupper(substr($word, 0, 1)))
                         ->take(3)
                         ->join('');
@@ -63,7 +66,8 @@ class ProductPerformance extends Component
             'slowMovingChart' => [
                 'labels' => $slowMoving->pluck('product.name')->toArray(),
                 'abbreviations' => $slowMoving->map(function($item) {
-                    return collect(explode(' ', $item->product->name))
+                    $name = $item->product?->name ?? 'Unknown';
+                    return collect(explode(' ', $name))
                         ->map(fn($word) => strtoupper(substr($word, 0, 1)))
                         ->take(3)
                         ->join('');

@@ -31,7 +31,7 @@ class AgingReport extends Component
             abort(403, 'Unauthorized');
         }
 
-        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get();
+        $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get();
         $this->generateReport();
     }
 

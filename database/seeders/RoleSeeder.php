@@ -99,6 +99,7 @@ class RoleSeeder extends Seeder
             'manage accounts',
             'create journal',
             'view general ledger',
+            'export general ledger',
             
             // Settings & Configuration
             'manage settings',
@@ -116,6 +117,7 @@ class RoleSeeder extends Seeder
             'manage sales returns',
             'manage purchase returns',
             'view trial balance',
+            'export aging report',
             'import_master_data',
         ];
 

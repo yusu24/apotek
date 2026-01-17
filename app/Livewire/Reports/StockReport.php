@@ -16,6 +16,10 @@ class StockReport extends Component
     public $search = '';
     public $startExpiry = '';
     public $endExpiry = '';
+    public $categoryFilter = '';
+    public $stockStatus = 'all'; // all, low, out_of_stock
+
+    protected $queryString = ['search', 'categoryFilter', 'stockStatus', 'startExpiry', 'endExpiry'];
 
     public function mount()
     {
@@ -30,8 +34,14 @@ class StockReport extends Component
             ->with(['product.category', 'product.unit'])
             ->where('stock_current', '>', 0)
             ->whereHas('product', function($q) {
-                $q->where('name', 'like', '%'.$this->search.'%')
-                  ->orWhere('barcode', 'like', '%'.$this->search.'%');
+                $q->where(function($sq) {
+                    $sq->where('name', 'like', '%'.$this->search.'%')
+                      ->orWhere('barcode', 'like', '%'.$this->search.'%');
+                });
+                
+                if ($this->categoryFilter) {
+                    $q->where('category_id', $this->categoryFilter);
+                }
             });
 
         if ($this->startExpiry) {
@@ -40,6 +50,12 @@ class StockReport extends Component
 
         if ($this->endExpiry) {
             $query->whereDate('expired_date', '<=', $this->endExpiry);
+        }
+
+        if ($this->stockStatus === 'low') {
+            $query->whereHas('product', function($q) {
+                $q->whereRaw('stock_current <= min_stock');
+            });
         }
 
         $batches = (clone $query)->orderBy('expired_date')->paginate(15);
@@ -54,13 +70,14 @@ class StockReport extends Component
             'batches' => $batches,
             'totalInventoryValue' => $totalInventoryValue,
             'totalStock' => $totalStock,
+            'categories' => \App\Models\Category::orderBy('name')->get(),
         ]);
     }
 
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(
-            new \App\Exports\StockReportExport($this->search, $this->startExpiry, $this->endExpiry), 
+            new \App\Exports\StockReportExport($this->search, $this->startExpiry, $this->endExpiry, $this->categoryFilter, $this->stockStatus), 
             'laporan-stok-'.date('Y-m-d').'.xlsx'
         );
     }

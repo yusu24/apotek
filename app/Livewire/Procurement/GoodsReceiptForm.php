@@ -36,7 +36,7 @@ class GoodsReceiptForm extends Component
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
         $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
-        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get(); // Load Bank Accounts
+        $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get(); // Load Bank Accounts & Other Current Assets
         
         if ($id) {
             $this->isEdit = true;

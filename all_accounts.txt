@@ -1,0 +1,24 @@
+Total accounts: 23
+1-1100 | Kas | Cat: current_asset | Type: asset
+1-1201 | Bank Mandiri | Cat: current_asset | Type: asset
+1-1202 | Bank BRI | Cat: current_asset | Type: asset
+1-1203 | Bank BNI | Cat: current_asset | Type: asset
+1-1204 | Bank BCA | Cat: current_asset | Type: asset
+1-1300 | Piutang Usaha | Cat: current_asset | Type: asset
+1-1400 | Persediaan Obat | Cat: current_asset | Type: asset
+1-3100 | Tanah | Cat: fixed_asset | Type: asset
+1-3200 | Bangunan | Cat: fixed_asset | Type: asset
+1-3210 | Akumulasi Penyusutan Bangunan | Cat: fixed_asset | Type: asset
+1-3300 | Kendaraan | Cat: fixed_asset | Type: asset
+1-3310 | Akumulasi Penyusutan Kendaraan | Cat: fixed_asset | Type: asset
+1-3400 | Peralatan | Cat: fixed_asset | Type: asset
+1-3410 | Akumulasi Penyusutan Peralatan | Cat: fixed_asset | Type: asset
+2-1100 | Utang Usaha | Cat: current_liability | Type: liability
+2-1200 | Utang Jatuh Tempo | Cat: current_liability | Type: liability
+3-1000 | Modal Pemilik | Cat: capital | Type: equity
+3-2000 | Laba Ditahan | Cat: capital | Type: equity
+4-1000 | Penjualan Obat | Cat: sales | Type: revenue
+4-1100 | Retur Penjualan | Cat: sales | Type: revenue
+5-1000 | Harga Pokok Penjualan (COGS) | Cat: cogs | Type: expense
+5-2100 | Beban Listrik & Air | Cat: operating_expense | Type: expense
+5-2400 | Beban Penyusutan | Cat: operating_expense | Type: expense

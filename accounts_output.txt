@@ -1,0 +1,10 @@
+Found 9 accounts:
+ID: 1 | Name: Kas | Category: current_asset | Type: asset
+ID: 2 | Name: Bank Mandiri | Category: current_asset | Type: asset
+ID: 3 | Name: Bank BRI | Category: current_asset | Type: asset
+ID: 4 | Name: Bank BNI | Category: current_asset | Type: asset
+ID: 5 | Name: Bank BCA | Category: current_asset | Type: asset
+ID: 6 | Name: Piutang Usaha | Category: current_asset | Type: asset
+ID: 7 | Name: Persediaan Obat | Category: current_asset | Type: asset
+ID: 15 | Name: Utang Usaha | Category: current_liability | Type: liability
+ID: 16 | Name: Utang Jatuh Tempo | Category: current_liability | Type: liability

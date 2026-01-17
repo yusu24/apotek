@@ -4,14 +4,24 @@
             Buku Besar (General Ledger)
         </h2>
         <div class="flex gap-2">
-            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate]) }}" 
+            @can('export general ledger')
+            <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate]) }}" 
                target="_blank"
-               class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+               class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
+               title="Export Excel">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                <span>Export PDF</span>
+                <span class="hidden sm:inline">Export Excel</span>
             </a>
+            @endcan
+            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
+   title="Export PDF">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+    </svg>
+    <span class="hidden sm:inline">Export PDF</span>
+</a>
         </div>
     </div>
 

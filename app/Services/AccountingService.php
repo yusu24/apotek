@@ -737,8 +737,26 @@ class AccountingService
         
         // Separate COGS from other expenses
         $cogsAccounts = $expenseAccounts->where('category', 'cogs');
-        $operatingExpenses = $expenseAccounts->where('category', 'operating_expense');
-        $otherExpenses = $expenseAccounts->where('category', 'other');
+        
+        // Identify Tax Accounts
+        $taxKeywords = ['tax', 'pajak', 'pph'];
+        $taxAccounts = $expenseAccounts->filter(function($account) use ($taxKeywords) {
+            $category = strtolower($account->category ?? '');
+            $name = strtolower($account->name ?? '');
+            return \Illuminate\Support\Str::contains($category, $taxKeywords) || 
+                   \Illuminate\Support\Str::contains($name, $taxKeywords);
+        });
+        
+        // Remaining accounts are Operating or Other (excluding COGS and Tax)
+        $operatingExpenses = $expenseAccounts->where('category', 'operating_expense')
+            ->diff($taxAccounts);
+            
+        $otherExpenses = $expenseAccounts->where('category', 'other')
+            ->diff($taxAccounts);
+
+        // Fallback: If any account is not grabbed by above logic (e.g. unknown category but not tax), put to Other
+        // But for simplicity, let's assume standard categories. 
+        // We need to ensure we don't double count.
         
         // Calculate totals
         $totalRevenue = $revenueAccounts->sum('balance');
@@ -747,9 +765,12 @@ class AccountingService
         
         $totalOperatingExpenses = $operatingExpenses->sum('balance');
         $totalOtherExpenses = $otherExpenses->sum('balance');
-        $totalExpenses = $totalOperatingExpenses + $totalOtherExpenses;
+        $totalTaxExpenses = $taxAccounts->sum('balance');
         
-        $netIncome = $grossProfit - $totalExpenses;
+        $totalExpenses = $totalOperatingExpenses + $totalOtherExpenses + $totalTaxExpenses;
+        
+        $netIncomeBeforeTax = $grossProfit - ($totalOperatingExpenses + $totalOtherExpenses);
+        $netIncome = $netIncomeBeforeTax - $totalTaxExpenses;
         
         return [
             'revenue_accounts' => $revenueAccounts,
@@ -761,10 +782,14 @@ class AccountingService
             
             'operating_expense_accounts' => $operatingExpenses,
             'other_expense_accounts' => $otherExpenses,
+            'tax_accounts' => $taxAccounts,
+            
             'total_operating_expenses' => $totalOperatingExpenses,
             'total_other_expenses' => $totalOtherExpenses,
+            'total_tax_expenses' => $totalTaxExpenses,
             'total_expenses' => $totalExpenses,
             
+            'net_income_before_tax' => $netIncomeBeforeTax,
             'net_income' => $netIncome,
             'start_date' => $startDate,
             'end_date' => $endDate,
@@ -1543,4 +1568,117 @@ public function processReceivablePayment($receivableId, $data)
             'data' => $ledgerData,
         ];
     }
+
+    /**
+     * Post asset depreciation journal automatically
+     */
+    public function postAssetDepreciation(int $assetId, string $periodDate): ?\App\Models\AssetDepreciation
+    {
+        $asset = \App\Models\FixedAsset::findOrFail($assetId);
+        $date = \Carbon\Carbon::parse($periodDate)->endOfMonth();
+        $dateKey = $date->format('Y-m-d');
+
+        // Check if already depreciated for this month
+        if (\App\Models\AssetDepreciation::where('fixed_asset_id', $assetId)->where('period_date', $dateKey)->exists()) {
+            return null;
+        }
+
+        $depreciationAmount = $this->calculateDepreciationAmount($asset, $date->month, $date->year);
+
+        if ($depreciationAmount <= 0) {
+            return null;
+        }
+
+        DB::beginTransaction();
+        try {
+            // Create journal entry
+            $entry = JournalEntry::create([
+                'entry_number' => JournalEntry::generateEntryNumber(),
+                'date' => $dateKey,
+                'description' => 'Penyusutan Aset - ' . $asset->asset_name . ' (' . $date->format('M Y') . ')',
+                'source' => 'asset_depreciation',
+                'source_id' => $assetId,
+                'user_id' => Auth::id() ?? 1,
+            ]);
+
+            // Dr. Beban Penyusutan
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $asset->depreciation_expense_account_id,
+                'debit' => $depreciationAmount,
+                'credit' => 0,
+                'notes' => 'Penyusutan ' . $asset->asset_name,
+            ]);
+
+            // Cr. Akumulasi Penyusutan
+            JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id' => $asset->accumulated_depreciation_account_id,
+                'debit' => 0,
+                'credit' => $depreciationAmount,
+                'notes' => 'Akumulasi Penyusutan ' . $asset->asset_name,
+            ]);
+
+            // Post journal
+            $entry->post();
+
+            // Record Depreciation
+            $depreciation = \App\Models\AssetDepreciation::create([
+                'fixed_asset_id' => $assetId,
+                'journal_entry_id' => $entry->id,
+                'period_date' => $dateKey,
+                'amount' => $depreciationAmount,
+                'book_value_after' => $asset->book_value - $depreciationAmount,
+            ]);
+
+            DB::commit();
+            return $depreciation;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Calculate depreciation amount based on ID Tax UU PPh
+     */
+    public function calculateDepreciationAmount(\App\Models\FixedAsset $asset, int $month, int $year): float
+    {
+        $taxGroups = \App\Models\FixedAsset::getTaxGroups();
+        $group = $taxGroups[$asset->tax_group] ?? null;
+
+        if (!$group) return 0;
+
+        $targetDate = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
+        
+        // Don't depreciate if before acquisition
+        if ($targetDate->lt($asset->acquisition_date->startOfMonth())) {
+            return 0;
+        }
+
+        // Don't depreciate if fully depreciated
+        if ($asset->book_value <= $asset->salvage_value) {
+            return 0;
+        }
+
+        $annualRate = ($asset->method === 'declining_balance') ? $group['db_rate'] : $group['sl_rate'];
+        $monthlyAmount = 0;
+
+        if ($asset->method === 'straight_line') {
+            // SL: (Acquisition Cost - Salvage) * Rate / 12
+            $monthlyAmount = ($asset->acquisition_cost - $asset->salvage_value) * $annualRate / 12;
+        } else {
+            // DB: Book Value * Rate / 12 (Simplified for monthly context in UU PPh)
+            // Note: In some practices, DB is annual. Here we use current book value for monthly.
+            $monthlyAmount = $asset->book_value * $annualRate / 12;
+        }
+
+        // Adjustment for the last month to hit salvage value exactly
+        if ($asset->book_value - $monthlyAmount < $asset->salvage_value) {
+            $monthlyAmount = $asset->book_value - $asset->salvage_value;
+        }
+
+        return (float) round($monthlyAmount, 2);
+    }
 }
+

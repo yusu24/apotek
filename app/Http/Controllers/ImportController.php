@@ -174,4 +174,25 @@ class ImportController extends Controller
             return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
         }
     }
+
+    public function downloadExpenseCategoryTemplate()
+    {
+        abort_if(!auth()->user()->can('manage expense categories'), 403);
+        return Excel::download(new \App\Exports\ExpenseCategoryTemplateExport, 'template_kategori_pengeluaran.xlsx');
+    }
+
+    public function importExpenseCategories(Request $request)
+    {
+        abort_if(!auth()->user()->can('manage expense categories'), 403);
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        try {
+            Excel::import(new \App\Imports\ExpenseCategoriesImport, $request->file('file'));
+            return redirect()->back()->with('message', 'Kategori Pengeluaran berhasil diimport!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
+        }
+    }
 }

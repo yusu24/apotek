@@ -1,181 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Laporan PPN - {{ $monthName }}</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body { font-family: sans-serif; font-size: 10pt; color: #333; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .header-table td { text-align: center; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; }
+        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px 10px; }
+        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
+        
+        .section-header { 
+            background-color: #f3f4f6; 
+            font-weight: bold; 
+            padding-top: 15px; 
+            padding-bottom: 5px;
+            color: #111;
+            border-bottom: 1px solid #ddd;
         }
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 11px;
-            line-height: 1.4;
-            color: #333;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #333;
-        }
-        .header h1 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .header p {
-            font-size: 12px;
-            color: #666;
-        }
-        .summary {
-            margin-bottom: 20px;
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 5px;
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 12px;
-        }
-        .summary-row strong {
-            font-weight: bold;
-        }
-        .summary-total {
-            border-top: 2px solid #333;
+        
+        .sub-row td { padding-left: 10px; border-bottom: 1px solid #eee; font-size: 9pt; }
+        
+        .total-row td { 
+            font-weight: bold; 
+            background-color: #f0f9ff; 
+            color: #000;
+            border-top: 1px solid #cbd5e1;
             padding-top: 8px;
-            margin-top: 8px;
-            font-size: 13px;
-            font-weight: bold;
+            padding-bottom: 8px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .section-title {
-            background: #333;
-            color: white;
-            padding: 8px 10px;
-            font-weight: bold;
-            font-size: 12px;
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
-        th {
-            background: #f0f0f0;
-            padding: 8px 6px;
-            text-align: left;
-            font-weight: bold;
-            font-size: 10px;
-            border: 1px solid #ddd;
-        }
-        th.text-right, td.text-right {
-            text-align: right;
-        }
-        td {
-            padding: 6px 6px;
-            border: 1px solid #ddd;
-            font-size: 10px;
-        }
-        tfoot td {
-            background: #f9f9f9;
-            font-weight: bold;
-            font-size: 11px;
-        }
-        .footer {
-            margin-top: 40px;
-            display: flex;
+        
+        /* Specific Status Badges adapted for PDF */
+        .status-badge { padding: 2px 6px; border-radius: 3px; font-size: 9pt; font-weight: bold; color: white; display: inline-block; }
+        .status-kurang { background-color: #ef4444; } /* Red */
+        .status-lebih { background-color: #f59e0b; } /* Amber */
+        .status-nihil { background-color: #10b981; } /* Green */
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        
+        .footer { 
+            margin-top: 50px; 
+            border-top: 1px solid #eee; 
+            padding-top: 10px; 
+            font-size: 8pt; 
+            color: #999; 
+            display: flex; 
             justify-content: space-between;
-        }
-        .signature-box {
-            text-align: center;
-            width: 45%;
-        }
-        .signature-line {
-            margin-top: 60px;
-            border-top: 1px solid #333;
-            padding-top: 5px;
-        }
-        .empty-row {
-            text-align: center;
-            color: #999;
-            font-style: italic;
-            padding: 20px;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-weight: bold;
-            font-size: 10px;
-        }
-        .status-kurang {
-            background: #fee;
-            color: #c00;
-        }
-        .status-lebih {
-            background: #ffc;
-            color: #c60;
-        }
-        .status-nihil {
-            background: #efe;
-            color: #060;
         }
     </style>
 </head>
 <body>
-    {{-- Header --}}
-    <div class="header">
-        <h1>LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</h1>
-        <p>Periode: {{ $monthName }}</p>
-        <p style="font-size: 10px; color: #999;">Dicetak: {{ now()->format('d/m/Y H:i') }} oleh {{ auth()->user()->name }}</p>
-    </div>
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
+                <div class="period">
+                    Periode: {{ $monthName }}
+                </div>
+                <div style="font-size: 9pt; margin-top: 5px; font-style: italic;">(dalam Mata Uang Rupiah IDR)</div>
+            </td>
+        </tr>
+    </table>
 
-    {{-- Summary --}}
-    <div class="summary">
-        <div class="summary-row">
-            <span>Total PPN Keluaran (Output Tax):</span>
-            <strong>Rp {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</strong>
-        </div>
-        <div class="summary-row">
-            <span>Total PPN Masukan (Input Tax):</span>
-            <strong>Rp {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</strong>
-        </div>
-        <div class="summary-total summary-row">
-            <span>
-                @if($data['status'] === 'kurang_bayar')
-                    <span class="status-badge status-kurang">KURANG BAYAR</span>
-                @elseif($data['status'] === 'lebih_bayar')
-                    <span class="status-badge status-lebih">LEBIH BAYAR</span>
-                @else
-                    <span class="status-badge status-nihil">NIHIL</span>
-                @endif
-            </span>
-            <strong style="font-size: 14px;">Rp {{ number_format(abs($data['kurang_lebih']), 0, ',', '.') }}</strong>
-        </div>
-    </div>
+    {{-- Summary Section --}}
+    <table style="width: 100%; margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th colspan="2">RINGKASAN PAJAK</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="sub-row">
+                <td>Total PPN Keluaran (Output Tax)</td>
+                <td class="text-right" style="font-weight: bold;">Rp {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="sub-row">
+                <td>Total PPN Masukan (Input Tax)</td>
+                <td class="text-right" style="font-weight: bold;">Rp {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="total-row">
+                <td>
+                    STATUS: 
+                    @if($data['status'] === 'kurang_bayar')
+                        <span style="color: #ef4444;">KURANG BAYAR</span>
+                    @elseif($data['status'] === 'lebih_bayar')
+                        <span style="color: #f59e0b;">LEBIH BAYAR</span>
+                    @else
+                        <span style="color: #10b981;">NIHIL</span>
+                    @endif
+                </td>
+                <td class="text-right" style="font-size: 11pt;">Rp {{ number_format(abs($data['kurang_lebih']), 0, ',', '.') }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    {{-- PPN Keluaran --}}
-    <div class="section-title">A. PPN KELUARAN (OUTPUT TAX) - PENJUALAN</div>
+    {{-- A. PPN KELUARAN --}}
+    <div class="section-header" style="margin-top: 20px; padding: 10px; border-bottom: 2px solid #ccc;">A. PPN KELUARAN (OUTPUT TAX) - PENJUALAN</div>
     <table>
         <thead>
             <tr>
-                <th style="width: 8%;">No</th>
-                <th style="width: 15%;">Tanggal</th>
-                <th style="width: 22%;">No. Invoice</th>
-                <th class="text-right" style="width: 20%;">DPP</th>
-                <th class="text-right" style="width: 20%;">PPN 11%</th>
-                <th class="text-right" style="width: 15%;">Total</th>
+                <th style="width: 5%">No</th>
+                <th style="width: 15%">Tanggal</th>
+                <th style="width: 20%">No. Invoice</th>
+                <th class="text-right" style="width: 20%">DPP</th>
+                <th class="text-right" style="width: 20%">PPN 11%</th>
+                <th class="text-right" style="width: 20%">Total</th>
             </tr>
         </thead>
         <tbody>
             @forelse($data['ppn_keluaran_details'] as $index => $sale)
-            <tr>
+            <tr class="sub-row">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</td>
                 <td>{{ $sale->invoice_no }}</td>
@@ -185,38 +125,37 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="empty-row">Tidak ada transaksi penjualan dengan PPN pada periode ini.</td>
+                <td colspan="6" class="text-center" style="padding: 15px; font-style: italic; color: #777;">Tidak ada transaksi penjualan dengan PPN pada periode ini.</td>
             </tr>
             @endforelse
-        </tbody>
-        @if($data['ppn_keluaran_details']->count() > 0)
-        <tfoot>
-            <tr>
-                <td colspan="3" style="text-align: right;">TOTAL PPN KELUARAN:</td>
+            
+            @if($data['ppn_keluaran_details']->count() > 0)
+            <tr class="total-row">
+                <td colspan="3" class="text-right">TOTAL PPN KELUARAN</td>
                 <td class="text-right">{{ number_format($data['total_dpp_keluaran'], 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($data['total_dpp_keluaran'] + $data['total_ppn_keluaran'], 0, ',', '.') }}</td>
             </tr>
-        </tfoot>
-        @endif
+            @endif
+        </tbody>
     </table>
 
-    {{-- PPN Masukan --}}
-    <div class="section-title">B. PPN MASUKAN (INPUT TAX) - PEMBELIAN</div>
+    {{-- B. PPN MASUKAN --}}
+    <div class="section-header" style="margin-top: 20px; padding: 10px; border-bottom: 2px solid #ccc;">B. PPN MASUKAN (INPUT TAX) - PEMBELIAN</div>
     <table>
         <thead>
             <tr>
-                <th style="width: 8%;">No</th>
-                <th style="width: 15%;">Tanggal</th>
-                <th style="width: 22%;">No. Surat Jalan</th>
-                <th class="text-right" style="width: 20%;">DPP</th>
-                <th class="text-right" style="width: 20%;">PPN 11%</th>
-                <th class="text-right" style="width: 15%;">Total</th>
+                <th style="width: 5%">No</th>
+                <th style="width: 15%">Tanggal</th>
+                <th style="width: 20%">No. Surat Jalan</th>
+                <th class="text-right" style="width: 20%">DPP</th>
+                <th class="text-right" style="width: 20%">PPN 11%</th>
+                <th class="text-right" style="width: 20%">Total</th>
             </tr>
         </thead>
         <tbody>
             @forelse($data['ppn_masukan_details'] as $index => $purchase)
-            <tr>
+            <tr class="sub-row">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ \Carbon\Carbon::parse($purchase->date)->format('d/m/Y') }}</td>
                 <td>{{ $purchase->delivery_note_number }}</td>
@@ -226,32 +165,24 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="empty-row">Tidak ada transaksi pembelian dengan PPN pada periode ini.</td>
+                <td colspan="6" class="text-center" style="padding: 15px; font-style: italic; color: #777;">Tidak ada transaksi pembelian dengan PPN pada periode ini.</td>
             </tr>
             @endforelse
-        </tbody>
-        @if($data['ppn_masukan_details']->count() > 0)
-        <tfoot>
-            <tr>
-                <td colspan="3" style="text-align: right;">TOTAL PPN MASUKAN:</td>
+            
+            @if($data['ppn_masukan_details']->count() > 0)
+            <tr class="total-row">
+                <td colspan="3" class="text-right">TOTAL PPN MASUKAN</td>
                 <td class="text-right">{{ number_format($data['total_dpp_masukan'], 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($data['total_dpp_masukan'] + $data['total_ppn_masukan'], 0, ',', '.') }}</td>
             </tr>
-        </tfoot>
-        @endif
+            @endif
+        </tbody>
     </table>
 
-    {{-- Footer / Signature --}}
     <div class="footer">
-        <div class="signature-box">
-            <div>Manajer</div>
-            <div class="signature-line">(...........................)</div>
-        </div>
-        <div class="signature-box">
-            <div>Petugas Keuangan</div>
-            <div class="signature-line">(...........................)</div>
-        </div>
+        <div>Dicetak oleh: {{ $printedBy }}</div>
+        <div>Waktu cetak: {{ $printedAt }}</div>
     </div>
 </body>
 </html>

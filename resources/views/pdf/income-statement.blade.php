@@ -66,18 +66,14 @@
     </style>
 </head>
 <body>
-    <table class="header-table">
-        <tr>
-            <td align="center" style="text-align: center;">
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LABA RUGI</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
-                <div class="currency">(dalam IDR)</div>
-            </td>
-        </tr>
-    </table>
+    <div style="text-align: center; width: 100%; margin-bottom: 25px;">
+        <div class="store-name" style="font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px;">{{ $store['name'] }}</div>
+        <div class="report-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555;">LABA RUGI</div>
+        <div class="period" style="font-size: 10pt; margin-top: 5px; color: #666;">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+        </div>
+        <div class="currency" style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam IDR)</div>
+    </div>
 
     <table>
         <thead>

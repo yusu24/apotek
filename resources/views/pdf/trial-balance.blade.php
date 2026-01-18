@@ -3,53 +3,17 @@
 <head>
     <title>Neraca Saldo</title>
     <style>
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 11px;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #1e3a8a;
-            padding-bottom: 10px;
-        }
-        .store-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1e3a8a;
-            text-transform: uppercase;
-        }
-        .report-title {
-            font-size: 16px;
-            margin: 5px 0;
-            font-weight: bold;
-            text-align: center;
-        }
-        .period {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th {
-            background-color: #1e3a8a;
-            color: white;
-            padding: 8px;
-            text-align: left;
-            text-transform: uppercase;
-            font-size: 10px;
-        }
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #e5e7eb;
-        }
+        @page { margin: 20pt 30pt; }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11px; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
+        .header-table td { text-align: center; padding: 0; }
+        .store-name { font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center; margin: 0; }
+        .report-title { font-size: 16px; font-weight: bold; text-align: center; margin-top: 5px; }
+        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
+        th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        th { background-color: #1e3a8a; color: white; text-align: left; text-transform: uppercase; font-size: 10px; }
         .text-right { text-align: right; }
         .font-bold { font-weight: bold; }
         .bg-gray-100 { background-color: #f3f4f6; }
@@ -84,12 +48,12 @@
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px;">
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
-                <div style="font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>
-                <div style="font-size: 16px; margin-top: 5px; font-weight: bold; text-align: center;">NERACA SALDO (TRIAL BALANCE)</div>
-                <div style="font-size: 12px; color: #666; margin-top: 5px; text-align: center;">
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
+                <div class="period">
                     Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
                 </div>
             </td>

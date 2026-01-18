@@ -84,13 +84,17 @@
     </style>
 </head>
 <body>
-    <center style="margin-bottom: 30px; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px;">
-        <div class="store-name">{{ $store['name'] }}</div>
-        <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
-        <div class="period">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
-        </div>
-    </center>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px;">
+        <tr>
+            <td align="center">
+                <div style="font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>
+                <div style="font-size: 16px; margin-top: 5px; font-weight: bold; text-align: center;">NERACA SALDO (TRIAL BALANCE)</div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px; text-align: center;">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

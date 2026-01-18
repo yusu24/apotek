@@ -75,13 +75,17 @@
     </style>
 </head>
 <body>
-    <center style="margin-bottom: 15px;">
-        <h1 style="margin: 0; font-size: 14px; text-transform: uppercase;">{{ $store['name'] }}</h1>
-        <div style="margin: 1px 0; font-size: 9px; color: #555;">{{ $store['address'] }}</div>
-        <div style="margin: 1px 0; font-size: 9px; color: #555;">{{ $store['phone'] }}</div>
-        <h2 style="margin-top: 10px; font-size: 14px; text-transform: uppercase;">LAPORAN RIWAYAT TRANSAKSI</h2>
-        <div style="margin: 1px 0; font-size: 9px; color: #555;">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
-    </center>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px;">
+        <tr>
+            <td align="center">
+                <h1 style="margin: 0; font-size: 14px; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</h1>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">{{ $store['address'] }}</div>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">{{ $store['phone'] }}</div>
+                <h2 style="margin-top: 10px; font-size: 14px; text-transform: uppercase; text-align: center;">LAPORAN RIWAYAT TRANSAKSI</h2>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
+            </td>
+        </tr>
+    </table>
 
     <table style="margin-bottom: 10px;">
         <thead>

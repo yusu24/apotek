@@ -308,12 +308,16 @@
 </head>
 <body>
     <div class="container">
-        <center style="width: 100%; margin-bottom: 15px; border-bottom: 3px solid #2563eb; padding-bottom: 12px;">
-            <div class="apotek-name">{{ $apotekName }}</div>
-            <div class="doc-title">KARTU STOK</div>
-            <div class="product-name">{{ $product->name }}</div>
-            <div class="period">Periode: {{ $period }}</div>
-        </center>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-bottom: 3px solid #2563eb; padding-bottom: 12px;">
+            <tr>
+                <td align="center">
+                    <div style="font-size: 16pt; font-weight: bold; color: #1e40af; margin-bottom: 3px; text-align: center;">{{ $apotekName }}</div>
+                    <div style="font-size: 13pt; font-weight: bold; color: #374151; margin-bottom: 3px; text-align: center;">KARTU STOK</div>
+                    <div style="font-size: 11pt; font-weight: bold; color: #059669; text-align: center;">{{ $product->name }}</div>
+                    <div style="font-size: 10pt; color: #6b7280; font-weight: bold; text-align: center;">Periode: {{ $period }}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Product Information -->
         <div class="product-info">

@@ -596,7 +596,7 @@ class Cashier extends Component
     {
         $this->subtotal = 0;
         $total_item_discount = 0;
-        $this->tax = 0; // Reset text
+        $this->tax = 0; 
         
         $ppn_rate = (float)\App\Models\Setting::get('pos_ppn_rate', 11) / 100;
 
@@ -612,10 +612,9 @@ class Cashier extends Component
             $net_item_total = $line_total_gross - $total_line_discount;
             
             $this->subtotal += $line_total_gross; 
-            
             $total_item_discount += $total_line_discount;
             
-            // Calculate Item PPN
+            // Item Level Tax (currently rarely used but kept for structure)
             if (isset($item['has_ppn']) && $item['has_ppn']) {
                 $item_tax = (float)$net_item_total * (float)$ppn_rate;
                 $this->tax += $item_tax;
@@ -626,26 +625,32 @@ class Cashier extends Component
             $this->cart[$key]['discount_amount_calculated'] = $discount_amount_per_unit; 
         }
 
-        // Net Amount after item and global discounts
+        // Net Amount after item and global discounts (This is the "Price to be Taxed")
         $net_before_sc = (float)$this->subtotal - (float)$total_item_discount - (float)$this->global_discount;
         if ($net_before_sc < 0) $net_before_sc = 0;
 
         // Service Charge calculation (applied on net amount)
         $this->service_charge_amount = $net_before_sc * ((float)$this->service_charge / 100);
         
-        // Base Grand Total (Net + Service Charge)
-        $net_amount = $net_before_sc + $this->service_charge_amount;
+        // Base Amount for PPN
+        $base_for_tax = $net_before_sc + $this->service_charge_amount;
 
-        // Add PPN (Global logic merged with Item logic)
-        if ($this->ppn_mode === 'inclusive') {
-             // Inclusive calculation typically: Total / (1 + rate)
-             // However, for simplicity and alignment with existing logic:
-        } elseif ($this->ppn_mode === 'exclusive') {
-             $this->tax += $net_amount * $ppn_rate; 
+        // PPN Mode Logic
+        if ($this->ppn_mode === 'exclusive') {
+            $this->tax += $base_for_tax * $ppn_rate; 
+            $this->dpp = $base_for_tax; 
+            $this->grand_total = $base_for_tax + $this->tax;
+        } elseif ($this->ppn_mode === 'inclusive') {
+            // DPP = Total / (1 + rate)
+            $this->grand_total = $base_for_tax;
+            $this->dpp = $base_for_tax / (1 + $ppn_rate);
+            $this->tax += $base_for_tax - $this->dpp;
+        } else {
+            // OFF
+            $this->dpp = $base_for_tax;
+            $this->grand_total = $base_for_tax;
+            // tax remains what was calculated at item level (usually 0)
         }
-        
-        $this->dpp = $net_amount; 
-        $this->grand_total = $net_amount + $this->tax;
 
         // Rounding for cash (Ceil to nearest 100)
         $raw_total = $this->grand_total;

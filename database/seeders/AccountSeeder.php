@@ -76,6 +76,13 @@ class AccountSeeder extends Seeder
                 'is_system' => true,
             ],
             [
+                'code' => '2-1300',
+                'name' => 'PPN Keluaran',
+                'type' => 'liability',
+                'category' => 'current_liability',
+                'is_system' => true,
+            ],
+            [
                 'code' => '2-2000',
                 'name' => 'Utang Bank Jangka Panjang',
                 'type' => 'liability',

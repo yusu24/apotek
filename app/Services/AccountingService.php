@@ -145,14 +145,28 @@ class AccountingService
                 ]);
             }
 
-            // Cr. Penjualan
+            // Cr. Penjualan & PPN
+            $ppnAccount = Account::where('code', '2-1300')->first(); // PPN Keluaran
+
+            // Cr. Penjualan (Revenue = DPP)
             JournalEntryLine::create([
                 'journal_entry_id' => $entry->id,
                 'account_id' => $salesAccount->id,
                 'debit' => 0,
-                'credit' => $sale->grand_total,
-                'notes' => 'Penjualan ' . $sale->invoice_no,
+                'credit' => (float)$sale->dpp,
+                'notes' => 'Penjualan (DPP) ' . $sale->invoice_no,
             ]);
+
+            // Cr. PPN Keluaran (Liability = Tax)
+            if ((float)$sale->tax > 0 && $ppnAccount) {
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $ppnAccount->id,
+                    'debit' => 0,
+                    'credit' => (float)$sale->tax,
+                    'notes' => 'PPN Penjualan ' . $sale->invoice_no,
+                ]);
+            }
 
             // Entry 2: Record COGS
             if ($cogsTotal > 0) {
@@ -1109,6 +1123,7 @@ public function getGroupedAgingReport($type = 'ar', $includePaid = false)
             $groupedData[$entityId]['invoices'][] = [
                 'number' => $item->sale->invoice_no ?? '-',
                 'date' => $item->created_at->format('d/m/Y'),
+                'dueDate' => $item->due_date ? $item->due_date->format('d/m/Y') : '-',
                 'age' => $age,
                 'amount' => $outstanding,
                 'bucket' => $bucketKey
@@ -1148,6 +1163,7 @@ public function getGroupedAgingReport($type = 'ar', $includePaid = false)
             $groupedData[$entityId]['invoices'][] = [
                 'number' => $item->delivery_note_number,
                 'date' => \Carbon\Carbon::parse($item->received_date)->format('d/m/Y'),
+                'dueDate' => $item->due_date ? \Carbon\Carbon::parse($item->due_date)->format('d/m/Y') : '-',
                 'age' => $age,
                 'amount' => $outstanding,
                 'bucket' => $bucketKey

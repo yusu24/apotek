@@ -19,8 +19,8 @@ new class extends Component
 <div class="contents">
     <!-- Sidebar Navigation -->
     <nav id="sidebar" 
-         class="fixed inset-y-0 left-0 z-[60] w-64 bg-gray-900 border-r border-gray-800 text-gray-100 flex flex-col transition-all duration-300 xl:translate-x-0 -translate-x-full"
-         :class="$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'">
+         class="fixed inset-y-0 left-0 z-[60] w-64 bg-gray-900 border-r border-gray-800 text-gray-100 flex flex-col transition-all duration-300 sm:translate-x-0 -translate-x-full"
+         :class="$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
         
         <!-- Sidebar Header -->
         <div class="h-16 flex items-center justify-center px-6 bg-gray-950/50 border-b border-gray-800 relative">
@@ -32,7 +32,7 @@ new class extends Component
                 @endif
             </a>
             <!-- Close button for mobile -->
-            <button @click="$store.mobileNav.close()" class="xl:hidden absolute right-4 text-gray-400 hover:text-white transition-colors">
+            <button @click="$store.mobileNav.close()" class="sm:hidden absolute right-4 text-gray-400 hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -173,23 +173,23 @@ new class extends Component
             @endcanany
  
             <!-- Group: Laporan Keuangan -->
-            @canany(['view sales reports', 'view stock', 'view stock movements', 'view reports'])
+            @canany(['view profit loss', 'view balance sheet', 'view income statement', 'view trial balance', 'view ppn report', 'view ap aging report', 'view general ledger'])
             @php
-                $isFinanceReportActive = request()->routeIs([
-                                     'finance.income-statement', 
-                                     'finance.cash-flow', 
-                                     'finance.trial-balance', 
-                                     'finance.ppn-report', 
-                                     'finance.aging-report', 
-                                     'finance.balance-sheet',
-                                     'accounting.ledger'
-                                 ]);
+                $isFinReportActive = request()->routeIs([
+                    'finance.trial-balance',
+                    'finance.balance-sheet',
+                    'finance.income-statement',
+                    'finance.cash-flow',
+                    'accounting.ledger',
+                    'finance.ppn-report',
+                    'finance.aging-report'
+                ]);
             @endphp
-            <div x-data="{ expanded: {{ $isFinanceReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isFinanceReportActive ? 'text-white' : 'text-gray-400' }}">
+            <div x-data="{ expanded: {{ $isFinReportActive ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isFinReportActive ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <span>Laporan Keuangan</span>
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Laporan</span>
                     </div>
                     <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
@@ -239,7 +239,73 @@ new class extends Component
                     @can('view ap aging report')
                     <a href="{{ route('finance.aging-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.aging-report') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Laporan Umur Hutang & Piutang
+                        Laporan Umur Hutang dan Piutang
+                    </a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+
+            <!-- Group: Keuangan dan Administrasi -->
+            @canany(['view journals', 'view accounts', 'view expenses', 'manage expense categories', 'manage opening balances', 'view reports'])
+            @php
+                $isFinanceActive = request()->routeIs([
+                    'accounting.accounts.*',
+                    'accounting.journals.*',
+                    'finance.opening-balance',
+                    'finance.expenses',
+                    'finance.expense-categories',
+                    'finance.assets'
+                ]);
+            @endphp
+            <div x-data="{ expanded: {{ $isFinanceActive ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-gray-400' }}">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span>Keuangan & Administrasi</span>
+                    </div>
+                    <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+                <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
+                    @can('view accounts')
+                    <a href="{{ route('accounting.accounts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.accounts.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Daftar Akun
+                    </a>
+                    @endcan
+
+                    @can('view journals')
+                    <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Jurnal Umum
+                    </a>
+                    @endcan
+
+                    @can('manage opening balances')
+                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Neraca Awal
+                    </a>
+                    @endcan
+
+                    @can('view expenses')
+                    <a href="{{ route('finance.expenses') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.expenses') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        Pengeluaran
+                    </a>
+                    @endcan
+
+                    @can('manage expense categories')
+                    <a href="{{ route('finance.expense-categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.expense-categories') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
+                        Kategori Pengeluaran
+                    </a>
+                    @endcan
+
+                    @can('view reports')
+                    <a href="{{ route('finance.assets') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.assets') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        Manajemen Aset Tetap
                     </a>
                     @endcan
                 </div>
@@ -249,10 +315,17 @@ new class extends Component
             <!-- Group: Laporan Operasional -->
             @canany(['view sales reports', 'view stock', 'view stock movements'])
             @php
-                $isOperationalReportActive = request()->routeIs('reports.*') && !request()->routeIs(['finance.*', 'accounting.*']);
+                $isOpReportActive = request()->routeIs('reports.*') && !request()->routeIs([
+                    'reports.aging-report',
+                    'reports.ppn-report',
+                    'reports.balance-sheet',
+                    'reports.income-statement',
+                    'reports.trial-balance',
+                    'reports.cash-flow'
+                ]);
             @endphp
-            <div x-data="{ expanded: {{ $isOperationalReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isOperationalReportActive ? 'text-white' : 'text-gray-400' }}">
+            <div x-data="{ expanded: {{ $isOpReportActive ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isOpReportActive ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span>Laporan Operasional</span>
@@ -289,71 +362,7 @@ new class extends Component
             </div>
             @endcanany
 
-            <!-- Group: Keuangan & Administrasi -->
-            @canany(['view accounts', 'view journals', 'manage opening balances', 'view expenses', 'manage expense categories', 'view reports'])
-            @php
-                $isFinanceActive = request()->routeIs([
-                                     'finance.opening-balance', 
-                                     'accounting.journals.*', 
-                                     'accounting.accounts.*', 
-                                     'finance.expenses', 
-                                     'finance.expense-categories', 
-                                     'finance.assets'
-                                   ]);
-            @endphp
-            <div x-data="{ expanded: {{ $isFinanceActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-gray-400' }}">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        <span>Keuangan & Administrasi</span>
-                    </div>
-                    <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                </button>
-                <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
-                    @can('view accounts')
-                    <a href="{{ route('accounting.accounts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.accounts.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        Daftar Akun
-                    </a>
-                    @endcan
 
-                    @can('view journals')
-                    <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2-2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        Jurnal Umum
-                    </a>
-                    @endcan
-
-                    @can('manage opening balances')
-                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Neraca Awal
-                    </a>
-                    @endcan
-
-                    @can('view expenses')
-                    <a href="{{ route('finance.expenses') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.expenses') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        Pengeluaran
-                    </a>
-                    @endcan
-
-                    @can('manage expense categories')
-                    <a href="{{ route('finance.expense-categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.expense-categories') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
-                        Kategori Pengeluaran
-                    </a>
-                    @endcan
-
-                    @can('view reports')
-                    <a href="{{ route('finance.assets') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.assets') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        Manajemen Aset Tetap
-                    </a>
-                    @endcan
-                </div>
-            </div>
-            @endcanany
 
             @canany(['manage settings', 'manage pos settings', 'manage users', 'view activity logs'])
             <div x-data="{ expanded: {{ request()->routeIs('settings.*') || request()->routeIs('admin.users*') ? 'true' : 'false' }} }">
@@ -434,7 +443,7 @@ new class extends Component
     </nav>
 
     <!-- Mobile Header -->
-    <div class="xl:hidden bg-gray-900 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">
+    <div class="sm:hidden bg-gray-900 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">
         <div class="flex items-center gap-2">
             @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
                 <img src="{{ asset('storage/' . $logoPath) }}" class="max-h-8 w-auto object-contain" alt="Logo">
@@ -459,6 +468,6 @@ new class extends Component
          x-transition:leave="transition-opacity ease-linear duration-300"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] xl:hidden">
+         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] sm:hidden">
     </div>
 </div>

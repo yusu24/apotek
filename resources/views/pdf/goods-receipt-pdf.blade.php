@@ -227,7 +227,7 @@
         }
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 10pt;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -235,6 +235,7 @@
             text-align: left;
             border-top: 1px solid #eee;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -243,14 +244,14 @@
 </head>
 <body>
     <div class="container">
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div style="font-size: 18pt; font-weight: bold; color: #1e40af; margin-bottom: 5px; text-align: center; width: 100%;">{{ $apotekName }}</div>
-                    <div style="font-size: 14pt; font-weight: bold; color: #374151; text-align: center; width: 100%;">PENERIMAAN BARANG</div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div style="font-size: 18pt; font-weight: bold; color: #1e40af; margin-bottom: 5px; text-align: center;">{{ trim($apotekName) }}</div>
+                <div style="font-size: 14pt; font-weight: bold; color: #374151; text-align: center;">PENERIMAAN BARANG</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

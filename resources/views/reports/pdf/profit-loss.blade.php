@@ -5,44 +5,29 @@
     <meta charset="UTF-8">
     <title>Laporan Laba Rugi - {{ $storeName }}</title>
     <style>
-        @page {
-            margin: 1.5cm;
-        }
+        @page { margin: 20pt 30pt; }
         body { 
             font-family: 'Helvetica', 'Arial', sans-serif; 
             font-size: 11pt;
             line-height: 1.4;
             color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
-        .header { 
-            text-align: center; 
+        .header-table { 
+            width: 100%; 
+            border-collapse: collapse; 
             margin-bottom: 30px; 
-            border-bottom: 2px solid #000;
-            padding-bottom: 15px;
+            table-layout: fixed;
         }
-        .store-name { 
-            font-size: 20pt; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .store-address {
-            font-size: 10pt;
-            font-style: italic;
-        }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            margin-top: 20px;
-        }
-        .report-period {
-            font-size: 11pt;
-            margin-bottom: 30px;
+        .header-table td { 
+            text-align: center; 
+            padding: 0;
         }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
         
-        .p-l-table td { padding: 8px 5px; }
+        .p-l-table td { padding: 8px 5px; vertical-align: top; }
         .p-l-table .label { width: 60%; }
         .p-l-table .amount { width: 40%; text-align: right; }
         
@@ -64,7 +49,7 @@
         .footer {
             position: fixed;
             bottom: -30px;
-            left: 0; /* Changed back to left/right for better margin sync */
+            left: 0;
             right: 0;
             font-size: 8pt;
             color: #666;

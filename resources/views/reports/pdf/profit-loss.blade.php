@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Laporan Laba Rugi - {{ $storeName }}</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { 
             font-family: 'Helvetica', 'Arial', sans-serif; 
             font-size: 11pt;
@@ -17,13 +17,11 @@
         .header-table { 
             width: 100%; 
             border-collapse: collapse; 
-            margin: 0 auto 30px auto; 
-            table-layout: auto !important;
+            margin-bottom: 30px; 
+            table-layout: fixed;
         }
         .header-table td { 
-            text-align: center; 
             padding: 0;
-            width: 100%;
         }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
@@ -49,7 +47,7 @@
         
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -57,6 +55,7 @@
             text-align: left;
             border-top: 1px solid #000;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -74,18 +73,18 @@
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div style="font-size: 20pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%;">{{ $storeName }}</div>
-                    <div style="font-size: 10pt; font-style: italic; text-align: center; width: 100%;">{{ $storeAddress }}</div>
-                    <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center; width: 100%;">LAPORAN LABA RUGI</div>
-                    <div style="font-size: 11pt; margin-top: 5px; text-align: center; width: 100%;">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                    </div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div style="font-size: 20pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ trim($storeName) }}</div>
+                <div style="font-size: 10pt; font-style: italic; text-align: center;">{{ trim($storeAddress) }}</div>
+                <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center;">LAPORAN LABA RUGI</div>
+                <div style="font-size: 11pt; margin-top: 5px; text-align: center;">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

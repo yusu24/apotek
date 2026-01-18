@@ -45,7 +45,7 @@
         
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -53,6 +53,7 @@
             text-align: left;
             border-top: 1px solid #eee;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -60,18 +61,18 @@
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div class="store-name">{{ $store['name'] }}</div>
-                    <div class="report-title">LAPORAN ARUS KAS</div>
-                    <div class="period">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                    </div>
-                    <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center; width: 100%;">(dalam Mata Uang Rupiah IDR)</div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div class="store-name">{{ trim($store['name']) }}</div>
+                <div class="report-title">LAPORAN ARUS KAS</div>
+                <div class="period">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
+                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

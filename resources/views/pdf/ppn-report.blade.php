@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Laporan PPN - {{ $monthName }}</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 30px auto; table-layout: auto !important; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
-        .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; width: 100%; }
-        .report-title { font-size: 14px; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; width: 100%; }
-        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
+        .header-table td { padding: 0; vertical-align: top; }
+        .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
+        .report-title { font-size: 14px; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
+        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; }
         
         table { width: 100%; border-collapse: collapse; margin: 10px auto 0 auto; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 8px 10px; vertical-align: top; }
@@ -47,7 +47,7 @@
         
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -55,6 +55,7 @@
             text-align: left;
             border-top: 1px solid #eee;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -62,16 +63,16 @@
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div class="store-name">{{ $store['name'] }}</div>
-                    <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
-                    <div class="period">Periode: {{ $monthName }}</div>
-                    <div style="font-size: 10px; margin-top: 5px; font-style: italic; color: #666; text-align: center; width: 100%;">(dalam Mata Uang Rupiah IDR)</div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div class="store-name">{{ trim($store['name']) }}</div>
+                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
+                <div class="period">Periode: {{ $monthName }}</div>
+                <div style="font-size: 10px; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

@@ -11,6 +11,7 @@ class GeneralLedger extends Component
     public $accountId = '';
     public $startDate;
     public $endDate;
+    public $search = '';
     
     // Calculated values
     public $openingBalance = 0;
@@ -30,6 +31,9 @@ class GeneralLedger extends Component
     public function generateLedger()
     {
         if (!$this->accountId) {
+            $this->ledgerLines = [];
+            $this->openingBalance = 0;
+            $this->endingBalance = 0;
             return;
         }
 
@@ -55,14 +59,23 @@ class GeneralLedger extends Component
         }
 
         // Get Lines within Period
-        $this->ledgerLines = JournalEntryLine::with('journalEntry')
+        $linesQuery = JournalEntryLine::with('journalEntry')
             ->whereHas('journalEntry', function($q) {
                 $q->whereDate('date', '>=', $this->startDate)
                   ->whereDate('date', '<=', $this->endDate);
             })
             ->where('account_id', $this->accountId)
-            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
-            ->orderBy('journal_entries.date')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id');
+
+        if ($this->search) {
+            $linesQuery->where(function($q) {
+                $q->where('journal_entries.description', 'like', "%{$this->search}%")
+                  ->orWhere('journal_entries.entry_number', 'like', "%{$this->search}%")
+                  ->orWhere('journal_entry_lines.notes', 'like', "%{$this->search}%");
+            });
+        }
+
+        $this->ledgerLines = $linesQuery->orderBy('journal_entries.date')
             ->orderBy('journal_entries.id')
             ->select('journal_entry_lines.*')
             ->get();
@@ -92,6 +105,11 @@ class GeneralLedger extends Component
     }
 
     public function updatedEndDate()
+    {
+        $this->generateLedger();
+    }
+
+    public function updatedSearch()
     {
         $this->generateLedger();
     }

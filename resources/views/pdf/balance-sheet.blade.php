@@ -4,56 +4,51 @@
     <meta charset="UTF-8">
     <title>Neraca (Balance Sheet)</title>
     <style>
-        @page { margin: 20px 40px; }
-        body { font-family: sans-serif; font-size: 9pt; color: #000; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        @page { margin: 20px 40px 60px 40px; }
+        body { font-family: sans-serif; font-size: 10pt; color: #333; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; text-align: center; }
         .header-table td { text-align: center; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; }
-        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; }
-        .currency { font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; width: 100%; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; }
+        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; width: 100%; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 5px; page-break-inside: auto; }
-        th, td { padding: 5px 8px; vertical-align: top; }
-        
-        thead th { 
-            background-color: #00BFFF; /* Cyan color consistent with P&L */
-            color: white; 
-            text-align: left; 
-            font-weight: normal; 
-            padding: 6px 10px;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px 10px; }
+        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
         
         .section-header { 
+            background-color: #f3f4f6; 
             font-weight: bold; 
-            background-color: #f9fafb;
-            padding-top: 10px;
-            border-bottom: 1px solid #eee;
+            padding-top: 15px; 
+            padding-bottom: 5px;
+            color: #111;
+            border-bottom: 1px solid #ddd;
         }
         
         .subsection-header {
             font-weight: bold;
             padding-top: 8px;
-            padding-left: 5px;
+            padding-left: 15px;
             color: #444;
         }
 
-        .account-row td { padding-left: 20px; border-bottom: 0.5px solid #f0f0f0; }
+        .account-row td { padding-left: 25px; border-bottom: 1px solid #eee; }
         
         .total-row td { 
             font-weight: bold; 
-            border-top: 1px solid #ccc;
-            padding-top: 6px;
-            padding-bottom: 15px;
+            background-color: #f0f9ff; 
+            color: #000;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 8px;
+            padding-bottom: 8px;
         }
         
         .grand-total-row td {
             font-weight: bold;
-            font-size: 10pt;
-            background-color: #f0f9ff;
-            border-top: 2px solid #00BFFF;
-            padding-top: 8px;
-            padding-bottom: 8px;
+            font-size: 11pt;
+            background-color: #333;
+            color: white;
+            padding: 10px;
         }
 
         .alert-unbalanced {
@@ -68,31 +63,32 @@
         
         .text-right { text-align: right; }
         
-        .footer { 
-            position: fixed; 
-            bottom: 0px; 
-            left: 0px; 
-            right: 0px; 
-            height: 20px; 
+        .footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
             font-size: 8pt;
-            border-top: 1px solid #000;
-            padding-top: 2px;
+            color: #999;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
     </style>
 </head>
 <body>
-    <table class="header-table">
-        <tr>
-            <td>
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">NERACA (BALANCE SHEET)</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
-                <div class="currency">(dalam IDR)</div>
-            </td>
-        </tr>
-    </table>
+    <center>
+        <div class="store-name">{{ $store['name'] }}</div>
+        <div class="report-title">NERACA (BALANCE SHEET)</div>
+        <div class="period">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+        </div>
+        <div style="font-size: 9pt; margin-top: 5px; font-style: italic;">(dalam Mata Uang Rupiah IDR)</div>
+    </center>
+    <br>
 
     @if(!$reportData['balance_check'])
     <div class="alert-unbalanced">
@@ -115,29 +111,29 @@
             @foreach($reportData['current_assets'] as $account)
             <tr class="account-row">
                 <td>{{ $account->name }}</td>
-                <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="total-row">
-                <td style="padding-left: 5px;">Total Aset Lancar</td>
-                <td class="text-right">{{ number_format($reportData['total_current_assets'], 2, ',', '.') }}</td>
+                <td>Total Aset Lancar</td>
+                <td class="text-right">{{ format_accounting($reportData['total_current_assets']) }}</td>
             </tr>
 
             <tr class="subsection-header"><td colspan="2">Aset Tetap</td></tr>
             @foreach($reportData['fixed_assets'] as $account)
             <tr class="account-row">
                 <td>{{ $account->name }}</td>
-                <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="total-row">
-                <td style="padding-left: 5px;">Total Aset Tetap</td>
-                <td class="text-right">{{ number_format($reportData['total_fixed_assets'], 2, ',', '.') }}</td>
+                <td>Total Aset Tetap</td>
+                <td class="text-right">{{ format_accounting($reportData['total_fixed_assets']) }}</td>
             </tr>
 
             <tr class="grand-total-row">
                 <td>TOTAL ASET</td>
-                <td class="text-right">{{ number_format($reportData['total_assets'], 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($reportData['total_assets']) }}</td>
             </tr>
 
             {{-- SPACING --}}
@@ -150,24 +146,24 @@
             @foreach($reportData['current_liabilities'] as $account)
             <tr class="account-row">
                 <td>{{ $account->name }}</td>
-                <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="total-row">
-                <td style="padding-left: 5px;">Total Liabilitas Lancar</td>
-                <td class="text-right">{{ number_format($reportData['total_current_liabilities'], 2, ',', '.') }}</td>
+                <td>Total Liabilitas Lancar</td>
+                <td class="text-right">{{ format_accounting($reportData['total_current_liabilities']) }}</td>
             </tr>
 
             <tr class="subsection-header"><td colspan="2">Liabilitas Jangka Panjang</td></tr>
             @foreach($reportData['long_term_liabilities'] as $account)
             <tr class="account-row">
                 <td>{{ $account->name }}</td>
-                <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="total-row">
-                <td style="padding-left: 5px;">Total Liabilitas Jangka Panjang</td>
-                <td class="text-right">{{ number_format($reportData['total_long_term_liabilities'], 2, ',', '.') }}</td>
+                <td>Total Liabilitas Jangka Panjang</td>
+                <td class="text-right">{{ format_accounting($reportData['total_long_term_liabilities']) }}</td>
             </tr>
 
             {{-- EKUITAS --}}
@@ -175,28 +171,36 @@
             @foreach($reportData['equity'] as $account)
             <tr class="account-row">
                 <td>{{ $account->name }}</td>
-                <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="account-row">
                 <td>Laba Bersih Periode Berjalan</td>
-                <td class="text-right">{{ number_format($reportData['net_income'], 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($reportData['net_income']) }}</td>
             </tr>
             <tr class="total-row">
-                <td style="padding-left: 5px;">Total Ekuitas</td>
-                <td class="text-right">{{ number_format($reportData['total_equity'] + $reportData['net_income'], 2, ',', '.') }}</td>
+                <td>Total Ekuitas</td>
+                <td class="text-right">{{ format_accounting($reportData['total_equity'] + $reportData['net_income']) }}</td>
             </tr>
 
             <tr class="grand-total-row">
                 <td>TOTAL LIABILITAS + EKUITAS</td>
-                <td class="text-right">{{ number_format($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income'], 2, ',', '.') }}</td>
+                <td class="text-right">{{ format_accounting($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income']) }}</td>
             </tr>
         </tbody>
     </table>
 
+    @php
+    function format_accounting($number) {
+        if ($number < 0) {
+            return '( ' . number_format(abs($number), 0, ',', '.') . ' )';
+        }
+        return number_format($number, 0, ',', '.');
+    }
+    @endphp
     <div class="footer">
-        <div style="float: left;">Neraca : {{ $store['name'] }} | Dicetak oleh: {{ $printedBy }}</div>
-        <div style="float: right;">{{ $printedAt }}</div>
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

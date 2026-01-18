@@ -43,30 +43,32 @@
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         
-        .footer { 
-            margin-top: 50px; 
-            border-top: 1px solid #eee; 
-            padding-top: 10px; 
-            font-size: 8pt; 
-            color: #999; 
-            display: flex; 
-            justify-content: space-between;
+        .footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
+            color: #999;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
     </style>
 </head>
 <body>
-    <table class="header-table">
-        <tr>
-            <td>
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
-                <div class="period">
-                    Periode: {{ $monthName }}
-                </div>
-                <div style="font-size: 9pt; margin-top: 5px; font-style: italic;">(dalam Mata Uang Rupiah IDR)</div>
-            </td>
-        </tr>
-    </table>
+    <center>
+        <div class="store-name">{{ $store['name'] }}</div>
+        <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
+        <div class="period">
+            Periode: {{ $monthName }}
+        </div>
+        <div style="font-size: 9pt; margin-top: 5px; font-style: italic;">(dalam Mata Uang Rupiah IDR)</div>
+    </center>
+    <br>
 
     {{-- Summary Section --}}
     <table style="width: 100%; margin-bottom: 20px;">
@@ -181,8 +183,8 @@
     </table>
 
     <div class="footer">
-        <div>Dicetak oleh: {{ $printedBy }}</div>
-        <div>Waktu cetak: {{ $printedAt }}</div>
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

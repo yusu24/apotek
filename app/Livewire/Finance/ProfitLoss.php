@@ -58,6 +58,8 @@ class ProfitLoss extends Component
                 'endDate' => $this->endDate,
                 'storeName' => \App\Models\Setting::get('store_name', 'Apotek'),
                 'storeAddress' => \App\Models\Setting::get('store_address', ''),
+                'printedBy' => auth()->user()->name ?? 'System',
+                'printedAt' => now()->format('d/m/Y H:i'),
             ]));
             echo $pdf->output();
         }, 'Laporan_Laba_Rugi_' . $this->startDate . '_to_' . $this->endDate . '.pdf');

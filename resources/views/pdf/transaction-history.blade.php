@@ -22,6 +22,7 @@
             margin: 1px 0;
             font-size: 9px;
             color: #555;
+            text-align: center;
         }
         table {
             width: 100%;
@@ -58,21 +59,29 @@
         .bg-adjustment { color: #856404; }
         .bg-return { color: #721c24; }
         .footer {
-            margin-top: 15px;
-            font-size: 7px;
-            text-align: right;
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
             color: #888;
+            text-align: left;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ $store['name'] }}</h1>
-        <p>{{ $store['address'] }}</p>
-        <p>{{ $store['phone'] }}</p>
-        <h2 style="margin-top: 10px; font-size: 14px;">LAPORAN RIWAYAT TRANSAKSI</h2>
-        <p>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
-    </div>
+    <center style="margin-bottom: 15px;">
+        <h1 style="margin: 0; font-size: 14px; text-transform: uppercase;">{{ $store['name'] }}</h1>
+        <div style="margin: 1px 0; font-size: 9px; color: #555;">{{ $store['address'] }}</div>
+        <div style="margin: 1px 0; font-size: 9px; color: #555;">{{ $store['phone'] }}</div>
+        <h2 style="margin-top: 10px; font-size: 14px; text-transform: uppercase;">LAPORAN RIWAYAT TRANSAKSI</h2>
+        <div style="margin: 1px 0; font-size: 9px; color: #555;">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
+    </center>
 
     <table style="margin-bottom: 10px;">
         <thead>
@@ -128,7 +137,8 @@
     </table>
 
     <div class="footer">
-        Dicetak oleh: {{ $printedBy }} pada {{ $printedAt }}
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

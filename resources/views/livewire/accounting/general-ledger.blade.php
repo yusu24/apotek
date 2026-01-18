@@ -5,7 +5,7 @@
         </h2>
         <div class="flex gap-2">
             @can('export general ledger')
-            <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate]) }}" 
+            <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" 
                target="_blank"
                class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
                title="Export Excel">
@@ -15,7 +15,7 @@
                 <span class="hidden sm:inline">Export Excel</span>
             </a>
             @endcan
-            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
+            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
    title="Export PDF">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
@@ -46,6 +46,18 @@
             <div class="w-full md:w-auto">
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Sampai Tanggal</label>
                 <input type="date" wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div class="w-full md:flex-1">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Cari Transaksi</label>
+                <div class="relative">
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari ket, no. jurnal..." class="block w-full py-2 px-3 pl-10 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 

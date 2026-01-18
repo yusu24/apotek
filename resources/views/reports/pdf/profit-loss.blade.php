@@ -34,11 +34,9 @@
             font-size: 16pt; 
             font-weight: bold; 
             margin-top: 20px;
-            text-align: center;
         }
         .report-period {
             font-size: 11pt;
-            text-align: center;
             margin-bottom: 30px;
         }
         
@@ -63,9 +61,19 @@
             padding: 10px 5px !important;
         }
         
-        .footer { 
-            margin-top: 50px; 
-            font-size: 9pt; 
+        .footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
+            color: #666;
+            text-align: left;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
         .signature-box {
             float: right;
@@ -80,15 +88,14 @@
     </style>
 </head>
 <body>
-    <div class="header">
+    <center>
         <div class="store-name">{{ $storeName }}</div>
         <div class="store-address">{{ $storeAddress }}</div>
-    </div>
-
-    <div class="report-title">LAPORAN LABA RUGI</div>
-    <div class="report-period">
-        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-    </div>
+        <div class="report-title">LAPORAN LABA RUGI</div>
+        <div class="report-period">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+        </div>
+    </center>
 
     <table class="p-l-table">
         <tbody>
@@ -161,15 +168,14 @@
         </tbody>
     </table>
 
-    <div class="footer">
-        * Penjualan tidak termasuk PPN ({{ number_format($totalTax, 0, ',', '.') }})<br>
-        Dicetak pada: {{ now()->format('d/m/Y H:i:s') }} oleh {{ auth()->user()->name }}
-    </div>
-
     <div class="signature-box">
         <p>Dicetak Oleh,</p>
         <div class="signature-line"></div>
-        <p>{{ auth()->user()->name }}</p>
+        <p>{{ $printedBy }}</p>
+    </div>
+    <div class="footer">
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

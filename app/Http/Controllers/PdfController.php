@@ -32,7 +32,7 @@ class PdfController extends Controller
         // Prepare data for PDF
         $data = [
             'receipt' => $receipt,
-            'printedBy' => auth()->user()->name,
+            'printedBy' => auth()->user()->name ?? 'System',
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
             'apotekName' => $apotekName,
         ];
@@ -119,7 +119,7 @@ class PdfController extends Controller
             'netChange' => $netChange,
             'period' => $period,
             'filterType' => $filterType,
-            'printedBy' => auth()->user()->name,
+            'printedBy' => auth()->user()->name ?? 'System',
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
             'apotekName' => $apotekName,
         ];
@@ -250,7 +250,7 @@ class PdfController extends Controller
         // Prepare data for PDF
         $data = [
             'content' => $html,
-            'printedBy' => auth()->user()->name,
+            'printedBy' => auth()->user()->name ?? 'System',
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
             'apotekName' => $apotekName,
         ];
@@ -411,9 +411,10 @@ class PdfController extends Controller
         $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
         $accountId = $request->get('accountId');
+        $search = $request->get('search');
 
         $accountingService = new \App\Services\AccountingService();
-        $reportData = $accountingService->getLedgerReport($startDate, $endDate, $accountId);
+        $reportData = $accountingService->getLedgerReport($startDate, $endDate, $accountId, $search);
         
         $storeName = \App\Models\Setting::get('store_name');
         if (!$storeName || $storeName === 'Laravel') {
@@ -431,6 +432,8 @@ class PdfController extends Controller
             'store' => $store,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'accountId' => $accountId,
+            'search' => $search,
             'printedBy' => auth()->user()->name ?? 'System',
             'printedAt' => Carbon::now()->format('d/m/Y H:i'),
         ]);
@@ -576,6 +579,42 @@ class PdfController extends Controller
         ]);
         
         $filename = 'Riwayat-Transaksi-' . Carbon::now()->format('Ymd_His') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Trial Balance to PDF
+     */
+    public function exportTrialBalance(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+
+        $accountingService = new \App\Services\AccountingService();
+        $reportData = $accountingService->getTrialBalance($startDate, $endDate);
+        
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.trial-balance', [
+            'reportData' => $reportData,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Neraca-Saldo-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
         
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }

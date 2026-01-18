@@ -128,11 +128,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
     Route::get('/pdf/stock-report', [App\Http\Controllers\PdfController::class, 'exportStockReport'])->name('pdf.stock-report');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');
+    Route::get('/pdf/trial-balance', [App\Http\Controllers\PdfController::class, 'exportTrialBalance'])->name('pdf.trial-balance');
 
     // Excel Exports
     Route::get('/excel/aging-report', [App\Http\Controllers\ExcelController::class, 'exportAgingReport'])->name('excel.aging-report');
     Route::get('/excel/general-ledger', [App\Http\Controllers\ExcelController::class, 'exportGeneralLedger'])->name('excel.general-ledger');
     Route::get('/excel/income-statement', [App\Http\Controllers\ExcelController::class, 'exportIncomeStatement'])->name('excel.income-statement');
+    Route::get('/excel/trial-balance', [App\Http\Controllers\ExcelController::class, 'exportTrialBalance'])->name('excel.trial-balance');
 
 
     // Settings (Super Admin only)

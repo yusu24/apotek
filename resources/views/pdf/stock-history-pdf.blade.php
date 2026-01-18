@@ -30,22 +30,18 @@
         }
 
         .header-top {
-            display: table;
             width: 100%;
             margin-bottom: 8px;
+            text-align: center;
         }
 
         .header-left {
-            display: table-cell;
-            width: 70%;
-            vertical-align: top;
+            width: 100%;
+            text-align: center;
         }
 
         .header-right {
-            display: table-cell;
-            width: 30%;
-            text-align: right;
-            vertical-align: top;
+            display: none;
         }
 
         .apotek-name {
@@ -294,27 +290,30 @@
             color: #2563eb;
             font-weight: bold;
         }
+        .footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
+            color: #999;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-top">
-                <div class="header-left">
-                    <div class="apotek-name">{{ $apotekName }}</div>
-                    <div class="doc-title">KARTU STOK</div>
-                    <div class="product-name">{{ $product->name }}</div>
-                    <div class="period">Periode: {{ $period }}</div>
-                </div>
-                <div class="header-right">
-                    <div class="print-info">
-                        Dicetak: {{ $printedAt }}<br>
-                        Oleh: {{ $printedBy }}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <center style="width: 100%; margin-bottom: 15px; border-bottom: 3px solid #2563eb; padding-bottom: 12px;">
+            <div class="apotek-name">{{ $apotekName }}</div>
+            <div class="doc-title">KARTU STOK</div>
+            <div class="product-name">{{ $product->name }}</div>
+            <div class="period">Periode: {{ $period }}</div>
+        </center>
 
         <!-- Product Information -->
         <div class="product-info">
@@ -462,6 +461,10 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="footer">
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

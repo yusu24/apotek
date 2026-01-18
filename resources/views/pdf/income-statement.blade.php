@@ -7,9 +7,9 @@
         body { font-family: sans-serif; font-size: 10pt; color: #333; }
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
         .header-table td { text-align: center; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; }
-        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; }
+        .period { font-size: 10pt; margin-top: 5px; color: #666; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 8px 10px; }
         thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
@@ -62,30 +62,32 @@
         
         .text-right { text-align: right; }
         
-        .footer { 
-            margin-top: 50px; 
-            border-top: 1px solid #eee; 
-            padding-top: 10px; 
-            font-size: 8pt; 
-            color: #999; 
-            display: flex; 
-            justify-content: space-between;
+        .footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            font-size: 8pt;
+            color: #999;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
     </style>
 </head>
 <body>
-    <table class="header-table">
-        <tr>
-            <td>
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LABA RUGI</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
-                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam IDR)</div>
-            </td>
-        </tr>
-    </table>
+    <center>
+        <div class="store-name">{{ $store['name'] }}</div>
+        <div class="report-title">LAPORAN LABA RUGI</div>
+        <div class="period">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+        </div>
+        <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam IDR)</div>
+    </center>
+    <br>
 
     <table>
         <thead>
@@ -185,8 +187,8 @@
     </table>
 
     <div class="footer">
-        <div style="float: left;">Laba Rugi : {{ $store['name'] }} {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
-        <div style="float: right;">Page 1 of 1</div>
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

@@ -2,9 +2,12 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Manajemen Aset Tetap</h2>
         <div class="flex space-x-2">
-            <button wire:click="$set('showDepreciationModal', true)" class="btn btn-warning">
+            <button wire:click="$set('showDepreciationModal', true)" 
+                class="btn btn-depreciation text-white" 
+                style="background-color: #d97706 !important;"
+                title="Proses Penyusutan">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Proses Penyusutan
+                <span class="hidden sm:inline">Proses Penyusutan</span>
             </button>
         </div>
     </div>
@@ -243,7 +246,9 @@
                     <button type="button" @click="open = false" class="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm font-bold transition text-sm">
                         Batal
                     </button>
-                    <button wire:click="processDepreciation" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 shadow-md font-bold transition text-sm">
+                    <button wire:click="processDepreciation" 
+                        class="px-4 py-2 btn-depreciation-confirm text-white rounded-lg shadow-md font-bold transition text-sm"
+                        style="background-color: #b45309 !important;">
                         Jalankan Jurnal Penyusutan
                     </button>
                 </div>

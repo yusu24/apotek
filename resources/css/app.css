@@ -38,4 +38,21 @@
     .btn-warning {
         @apply bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500;
     }
+
+    /* Depreciation Specific Buttons with HEX fallbacks for guaranteed visibility */
+    .btn-depreciation {
+        background-color: #d97706 !important;
+        color: white !important;
+    }
+    .btn-depreciation:hover {
+        background-color: #b45309 !important;
+    }
+
+    .btn-depreciation-confirm {
+        background-color: #b45309 !important;
+        color: white !important;
+    }
+    .btn-depreciation-confirm:hover {
+        background-color: #92400e !important;
+    }
 }

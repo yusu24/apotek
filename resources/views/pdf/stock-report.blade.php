@@ -27,8 +27,8 @@
             border-bottom: 2px solid #000;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            display: table;
             width: 100%;
+            text-align: center;
         }
 
         .logo-placeholder {
@@ -53,8 +53,7 @@
         }
 
         .store-info {
-            display: table-cell;
-            vertical-align: top;
+            text-align: center;
         }
 
         .store-name {
@@ -73,6 +72,7 @@
             font-weight: bold;
             margin-bottom: 15px;
             text-transform: uppercase;
+            text-align: center;
         }
 
         /* Table Styles */
@@ -116,26 +116,29 @@
         }
 
         .footer {
-            margin-top: 30px;
+            position: fixed;
+            bottom: -30px;
+            left: 0;
+            right: 0;
             font-size: 8pt;
-            text-align: right;
             color: #777;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .footer .right {
+            float: right;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="header">
-            <div class="logo-placeholder">
-                <div class="logo-box">Logo</div>
-            </div>
-            <div class="store-info">
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="store-address">{{ $store['address'] }}</div>
-                <div class="store-address">{{ $store['phone'] }}</div>
-            </div>
-        </div>
+        <center style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+            <div class="store-name">{{ $store['name'] }}</div>
+            <div class="store-address">{{ $store['address'] }}</div>
+            <div class="store-address">{{ $store['phone'] }}</div>
+        </center>
 
         <div class="report-title">LAPORAN BARANG</div>
 
@@ -177,9 +180,10 @@
         </div>
         @endif
 
-        <div class="footer">
-            Dicetak pada: {{ $printedAt }} oleh {{ $printedBy }}
-        </div>
+    </div>
+    <div class="footer">
+        Dicetak oleh: {{ $printedBy }}
+        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
     </div>
 </body>
 </html>

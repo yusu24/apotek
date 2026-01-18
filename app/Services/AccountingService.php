@@ -1499,7 +1499,7 @@ public function processReceivablePayment($receivableId, $data)
      * Get General Ledger Report Data
      * Supports single account or all accounts
      */
-    public function getLedgerReport(string $startDate, string $endDate, ?int $accountId = null): array
+    public function getLedgerReport(string $startDate, string $endDate, ?int $accountId = null, ?string $search = null): array
     {
         $accounts = Account::active();
         
@@ -1530,15 +1530,24 @@ public function processReceivablePayment($receivableId, $data)
             }
 
             // 2. Get Transaction Lines
-            $lines = JournalEntryLine::with('journalEntry')
+            $linesQuery = JournalEntryLine::with('journalEntry')
                 ->whereHas('journalEntry', function($q) use ($startDate, $endDate) {
                     $q->whereDate('date', '>=', $startDate)
                       ->whereDate('date', '<=', $endDate)
                       ->where('is_posted', true);
                 })
                 ->where('account_id', $account->id)
-                ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
-                ->orderBy('journal_entries.date')
+                ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id');
+
+            if ($search) {
+                $linesQuery->where(function($q) use ($search) {
+                    $q->where('journal_entries.description', 'like', "%{$search}%")
+                      ->orWhere('journal_entries.entry_number', 'like', "%{$search}%")
+                      ->orWhere('journal_entry_lines.notes', 'like', "%{$search}%");
+                });
+            }
+
+            $lines = $linesQuery->orderBy('journal_entries.date')
                 ->orderBy('journal_entries.id')
                 ->select('journal_entry_lines.*')
                 ->get();

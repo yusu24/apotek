@@ -66,4 +66,24 @@ class ExcelController extends Controller
             $filename
         );
     }
+
+    public function exportTrialBalance(Request $request)
+    {
+        abort_if(!auth()->user()->can('view balance sheet'), 403, 'Anda tidak memiliki hak akses.');
+
+        $request->validate([
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+        ]);
+
+        $accountingService = new AccountingService();
+        $reportData = $accountingService->getTrialBalance($request->startDate, $request->endDate);
+
+        $filename = 'Neraca_Saldo_' . date('Ymd_His') . '.xlsx';
+
+        return Excel::download(
+            new \App\Exports\TrialBalanceExport($reportData),
+            $filename
+        );
+    }
 }

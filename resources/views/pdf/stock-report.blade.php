@@ -7,11 +7,11 @@
     <style>
         @page { margin: 20pt 30pt; }
         body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .header-table td { text-align: center; padding: 0; }
-        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; }
-        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; }
-        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; }
+        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 20px auto; table-layout: auto !important; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header-table td { text-align: center; padding: 0; width: 100%; }
+        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; width: 100%; }
+        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; width: 100%; }
+        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; width: 100%; }
         
         table { width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
         thead { border-top: 1px solid #000; border-bottom: 1px solid #000; }
@@ -43,17 +43,19 @@
 <body>
     <div class="container">
         <!-- Header -->
-    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center">
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="store-address">{{ $store['address'] }}</div>
-                <div class="store-address">{{ $store['phone'] }}</div>
+            <td align="center" width="100%">
+                <center>
+                    <div class="store-name">{{ $store['name'] }}</div>
+                    <div class="store-address">{{ $store['address'] }}</div>
+                    <div class="store-address">{{ $store['phone'] }}</div>
+                </center>
             </td>
         </tr>
     </table>
 
-        <div class="report-title">LAPORAN BARANG</div>
+        <center><div class="report-title">LAPORAN BARANG</div></center>
 
         <table>
             <thead>

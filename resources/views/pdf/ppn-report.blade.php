@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <title>Laporan PPN - {{ $monthName }}</title>
     <style>
-        body { font-family: sans-serif; font-size: 10pt; color: #333; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .header-table td { text-align: center; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; }
-        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 8px 10px; }
+        @page { margin: 20pt 30pt; }
+        body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
+        .header-table td { text-align: center; padding: 0; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%; margin: 0; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; margin-top: 5px; }
+        .period { font-size: 10pt; color: #666; text-align: center; width: 100%; margin-top: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
+        th, td { padding: 8px 10px; vertical-align: top; }
         thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
         
         .section-header { 
@@ -60,14 +62,12 @@
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
-                <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>
-                <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; margin-top: 5px; text-align: center;">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
-                <div style="font-size: 10pt; color: #666; margin-top: 5px; text-align: center;">
-                    Periode: {{ $monthName }}
-                </div>
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
+                <div class="period">Periode: {{ $monthName }}</div>
                 <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
             </td>
         </tr>

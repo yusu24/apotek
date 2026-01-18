@@ -11,12 +11,14 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 11pt;
-            line-height: 1.4;
-            color: #333;
-        }
+    <style>
+        @page { margin: 20pt 30pt; }
+        body { font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 15px; }
+        .header-table td { text-align: center; padding: 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
+        th, td { padding: 8px; vertical-align: top; }
 
         .container {
             padding: 20px;
@@ -241,14 +243,14 @@
 </head>
 <body>
     <div class="container">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-bottom: 3px solid #2563eb; padding-bottom: 15px;">
-            <tr>
-                <td align="center">
-                    <div style="font-size: 18pt; font-weight: bold; color: #1e40af; margin-bottom: 5px; text-align: center;">{{ $apotekName }}</div>
-                    <div style="font-size: 14pt; font-weight: bold; color: #374151; text-align: center;">PENERIMAAN BARANG</div>
-                </td>
-            </tr>
-        </table>
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center">
+                <div style="font-size: 18pt; font-weight: bold; color: #1e40af; margin-bottom: 5px; text-align: center;">{{ $apotekName }}</div>
+                <div style="font-size: 14pt; font-weight: bold; color: #374151; text-align: center;">PENERIMAAN BARANG</div>
+            </td>
+        </tr>
+    </table>
 
         <!-- Receipt Information -->
         <div class="receipt-info">

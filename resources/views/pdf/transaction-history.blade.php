@@ -4,11 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Riwayat Transaksi</title>
     <style>
-        body {
-            font-family: sans-serif;
-            font-size: 9px;
-            margin: 0.5cm;
-        }
+        @page { margin: 20pt 30pt; }
+        body { font-family: sans-serif; font-size: 9px; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        .header-table td { text-align: center; padding: 0; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 9px; table-layout: fixed; word-wrap: break-word; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 4px 3px; text-align: left; vertical-align: top; }
         .header {
             text-align: center;
             margin-bottom: 15px;
@@ -75,7 +77,7 @@
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px;">
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
                 <h1 style="margin: 0; font-size: 14px; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</h1>

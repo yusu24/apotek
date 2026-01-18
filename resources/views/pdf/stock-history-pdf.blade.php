@@ -11,12 +11,14 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 9pt;
-            line-height: 1.3;
-            color: #333;
-        }
+    <style>
+        @page { margin: 20pt 30pt; }
+        body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 12px; }
+        .header-table td { text-align: center; padding: 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
+        th, td { padding: 5px 4px; vertical-align: top; }
 
         .container {
             padding: 15px;
@@ -308,16 +310,16 @@
 </head>
 <body>
     <div class="container">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 15px; border-bottom: 3px solid #2563eb; padding-bottom: 12px;">
-            <tr>
-                <td align="center">
-                    <div style="font-size: 16pt; font-weight: bold; color: #1e40af; margin-bottom: 3px; text-align: center;">{{ $apotekName }}</div>
-                    <div style="font-size: 13pt; font-weight: bold; color: #374151; margin-bottom: 3px; text-align: center;">KARTU STOK</div>
-                    <div style="font-size: 11pt; font-weight: bold; color: #059669; text-align: center;">{{ $product->name }}</div>
-                    <div style="font-size: 10pt; color: #6b7280; font-weight: bold; text-align: center;">Periode: {{ $period }}</div>
-                </td>
-            </tr>
-        </table>
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center">
+                <div style="font-size: 16pt; font-weight: bold; color: #1e40af; margin-bottom: 3px; text-align: center;">{{ $apotekName }}</div>
+                <div style="font-size: 13pt; font-weight: bold; color: #374151; margin-bottom: 3px; text-align: center;">KARTU STOK</div>
+                <div style="font-size: 11pt; font-weight: bold; color: #059669; text-align: center;">{{ $product->name }}</div>
+                <div style="font-size: 10pt; color: #6b7280; font-weight: bold; text-align: center;">Periode: {{ $period }}</div>
+            </td>
+        </tr>
+    </table>
 
         <!-- Product Information -->
         <div class="product-info">

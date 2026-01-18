@@ -79,7 +79,7 @@
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
                 <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>

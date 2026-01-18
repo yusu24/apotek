@@ -4,55 +4,22 @@
     <meta charset="UTF-8">
     <title>Laporan Aging {{ $type === 'ar' ? 'Piutang' : 'Hutang' }}</title>
     <style>
-        @page { margin: 20px 30px; }
-        body { font-family: sans-serif; font-size: 9pt; color: #333; }
+        @page { margin: 20pt 30pt; }
+        body { font-family: sans-serif; font-size: 9pt; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        .header-table td { text-align: center; padding: 0; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%; margin: 0; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; margin-top: 5px; }
+        .period { font-size: 10pt; color: #666; text-align: center; width: 100%; margin-top: 5px; }
         
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center; }
-        .header-table td { text-align: center; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; text-align: center; width: 100%; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; }
-        .period { font-size: 10pt; margin-top: 5px; color: #666; text-align: center; width: 100%; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 6px 8px; vertical-align: top; }
+        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; font-size: 9pt; }
         
-        thead th { 
-            background-color: #00BFFF; 
-            color: white; 
-            text-align: left; 
-            font-weight: bold; 
-            border-bottom: 2px solid #009ACD;
-            font-size: 9pt;
-        }
-        
-        .entity-row td {
-            font-weight: bold;
-            background-color: #f9fafb;
-            border-bottom: 1px solid #ddd;
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-        
-        .invoice-row td {
-            font-size: 8pt;
-            border-bottom: 1px solid #eee;
-            color: #555;
-            padding-top: 4px;
-            padding-bottom: 4px;
-        }
-        
-        .total-row td { 
-            font-weight: bold; 
-            background-color: #333; 
-            color: white;
-            padding: 8px;
-            font-size: 10pt;
-        }
-        
+        .entity-row td { font-weight: bold; background-color: #f9fafb; border-bottom: 1px solid #ddd; padding-top: 8px; padding-bottom: 8px; }
+        .invoice-row td { font-size: 8pt; border-bottom: 1px solid #eee; color: #555; padding-top: 4px; padding-bottom: 4px; }
+        .total-row td { font-weight: bold; background-color: #333; color: white; padding: 8px; font-size: 10pt; }
         .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        
-        .invoice-header-label { font-weight: bold; font-style: italic; color: #777; }
         .footer {
             position: fixed;
             bottom: -30px;
@@ -64,18 +31,16 @@
             border-top: 1px solid #eee;
             padding-top: 5px;
         }
-        .footer .right {
-            float: right;
-        }
+        .footer .right { float: right; }
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
-                <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>
-                <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; margin-top: 5px; text-align: center;">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
-                <div style="font-size: 10pt; color: #666; margin-top: 5px; text-align: center;">Per Tanggal: {{ \Carbon\Carbon::now()->format('d F Y') }}</div>
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="report-title">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
+                <div class="period">Per Tanggal: {{ \Carbon\Carbon::now()->format('d F Y') }}</div>
                 <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
             </td>
         </tr>

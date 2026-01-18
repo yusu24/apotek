@@ -5,100 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Barang</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 9pt;
-            line-height: 1.3;
-            color: #333;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        /* Header Styles */
-        .header {
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .logo-placeholder {
-            display: table-cell;
-            width: 80px;
-            vertical-align: top;
-            padding-right: 15px;
-        }
-
-        .logo-box {
-            width: 70px;
-            height: 70px;
-            border: 1px dashed #999;
-            background-color: #f5f5f5;
-            display: flex; /* Flex doesn't work well in DomPDF sometimes, but trying strict styling */
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 8pt;
-            color: #666;
-            line-height: 70px; /* For vertical alignment fallback */
-        }
-
-        .store-info {
-            text-align: center;
-        }
-
-        .store-name {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .store-address {
-            font-size: 9pt;
-            color: #555;
-        }
-
-        .report-title {
-            font-size: 11pt;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            text-align: center;
-        }
-
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 8pt;
-        }
-
-        thead {
-            border-top: 1px solid #000;
-            border-bottom: 1px solid #000;
-        }
-
-        th {
-            padding: 5px;
-            text-align: left;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 5px;
-            vertical-align: top;
-        }
-
+        @page { margin: 20pt 30pt; }
+        body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header-table td { text-align: center; padding: 0; }
+        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; }
+        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; }
+        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
+        thead { border-top: 1px solid #000; border-bottom: 1px solid #000; }
+        th { padding: 5px; text-align: left; font-weight: bold; text-transform: uppercase; }
+        td { padding: 5px; vertical-align: top; }
+        
         .no-col { width: 5%; text-align: center; }
         .code-col { width: 15%; }
         .name-col { width: 35%; }
@@ -106,15 +25,7 @@
         .stock-col { width: 10%; text-align: right; }
         .price-col { width: 12%; text-align: right; }
         .total-col { width: 13%; text-align: right; }
-
         .text-right { text-align: right; }
-        .text-center { text-align: center; }
-
-        /* Striped rows usually not in this specific style, but cleaner to verify rows */
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
         .footer {
             position: fixed;
             bottom: -30px;
@@ -126,23 +37,21 @@
             border-top: 1px solid #eee;
             padding-top: 5px;
         }
-        .footer .right {
-            float: right;
-        }
+        .footer .right { float: right; }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
-            <tr>
-                <td align="center">
-                    <div style="font-size: 14pt; font-weight: bold; text-align: center;">{{ $store['name'] }}</div>
-                    <div style="font-size: 9pt; color: #555; text-align: center;">{{ $store['address'] }}</div>
-                    <div style="font-size: 9pt; color: #555; text-align: center;">{{ $store['phone'] }}</div>
-                </td>
-            </tr>
-        </table>
+    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center">
+                <div class="store-name">{{ $store['name'] }}</div>
+                <div class="store-address">{{ $store['address'] }}</div>
+                <div class="store-address">{{ $store['phone'] }}</div>
+            </td>
+        </tr>
+    </table>
 
         <div class="report-title">LAPORAN BARANG</div>
 

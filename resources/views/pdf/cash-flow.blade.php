@@ -47,7 +47,8 @@
         .footer {
             position: fixed;
             bottom: -30px;
-            width: 100%;
+            left: 0;
+            right: 0;
             font-size: 8pt;
             color: #999;
             text-align: left;
@@ -60,20 +61,18 @@
     </style>
 </head>
 <body>
-    <div style="width: 100%; text-align: center; margin-bottom: 30px;">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-            <tr>
-                <td align="center" style="text-align: center;">
-                    <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase;">{{ $store['name'] }}</div>
-                    <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; margin-top: 5px;">LAPORAN ARUS KAS</div>
-                    <div style="font-size: 10pt; color: #666; margin-top: 5px;">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                    </div>
-                    <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam Mata Uang Rupiah IDR)</div>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+        <tr>
+            <td align="center">
+                <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $store['name'] }}</div>
+                <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; margin-top: 5px; text-align: center;">LAPORAN ARUS KAS</div>
+                <div style="font-size: 10pt; color: #666; margin-top: 5px; text-align: center;">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
+                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
+            </td>
+        </tr>
+    </table>
 
     <table>
         <thead>

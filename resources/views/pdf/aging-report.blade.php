@@ -70,12 +70,18 @@
     </style>
 </head>
 <body>
-    <center style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
-        <div class="store-name">{{ $store['name'] }}</div>
-        <div class="report-title">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
-        <div class="period">Per Tanggal: {{ \Carbon\Carbon::now()->format('d F Y') }}</div>
-        <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam Mata Uang Rupiah IDR)</div>
-    </center>
+    <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+            <tr>
+                <td align="center" style="text-align: center;">
+                    <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase;">{{ $store['name'] }}</div>
+                    <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; margin-top: 5px;">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
+                    <div style="font-size: 10pt; color: #666; margin-top: 5px;">Per Tanggal: {{ \Carbon\Carbon::now()->format('d F Y') }}</div>
+                    <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666;">(dalam Mata Uang Rupiah IDR)</div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <table>
         <thead>

@@ -64,7 +64,7 @@
         .footer {
             position: fixed;
             bottom: -30px;
-            left: 0;
+            left: 0; /* Changed back to left/right for better margin sync */
             right: 0;
             font-size: 8pt;
             color: #666;
@@ -88,14 +88,18 @@
     </style>
 </head>
 <body>
-    <center>
-        <div class="store-name">{{ $storeName }}</div>
-        <div class="store-address">{{ $storeAddress }}</div>
-        <div class="report-title">LAPORAN LABA RUGI</div>
-        <div class="report-period">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-        </div>
-    </center>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+        <tr>
+            <td align="center">
+                <div style="font-size: 20pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $storeName }}</div>
+                <div style="font-size: 10pt; font-style: italic; text-align: center;">{{ $storeAddress }}</div>
+                <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center;">LAPORAN LABA RUGI</div>
+                <div style="font-size: 11pt; margin-top: 5px; text-align: center;">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <table class="p-l-table">
         <tbody>

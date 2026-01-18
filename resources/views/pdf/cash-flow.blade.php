@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Laporan Arus Kas</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 30px auto; table-layout: auto !important; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%; margin: 0; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; margin-top: 5px; }
-        .period { font-size: 10pt; color: #666; text-align: center; width: 100%; margin-top: 5px; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
+        .header-table td { padding: 0; vertical-align: top; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
+        .period { font-size: 10pt; color: #666; text-align: center; margin-top: 5px; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 8px 10px; vertical-align: top; }

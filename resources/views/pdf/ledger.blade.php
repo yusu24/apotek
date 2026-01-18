@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Buku Besar (General Ledger)</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: sans-serif; font-size: 9pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 30px auto; table-layout: auto !important; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%; margin: 0; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; margin-top: 5px; }
-        .period { font-size: 10pt; color: #666; text-align: center; width: 100%; margin-top: 5px; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
+        .header-table td { padding: 0; vertical-align: top; }
+        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
+        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
+        .period { font-size: 10pt; color: #666; text-align: center; margin-top: 5px; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 6px 8px; vertical-align: top; border-bottom: 1px solid #eee; }
@@ -35,7 +35,7 @@
         .text-right { text-align: right; }
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -43,6 +43,7 @@
             text-align: left;
             border-top: 1px solid #eee;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -56,23 +57,23 @@
         $hasSearch = !empty($search);
     @endphp
 
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div class="store-name">{{ $store['name'] }}</div>
-                    <div class="report-title">BUKU BESAR{{ $isSummaryView ? ' (Ringkasan)' : '' }}</div>
-                    <div class="period">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div class="store-name">{{ trim($store['name']) }}</div>
+                <div class="report-title">BUKU BESAR{{ $isSummaryView ? ' (Ringkasan)' : '' }}</div>
+                <div class="period">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                </div>
+                @if($hasSearch)
+                    <div style="font-size: 10pt; margin-top: 5px; font-weight: bold; color: #000; text-align: center;">
+                        Pencarian: "{{ $search }}"
                     </div>
-                    @if($hasSearch)
-                        <div style="font-size: 10pt; margin-top: 5px; font-weight: bold; color: #000; text-align: center; width: 100%;">
-                            Pencarian: "{{ $search }}"
-                        </div>
-                    @endif
-                    <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center; width: 100%;">(dalam Mata Uang Rupiah IDR)</div>
-                </center>
+                @endif
+                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
     

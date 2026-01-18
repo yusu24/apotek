@@ -3,13 +3,13 @@
 <head>
     <title>Neraca Saldo</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11px; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 30px auto; table-layout: auto !important; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
-        .store-name { font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center; margin: 0; width: 100%; }
-        .report-title { font-size: 16px; font-weight: bold; text-align: center; margin-top: 5px; width: 100%; }
-        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
+        .header-table td { padding: 0; vertical-align: top; }
+        .store-name { font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center; margin: 0; }
+        .report-title { font-size: 16px; font-weight: bold; text-align: center; margin-top: 5px; }
+        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
@@ -48,17 +48,17 @@
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div class="store-name">{{ $store['name'] }}</div>
-                    <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
-                    <div class="period">
-                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
-                    </div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div class="store-name">{{ trim($store['name']) }}</div>
+                <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
+                <div class="period">
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                </div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

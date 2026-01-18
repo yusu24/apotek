@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Riwayat Transaksi</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: sans-serif; font-size: 9px; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 20px auto; table-layout: auto !important; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        .header-table td { padding: 0; vertical-align: top; }
         
         table { width: 100%; border-collapse: collapse; font-size: 9px; table-layout: fixed; word-wrap: break-word; margin-top: 10px; }
         th, td { border: 1px solid #ccc; padding: 4px 3px; text-align: left; vertical-align: top; }
@@ -62,7 +62,7 @@
         .bg-return { color: #721c24; }
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -70,6 +70,7 @@
             text-align: left;
             border-top: 1px solid #ccc;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right {
             float: right;
@@ -77,17 +78,17 @@
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <h1 style="margin: 0; font-size: 14px; text-transform: uppercase; text-align: center; width: 100%;">{{ $store['name'] }}</h1>
-                    <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center; width: 100%;">{{ $store['address'] }}</div>
-                    <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center; width: 100%;">{{ $store['phone'] }}</div>
-                    <h2 style="margin-top: 10px; font-size: 14px; text-transform: uppercase; text-align: center; width: 100%;">LAPORAN RIWAYAT TRANSAKSI</h2>
-                    <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center; width: 100%;">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <h1 style="margin: 0; font-size: 14px; text-transform: uppercase; text-align: center;">{{ trim($store['name']) }}</h1>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">{{ trim($store['address']) }}</div>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">{{ trim($store['phone']) }}</div>
+                <h2 style="margin-top: 10px; font-size: 14px; text-transform: uppercase; text-align: center;">LAPORAN RIWAYAT TRANSAKSI</h2>
+                <div style="margin: 1px 0; font-size: 9px; color: #555; text-align: center;">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 

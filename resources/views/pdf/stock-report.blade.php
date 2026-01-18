@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Barang</title>
     <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
         body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 20px auto; table-layout: auto !important; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
-        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; width: 100%; }
-        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; width: 100%; }
-        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header-table td { padding: 0; vertical-align: top; }
+        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; }
+        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; }
+        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; }
         
         table { width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
         thead { border-top: 1px solid #000; border-bottom: 1px solid #000; }
@@ -28,7 +28,7 @@
         .text-right { text-align: right; }
         .footer {
             position: fixed;
-            bottom: -30px;
+            bottom: 0;
             left: 0;
             right: 0;
             font-size: 8pt;
@@ -36,6 +36,7 @@
             text-align: left;
             border-top: 1px solid #eee;
             padding-top: 5px;
+            height: 30px;
         }
         .footer .right { float: right; }
     </style>
@@ -43,19 +44,19 @@
 <body>
     <div class="container">
         <!-- Header -->
-    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" width="100%">
-                <center>
-                    <div class="store-name">{{ $store['name'] }}</div>
-                    <div class="store-address">{{ $store['address'] }}</div>
-                    <div class="store-address">{{ $store['phone'] }}</div>
-                </center>
+            <td width="5%"></td>
+            <td width="90%" align="center">
+                <div class="store-name">{{ trim($store['name']) }}</div>
+                <div class="store-address">{{ trim($store['address']) }}</div>
+                <div class="store-address">{{ trim($store['phone']) }}</div>
             </td>
+            <td width="5%"></td>
         </tr>
     </table>
 
-        <center><div class="report-title">LAPORAN BARANG</div></center>
+        <div class="report-title">LAPORAN BARANG</div>
 
         <table>
             <thead>

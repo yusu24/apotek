@@ -5,17 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penerimaan Barang - {{ $receipt->delivery_note_number }}</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-    <style>
-        @page { margin: 20pt 30pt; }
+        @page { margin: 1.5cm 1cm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 20px auto; table-layout: auto !important; border-bottom: 3px solid #2563eb; padding-bottom: 15px; }
-        .header-table td { text-align: center; padding: 0; width: 100%; }
+        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 15px; }
+        .header-table td { padding: 0; vertical-align: top; }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 8px; vertical-align: top; }

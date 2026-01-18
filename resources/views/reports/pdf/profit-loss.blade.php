@@ -47,7 +47,7 @@
         
         .footer {
             position: fixed;
-            bottom: 0;
+            bottom: 10pt;
             left: 0;
             right: 0;
             font-size: 8pt;

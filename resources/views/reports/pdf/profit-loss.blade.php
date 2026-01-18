@@ -17,12 +17,13 @@
         .header-table { 
             width: 100%; 
             border-collapse: collapse; 
-            margin-bottom: 30px; 
-            table-layout: fixed;
+            margin: 0 auto 30px auto; 
+            table-layout: auto !important;
         }
         .header-table td { 
             text-align: center; 
             padding: 0;
+            width: 100%;
         }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
@@ -73,15 +74,17 @@
     </style>
 </head>
 <body>
-    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center">
-                <div style="font-size: 20pt; font-weight: bold; text-transform: uppercase; text-align: center;">{{ $storeName }}</div>
-                <div style="font-size: 10pt; font-style: italic; text-align: center;">{{ $storeAddress }}</div>
-                <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center;">LAPORAN LABA RUGI</div>
-                <div style="font-size: 11pt; margin-top: 5px; text-align: center;">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
+            <td align="center" width="100%">
+                <center>
+                    <div style="font-size: 20pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%;">{{ $storeName }}</div>
+                    <div style="font-size: 10pt; font-style: italic; text-align: center; width: 100%;">{{ $storeAddress }}</div>
+                    <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center; width: 100%;">LAPORAN LABA RUGI</div>
+                    <div style="font-size: 11pt; margin-top: 5px; text-align: center; width: 100%;">
+                        Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                    </div>
+                </center>
             </td>
         </tr>
     </table>

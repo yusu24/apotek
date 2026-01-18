@@ -6,13 +6,13 @@
     <style>
         @page { margin: 20pt 30pt; }
         body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
-        .header-table td { text-align: center; padding: 0; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 100%; margin: 0; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; width: 100%; margin-top: 5px; }
-        .period { font-size: 10pt; color: #666; text-align: center; width: 100%; margin-top: 5px; }
+        .header-table { width: 100%; border-collapse: collapse; margin: 0 auto 30px auto; table-layout: auto !important; }
+        .header-table td { text-align: center; padding: 0; width: 100%; }
+        .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; width: 100%; }
+        .report-title { font-size: 14px; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; width: 100%; }
+        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; width: 100%; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
+        table { width: 100%; border-collapse: collapse; margin: 10px auto 0 auto; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 8px 10px; vertical-align: top; }
         thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
         
@@ -62,13 +62,15 @@
     </style>
 </head>
 <body>
-    <table class="header-table" border="0" cellpadding="0" cellspacing="0">
+    <table class="header-table" width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center">
-                <div class="store-name">{{ $store['name'] }}</div>
-                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
-                <div class="period">Periode: {{ $monthName }}</div>
-                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
+            <td align="center" width="100%">
+                <center>
+                    <div class="store-name">{{ $store['name'] }}</div>
+                    <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
+                    <div class="period">Periode: {{ $monthName }}</div>
+                    <div style="font-size: 10px; margin-top: 5px; font-style: italic; color: #666; text-align: center; width: 100%;">(dalam Mata Uang Rupiah IDR)</div>
+                </center>
             </td>
         </tr>
     </table>

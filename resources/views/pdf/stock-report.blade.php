@@ -134,11 +134,15 @@
 <body>
     <div class="container">
         <!-- Header -->
-        <center style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
-            <div class="store-name">{{ $store['name'] }}</div>
-            <div class="store-address">{{ $store['address'] }}</div>
-            <div class="store-address">{{ $store['phone'] }}</div>
-        </center>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+            <tr>
+                <td align="center">
+                    <div style="font-size: 14pt; font-weight: bold; text-align: center;">{{ $store['name'] }}</div>
+                    <div style="font-size: 9pt; color: #555; text-align: center;">{{ $store['address'] }}</div>
+                    <div style="font-size: 9pt; color: #555; text-align: center;">{{ $store['phone'] }}</div>
+                </td>
+            </tr>
+        </table>
 
         <div class="report-title">LAPORAN BARANG</div>
 

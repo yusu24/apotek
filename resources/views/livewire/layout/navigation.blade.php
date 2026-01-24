@@ -55,8 +55,11 @@ new class extends Component
 
             <!-- Inventory & Procurement Group -->
             @canany(['view stock', 'adjust stock', 'view purchase orders', 'view goods receipts'])
-            <div x-data="{ expanded: {{ request()->routeIs('inventory.*') || request()->routeIs('procurement.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs('inventory.*') || request()->routeIs('procurement.*') ? 'text-white' : 'text-gray-400' }}">
+            @php
+                $isStockActive = (request()->routeIs('inventory.*') || request()->routeIs('procurement.*')) && !request()->routeIs('inventory.returns.*');
+            @endphp
+            <div x-data="{ expanded: {{ $isStockActive ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                         <span>Stok & Pengadaan</span>
@@ -65,7 +68,7 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view stock')
-                    <a href="{{ route('inventory.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('inventory.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                    <a href="{{ route('inventory.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('inventory.index') || (request()->routeIs('inventory.*') && !request()->routeIs('inventory.returns.*')) ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         Stok & Opname
                     </a>
@@ -194,17 +197,17 @@ new class extends Component
                     <svg :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
-                    @can('view trial balance')
+                    {{-- @can('view trial balance')
                     <a href="{{ route('finance.trial-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.trial-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         Neraca Saldo Awal
                     </a>
-                    @endcan
+                    @endcan --}}
 
                     @can('view balance sheet')
                     <a href="{{ route('finance.balance-sheet') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.balance-sheet') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        Neraca Saldo Akhir
+                        Neraca
                     </a>
                     @endcan
 
@@ -317,17 +320,17 @@ new class extends Component
                     </a>
                     @endcan
 
+                    @canany(['edit opening balances', 'view opening balances', 'lock opening balances', 'unlock opening balances'])
+                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Neraca Saldo Awal
+                    </a>
+                    @endcanany
+
                     @can('view journals')
                     <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2-2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         Jurnal Umum
-                    </a>
-                    @endcan
-
-                    @can('manage opening balances')
-                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-gray-800' : 'text-gray-400 hover:text-white hover:bg-gray-800/50' }}">
-                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Neraca Awal
                     </a>
                     @endcan
 

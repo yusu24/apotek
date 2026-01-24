@@ -29,6 +29,8 @@ class RoleSeeder extends Seeder
             'view product margin report',
             'view ap aging report',
             'view journals',
+            'edit journals',
+            'delete journals',
             'export reports',
             
             // Master Data
@@ -52,6 +54,7 @@ class RoleSeeder extends Seeder
             'edit customers',
             'delete customers',
             'import customers',
+            'manage customers',
             
             // Inventory & Stock
             'manage inventory',
@@ -92,7 +95,10 @@ class RoleSeeder extends Seeder
             'view finance',
             'view expenses',
             'manage expense categories',
-            'manage opening balances',
+            'view opening balances',
+            'edit opening balances',
+            'lock opening balances',
+            'unlock opening balances',
 
             // Accounting
             'view accounts',

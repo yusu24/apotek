@@ -23,15 +23,15 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4 text-left border-b border-gray-100">No. Surat Jalan</th>
-                        <th class="px-6 py-4 text-left border-b border-gray-100">Tanggal</th>
-                        <th class="px-6 py-4 text-left border-b border-gray-100">Supplier (PO)</th>
-                        <th class="px-6 py-4 text-left border-b border-gray-100">Status Bayar</th>
-                        <th class="px-6 py-4 text-right border-b border-gray-100">Total</th>
-                        <th class="px-6 py-4 text-left border-b border-gray-100">User</th>
-                        <th class="px-6 py-4 text-right border-b border-gray-100">Aksi</th>
+                        <th class="px-6 py-4 text-left">No. Surat Jalan</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">Supplier (PO)</th>
+                        <th class="px-6 py-4 text-left">Status Bayar</th>
+                        <th class="px-6 py-4 text-right">Total</th>
+                        <th class="px-6 py-4 text-left">User</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -92,7 +92,7 @@
                                     <a href="{{ route('pdf.goods-receipt', $gr->id) }}" target="_blank"
                                        class="text-blue-900 hover:text-blue-700 transition-colors duration-200" title="Cetak Surat Jalan">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                                         </svg>
                                     </a>
                                 </div>
@@ -168,12 +168,12 @@
 
                     <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
                         <table class="min-w-full divide-y divide-gray-100">
-                            <thead>
-                                <tr class="bg-gray-50/50">
-                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase">Produk</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase">Qty</th>
-                                    <th class="px-6 py-4 text-center text-xs font-bold text-gray-400 uppercase">Satuan</th>
-                                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase">Batch No</th>
+                            <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                                <tr>
+                                    <th class="px-6 py-4 text-left">Produk</th>
+                                    <th class="px-6 py-4 text-center">Qty</th>
+                                    <th class="px-6 py-4 text-center">Satuan</th>
+                                    <th class="px-6 py-4 text-right">Batch No</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -212,7 +212,7 @@
                         <a href="{{ route('pdf.goods-receipt', $selectedReceipt->id) }}" target="_blank"
                             class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>
                             <span>Export PDF</span>
                         </a>

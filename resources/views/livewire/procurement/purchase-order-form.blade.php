@@ -244,6 +244,16 @@
 
             <!-- Footer Actions -->
             <div class="bg-gray-50 p-4 border-t border-gray-200 flex justify-end items-center rounded-b-lg gap-3">
+                @if($purchaseOrder && $status === 'partial')
+                <button type="button" 
+                    wire:click="markAsDone" 
+                    wire:confirm="Yakin ingin menyelesaikan pesanan ini? Status akan diubah menjadi Selesai/Diterima meskipun barang belum diterima semua."
+                    class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold shadow-md transition text-sm flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Selesaikan Pesanan
+                </button>
+                @endif
+
                 @if($purchaseOrder && ($status === 'ordered' || $status === 'partial'))
                 <a href="{{ route('procurement.goods-receipts.create', ['po_id' => $purchaseOrder->id]) }}"
                     class="px-5 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold shadow-md transition text-sm flex items-center gap-2">

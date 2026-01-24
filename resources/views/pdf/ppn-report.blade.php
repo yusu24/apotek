@@ -2,95 +2,141 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan PPN - {{ $monthName }}</title>
+    <title>Laporan PPN (Standar)</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
-        .header-table td { padding: 0; vertical-align: top; }
-        .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
-        .report-title { font-size: 14px; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
-        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; }
+        @page { 
+            size: A4; 
+            margin:  15mm 1cm 10mm 1cm; 
+        }
         
-        table { width: 100%; border-collapse: collapse; margin: 10px auto 0 auto; table-layout: fixed; word-wrap: break-word; }
-        th, td { padding: 8px 10px; vertical-align: top; }
-        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 9pt; 
+            color: #000; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.2;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
+        .italic { font-style: italic; }
+
+        .report-header { 
+            margin-bottom: 25px; 
+            text-align: center;
+        }
+        .store-name { 
+            font-size: 11pt; 
+            margin-bottom: 5px; 
+        }
+        .report-title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            color: #800000; /* Maroon */
+            margin: 0;
+        }
+        .period-info { 
+            font-size: 10pt; 
+            margin-top: 5px; 
+        }
+        
+        .timestamp {
+            position: fixed;
+            top: -10mm;
+            right: 0;
+            font-size: 7pt;
+            color: #666;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; 
+            margin-top: 10px;
+        }
+        
+        /* Table Header Style - Unified Border */
+        .column-headers th {
+            padding: 5px 0;
+            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            font-weight: bold;
+            color: #4a7ebb;
+            text-align: left;
+        }
+
+        td { 
+            padding: 4px 0; 
+            vertical-align: top; 
+        }
         
         .section-header { 
-            background-color: #f3f4f6; 
             font-weight: bold; 
             padding-top: 15px; 
             padding-bottom: 5px;
-            color: #111;
-            border-bottom: 1px solid #ddd;
+            color: #000;
+            text-transform: uppercase;
         }
         
-        .sub-row td { padding-left: 10px; border-bottom: 1px solid #eee; font-size: 9pt; }
-        
+        .transaction-row td {
+            border-bottom: 0.5pt solid #eee;
+            padding: 4px 0;
+        }
+
         .total-row td { 
             font-weight: bold; 
-            background-color: #f0f9ff; 
-            color: #000;
-            border-top: 1px solid #cbd5e1;
+            border-top: 1pt solid #000;
             padding-top: 8px;
             padding-bottom: 8px;
         }
-        
-        /* Specific Status Badges adapted for PDF */
-        .status-badge { padding: 2px 6px; border-radius: 3px; font-size: 9pt; font-weight: bold; color: white; display: inline-block; }
-        .status-kurang { background-color: #ef4444; } /* Red */
-        .status-lebih { background-color: #f59e0b; } /* Amber */
-        .status-nihil { background-color: #10b981; } /* Green */
 
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #999;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
+        .grand-total-label { 
+            font-weight: bold; 
+            text-transform: uppercase;
+            padding-top: 10px;
         }
-        .footer .right {
-            float: right;
+        .grand-total-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            border-bottom: 3pt double #000;
+            text-align: right;
+            padding-top: 2px;
         }
+
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div class="store-name">{{ trim($store['name']) }}</div>
-                <div class="report-title">LAPORAN PAJAK PERTAMBAHAN NILAI (PPN)</div>
-                <div class="period">Periode: {{ $monthName }}</div>
-                <div style="font-size: 10px; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="timestamp">
+        Waktu Cetak: {{ $printedAt }}
+    </div>
+
+    <div class="report-header">
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">Laporan PPN (Standar)</div>
+        <div class="period-info">Periode: {{ $monthName }}</div>
+        <div class="currency-info">(dalam Mata Uang Rupiah IDR)</div>
+    </div>
 
     {{-- Summary Section --}}
-    <table style="width: 100%; margin-bottom: 20px;">
+    <div class="section-header">RINGKASAN PAJAK</div>
+    <table>
         <thead>
-            <tr>
-                <th colspan="2">RINGKASAN PAJAK</th>
+            <tr class="column-headers">
+                <th style="width: 70%">Deskripsi</th>
+                <th style="width: 30%; text-align: right;">Jumlah</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="sub-row">
+            <tr class="transaction-row">
                 <td>Total PPN Keluaran (Output Tax)</td>
-                <td class="text-right" style="font-weight: bold;">Rp {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</td>
             </tr>
-            <tr class="sub-row">
+            <tr class="transaction-row">
                 <td>Total PPN Masukan (Input Tax)</td>
-                <td class="text-right" style="font-weight: bold;">Rp {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</td>
             </tr>
             <tr class="total-row">
                 <td>
@@ -109,10 +155,10 @@
     </table>
 
     {{-- A. PPN KELUARAN --}}
-    <div class="section-header" style="margin-top: 20px; padding: 10px; border-bottom: 2px solid #ccc;">A. PPN KELUARAN (OUTPUT TAX) - PENJUALAN</div>
+    <div class="section-header" style="margin-top: 20px;">A. PPN KELUARAN (OUTPUT TAX) - PENJUALAN</div>
     <table>
         <thead>
-            <tr>
+            <tr class="column-headers">
                 <th style="width: 5%">No</th>
                 <th style="width: 15%">Tanggal</th>
                 <th style="width: 20%">No. Invoice</th>
@@ -123,7 +169,7 @@
         </thead>
         <tbody>
             @forelse($data['ppn_keluaran_details'] as $index => $sale)
-            <tr class="sub-row">
+            <tr class="transaction-row">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</td>
                 <td>{{ $sale->invoice_no }}</td>
@@ -133,7 +179,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center" style="padding: 15px; font-style: italic; color: #777;">Tidak ada transaksi penjualan dengan PPN pada periode ini.</td>
+                <td colspan="6" class="text-center italic" style="padding: 15px; color: #777;">Tidak ada transaksi penjualan dengan PPN pada periode ini.</td>
             </tr>
             @endforelse
             
@@ -149,10 +195,10 @@
     </table>
 
     {{-- B. PPN MASUKAN --}}
-    <div class="section-header" style="margin-top: 20px; padding: 10px; border-bottom: 2px solid #ccc;">B. PPN MASUKAN (INPUT TAX) - PEMBELIAN</div>
+    <div class="section-header" style="margin-top: 20px;">B. PPN MASUKAN (INPUT TAX) - PEMBELIAN</div>
     <table>
         <thead>
-            <tr>
+            <tr class="column-headers">
                 <th style="width: 5%">No</th>
                 <th style="width: 15%">Tanggal</th>
                 <th style="width: 20%">No. Surat Jalan</th>
@@ -163,7 +209,7 @@
         </thead>
         <tbody>
             @forelse($data['ppn_masukan_details'] as $index => $purchase)
-            <tr class="sub-row">
+            <tr class="transaction-row">
                 <td>{{ $index + 1 }}</td>
                 <td>{{ \Carbon\Carbon::parse($purchase->date)->format('d/m/Y') }}</td>
                 <td>{{ $purchase->delivery_note_number }}</td>
@@ -173,7 +219,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center" style="padding: 15px; font-style: italic; color: #777;">Tidak ada transaksi pembelian dengan PPN pada periode ini.</td>
+                <td colspan="6" class="text-center italic" style="padding: 15px; color: #777;">Tidak ada transaksi pembelian dengan PPN pada periode ini.</td>
             </tr>
             @endforelse
             
@@ -188,9 +234,5 @@
         </tbody>
     </table>
 
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
-</body>
+    </body>
 </html>

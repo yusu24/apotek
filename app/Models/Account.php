@@ -12,6 +12,7 @@ class Account extends Model
         'name',
         'type',
         'category',
+        'normal_balance',
         'balance',
         'is_system',
         'is_active',

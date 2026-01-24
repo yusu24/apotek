@@ -13,6 +13,8 @@ class OpeningBalanceManager extends Component
     public $bank_amount = null;
     public $inventory_amount = null;
     public $capital_amount = null;
+    public $balance_date = null;
+    public $is_locked = false;
     
     public $assets = [];
     public $debts = [];
@@ -27,6 +29,13 @@ class OpeningBalanceManager extends Component
 
     public function mount()
     {
+        if (!auth()->user()->can('view opening balances') && 
+            !auth()->user()->can('edit opening balances') &&
+            !auth()->user()->can('lock opening balances') &&
+            !auth()->user()->can('unlock opening balances')) {
+            abort(403, 'Unauthorized');
+        }
+
         $ob = OpeningBalance::with(['assets', 'debts'])->first();
         if ($ob) {
             $this->openingBalanceId = $ob->id;
@@ -34,6 +43,8 @@ class OpeningBalanceManager extends Component
             $this->bank_amount = number_format($ob->bank_amount, 2, '.', '');
             $this->inventory_amount = number_format($ob->inventory_amount, 2, '.', '');
             $this->capital_amount = number_format($ob->capital_amount, 2, '.', '');
+            $this->balance_date = $ob->balance_date ? $ob->balance_date->format('Y-m-d') : null;
+            $this->is_locked = $ob->locked_at !== null;
             
             foreach ($ob->assets as $asset) {
                 $this->assets[] = [
@@ -116,6 +127,11 @@ class OpeningBalanceManager extends Component
 
     public function calculateInventoryFromDb()
     {
+        if ($this->is_locked) {
+            session()->flash('error', 'Neraca sudah terkunci.');
+            return;
+        }
+
         // Hitung total nilai persediaan dari batch yang ada
         // Rumus: Sum(current_stock * buy_price)
         $totalValue = \App\Models\Batch::where('stock_current', '>', 0)
@@ -132,11 +148,22 @@ class OpeningBalanceManager extends Component
 
     public function save()
     {
+        if (!auth()->user()->can('edit opening balances')) {
+            session()->flash('error', 'Anda tidak memiliki hak akses untuk mengubah neraca saldo awal.');
+            return;
+        }
+
+        if ($this->is_locked) {
+            session()->flash('error', 'Neraca sudah terkunci dan tidak dapat diubah.');
+            return;
+        }
+
         $this->validate([
             'cash_amount' => 'required|numeric|min:0',
             'bank_amount' => 'required|numeric|min:0',
             'inventory_amount' => 'required|numeric|min:0',
             'capital_amount' => 'required|numeric|min:0',
+            'balance_date' => 'required|date',
             'assets.*.asset_name' => 'required_with:assets.*.amount',
             'assets.*.amount' => 'nullable|numeric|min:0',
             'debts.*.debt_name' => 'required_with:debts.*.amount',
@@ -159,6 +186,7 @@ class OpeningBalanceManager extends Component
                     'bank_amount' => $this->bank_amount,
                     'inventory_amount' => $this->inventory_amount,
                     'capital_amount' => $this->capital_amount,
+                    'balance_date' => $this->balance_date,
                     'is_confirmed' => true
                 ]
             );
@@ -189,6 +217,45 @@ class OpeningBalanceManager extends Component
             DB::rollBack();
             session()->flash('error', 'Gagal menyimpan neraca awal: ' . $e->getMessage());
         }
+    }
+
+    public function lock()
+    {
+        if (!auth()->user()->can('lock opening balances')) {
+            session()->flash('error', 'Anda tidak memiliki hak akses untuk mengunci neraca.');
+            return;
+        }
+
+        if (!$this->openingBalanceId) {
+            session()->flash('error', 'Simpan neraca terlebih dahulu sebelum mengunci.');
+            return;
+        }
+
+        $this->updateSummary();
+        if (!$this->summary['is_balanced']) {
+            session()->flash('error', 'Neraca belum seimbang! Tidak dapat mengunci.');
+            return;
+        }
+
+        $ob = OpeningBalance::find($this->openingBalanceId);
+        $ob->update(['locked_at' => now()]);
+        $this->is_locked = true;
+        
+        session()->flash('success', 'Neraca berhasil dikunci.');
+    }
+
+    public function unlock()
+    {
+        if (!auth()->user()->can('unlock opening balances')) {
+            session()->flash('error', 'Anda tidak memiliki hak akses untuk membuka kuncian neraca.');
+            return;
+        }
+
+        $ob = OpeningBalance::find($this->openingBalanceId);
+        $ob->update(['locked_at' => null]);
+        $this->is_locked = false;
+        
+        session()->flash('success', 'Kuncian neraca berhasil dibuka.');
     }
 
     public function render()

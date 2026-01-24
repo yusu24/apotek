@@ -52,7 +52,7 @@ class CustomerManagement extends Component
 
     public function store()
     {
-        if (!auth()->user()->can('manage master data')) {
+        if (!auth()->user()->can('manage customers')) {
             abort(403);
         }
 
@@ -82,7 +82,7 @@ class CustomerManagement extends Component
 
     public function update()
     {
-        if (!auth()->user()->can('manage master data')) {
+        if (!auth()->user()->can('manage customers')) {
             abort(403);
         }
 
@@ -101,7 +101,7 @@ class CustomerManagement extends Component
 
     public function delete($id)
     {
-        if (!auth()->user()->can('manage master data')) {
+        if (!auth()->user()->can('manage customers')) {
             abort(403);
         }
 

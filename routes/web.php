@@ -34,9 +34,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('permission:manage product units');
     Route::get('/master/units', App\Livewire\Master\UnitManagement::class)
         ->name('master.units')
-        ->middleware('permission:manage master data');
-    Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)->name('master.suppliers');
-    Route::get('/master/customers', App\Livewire\Master\CustomerManagement::class)->name('master.customers');
+        ->middleware('permission:manage units');
+    Route::get('/master/suppliers', App\Livewire\Master\SupplierManagement::class)
+        ->name('master.suppliers')
+        ->middleware('permission:manage suppliers');
+    Route::get('/master/customers', App\Livewire\Master\CustomerManagement::class)
+        ->name('master.customers')
+        ->middleware('permission:manage customers');
 
 
     Route::controller(App\Http\Controllers\ImportController::class)->group(function () {
@@ -71,8 +75,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/receipt/{id}', App\Livewire\Pos\Receipt::class)->name('pos.receipt');
 
     // Reports
-    Route::get('/reports/sales', App\Livewire\Reports\SalesChart::class)->name('reports.sales');
-    Route::get('/reports/sales-detail', App\Livewire\Reports\SalesReport::class)->name('reports.sales-detail');
+    Route::get('/reports/sales', App\Livewire\Reports\SalesReport::class)->name('reports.sales');
+    Route::get('/reports/sales-chart', App\Livewire\Reports\SalesChart::class)->name('reports.sales-chart');
     Route::get('/reports/stock', App\Livewire\Reports\StockReport::class)->name('reports.stock');
     Route::get('/reports/transaction-history', App\Livewire\Reports\TransactionHistory::class)->name('reports.transaction-history');
     Route::get('/reports/product-margin', App\Livewire\Reports\ProductMarginReport::class)->name('reports.product-margin');
@@ -87,10 +91,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/balance-sheet', App\Livewire\Reports\BalanceSheet::class)->name('balance-sheet');
         Route::get('/income-statement', App\Livewire\Reports\IncomeStatement::class)->name('income-statement');
         Route::get('/expenses', App\Livewire\Finance\ExpenseManager::class)->name('expenses');
-        Route::get('/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)->name('expense-categories');
+        Route::get('/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)
+            ->name('expense-categories')
+            ->middleware('permission:manage expense categories');
         Route::get('/opening-balance', App\Livewire\Finance\OpeningBalanceManager::class)
             ->name('opening-balance')
-            ->middleware('permission:manage opening balances');
+            ->middleware('permission:view opening balances');
         Route::get('/trial-balance', App\Livewire\Reports\TrialBalance::class)->name('trial-balance');
         Route::get('/cash-flow', App\Livewire\Reports\CashFlow::class)->name('cash-flow');
         Route::get('/assets', App\Livewire\Finance\AssetIndex::class)->name('assets');
@@ -99,11 +105,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/accounting/accounts', App\Livewire\Accounting\AccountIndex::class)->name('accounting.accounts.index');
     Route::get('/accounting/journals', App\Livewire\Accounting\JournalIndex::class)->name('accounting.journals.index');
     Route::get('/accounting/journals/create', App\Livewire\Accounting\JournalEntryForm::class)->name('accounting.journals.create');
+    Route::get('/accounting/journals/{id}/edit', App\Livewire\Accounting\JournalEntryForm::class)->name('accounting.journals.edit');
     Route::get('/accounting/ledger', App\Livewire\Accounting\GeneralLedger::class)->name('accounting.ledger');
-
-    Route::get('/finance/expense-categories', App\Livewire\Finance\ExpenseCategoryIndex::class)
-        ->name('finance.expense-categories')
-        ->middleware('permission:manage expense categories');
     
     // Procurement
     Route::get('/procurement/purchase-orders', App\Livewire\Procurement\PurchaseOrderIndex::class)->name('procurement.purchase-orders.index');
@@ -127,6 +130,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/balance-sheet', [App\Http\Controllers\PdfController::class, 'exportBalanceSheet'])->name('pdf.balance-sheet');
     Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
     Route::get('/pdf/stock-report', [App\Http\Controllers\PdfController::class, 'exportStockReport'])->name('pdf.stock-report');
+    Route::get('/pdf/sales-report', [App\Http\Controllers\PdfController::class, 'exportSalesReport'])->name('pdf.sales-report');
+    Route::get('/pdf/product-margin', [App\Http\Controllers\PdfController::class, 'exportProductMarginReport'])->name('pdf.product-margin');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');
     Route::get('/pdf/trial-balance', [App\Http\Controllers\PdfController::class, 'exportTrialBalance'])->name('pdf.trial-balance');
 

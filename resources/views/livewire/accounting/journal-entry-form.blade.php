@@ -52,24 +52,40 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($lines as $index => $line)
-                            <tr class="hover:bg-gray-50 transition duration-150">
+                            @php
+                                $warnings = $this->getLineWarnings();
+                                $warning = $warnings[$index] ?? null;
+                            @endphp
+                            <tr class="hover:bg-gray-50 transition duration-150 {{ $warning ? 'bg-yellow-50' : '' }}">
                                 <td class="px-4 py-2">
-                                    <select wire:model="lines.{{ $index }}.account_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                                        <option value="">-- Pilih Akun --</option>
-                                        @foreach($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->code }} - {{ $account->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="relative">
+                                        <select wire:model="lines.{{ $index }}.account_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm {{ $warning ? 'border-yellow-400 bg-yellow-50' : '' }}">
+                                            <option value="">-- Pilih Akun --</option>
+                                            @foreach($accounts as $account)
+                                                <option value="{{ $account->id }}">{{ $account->code }} - {{ $account->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if($warning)
+                                            <div class="absolute right-2 top-2 group">
+                                                <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <div class="hidden group-hover:block absolute right-0 top-6 z-10 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg">
+                                                    ⚠️ {{ $warning['message'] }}
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
                                     @error("lines.{$index}.account_id") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-4 py-2">
                                     <div x-data="money($wire.entangle('lines.{{ $index }}.debit').live)">
-                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono">
+                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono {{ $warning && $warning['type'] === 'warning' ? 'border-yellow-400 bg-yellow-50' : '' }}">
                                     </div>
                                 </td>
                                 <td class="px-4 py-2">
                                     <div x-data="money($wire.entangle('lines.{{ $index }}.credit').live)">
-                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono">
+                                    <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono {{ $warning && $warning['type'] === 'warning' ? 'border-yellow-400 bg-yellow-50' : '' }}">
                                     </div>
                                 </td>
                                 <td class="px-4 py-2">

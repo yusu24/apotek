@@ -273,10 +273,15 @@ class PurchaseOrderForm extends Component
 
     public function markAsDone()
     {
+        if (!auth()->user()->can('view purchase orders')) {
+            session()->flash('error', 'Anda tidak memiliki izin untuk menyelesaikan pesanan.');
+            return;
+        }
+
         if ($this->purchaseOrder && $this->purchaseOrder->status === 'partial') {
             $this->purchaseOrder->update(['status' => 'received']);
             session()->flash('message', 'PO status berhasil diubah menjadi Diterima (Selesai).');
-            $this->redirect(route('procurement.purchase-orders.index'), navigate: true);
+            return redirect()->route('procurement.purchase-orders.index');
         }
     }
 

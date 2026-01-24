@@ -2,137 +2,181 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Arus Kas</title>
+    <title>Arus Kas (Standar)</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        body { font-family: sans-serif; font-size: 10pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
-        .header-table td { padding: 0; vertical-align: top; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
-        .period { font-size: 10pt; color: #666; text-align: center; margin-top: 5px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
-        th, td { padding: 8px 10px; vertical-align: top; }
-        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
-        
-        .section-header { 
-            background-color: #f3f4f6; 
-            font-weight: bold; 
-            padding-top: 15px; 
-            padding-bottom: 5px;
-            color: #111;
-            border-bottom: 1px solid #ddd;
+        @page { 
+            size: A4; 
+            margin: 15mm 1cm 10mm 1cm; 
         }
         
-        .sub-row td { padding-left: 25px; border-bottom: 1px solid #eee; }
-        
-        .total-row { 
-            font-weight: bold; 
-            background-color: #f0f9ff; 
-            color: #000;
-            border-top: 1px solid #cbd5e1;
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 10pt; 
+            color: #000; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.2;
         }
-        
-        .grand-total-row {
-            font-weight: bold;
-            font-size: 11pt;
-            background-color: #333;
-            color: white;
-        }
-        
+
+        .full-width { width: 100%; }
+        .text-center { text-align: center; }
         .text-right { text-align: right; }
-        
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #999;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
+
+        .report-header { 
+            margin-bottom: 25px; 
+            text-align: center;
         }
-        .footer .right {
-            float: right;
+        .store-name { 
+            font-size: 11pt; 
+            margin-bottom: 5px; 
+        }
+        .report-title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            color: #800000; /* Maroon */
+            margin: 0;
+        }
+        .period-info { 
+            font-size: 10pt; 
+            margin-top: 5px; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; 
+        }
+        
+        /* Table Header Style */
+        .column-headers td {
+            padding: 5px 0;
+            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            font-weight: bold;
+            color: #4a7ebb;
+        }
+
+        td { 
+            padding: 3px 0; 
+            vertical-align: bottom; 
+        }
+        
+        /* Hierarchy Levels */
+        .level-0 { font-weight: bold; padding-top: 10px; text-transform: uppercase; }
+        .level-1 { font-weight: normal; padding-left: 15px; padding-top: 5px; }
+        .level-2 { font-weight: normal; padding-left: 30px; }
+        .level-3 { font-weight: normal; padding-left: 45px; }
+
+        .timestamp {
+            position: fixed;
+            top: -10mm;
+            right: 0;
+            font-size: 7pt;
+            color: #666;
+        }
+        
+        /* Summary Lines */
+        .summary-label { font-weight: bold; }
+        .summary-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            text-align: right;
+            width: 35%;
+        }
+
+        .grand-total-label { 
+            font-weight: bold; 
+            text-transform: uppercase;
+            padding-top: 15px;
+        }
+        .grand-total-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            border-bottom: 3pt double #000;
+            text-align: right;
+            padding-top: 2px;
         }
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div class="store-name">{{ trim($store['name']) }}</div>
-                <div class="report-title">LAPORAN ARUS KAS</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
-                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam Mata Uang Rupiah IDR)</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="timestamp">
+        Waktu Cetak: {{ $printedAt }}
+    </div>
+    <div class="report-header">
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">Arus Kas (Standar)</div>
+        <div class="period-info">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+        </div>
+    </div>
 
     <table>
         <thead>
-            <tr>
-                <th style="width: 65%">Akun & Kategori</th>
-                <th style="width: 35%; text-align: right;">Jumlah</th>
+            <tr class="column-headers">
+                <td style="width: 65%">Deskripsi</td>
+                <td style="width: 35%; text-align: right;">Nilai</td>
             </tr>
         </thead>
         <tbody>
-            {{-- Operating --}}
-            <tr class="section-header"><td colspan="2">ARUS KAS DARI AKTIVITAS OPERASIONAL</td></tr>
-            <tr class="sub-row"><td>Penerimaan dari pelanggan</td><td class="text-right">{{ format_accounting($data['receipts_from_customers']) }}</td></tr>
-            <tr class="sub-row"><td>Pembayaran ke pemasok</td><td class="text-right">{{ format_accounting($data['payments_to_suppliers']) }}</td></tr>
-            <tr class="sub-row"><td>Pengeluaran operasional</td><td class="text-right">{{ format_accounting($data['payments_for_expenses']) }}</td></tr>
-            <tr class="sub-row"><td>Pendapatan lainnya</td><td class="text-right">{{ format_accounting($data['other_operating']) }}</td></tr>
-            <tr class="total-row"><td>Kas Bersih dari Aktivitas Operasional</td><td class="text-right">{{ format_accounting($data['net_cash_operating']) }}</td></tr>
+            {{-- AKTIVITAS OPERASIONAL --}}
+            <tr class="level-0"><td colspan="2">ARUS KAS DARI AKTIVITAS OPERASIONAL</td></tr>
+            <tr class="level-1"><td>Penerimaan dari pelanggan</td><td class="text-right">{{ format_accounting_standard($data['receipts_from_customers']) }}</td></tr>
+            <tr class="level-1"><td>Pembayaran ke pemasok</td><td class="text-right">{{ format_accounting_standard($data['payments_to_suppliers']) }}</td></tr>
+            <tr class="level-1"><td>Pengeluaran operasional</td><td class="text-right">{{ format_accounting_standard($data['payments_for_expenses']) }}</td></tr>
+            <tr class="level-1"><td>Pendapatan lainnya</td><td class="text-right">{{ format_accounting_standard($data['other_operating']) }}</td></tr>
+            
+            <tr class="level-0">
+                <td class="summary-label">Kas Bersih dari Aktivitas Operasional</td>
+                <td class="summary-value">{{ format_accounting_standard($data['net_cash_operating']) }}</td>
+            </tr>
 
-            {{-- Investing --}}
-            <tr class="section-header"><td colspan="2">ARUS KAS DARI AKTIVITAS INVESTASI</td></tr>
-            <tr class="sub-row"><td>Perolehan/Penjualan Aset</td><td class="text-right">{{ format_accounting($data['sale_assets'] + $data['purchase_assets']) }}</td></tr>
-            <tr class="sub-row"><td>Investasi Lainnya</td><td class="text-right">{{ format_accounting($data['other_investing']) }}</td></tr>
-            <tr class="total-row"><td>Kas Bersih dari Aktivitas Investasi</td><td class="text-right">{{ format_accounting($data['net_cash_investing']) }}</td></tr>
+            {{-- AKTIVITAS INVESTASI --}}
+            <tr class="level-0"><td colspan="2">ARUS KAS DARI AKTIVITAS INVESTASI</td></tr>
+            <tr class="level-1"><td>Perolehan/Penjualan Aset</td><td class="text-right">{{ format_accounting_standard($data['sale_assets'] + $data['purchase_assets']) }}</td></tr>
+            <tr class="level-1"><td>Investasi Lainnya</td><td class="text-right">{{ format_accounting_standard($data['other_investing']) }}</td></tr>
+            
+            <tr class="level-0">
+                <td class="summary-label">Kas Bersih dari Aktivitas Investasi</td>
+                <td class="summary-value">{{ format_accounting_standard($data['net_cash_investing']) }}</td>
+            </tr>
 
-            {{-- Financing --}}
-            <tr class="section-header"><td colspan="2">ARUS KAS DARI AKTIVITAS PENDANAAN</td></tr>
-            <tr class="sub-row"><td>Pinjaman</td><td class="text-right">{{ format_accounting($data['loans']) }}</td></tr>
-            <tr class="sub-row"><td>Ekuitas/Modal</td><td class="text-right">{{ format_accounting($data['equity']) }}</td></tr>
-            <tr class="total-row"><td>Kas Bersih dari Aktivitas Pendanaan</td><td class="text-right">{{ format_accounting($data['net_cash_financing']) }}</td></tr>
+            {{-- AKTIVITAS PENDANAAN --}}
+            <tr class="level-0"><td colspan="2">ARUS KAS DARI AKTIVITAS PENDANAAN</td></tr>
+            <tr class="level-1"><td>Pinjaman</td><td class="text-right">{{ format_accounting_standard($data['loans']) }}</td></tr>
+            <tr class="level-1"><td>Ekuitas/Modal</td><td class="text-right">{{ format_accounting_standard($data['equity']) }}</td></tr>
+            
+            <tr class="level-0">
+                <td class="summary-label">Kas Bersih dari Aktivitas Pendanaan</td>
+                <td class="summary-value">{{ format_accounting_standard($data['net_cash_financing']) }}</td>
+            </tr>
 
-            {{-- Summary --}}
+            {{-- SUMMARY --}}
             <tr><td colspan="2" style="height: 30px;"></td></tr>
             
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding-top: 10px; font-weight: bold;">Kenaikan (Penurunan) Bersih Kas</td>
-                <td class="text-right" style="padding-top: 10px; font-weight: bold;">{{ format_accounting($data['net_increase']) }}</td>
+            <tr class="level-0">
+                <td>Kenaikan (Penurunan) Bersih Kas</td>
+                <td class="text-right">{{ format_accounting_standard($data['net_increase']) }}</td>
             </tr>
-            <tr style="border-bottom: 2px solid #333;">
+            <tr class="level-0">
                 <td>Saldo Kas Awal</td>
-                <td class="text-right">{{ format_accounting($data['beginning_balance']) }}</td>
+                <td class="text-right">{{ format_accounting_standard($data['beginning_balance']) }}</td>
             </tr>
-            <tr class="grand-total-row">
-                <td style="padding: 10px;">SALDO KAS AKHIR</td>
-                <td class="text-right" style="padding: 10px;">{{ format_accounting($data['ending_balance']) }}</td>
+            
+            <tr class="grand-total-label">
+                <td style="color: #800000">SALDO KAS AKHIR</td>
+                <td class="grand-total-value" style="color: #800000">{{ format_accounting_standard($data['ending_balance']) }}</td>
             </tr>
         </tbody>
     </table>
 
     @php
-    function format_accounting($number) {
-        if ($number < 0) {
-            return '( ' . number_format(abs($number), 0, ',', '.') . ' )';
-        }
-        return number_format($number, 0, ',', '.');
+    function format_accounting_standard($number) {
+        $formatted = number_format(abs($number), 2, ',', '.');
+        if ($formatted == '0,00') return '0';
+        return ($number < 0 ? '-' : '') . $formatted;
     }
     @endphp
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
 </body>
 </html>

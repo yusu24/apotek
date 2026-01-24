@@ -11,8 +11,13 @@ use App\Models\User;
 class UserManagement extends Component
 {
     use WithPagination;
-
+    
     public $search = '';
+
+    protected $queryString = [
+        'page' => ['except' => 1],
+        'search' => ['except' => ''],
+    ];
 
     public function mount()
     {
@@ -89,8 +94,10 @@ class UserManagement extends Component
     {
         $users = User::with('roles')
             ->when($this->search, function($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
+                $query->where(function($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('email', 'like', '%' . $this->search . '%');
+                });
             })
             ->paginate(10)
             ->onEachSide(2);

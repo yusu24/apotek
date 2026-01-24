@@ -28,6 +28,23 @@ class StockReport extends Component
         }
     }
 
+    public function resetFilters()
+    {
+        $this->search = '';
+        $this->startExpiry = '';
+        $this->endExpiry = '';
+        $this->categoryFilter = '';
+        $this->stockStatus = 'all';
+        $this->resetPage();
+    }
+
+
+    public function toggleStockStatus()
+    {
+        $this->stockStatus = ($this->stockStatus === 'low') ? 'all' : 'low';
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = Batch::query()

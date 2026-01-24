@@ -24,6 +24,9 @@
 
             <!-- Performance Components -->
             <livewire:dashboard.product-performance />
+
+            <!-- Financial Overview -->
+            <livewire:dashboard.financial-overview />
         </div>
     </div>
     @else

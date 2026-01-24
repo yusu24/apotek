@@ -2,104 +2,140 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Barang</title>
+    <title>Laporan Stok Barang (Standar)</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .header-table td { padding: 0; vertical-align: top; }
-        .store-name { font-size: 14pt; font-weight: bold; text-align: center; margin: 0; }
-        .store-address { font-size: 9pt; color: #555; text-align: center; margin-top: 3px; }
-        .report-title { font-size: 11pt; font-weight: bold; text-align: center; margin: 15px 0; text-transform: uppercase; }
-        
-        table { width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
-        thead { border-top: 1px solid #000; border-bottom: 1px solid #000; }
-        th { padding: 5px; text-align: left; font-weight: bold; text-transform: uppercase; }
-        td { padding: 5px; vertical-align: top; }
-        
-        .no-col { width: 5%; text-align: center; }
-        .code-col { width: 15%; }
-        .name-col { width: 35%; }
-        .unit-col { width: 10%; }
-        .stock-col { width: 10%; text-align: right; }
-        .price-col { width: 12%; text-align: right; }
-        .total-col { width: 13%; text-align: right; }
-        .text-right { text-align: right; }
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #777;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
+        @page { 
+            size: A4; 
+            margin:  15mm 1cm 10mm 1cm; 
         }
-        .footer .right { float: right; }
+        
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 9pt; 
+            color: #000; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.2;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
+        .italic { font-style: italic; }
+
+        .report-header { 
+            margin-bottom: 25px; 
+            text-align: center;
+        }
+        .store-name { 
+            font-size: 11pt; 
+            margin-bottom: 5px; 
+        }
+        .report-title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            color: #800000; /* Maroon */
+            margin: 0;
+        }
+        .period-info { 
+            font-size: 10pt; 
+            margin-top: 5px; 
+        }
+        
+        .timestamp {
+            position: fixed;
+            top: -10mm;
+            right: 0;
+            font-size: 7pt;
+            color: #666;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; 
+            margin-top: 10px;
+        }
+        
+        /* Table Header Style - Unified Border */
+        .column-headers th {
+            padding: 5px 0;
+            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            font-weight: bold;
+            color: #4a7ebb;
+            text-align: left;
+        }
+
+        td { 
+            padding: 5px 0; 
+            vertical-align: top; 
+            border-bottom: 0.5pt solid #eee;
+        }
+
+        .grand-total-label { 
+            font-weight: bold; 
+            text-transform: uppercase;
+            padding-top: 10px;
+        }
+        .grand-total-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            border-bottom: 3pt double #000;
+            text-align: right;
+            padding-top: 2px;
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div class="store-name">{{ trim($store['name']) }}</div>
-                <div class="store-address">{{ trim($store['address']) }}</div>
-                <div class="store-address">{{ trim($store['phone']) }}</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
+    <div class="timestamp">
+        Waktu Cetak: {{ $printedAt }}
+    </div>
+
+    <div class="report-header">
+        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
+        <div class="report-title">LAPORAN STOK BARANG</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr class="column-headers">
+                <th style="width: 5%">No</th>
+                <th style="width: 15%">Kode Barang</th>
+                <th style="width: 35%">Nama Barang</th>
+                <th style="width: 10%">Satuan</th>
+                <th style="width: 10%; text-align: right;">Stok</th>
+                <th style="width: 12%; text-align: right;">Harga Beli</th>
+                <th style="width: 13%; text-align: right;">Saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($products as $index => $product)
+            <tr>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ $product->barcode ?? $product->id }}</td>
+                <td>{{ $product->name }}</td>
+                <td>{{ $product->unit->name ?? '-' }}</td>
+                <td class="text-right">{{ number_format($product->total_stock, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($product->avg_buy_price, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($product->total_value, 0, ',', '.') }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="7" class="text-center italic" style="padding: 20px; color: #777;">Tidak ada data barang.</td>
+            </tr>
+            @endforelse
+            
+            @if($products->count() > 0)
+            <tr>
+                <td colspan="6" class="grand-total-label text-right">TOTAL NILAI PERSEDIAAN</td>
+                <td class="grand-total-value">{{ number_format($products->sum('total_value'), 0, ',', '.') }}</td>
+            </tr>
+            @endif
+        </tbody>
     </table>
 
-        <div class="report-title">LAPORAN BARANG</div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th class="no-col">NO.</th>
-                    <th class="code-col">KODE BARANG</th>
-                    <th class="name-col">NAMA BARANG</th>
-                    <th class="unit-col">SATUAN</th>
-                    <th class="stock-col">STOK</th>
-                    <th class="price-col">HARGA BELI</th>
-                    <th class="total-col">SALDO</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($products as $index => $product)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $product->barcode ?? $product->id }}</td> <!-- Using barcode as code, or ID fallback -->
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->unit->name ?? '-' }}</td>
-                    <td class="text-right">{{ number_format($product->total_stock, 0, ',', '.') }}</td>
-                    <td class="text-right">{{ number_format($product->avg_buy_price, 0, ',', '.') }}</td>
-                    <td class="text-right">{{ number_format($product->total_value, 0, ',', '.') }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="text-center" style="padding: 20px;">Tidak ada data barang.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <!-- Grand Total (Optional, but usually helpful) -->
-        @if($products->count() > 0)
-        <div style="margin-top: 10px; border-top: 1px solid #000; padding-top: 5px; text-align: right; font-weight: bold; font-size: 9pt;">
-            Total Nilai Persediaan: {{ number_format($products->sum('total_value'), 0, ',', '.') }}
-        </div>
-        @endif
-
-    </div>
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
-</body>
+    </body>
 </html>

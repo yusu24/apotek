@@ -36,7 +36,16 @@ class GoodsReceiptForm extends Component
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
         $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
-        $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get(); // Load Bank Accounts & Other Current Assets
+        // $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get(); 
+        // FIX: Only show Bank Accounts for Transfer option
+        $this->accounts = \App\Models\Account::query()
+            ->where(function($query) {
+                $query->where('code', 'like', '1-12%')
+                      ->orWhere('name', 'like', '%Bank%');
+            })
+            ->active()
+            ->orderBy('code')
+            ->get();
         
         if ($id) {
             $this->isEdit = true;

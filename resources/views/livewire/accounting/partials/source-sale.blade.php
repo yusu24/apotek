@@ -25,13 +25,13 @@
         <h4 class="font-bold text-gray-900 mb-3">Item Penjualan</h4>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-100">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Produk</th>
-                        <th class="px-3 py-2 text-right text-xs font-bold text-gray-700">Qty</th>
-                        <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Satuan</th>
-                        <th class="px-3 py-2 text-right text-xs font-bold text-gray-700">Harga</th>
-                        <th class="px-3 py-2 text-right text-xs font-bold text-gray-700">Subtotal</th>
+                        <th class="px-3 py-2 text-left">Produk</th>
+                        <th class="px-3 py-2 text-right">Qty</th>
+                        <th class="px-3 py-2 text-left">Satuan</th>
+                        <th class="px-3 py-2 text-right">Harga</th>
+                        <th class="px-3 py-2 text-right">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">

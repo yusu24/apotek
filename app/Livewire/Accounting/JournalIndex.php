@@ -20,6 +20,12 @@ class JournalIndex extends Component
     public $selectedJournal = null;
     public $sourceData = null;
 
+    // Delete confirmation
+    public $showDeleteModal = false;
+    public $journalToDelete = null;
+
+
+
     public function mount()
     {
         if (!auth()->user()->can('view journals')) {
@@ -59,6 +65,72 @@ class JournalIndex extends Component
         $this->showSourceModal = false;
         $this->selectedJournal = null;
         $this->sourceData = null;
+    }
+
+    public function confirmDelete($journalId)
+    {
+        if (!auth()->user()->can('delete journals')) {
+            session()->flash('error', 'Anda tidak memiliki izin untuk menghapus jurnal.');
+            return;
+        }
+
+        $journal = JournalEntry::find($journalId);
+        if (!$journal) {
+            session()->flash('error', 'Jurnal tidak ditemukan.');
+            return;
+        }
+
+        $this->journalToDelete = $journal;
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteJournal()
+    {
+        if (!auth()->user()->can('delete journals')) {
+            session()->flash('error', 'Anda tidak memiliki izin untuk menghapus jurnal.');
+            $this->showDeleteModal = false;
+            return;
+        }
+
+        if (!$this->journalToDelete) {
+            session()->flash('error', 'Jurnal tidak ditemukan.');
+            $this->showDeleteModal = false;
+            return;
+        }
+
+        try {
+            $entryNumber = $this->journalToDelete->entry_number;
+            
+            // If journal is posted, neutralize balances first
+            if ($this->journalToDelete->is_posted) {
+                $this->journalToDelete->reverse();
+            }
+
+            // Delete lines first
+            $this->journalToDelete->lines()->delete();
+            
+            // Delete journal
+            $this->journalToDelete->delete();
+
+            \App\Models\ActivityLog::log([
+                'action' => 'deleted',
+                'module' => 'journals',
+                'description' => "Menghapus jurnal draft: {$entryNumber}",
+            ]);
+
+            session()->flash('message', 'Jurnal draft berhasil dihapus.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Gagal menghapus jurnal: ' . $e->getMessage());
+        }
+
+        $this->showDeleteModal = false;
+        $this->journalToDelete = null;
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->journalToDelete = null;
     }
 
     public function render()

@@ -108,7 +108,7 @@
                     @foreach($reportData['revenue_accounts'] as $account)
                     <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->amount, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -125,7 +125,7 @@
                     @foreach($reportData['cogs_accounts'] as $account)
                     <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->amount, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -150,7 +150,7 @@
                     @foreach($reportData['operating_expense_accounts'] as $account)
                     <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->amount, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -168,7 +168,7 @@
                     @foreach($reportData['other_expense_accounts'] as $account)
                     <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->amount, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -181,13 +181,22 @@
 
             {{-- TAX EXPENSES --}}
             @if(isset($reportData['tax_accounts']) && $reportData['tax_accounts']->count() > 0)
+            
+            {{-- NET INCOME BEFORE TAX --}}
+            <div class="bg-indigo-50 p-4 rounded-lg border-2 border-indigo-200">
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-bold text-gray-800">LABA SEBELUM PAJAK</span>
+                    <span class="text-2xl font-bold text-indigo-700">Rp {{ number_format($reportData['net_income_before_tax'], 0, ',', '.') }}</span>
+                </div>
+            </div>
+
             <div>
                 <h4 class="text-base font-bold text-gray-800 uppercase mb-3 pb-2 border-b-2 border-gray-300">BEBAN PAJAK (TAX)</h4>
                 <div class="space-y-2 ml-4">
                     @foreach($reportData['tax_accounts'] as $account)
                     <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->amount, 0, ',', '.') }}</span>
                     </div>
                     @endforeach
                 </div>

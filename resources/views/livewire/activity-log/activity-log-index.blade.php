@@ -76,25 +76,21 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-            <!-- Search -->
-            <div class="lg:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
-                <div class="relative">
-                    <input type="text" wire:model.live.debounce.300ms="search" 
-                        placeholder="Cari deskripsi atau modul..." 
-                        class="w-full pl-10 pr-4 py-2 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                </div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print mb-6">
+        <!-- Row 1: Main Filters -->
+        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center">
+            <!-- Search (Order 1) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-1">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari</label>
+                <input type="text" wire:model.live.debounce.300ms="search" 
+                    placeholder="Deskripsi/modul..." 
+                    class="w-full md:w-64 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
             </div>
 
-            <!-- Filter User -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">User</label>
-                <select wire:model.live="filterUser" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+            <!-- Filter User (Order 2) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">User</label>
+                <select wire:model.live="filterUser" class="w-full md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="">Semua User</option>
                     @foreach($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -102,10 +98,10 @@
                 </select>
             </div>
 
-            <!-- Filter Module -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Modul</label>
-                <select wire:model.live="filterModule" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+            <!-- Filter Module (Order 3) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-3">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Modul</label>
+                <select wire:model.live="filterModule" class="w-full md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="">Semua Modul</option>
                     @foreach($modules as $module)
                         <option value="{{ $module }}">{{ ucfirst($module) }}</option>
@@ -113,10 +109,10 @@
                 </select>
             </div>
 
-            <!-- Filter Action -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Aksi</label>
-                <select wire:model.live="filterAction" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+            <!-- Filter Action (Order 4) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-4">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Aksi</label>
+                <select wire:model.live="filterAction" class="w-full md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
                     <option value="">Semua Aksi</option>
                     @foreach($actions as $action)
                         <option value="{{ $action }}">{{ ucfirst($action) }}</option>
@@ -124,25 +120,27 @@
                 </select>
             </div>
 
-            <!-- Clear Filters -->
-            <div class="flex items-end">
+            <!-- Reset (Order 5) -->
+            <div class="order-5 md:ml-auto">
                 <button wire:click="clearFilters" 
-                    class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition text-sm flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Reset
+                    class="px-3 md:px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 shadow-sm font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Reset semua filter">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span class="hidden md:inline">Reset Filter</span>
                 </button>
             </div>
         </div>
 
-        <!-- Date Range -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
-                <input type="date" wire:model.live="filterDateFrom" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
-                <input type="date" wire:model.live="filterDateTo" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+        <!-- Row 2: Date Filters -->
+        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Periode</label>
+                <div class="flex items-center gap-1.5 flex-1 md:flex-none">
+                    <input type="date" wire:model.live="filterDateFrom" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                    <span class="text-gray-400 font-bold">-</span>
+                    <input type="date" wire:model.live="filterDateTo" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
             </div>
         </div>
     </div>
@@ -245,7 +243,7 @@
 
         <!-- Pagination -->
         <div class="mt-6">
-            @include('components.custom-pagination', ['items' => $logs])
+            {{ $logs->links('components.custom-pagination', ['items' => $logs]) }}
         </div>
     </div>
 </div>

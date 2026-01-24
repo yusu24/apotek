@@ -30,6 +30,7 @@ class ActivityLogIndex extends Component
     public $showDetailModal = false;
 
     protected $queryString = [
+        'page' => ['except' => 1],
         'search' => ['except' => ''],
         'filterUser' => ['except' => ''],
         'filterModule' => ['except' => ''],
@@ -80,8 +81,10 @@ class ActivityLogIndex extends Component
     {
         $query = ActivityLog::with('user')
             ->when($this->search, function ($q) {
-                $q->where('description', 'like', '%' . $this->search . '%')
-                  ->orWhere('module', 'like', '%' . $this->search . '%');
+                $q->where(function($q2) {
+                    $q2->where('description', 'like', '%' . $this->search . '%')
+                       ->orWhere('module', 'like', '%' . $this->search . '%');
+                });
             })
             ->when($this->filterUser, function ($q) {
                 $q->where('user_id', $this->filterUser);
@@ -100,6 +103,14 @@ class ActivityLogIndex extends Component
             })
             ->latest()
             ->paginate(20);
+
+        \Log::info("ActivityLogIndex Rendering", [
+            'page' => $this->getPage(),
+            'search' => $this->search,
+            'user' => $this->filterUser,
+            'total' => $query->total(),
+            'count' => $query->count()
+        ]);
 
         $users = User::orderBy('name')->get();
         $modules = ActivityLog::select('module')->distinct()->orderBy('module')->pluck('module');

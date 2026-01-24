@@ -17,11 +17,14 @@ class JournalEntry extends Model
         'source_id',
         'user_id',
         'is_posted',
+        'is_reversed',
+        'reversed_by',
     ];
 
     protected $casts = [
         'date' => 'date',
         'is_posted' => 'boolean',
+        'is_reversed' => 'boolean',
     ];
 
     // Relationships

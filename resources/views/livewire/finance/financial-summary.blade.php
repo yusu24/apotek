@@ -138,7 +138,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50/50 dark:bg-gray-900/20 text-gray-500 dark:text-gray-400 text-xs uppercase font-bold">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                         <tr>
                             <th class="px-6 py-4 text-left">Tanggal</th>
                             <th class="px-6 py-4 text-left">Akun</th>

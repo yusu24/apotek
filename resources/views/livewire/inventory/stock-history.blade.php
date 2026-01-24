@@ -32,12 +32,12 @@
         </div>
         <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch No</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Exp. Date</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stok Saat Ini</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-4 text-left">Batch No</th>
+                    <th class="px-6 py-4 text-left">Exp. Date</th>
+                    <th class="px-6 py-4 text-left">Stok Saat Ini</th>
+                    <th class="px-6 py-4 text-left">Status</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -126,17 +126,17 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Masuk</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Keluar</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Saldo</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referensi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">Tipe</th>
+                        <th class="px-6 py-4 text-left">Batch</th>
+                        <th class="px-6 py-4 text-center">Masuk</th>
+                        <th class="px-6 py-4 text-center">Keluar</th>
+                        <th class="px-6 py-4 text-center">Saldo</th>
+                        <th class="px-6 py-4 text-left">Referensi</th>
+                        <th class="px-6 py-4 text-left">Keterangan</th>
+                        <th class="px-6 py-4 text-left">User</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

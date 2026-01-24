@@ -28,6 +28,6 @@ class AssetDepreciation extends Model
 
     public function journalEntry(): BelongsTo
     {
-        return $this->belongsTo(JournalEntry.class);
+        return $this->belongsTo(JournalEntry::class);
     }
 }

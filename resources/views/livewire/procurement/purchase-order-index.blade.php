@@ -72,15 +72,14 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. PO</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Supplier</th>
-                        {{-- <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th> --}}
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                        <th class="px-6 py-4 text-left">No. PO</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">Supplier</th>
+                        <th class="px-6 py-4 text-left">Status</th>
+                        <th class="px-6 py-4 text-left">User</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

@@ -12,12 +12,12 @@
                 </svg>
                 <span class="hidden sm:inline">Export Excel</span>
             </button>
-            <button onclick="window.print()" class="p-2 sm:px-4 sm:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export PDF">
+            <a href="{{ route('pdf.product-margin', ['search' => $search, 'categoryFilter' => $categoryFilter, 'marginFilter' => $marginFilter]) }}" target="_blank" class="p-2 sm:px-4 sm:py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export PDF">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
                 <span class="hidden sm:inline">Export PDF</span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -80,9 +80,9 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th wire:click="sortByColumn('name')" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
@@ -92,8 +92,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                        <th wire:click="sortByColumn('last_buy_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
+                        <th class="px-6 py-4 text-left">Kategori</th>
+                        <th wire:click="sortByColumn('last_buy_price')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Harga Beli
                                 @if($sortBy === 'last_buy_price')
@@ -103,7 +103,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('sell_price')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('sell_price')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Harga Jual
                                 @if($sortBy === 'sell_price')
@@ -113,7 +113,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('margin_amount')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('margin_amount')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Margin (Rp)
                                 @if($sortBy === 'margin_amount')
@@ -123,7 +123,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('margin_percentage')" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('margin_percentage')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center justify-end gap-1">
                                 Margin (%)
                                 @if($sortBy === 'margin_percentage')

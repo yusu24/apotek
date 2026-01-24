@@ -102,13 +102,13 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Invoice</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">DPP</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">PPN 11%</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">No. Invoice</th>
+                        <th class="px-6 py-4 text-right">DPP</th>
+                        <th class="px-6 py-4 text-right">PPN 11%</th>
+                        <th class="px-6 py-4 text-right">Total</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -150,13 +150,13 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Surat Jalan</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">DPP</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">PPN 11%</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">No. Surat Jalan</th>
+                        <th class="px-6 py-4 text-right">DPP</th>
+                        <th class="px-6 py-4 text-right">PPN 11%</th>
+                        <th class="px-6 py-4 text-right">Total</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

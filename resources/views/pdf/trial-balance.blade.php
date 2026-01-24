@@ -3,64 +3,98 @@
 <head>
     <title>Neraca Saldo</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11px; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; }
-        .header-table td { padding: 0; vertical-align: top; }
-        .store-name { font-size: 18px; font-weight: bold; color: #1e3a8a; text-transform: uppercase; text-align: center; margin: 0; }
-        .report-title { font-size: 16px; font-weight: bold; text-align: center; margin-top: 5px; }
-        .period { font-size: 12px; color: #666; text-align: center; margin-top: 5px; }
+        @page { 
+            size: A4; 
+            margin:    10mm 1cm 10mm 1cm; 
+        }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
-        th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
-        th { background-color: #1e3a8a; color: white; text-align: left; text-transform: uppercase; font-size: 10px; }
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 10pt; 
+            color: #1a1a1a; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.4;
+        }
+
+        .full-width { width: 100%; }
+        .text-center { text-align: center; }
         .text-right { text-align: right; }
+        .text-left { text-align: left; }
         .font-bold { font-weight: bold; }
-        .bg-gray-100 { background-color: #f3f4f6; }
-        .bg-blue-50 { background-color: #eff6ff; }
-        .bg-yellow-50 { background-color: #fefce8; }
-        .bg-purple-50 { background-color: #faf5ff; }
-        .bg-green-50 { background-color: #f0fdf4; }
-        .bg-red-50 { background-color: #fef2f2; }
-        .footer {
-            position: fixed;
-            bottom: -30px;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #666;
+        .uppercase { text-transform: uppercase; }
+
+        .report-header { 
+            margin-bottom: 30px; 
+            display: block;
+            width: 100%;
+        }
+        .store-name { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            margin: 0; 
+        }
+        .report-title { 
+            font-size: 13pt; 
+            font-weight: bold; 
+            color: #333; 
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        .period-info { 
+            font-size: 11pt; 
+            color: #4b5563; 
+            margin-top: 6px; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            table-layout: fixed; 
+        }
+        th { 
+            padding: 10px 12px;
+            background-color: #f8fafc;
+            color: #1e293b;
             text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
+            font-weight: bold;
+            border-top: 2pt solid #1e293b;
+            border-bottom: 1pt solid #cbd5e1;
+            font-size: 11pt;
         }
-        .footer .right {
-            float: right;
+        td { 
+            padding: 8px 12px; 
+            vertical-align: middle; 
+            font-size: 12pt;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .grand-total {
-            background-color: #111827;
+        
+        .section-header td { 
+            background-color: #f1f5f9; 
+            font-weight: bold; 
+            padding-top: 12px; 
+            padding-bottom: 10px;
+            color: #0f172a;
+        }
+        
+        .grand-total td {
+            font-weight: bold;
+            background-color: #1e293b;
             color: white;
-            font-weight: bold;
+            padding: 12px;
         }
-        .section-header {
-            font-weight: bold;
-            background-color: #f1f5f9;
-        }
-    </style>
+
+        </style>
 </head>
 <body>
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div class="store-name">{{ trim($store['name']) }}</div>
-                <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
-                </div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="report-header text-center">
+        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
+        <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
+        <div class="period-info">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+        </div>
+    </div>
 
     <table>
         <thead>
@@ -120,9 +154,5 @@
         PERINGATAN: Neraca tidak balance! Selisih: Rp {{ number_format(abs($reportData['difference']), 0, ',', '.') }}
     </div>
     @endif
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
-</body>
+    </body>
 </html>

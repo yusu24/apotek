@@ -23,11 +23,11 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-widest">No</th>
-                        <th class="px-6 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-widest">Nama Satuan</th>
-                        <th class="px-6 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-widest">Aksi</th>
+                        <th class="px-6 py-4 text-left">No</th>
+                        <th class="px-6 py-4 text-left">Nama Satuan</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">

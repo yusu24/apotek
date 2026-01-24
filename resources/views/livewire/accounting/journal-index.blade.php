@@ -50,90 +50,94 @@
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[800px]">
-                <thead class="bg-gray-800 text-white">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider">Tanggal & No. Jurnal</th>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider">Deskripsi</th>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider">Detail Akun</th>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-right">Debit</th>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-right">Kredit</th>
-                        <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-center">Status</th>
+                        <th class="px-4 py-4 text-left">Tgl & No</th>
+                        <th class="px-4 py-4 text-left">Deskripsi</th>
+                        <th class="px-4 py-4 text-left">Akun</th>
+                        <th class="px-4 py-4 text-right">Debit</th>
+                        <th class="px-4 py-4 text-right">Kredit</th>
+                        <th class="px-4 py-4 text-center">Status</th>
+                        <th class="px-4 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($journals as $journal)
-                        <tr class="bg-gray-50 border-b-2 border-gray-100 italic
-                            {{ $journal->hasViewableSource() ? 'cursor-pointer hover:bg-blue-50 transition' : '' }}"
-                            @if($journal->hasViewableSource())
-                                wire:click="viewSource({{ $journal->id }})"
-                                title="Klik untuk melihat transaksi sumber"
-                            @endif>
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-gray-900">{{ $journal->date->format('d/m/Y') }}</div>
-                                <div class="text-xs text-blue-600 font-semibold">{{ $journal->entry_number }}</div>
+                        {{-- Journal Header Row --}}
+                        <tr class="bg-gray-100 border-t-2 border-gray-300">
+                            <td class="px-4 py-3 align-top">
+                                <div class="font-bold text-gray-900">{{ $journal->date->format('d/m/y') }}</div>
+                                <div class="text-[10px] text-blue-600 font-bold uppercase">{{ $journal->entry_number }}</div>
                             </td>
-                            <td class="px-6 py-4 font-semibold text-gray-800" colspan="3">
+                            <td class="px-4 py-3 align-top font-bold text-gray-800">
                                 {{ $journal->description }}
-                                <span class="ml-2 px-2 py-0.5 bg-gray-200 text-gray-700 text-[10px] rounded uppercase">{{ $journal->source }}</span>
-                                @if($journal->hasViewableSource())
-                                    <svg class="w-4 h-4 inline ml-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                    </svg>
+                                <span class="block text-[9px] text-gray-500 font-normal mt-1">S: {{ $journal->source }}</span>
+                            </td>
+                            <td class="px-4 py-3" colspan="3"></td>
+                            <td class="px-4 py-3 text-center align-top">
+                                @if($journal->is_posted)
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800 border">POSTED</span>
+                                @else
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-800 border">DRAFT</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4" colspan="2"></td>
+                            <td class="px-4 py-3 text-center align-top whitespace-nowrap">
+                                <div class="flex items-center justify-center gap-3">
+                                    @can('edit journals')
+                                    <a href="{{ route('accounting.journals.edit', $journal->id) }}" 
+                                        class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit Jurnal" @click.stop>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    </a>
+                                    @endcan
+
+                                    @can('delete journals')
+                                    <button wire:click.stop="confirmDelete({{ $journal->id }})" 
+                                        class="text-red-600 hover:text-red-900 transition duration-150" title="Hapus Jurnal">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                    @endcan
+                                </div>
+                            </td>
                         </tr>
+                        {{-- Journal Lines --}}
                         @foreach($journal->lines as $line)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-2" colspan="2"></td>
-                            <td class="px-6 py-2">
-                                <div class="{{ $line->credit > 0 ? 'ml-8' : '' }} flex flex-col">
-                                    <span class="text-sm font-bold text-gray-700">{{ $line->account->code }} - {{ $line->account->name }}</span>
+                        <tr class="hover:bg-gray-50 transition border-b border-gray-100 italic bg-white">
+                            <td class="px-4 py-2" colspan="2"></td>
+                            <td class="px-4 py-2">
+                                <div class="{{ $line->credit > 0 ? 'ml-6' : '' }} flex flex-col">
+                                    <span class="text-xs font-bold text-gray-700">{{ $line->account->code }} - {{ $line->account->name }}</span>
                                     @if($line->notes)
-                                        <span class="text-[10px] text-gray-500 italic">{{ $line->notes }}</span>
+                                        <span class="text-[9px] text-gray-500">{{ $line->notes }}</span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-2 text-right">
+                            <td class="px-4 py-2 text-right">
                                 @if($line->debit > 0)
-                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($line->debit, 0, ',', '.') }}</span>
+                                    <span class="text-xs font-bold text-gray-900">{{ number_format($line->debit, 0, ',', '.') }}</span>
                                 @else
-                                    <span class="text-gray-300">-</span>
+                                    -
                                 @endif
                             </td>
-                            <td class="px-6 py-2 text-right">
+                            <td class="px-4 py-2 text-right">
                                 @if($line->credit > 0)
-                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($line->credit, 0, ',', '.') }}</span>
+                                    <span class="text-xs font-bold text-gray-900">{{ number_format($line->credit, 0, ',', '.') }}</span>
                                 @else
-                                    <span class="text-gray-300">-</span>
+                                    -
                                 @endif
                             </td>
-                            <td class="px-6 py-2 text-center">
-                                 @if($loop->first)
-                                    @if($journal->is_posted)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">
-                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                            POSTED
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-yellow-100 text-yellow-800">
-                                            DRAFT
-                                        </span>
-                                    @endif
-                                 @endif
-                            </td>
+                            <td class="px-2 py-2" colspan="2"></td>
                         </tr>
                         @endforeach
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
+                            <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
                         </tr>
                     @endforelse
                 </tbody>
                 @if($journals->count() > 0)
                 <tfoot class="bg-gray-50">
                     <tr>
-                        <td colspan="6" class="px-6 py-4">
+                        <td colspan="7" class="px-6 py-4">
                             {{ $journals->links() }}
                         </td>
                     </tr>
@@ -185,4 +189,51 @@
         </div>
     </div>
     @endif
+
+    {{-- Delete Confirmation Modal --}}
+    @if($showDeleteModal && $journalToDelete)
+    <div class="fixed inset-0 z-[70] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="cancelDelete"></div>
+
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <div class="bg-white px-6 py-5">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4 flex-1">
+                            <h3 class="text-lg font-bold text-gray-900">Hapus Jurnal</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-600">
+                                    Anda yakin ingin menghapus jurnal ini?
+                                </p>
+                                @if($journalToDelete->is_posted)
+                                <p class="text-[10px] text-orange-600 font-bold mt-1 uppercase">⚠️ Jurnal ini sudah posted. Menghapus akan membatalkan pengaruh saldonya.</p>
+                                @endif
+                                <div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                                    <p class="text-xs font-bold text-gray-700">{{ $journalToDelete->entry_number }}</p>
+                                    <p class="text-xs text-gray-600 mt-1">{{ $journalToDelete->description }}</p>
+                                </div>
+                                <p class="text-xs text-red-600 mt-3 font-semibold">⚠️ Tindakan ini tidak dapat dibatalkan!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
+                    <button wire:click="cancelDelete" type="button" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-semibold transition">
+                        Batal
+                    </button>
+                    <button wire:click="deleteJournal" type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition shadow-sm">
+                        Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+
 </div>

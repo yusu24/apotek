@@ -40,6 +40,15 @@ class SalesReport extends Component
         $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
     }
 
+    public function resetFilters()
+    {
+        $this->search = '';
+        $this->paymentMethod = 'all';
+        $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $this->resetPage();
+    }
+
     public function render()
     {
         $salesQuery = Sale::query()

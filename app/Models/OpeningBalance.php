@@ -15,6 +15,8 @@ class OpeningBalance extends Model
         'inventory_amount',
         'capital_amount',
         'journal_entry_id',
+        'balance_date',
+        'locked_at',
         'is_confirmed',
     ];
 
@@ -23,6 +25,8 @@ class OpeningBalance extends Model
         'bank_amount' => 'decimal:2',
         'inventory_amount' => 'decimal:2',
         'capital_amount' => 'decimal:2',
+        'balance_date' => 'date',
+        'locked_at' => 'datetime',
         'is_confirmed' => 'boolean',
     ];
 
@@ -79,8 +83,8 @@ class OpeningBalance extends Model
             } else {
                 $journal = JournalEntry::create([
                     'entry_number' => JournalEntry::generateEntryNumber(),
-                    'date' => now(),
-                    'description' => 'Jurnal Pembukaan (Neraca Awal)',
+                    'date' => $this->balance_date ?? now(),
+                    'description' => 'Jurnal Pembukaan (Neraca Saldo Awal)',
                     'source' => 'opening_balance',
                     'source_id' => $this->id,
                     'user_id' => auth()->id() ?? 1,
@@ -91,7 +95,8 @@ class OpeningBalance extends Model
             }
 
             $journal = JournalEntry::find($journalId);
-            $journal->description = 'Jurnal Pembukaan (Neraca Awal)';
+            $journal->date = $this->balance_date ?? $journal->date;
+            $journal->description = 'Jurnal Pembukaan (Neraca Saldo Awal)';
             $journal->save();
 
             // 2. Create Journal Lines
@@ -109,7 +114,7 @@ class OpeningBalance extends Model
             }
             foreach ($this->assets as $asset) {
                 if ($asset->amount > 0) {
-                    $lines[] = ['account_id' => Account::where('code', '1-2000')->first()->id, 'debit' => $asset->amount, 'credit' => 0];
+                    $lines[] = ['account_id' => Account::where('code', '1-3100')->first()->id, 'debit' => $asset->amount, 'credit' => 0];
                 }
             }
 

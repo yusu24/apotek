@@ -2,7 +2,7 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900 leading-tight">Neraca (Balance Sheet)</h2>
+            <h2 class="text-2xl font-bold text-gray-900 leading-tight">Neraca</h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Posisi Keuangan</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">

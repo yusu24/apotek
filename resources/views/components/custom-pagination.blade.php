@@ -10,13 +10,13 @@
                     Previous
                 </span>
             @else
-                <a href="{{ $items->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition">
+                <a href="{{ $items->previousPageUrl() }}" wire:click.prevent="previousPage" wire:loading.attr="disabled" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition">
                     Previous
                 </a>
             @endif
 
             @if ($items->hasMorePages())
-                <a href="{{ $items->nextPageUrl() }}" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition">
+                <a href="{{ $items->nextPageUrl() }}" wire:click.prevent="nextPage" wire:loading.attr="disabled" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition">
                     Next
                 </a>
             @else
@@ -50,7 +50,7 @@
                             </svg>
                         </span>
                     @else
-                        <a href="{{ $items->previousPageUrl() }}" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                        <a href="{{ $items->previousPageUrl() }}" wire:click.prevent="previousPage" wire:loading.attr="disabled" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                             </svg>
@@ -78,7 +78,7 @@
                                 {{ $page }}
                             </span>
                         @else
-                            <a href="{{ $items->url($page) }}" class="relative inline-flex items-center px-4 py-2 -ml-px border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                            <a href="{{ $items->url($page) }}" wire:click.prevent="gotoPage({{ $page }})" wire:loading.attr="disabled" class="relative inline-flex items-center px-4 py-2 -ml-px border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                                 {{ $page }}
                             </a>
                         @endif
@@ -86,7 +86,7 @@
 
                     {{-- Next Button --}}
                     @if ($items->hasMorePages())
-                        <a href="{{ $items->nextPageUrl() }}" class="relative inline-flex items-center px-3 py-2 -ml-px rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                        <a href="{{ $items->nextPageUrl() }}" wire:click.prevent="nextPage" wire:loading.attr="disabled" class="relative inline-flex items-center px-3 py-2 -ml-px rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>

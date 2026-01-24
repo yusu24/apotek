@@ -47,12 +47,12 @@
 
         <div class="overflow-x-auto rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-4 text-left">Nama</th>
+                        <th class="px-6 py-4 text-left">Email</th>
+                        <th class="px-6 py-4 text-left">Role</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

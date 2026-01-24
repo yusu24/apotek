@@ -750,9 +750,12 @@ class Cashier extends Component
         $this->calculateTotal();
     }
 
-    public function updatedCashAmount()
+    public function updatedPaymentMethod($value)
     {
-        $this->calculateChange();
+        if ($value === 'tempo') {
+            $this->resetPatientInfo();
+        }
+        $this->calculateTotal();
     }
 
     public function calculateChange()

@@ -5,40 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buku Panduan Apotek</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page { 
+            size: A4; 
+            margin:    10mm 1cm 10mm 1cm; 
         }
         
-        body {
-            font-family: 'DejaVu Sans', Arial, sans-serif;
-            font-size: 10pt;
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 10pt; 
+            color: #1a1a1a; 
+            margin: 0; 
+            padding: 0; 
             line-height: 1.6;
-            color: #333;
         }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .full-width { width: 100%; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
+
+        .report-header { 
+            margin-bottom: 40px; 
+            display: block;
+            width: 100%;
+            border-bottom: 3pt solid #1e40af;
             padding-bottom: 20px;
-            border-bottom: 3px solid #2563eb;
         }
-        
-        .header h1 {
-            font-size: 24pt;
+        .store-name { 
+            font-size: 20pt; 
+            font-weight: bold; 
             color: #1e40af;
-            margin-bottom: 10px;
+            margin: 0; 
+        }
+        .report-title { 
+            font-size: 14pt; 
+            font-weight: bold; 
+            color: #64748b; 
+            margin-top: 8px;
         }
         
-        .header .subtitle {
-            font-size: 12pt;
-            color: #64748b;
-        }
-        
-        .content {
-            padding: 20px;
-        }
+        .content { padding: 0; }
         
         h1 {
             font-size: 18pt;
@@ -46,132 +54,75 @@
             margin-top: 30px;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2pt solid #e2e8f0;
             page-break-after: avoid;
         }
         
         h2 {
             font-size: 14pt;
             color: #1e3a8a;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 25px;
+            margin-bottom: 12px;
             page-break-after: avoid;
         }
         
         h3 {
             font-size: 12pt;
-            color: #3b82f6;
-            margin-top: 15px;
-            margin-bottom: 8px;
+            color: #2563eb;
+            margin-top: 20px;
+            margin-bottom: 10px;
             page-break-after: avoid;
         }
         
-        p {
-            margin-bottom: 10px;
-            text-align: justify;
-        }
+        p { margin-bottom: 12px; text-align: justify; }
         
-        ul, ol {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-        
-        li {
-            margin-bottom: 5px;
-        }
+        ul, ol { margin-left: 25px; margin-bottom: 15px; }
+        li { margin-bottom: 6px; }
         
         code {
             background-color: #f1f5f9;
             padding: 2px 6px;
-            border-radius: 3px;
+            border-radius: 4px;
             font-family: 'Courier New', monospace;
-            font-size: 9pt;
+            font-size: 10pt;
         }
         
-        strong {
-            color: #1e40af;
-            font-weight: bold;
-        }
+        strong { color: #1e40af; font-weight: bold; }
         
         .alert {
-            padding: 12px;
-            margin: 15px 0;
-            border-left: 4px solid;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid;
             background-color: #f8fafc;
+            border-radius: 0 6px 6px 0;
         }
+        .alert-important { border-color: #dc2626; background-color: #fef2f2; }
+        .alert-warning { border-color: #f59e0b; background-color: #fffbeb; }
+        .alert-note { border-color: #3b82f6; background-color: #eff6ff; }
+        .alert-tip { border-color: #10b981; background-color: #f0fdf4; }
         
-        .alert-important {
-            border-color: #dc2626;
-            background-color: #fef2f2;
-        }
-        
-        .alert-warning {
-            border-color: #f59e0b;
-            background-color: #fffbeb;
-        }
-        
-        .alert-note {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
-        }
-        
-        .alert-tip {
-            border-color: #10b981;
-            background-color: #f0fdf4;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         table th {
             background-color: #1e40af;
             color: white;
-            padding: 8px;
+            padding: 10px;
             text-align: left;
             font-weight: bold;
         }
+        table td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; }
         
-        table td {
-            padding: 6px 8px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 8pt;
-            color: #64748b;
-            padding: 10px 0;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        .page-break {
-            page-break-after: always;
-        }
-        
-        @page {
-            margin: 2cm;
-        }
+        .page-break { page-break-after: always; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>📚 BUKU PANDUAN APLIKASI APOTEK</h1>
-        <div class="subtitle">Panduan Lengkap Penggunaan Sistem Manajemen Apotek</div>
-        <div class="subtitle" style="margin-top: 10px;">Dicetak oleh: {{ $printedBy }} | {{ $printedAt }}</div>
+    <div class="report-header text-center">
+        <div class="store-name uppercase">BUKU PANDUAN APLIKASI APOTEK</div>
+        <div class="report-title">Panduan Lengkap Penggunaan Sistem Manajemen Apotek</div>
     </div>
     
     <div class="content">
         {!! $content !!}
     </div>
     
-    <div class="footer">
-        <p>Buku Panduan Aplikasi Apotek | Versi 1.0 | {{ date('Y') }}</p>
-    </div>
-</body>
+    </body>
 </html>

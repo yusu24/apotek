@@ -28,12 +28,24 @@
                 </div>
             </div>
 
-            <!-- Search (Row 2 on Mobile, Center on Desktop) -->
             <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
                 <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Produk</label>
                 <input wire:model.live.debounce.300ms="search" 
                     type="text" placeholder="Nama atau barcode..." 
                     class="w-full md:w-64 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
+
+            <!-- Tipe Filter (Order 3) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-3">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Tipe</label>
+                <select wire:model.live="type" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
+                    <option value="all">Semua Tipe</option>
+                    <option value="sale">Penjualan</option>
+                    <option value="in">Masuk (Beli)</option>
+                    <option value="adjustment">Opname</option>
+                    <option value="return">Retur Jual</option>
+                    <option value="return-supplier">Retur Beli</option>
+                </select>
             </div>
 
             <!-- Reset (Row 2 on Mobile, Right on Desktop) -->

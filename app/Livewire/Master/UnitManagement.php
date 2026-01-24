@@ -21,6 +21,14 @@ class UnitManagement extends Component
         'name' => 'required|min:2|unique:units,name',
     ];
 
+    public function mount()
+    {
+        if (!auth()->user()->can('manage units') && !auth()->user()->can('manage master data')) {
+            // Fallback for backward compatibility or simple check
+             abort(403, 'Unauthorized');
+        }
+    }
+
     public function render()
     {
         $units = Unit::where('name', 'like', '%' . $this->search . '%')
@@ -54,6 +62,10 @@ class UnitManagement extends Component
 
     public function save()
     {
+        if (!auth()->user()->can('manage units')) {
+            abort(403, 'Unauthorized');
+        }
+
         $this->validate([
             'name' => 'required|min:2|unique:units,name,' . ($this->unitId ?? 'NULL'),
         ]);
@@ -95,6 +107,10 @@ class UnitManagement extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->can('manage units')) {
+            abort(403, 'Unauthorized');
+        }
+
         $unit = Unit::findOrFail($id);
         
         // Check if used by products

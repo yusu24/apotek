@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Laporan Riwayat Transaksi (Standar)</title>
+    <meta charset="UTF-8">
+    <title>Laporan Penjualan (Standar)</title>
     <style>
         @page { 
             size: A4; 
-            margin: 15mm 1cm 10mm 1cm; 
+            margin:  15mm 1cm 10mm 1cm; 
         }
         
         body { 
             font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
+            font-size: 8pt; 
             color: #000; 
             margin: 0; 
             padding: 0; 
@@ -74,8 +74,26 @@
             border-bottom: 0.5pt solid #eee;
         }
 
-        .badge { font-weight: bold; text-transform: uppercase; font-size: 8pt; }
-        
+        .total-row td { 
+            font-weight: bold; 
+            border-top: 1pt solid #000;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .grand-total-label { 
+            font-weight: bold; 
+            text-transform: uppercase;
+            padding-top: 10px;
+        }
+        .grand-total-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            border-bottom: 3pt double #000;
+            text-align: right;
+            padding-top: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -85,55 +103,48 @@
 
     <div class="report-header">
         <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">LAPORAN RIWAYAT TRANSAKSI</div>
+        <div class="report-title">LAPORAN PENJUALAN</div>
         <div class="period-info">
             Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
         </div>
+        @if($paymentMethod !== 'all')
+            <div class="period-info font-bold">Metode Pembayaran: {{ strtoupper($paymentMethod) }}</div>
+        @endif
     </div>
 
     <table>
         <thead>
             <tr class="column-headers">
-                <th style="width: 5%">No</th>
-                <th style="width: 18%">Tanggal</th>
-                <th style="width: 15%">Kode</th>
-                <th style="width: 37%">Nama Produk</th>
-                <th style="width: 15%">Tipe</th>
-                <th style="width: 10%; text-align: right;">Qty</th>
+                <th style="width: 30%">No. Invois</th>
+                <th style="width: 20%">Tanggal</th>
+                <th style="width: 15%">Kasir</th>
+                <th style="width: 10%">Metode</th>
+                <th style="width: 25%; text-align: right;">Total</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($transactions as $index => $item)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                    <td>{{ $item->product->barcode ?? '-' }}</td>
-                    <td>{{ $item->product->name ?? '-' }}</td>
-                    <td class="font-bold uppercase" style="font-size: 8pt;">
-                        @php
-                            $labels = [
-                                'sale' => 'Penjualan',
-                                'in' => 'Masuk',
-                                'adjustment' => 'Opname',
-                                'return' => 'Retur Jual',
-                                'return-supplier' => 'Retur Beli',
-                            ];
-                        @endphp
-                        {{ $labels[$item->type] ?? $item->type }}
-                    </td>
-                    <td class="text-right font-bold">
-                        {{ $item->quantity > 0 ? '+' : '' }}{{ number_format($item->quantity, 0) }}
-                    </td>
-                </tr>
-            @endforeach
+            @forelse($sales as $sale)
+            <tr>
+                <td class="font-bold">{{ $sale->invoice_no }}</td>
+                <td>{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y H:i') }}</td>
+                <td>{{ $sale->user->name }}</td>
+                <td class="uppercase">{{ $sale->payment_method }}</td>
+                <td class="text-right">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5" class="text-center italic" style="padding: 20px; color: #777;">Data Tidak Ditemukan</td>
+            </tr>
+            @endforelse
             
-            @if(count($transactions) === 0)
-                <tr>
-                    <td colspan="6" class="text-center italic" style="padding: 20px; color: #777;">Tidak ada data transaksi.</td>
-                </tr>
+            @if($sales->count() > 0)
+            <tr>
+                <td colspan="4" class="grand-total-label text-right">TOTAL PENJUALAN ({{ $stats['transaction_count'] }} Transaksi)</td>
+                <td class="grand-total-value">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</td>
+            </tr>
             @endif
         </tbody>
     </table>
 
-</body>
+    </body>
 </html>

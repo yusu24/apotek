@@ -77,12 +77,12 @@
             <!-- Table -->
             <div class="flex-1 overflow-x-auto min-h-0 custom-scrollbar">
                 <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50/80 dark:bg-gray-700/50 sticky top-0 z-10">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs sticky top-0 z-10">
                         <tr>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nama Pelanggan</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Telepon</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Alamat</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Aksi</th>
+                            <th class="px-6 py-4 text-left">Nama Pelanggan</th>
+                            <th class="px-6 py-4 text-left">Telepon</th>
+                            <th class="px-6 py-4 text-left">Alamat</th>
+                            <th class="px-6 py-4 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">

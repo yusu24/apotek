@@ -5,75 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penerimaan Barang - {{ $receipt->delivery_note_number }}</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 15px; }
-        .header-table td { padding: 0; vertical-align: top; }
+        @page { 
+            size: A4; 
+            margin:    10mm 1cm 10mm 1cm; 
+        }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; word-wrap: break-word; }
-        th, td { padding: 8px; vertical-align: top; }
-
-        .container {
-            padding: 20px;
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 10pt; 
+            color: #1a1a1a; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.4;
         }
 
-        /* Header Styles */
-        .header {
-            border-bottom: 3px solid #2563eb;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
+        .full-width { width: 100%; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
 
-        .header-top {
+        .report-header { 
+            margin-bottom: 30px; 
+            display: block;
             width: 100%;
-            margin-bottom: 10px;
-            text-align: center;
         }
-
-        .header-left {
-            width: 100%;
-            text-align: center;
+        .store-name { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            margin: 0; 
         }
-
-        .header-right {
-            display: none;
-        }
-
-        .apotek-name {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #1e40af;
-            margin-bottom: 5px;
-        }
-
-        .doc-title {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #374151;
-        }
-
-        .print-info {
-            font-size: 9pt;
-            color: #6b7280;
+        .report-title { 
+            font-size: 13pt; 
+            font-weight: bold; 
+            color: #333; 
+            margin-top: 4px;
+            letter-spacing: 1px;
         }
 
         /* Receipt Info Section */
         .receipt-info {
-            background-color: #f3f4f6;
+            background-color: #f8fafc;
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
         }
 
         .info-row {
             display: table;
             width: 100%;
             margin-bottom: 8px;
-        }
-
-        .info-row:last-child {
-            margin-bottom: 0;
         }
 
         .info-label {
@@ -94,9 +77,9 @@
             font-size: 12pt;
             font-weight: bold;
             color: #1f2937;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             padding-bottom: 5px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid #cbd5e1;
         }
 
         table {
@@ -105,149 +88,74 @@
             margin-bottom: 20px;
         }
 
-        thead {
-            background-color: #1e40af;
-            color: white;
-        }
-
-        th {
-            padding: 10px 8px;
+        th { 
+            padding: 10px 12px;
+            background-color: #f8fafc;
+            color: #1e293b;
             text-align: left;
             font-weight: bold;
-            font-size: 10pt;
+            border-top: 2pt solid #1e293b;
+            border-bottom: 1pt solid #cbd5e1;
+            font-size: 11pt;
+        }
+        td { 
+            padding: 8px 12px; 
+            vertical-align: middle; 
+            font-size: 11pt;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        th.center, td.center {
-            text-align: center;
-        }
-
-        th.right, td.right {
-            text-align: right;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        td {
-            padding: 8px;
-            font-size: 10pt;
-        }
-
-        .product-name {
-            font-weight: bold;
-            color: #111827;
-        }
+        .product-name { font-weight: bold; color: #111827; }
 
         .batch-number {
             font-family: 'Courier New', monospace;
-            background-color: #e5e7eb;
+            background-color: #f1f5f9;
             padding: 2px 6px;
             border-radius: 3px;
-            font-size: 9pt;
         }
 
-        /* Notes Section */
         .notes-section {
-            background-color: #fef3c7;
-            padding: 12px;
+            background-color: #fffbeb;
+            padding: 15px;
             border-left: 4px solid #f59e0b;
-            margin-bottom: 20px;
-            font-size: 10pt;
+            margin-bottom: 25px;
+            font-size: 11pt;
+            border: 1px solid #fef3c7;
         }
 
-        .notes-label {
-            font-weight: bold;
-            color: #92400e;
-            margin-bottom: 5px;
-        }
+        .notes-label { font-weight: bold; color: #92400e; margin-bottom: 4px; }
 
-        /* Footer / Signature Section */
         .signature-section {
             margin-top: 40px;
-            page-break-inside: avoid;
+            width: 100% !important;
         }
-
-        .signature-row {
-            display: table;
-            width: 100%;
-        }
-
-        .signature-box {
-            display: table-cell;
-            width: 50%;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .signature-label {
-            font-weight: bold;
-            margin-bottom: 60px;
-            display: block;
-        }
-
+        .signature-box { text-align: center; width: 45%; }
+        .signature-label { font-weight: bold; margin-bottom: 50px; display: block; }
         .signature-line {
-            border-top: 1px solid #333;
-            padding-top: 5px;
-            font-size: 10pt;
-        }
-
-        /* Status Badge */
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 9pt;
+            border-top: 1px solid #1e293b;
+            padding-top: 6px;
             font-weight: bold;
         }
 
-        .status-paid {
-            background-color: #d1fae5;
-            color: #065f46;
+        /* Status Badge adapted for simple table */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
         }
+        .status-paid { background-color: #dcfce7; color: #166534; }
+        .status-partial { background-color: #fef3c7; color: #92400e; }
+        .status-pending { background-color: #fee2e2; color: #991b1b; }
 
-        .status-partial {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-pending {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #999;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
-        }
-        .footer .right {
-            float: right;
-        }
-    </style>
+        </style>
 </head>
 <body>
     <div class="container">
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div style="font-size: 18pt; font-weight: bold; color: #1e40af; margin-bottom: 5px; text-align: center;">{{ trim($apotekName) }}</div>
-                <div style="font-size: 14pt; font-weight: bold; color: #374151; text-align: center;">PENERIMAAN BARANG</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="report-header text-center">
+        <div class="store-name uppercase">{{ trim($apotekName) }}</div>
+        <div class="report-title">PENERIMAAN BARANG</div>
+    </div>
 
         <!-- Receipt Information -->
         <div class="receipt-info">
@@ -329,22 +237,19 @@
         @endif
 
         <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-row">
-                <div class="signature-box">
+        <table class="signature-section">
+            <tr>
+                <td class="signature-box" style="border:none">
                     <span class="signature-label">Manajer</span>
                     <div class="signature-line">(...........................)</div>
-                </div>
-                <div class="signature-box">
+                </td>
+                <td style="width:10%; border:none"></td>
+                <td class="signature-box" style="border:none">
                     <span class="signature-label">Petugas Apotek</span>
                     <div class="signature-line">(...........................)</div>
-                </div>
-            </div>
-        </div>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
-</body>
+    </body>
 </html>

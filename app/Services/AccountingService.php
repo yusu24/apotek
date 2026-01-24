@@ -667,10 +667,11 @@ class AccountingService
         }
         
         // Update Persediaan account balance
-        $inventoryAccount = Account::where('code', '1-1400')->first();
-        if ($inventoryAccount) {
-            $inventoryAccount->update(['balance' => $totalValue]);
-        }
+        // REMOVED: Do not overwrite GL balance with Stock Module value automatically. 
+        // Sync should happen via Adjustment Journals or Manual Recalculation.
+        // if ($inventoryAccount) {
+        //    $inventoryAccount->update(['balance' => $totalValue]);
+        // }
         
         return $totalValue;
     }
@@ -680,13 +681,44 @@ class AccountingService
      */
     public function getBalanceSheet($startDate = null, $endDate = null): array
     {
-        // Calculate inventory value first
-        $this->calculateInventoryValue();
+        $endDate = $endDate ?? now()->endOfMonth()->format('Y-m-d');
         
-        // Get all accounts grouped by type and category
-        $assets = Account::where('type', 'asset')->orderBy('code')->get();
-        $liabilities = Account::where('type', 'liability')->orderBy('code')->get();
-        $equity = Account::where('type', 'equity')->orderBy('code')->get();
+        // Calculate inventory value for comparison (Optional, strictly for info)
+        // $this->calculateInventoryValue();
+        
+        // Get all accounts
+        $accounts = Account::orderBy('code')->get();
+        
+        // Calculate balances "As Of End Date"
+        // We sum all posted journal lines <= EndDate
+        $balances = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->where('journal_entries.is_posted', true)
+            ->whereDate('journal_entries.date', '<=', $endDate)
+            ->select('journal_entry_lines.account_id', DB::raw('SUM(journal_entry_lines.debit) as total_debit'), DB::raw('SUM(journal_entry_lines.credit) as total_credit'))
+            ->groupBy('journal_entry_lines.account_id')
+            ->get()
+            ->keyBy('account_id');
+
+        // Apply calculated balances to account objects in memory
+        foreach ($accounts as $account) {
+            $record = $balances->get($account->id);
+            $debit = $record ? $record->total_debit : 0;
+            $credit = $record ? $record->total_credit : 0;
+            
+            $increaseOnDebit = in_array($account->type, ['asset', 'expense']);
+            
+            if ($increaseOnDebit) {
+                $account->balance = $debit - $credit;
+            } else {
+                $account->balance = $credit - $debit;
+            }
+        }
+        
+        // Group by type
+        $assets = $accounts->where('type', 'asset');
+        $liabilities = $accounts->where('type', 'liability');
+        $equity = $accounts->where('type', 'equity');
         
         // Group assets
         $currentAssets = $assets->where('category', 'current_asset');
@@ -707,9 +739,30 @@ class AccountingService
         
         $totalEquity = $equity->sum('balance');
         
-        // Calculate net income for the period (to add to retained earnings)
-        $incomeStatement = $this->getIncomeStatement($startDate, $endDate);
-        $netIncome = $incomeStatement['net_income'];
+        // Calculate net income for the period (Revenue - Expense) up to EndDate
+        // Note: For Balance Sheet "Retained Earnings", we usually need Net Income 
+        // from the beginning of time OR from the beginning of the fiscal year depending on context.
+        // Here we take 'Net Income (Current Period)' usually implies YTD or similar.
+        // However, for A = L + E to hold, 'Equity' must include ALL historical Retained Earnings.
+        // So we calculate Net Income for ALL TIME up to End Date to simulate "Retained Earnings".
+        
+        $revenueIncome = DB::table('journal_entry_lines')
+             ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+             ->join('accounts', 'journal_entry_lines.account_id', '=', 'accounts.id')
+             ->where('journal_entries.is_posted', true)
+             ->whereDate('journal_entries.date', '<=', $endDate)
+             ->where('accounts.type', 'revenue')
+             ->sum(DB::raw('journal_entry_lines.credit - journal_entry_lines.debit'));
+             
+        $expenseIncome = DB::table('journal_entry_lines')
+             ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+             ->join('accounts', 'journal_entry_lines.account_id', '=', 'accounts.id')
+             ->where('journal_entries.is_posted', true)
+             ->whereDate('journal_entries.date', '<=', $endDate)
+             ->where('accounts.type', 'expense')
+             ->sum(DB::raw('journal_entry_lines.debit - journal_entry_lines.credit'));
+             
+        $netIncome = $revenueIncome - $expenseIncome;
         
         // Balance check
         $balanceCheck = abs($totalAssets - ($totalLiabilities + $totalEquity + $netIncome)) < 0.01;
@@ -729,7 +782,7 @@ class AccountingService
             
             'equity' => $equity,
             'total_equity' => $totalEquity,
-            'net_income' => $netIncome,
+            'net_income' => $netIncome, // This effectively acts as "Current Year Earnings" + "Retained Earnings" not yet closed
             
             'balance_check' => $balanceCheck,
             'start_date' => $startDate,
@@ -742,48 +795,91 @@ class AccountingService
      */
     public function getIncomeStatement($startDate = null, $endDate = null): array
     {
-        $startDate = $startDate ?? now()->startOfMonth();
-        $endDate = $endDate ?? now()->endOfMonth();
+        $startDate = $startDate ?? now()->startOfMonth()->format('Y-m-d');
+        $endDate = $endDate ?? now()->endOfMonth()->format('Y-m-d');
         
-        // Get revenue and expense accounts
-        $revenueAccounts = Account::where('type', 'revenue')->orderBy('code')->get();
-        $expenseAccounts = Account::where('type', 'expense')->orderBy('code')->get();
-        
-        // Separate COGS from other expenses
-        $cogsAccounts = $expenseAccounts->where('category', 'cogs');
-        
-        // Identify Tax Accounts
-        $taxKeywords = ['tax', 'pajak', 'pph'];
-        $taxAccounts = $expenseAccounts->filter(function($account) use ($taxKeywords) {
-            $category = strtolower($account->category ?? '');
-            $name = strtolower($account->name ?? '');
-            return \Illuminate\Support\Str::contains($category, $taxKeywords) || 
-                   \Illuminate\Support\Str::contains($name, $taxKeywords);
-        });
-        
-        // Remaining accounts are Operating or Other (excluding COGS and Tax)
-        $operatingExpenses = $expenseAccounts->where('category', 'operating_expense')
-            ->diff($taxAccounts);
+        // 1. Get Balances from Journal Entries within Period
+        $periodMovements = DB::table('journal_entry_lines')
+            ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+            ->join('accounts', 'journal_entry_lines.account_id', '=', 'accounts.id')
+            ->where('journal_entries.is_posted', true)
+            ->whereDate('journal_entries.date', '>=', $startDate)
+            ->whereDate('journal_entries.date', '<=', $endDate)
+            ->whereIn('accounts.type', ['revenue', 'expense'])
+            ->select(
+                'accounts.id', 
+                'accounts.code', 
+                'accounts.name', 
+                'accounts.category',
+                'accounts.type',
+                DB::raw('SUM(journal_entry_lines.debit) as period_debit'),
+                DB::raw('SUM(journal_entry_lines.credit) as period_credit')
+            )
+            ->groupBy('accounts.id', 'accounts.code', 'accounts.name', 'accounts.category', 'accounts.type')
+            ->get();
             
-        $otherExpenses = $expenseAccounts->where('category', 'other')
-            ->diff($taxAccounts);
-
-        // Fallback: If any account is not grabbed by above logic (e.g. unknown category but not tax), put to Other
-        // But for simplicity, let's assume standard categories. 
-        // We need to ensure we don't double count.
+        // 2. Process Accounts & Calculate Net Amount
+        $revenueAccounts = collect();
+        $cogsAccounts = collect();
+        $operatingExpenseAccounts = collect();
+        $taxAccounts = collect();
+        $otherExpenseAccounts = collect();
         
-        // Calculate totals
-        $totalRevenue = $revenueAccounts->sum('balance');
-        $totalCOGS = $cogsAccounts->sum('balance');
+        foreach ($periodMovements as $account) {
+            $debit = (float) $account->period_debit;
+            $credit = (float) $account->period_credit;
+            
+            // Calculate Net Amount based on Normal Balance
+            // Revenue: Credit - Debit (Positive is Good)
+            // Expense: Debit - Credit (Positive is Expense)
+            $amount = ($account->type === 'revenue') ? ($credit - $debit) : ($debit - $credit);
+            
+            // Skip if zero balance (optional, but cleaner)
+            if (abs($amount) < 0.01) continue;
+            
+            $accountObj = (object) [
+                'id' => $account->id,
+                'code' => $account->code,
+                'name' => $account->name,
+                'category' => $account->category,
+                'amount' => $amount
+            ];
+
+            if ($account->type === 'revenue') {
+                $revenueAccounts->push($accountObj);
+            } else {
+                // Categorize Expenses
+                $cat = strtolower($account->category ?? '');
+                $name = strtolower($account->name ?? '');
+                
+                if (str_contains($cat, 'hpp') || str_contains($cat, 'pokok') || str_contains($name, 'hpp')) {
+                    $cogsAccounts->push($accountObj);
+                } elseif (str_contains($cat, 'pajak') || str_contains($name, 'pajak') || str_contains($cat, 'tax')) {
+                    $taxAccounts->push($accountObj);
+                } elseif ($cat === 'beban lain-lain' || $cat === 'other') {
+                    $otherExpenseAccounts->push($accountObj);
+                } else {
+                    // Default to Operating
+                    $operatingExpenseAccounts->push($accountObj);
+                }
+            }
+        }
+        
+        // 3. Calculate Totals
+        $totalRevenue = $revenueAccounts->sum('amount');
+        $totalCOGS = $cogsAccounts->sum('amount');
+        
+        // Gross Profit (Laba Kotor)
         $grossProfit = $totalRevenue - $totalCOGS;
         
-        $totalOperatingExpenses = $operatingExpenses->sum('balance');
-        $totalOtherExpenses = $otherExpenses->sum('balance');
-        $totalTaxExpenses = $taxAccounts->sum('balance');
+        $totalOperatingExpenses = $operatingExpenseAccounts->sum('amount');
+        $totalOtherExpenses = $otherExpenseAccounts->sum('amount');
+        $totalTaxExpenses = $taxAccounts->sum('amount');
         
-        $totalExpenses = $totalOperatingExpenses + $totalOtherExpenses + $totalTaxExpenses;
-        
+        // Net Income Before Tax (Laba Sebelum Pajak / EBIT)
         $netIncomeBeforeTax = $grossProfit - ($totalOperatingExpenses + $totalOtherExpenses);
+        
+        // Net Income (Laba Bersih)
         $netIncome = $netIncomeBeforeTax - $totalTaxExpenses;
         
         return [
@@ -794,17 +890,17 @@ class AccountingService
             'total_cogs' => $totalCOGS,
             'gross_profit' => $grossProfit,
             
-            'operating_expense_accounts' => $operatingExpenses,
-            'other_expense_accounts' => $otherExpenses,
+            'operating_expense_accounts' => $operatingExpenseAccounts,
+            'other_expense_accounts' => $otherExpenseAccounts,
             'tax_accounts' => $taxAccounts,
             
             'total_operating_expenses' => $totalOperatingExpenses,
             'total_other_expenses' => $totalOtherExpenses,
             'total_tax_expenses' => $totalTaxExpenses,
-            'total_expenses' => $totalExpenses,
             
             'net_income_before_tax' => $netIncomeBeforeTax,
             'net_income' => $netIncome,
+            
             'start_date' => $startDate,
             'end_date' => $endDate,
         ];
@@ -1704,6 +1800,49 @@ public function processReceivablePayment($receivableId, $data)
         }
 
         return (float) round($monthlyAmount, 2);
+    }
+
+    /**
+     * Recalculate all account balances from scratch based on Journal Entries.
+     * Useful for fixing sync issues.
+     */
+    public function recalculateAccountBalances()
+    {
+        DB::beginTransaction();
+        try {
+            // 1. Reset all balances to 0
+            Account::query()->update(['balance' => 0]);
+            
+            // 2. Calculate totals from Posted Journals
+            $balances = DB::table('journal_entry_lines')
+                ->join('journal_entries', 'journal_entry_lines.journal_entry_id', '=', 'journal_entries.id')
+                ->where('journal_entries.is_posted', true)
+                ->select('journal_entry_lines.account_id', DB::raw('SUM(journal_entry_lines.debit) as total_debit'), DB::raw('SUM(journal_entry_lines.credit) as total_credit'))
+                ->groupBy('journal_entry_lines.account_id')
+                ->get();
+                
+            // 3. Update Accounts
+            foreach ($balances as $balance) {
+                $account = Account::find($balance->account_id);
+                if ($account) {
+                    $increaseOnDebit = in_array($account->type, ['asset', 'expense']);
+                    
+                    if ($increaseOnDebit) {
+                        $newBalance = $balance->total_debit - $balance->total_credit;
+                    } else {
+                        $newBalance = $balance->total_credit - $balance->total_debit;
+                    }
+                    
+                    $account->update(['balance' => $newBalance]);
+                }
+            }
+            
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }
 

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Stok - {{ $product->name }}</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
+        @page { margin:    10mm 1cm 10mm 1cm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; font-size: 9pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
+        body { font-family: 'Arial', sans-serif; font-size: 10pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 12px; }
         .header-table td { padding: 0; vertical-align: top; }
         
@@ -286,18 +286,6 @@
             color: #2563eb;
             font-weight: bold;
         }
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #999;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
-        }
         .footer .right {
             float: right;
         }
@@ -305,18 +293,12 @@
 </head>
 <body>
     <div class="container">
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div style="font-size: 16pt; font-weight: bold; color: #1e40af; margin-bottom: 3px; text-align: center;">{{ trim($apotekName) }}</div>
-                <div style="font-size: 13pt; font-weight: bold; color: #374151; margin-bottom: 3px; text-align: center;">KARTU STOK</div>
-                <div style="font-size: 11pt; font-weight: bold; color: #059669; text-align: center;">{{ trim($product->name) }}</div>
-                <div style="font-size: 10pt; color: #6b7280; font-weight: bold; text-align: center;">Periode: {{ $period }}</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="report-header text-center">
+        <div class="store-name uppercase">{{ trim($apotekName) }}</div>
+        <div class="report-title">KARTU STOK</div>
+        <div style="font-size: 12pt; font-weight: bold; color: #059669; margin-top: 4px;">{{ trim($product->name) }}</div>
+        <div class="period-info">Periode: {{ $period }}</div>
+    </div>
 
         <!-- Product Information -->
         <div class="product-info">
@@ -432,23 +414,25 @@
 
         <!-- Summary -->
         <div class="summary-section">
-            <div class="summary-title">Ringkasan Pergerakan Stok</div>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <div class="summary-label">Total Masuk</div>
-                    <div class="summary-value value-green">+{{ number_format($totalIn, 0, ',', '.') }}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Total Keluar</div>
-                    <div class="summary-value value-red">-{{ number_format($totalOut, 0, ',', '.') }}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">Perubahan (Net)</div>
-                    <div class="summary-value {{ $netChange >= 0 ? 'value-green' : 'value-red' }}">
-                        {{ $netChange >= 0 ? '+' : '' }}{{ number_format($netChange, 0, ',', '.') }}
-                    </div>
-                </div>
-            </div>
+            <div style="font-weight: bold; margin-bottom: 12px; font-size: 11pt; color: #1e293b;">Ringkasan Pergerakan Stok</div>
+            <table class="summary-table">
+                <tr>
+                    <td class="text-center" style="border:none">
+                        <div class="summary-label">Total Masuk</div>
+                        <div class="summary-value value-green">+{{ number_format($totalIn, 0, ',', '.') }}</div>
+                    </td>
+                    <td class="text-center" style="border:none">
+                        <div class="summary-label">Total Keluar</div>
+                        <div class="summary-value value-red">-{{ number_format($totalOut, 0, ',', '.') }}</div>
+                    </td>
+                    <td class="text-center" style="border:none">
+                        <div class="summary-label">Perubahan (Net)</div>
+                        <div class="summary-value {{ $netChange >= 0 ? 'value-green' : 'value-red' }}">
+                            {{ $netChange >= 0 ? '+' : '' }}{{ number_format($netChange, 0, ',', '.') }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Signature Section -->
@@ -465,9 +449,5 @@
             </div>
         </div>
     </div>
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
-</body>
+    </body>
 </html>

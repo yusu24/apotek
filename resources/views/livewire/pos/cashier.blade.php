@@ -581,6 +581,7 @@
                     @endif
 
                     <!-- Patient Information Section -->
+                    @if($payment_method !== 'tempo')
                     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4" x-data="{ showPatient: @entangle('includePatientInfo').live }">
                         <div class="flex items-center gap-3 mb-3">
                             <input type="checkbox" 
@@ -648,6 +649,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
                     <!-- Cash Input (Only for Cash) -->
                     @if($payment_method == 'cash')

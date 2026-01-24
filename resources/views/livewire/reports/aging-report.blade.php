@@ -81,23 +81,23 @@
         {{-- Table --}}
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-4 text-left">
                             {{ $type === 'ap' ? 'Supplier' : 'Customer' }}
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-4 text-left">
                             {{ $type === 'ap' ? 'No. Surat Jalan' : 'No. Invoice' }}
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jatuh Tempo</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Umur (Hari)</th>
+                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th class="px-6 py-4 text-left">Jatuh Tempo</th>
+                        <th class="px-6 py-4 text-center">Umur (Hari)</th>
                         @if($type === 'ar')
-                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status Jatuh Tempo</th>
+                             <th class="px-6 py-4 text-center">Status Jatuh Tempo</th>
                         @endif
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total Tagihan</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-4 text-right">Total Tagihan</th>
+                        <th class="px-6 py-4 text-right">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

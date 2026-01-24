@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GoodsReceipt;
 use App\Models\Product;
 use App\Models\StockMovement;
+use App\Models\Sale;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -517,6 +518,221 @@ class PdfController extends Controller
 
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
+    /**
+     * Export Sales Report to PDF
+     */
+    public function exportSalesReport(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+        $paymentMethod = $request->get('paymentMethod', 'all');
+        $search = $request->get('search');
+
+        $salesQuery = Sale::query()
+            ->with(['user'])
+            ->whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate);
+
+        if ($paymentMethod !== 'all') {
+            $salesQuery->where('payment_method', $paymentMethod);
+        }
+
+        if ($search) {
+            $salesQuery->where(function($q) use ($search) {
+                $q->where('invoice_no', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function($u) use ($search) {
+                      $u->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $sales = $salesQuery->latest('date')->limit(1000)->get();
+
+        $stats = [
+            'total_sales' => $sales->sum('grand_total'),
+            'transaction_count' => $sales->count(),
+        ];
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.sales-report', [
+            'sales' => $sales,
+            'stats' => $stats,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'paymentMethod' => $paymentMethod,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Laporan-Penjualan-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Product Margin Report to PDF
+     */
+    public function exportProductMarginReport(Request $request)
+    {
+        $search = $request->get('search');
+        $categoryFilter = $request->get('categoryFilter');
+        $marginFilter = $request->get('marginFilter', 'all');
+
+        $query = Product::with(['category', 'unit'])
+            ->select([
+                'products.id',
+                'products.name',
+                'products.barcode',
+                'products.sell_price',
+                'products.category_id',
+                'products.unit_id',
+            ])
+            ->selectRaw('
+                COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) as last_buy_price
+            ')
+            ->selectRaw('
+                (products.sell_price - COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                )) as margin_amount
+            ')
+            ->selectRaw('
+                CASE 
+                WHEN COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) > 0 
+                THEN ((products.sell_price - COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                )) / COALESCE(
+                    (SELECT AVG(buy_price) 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     AND batches.stock_current > 0
+                    ), 
+                    (SELECT buy_price 
+                     FROM batches 
+                     WHERE batches.product_id = products.id 
+                     ORDER BY created_at DESC 
+                     LIMIT 1
+                    ),
+                    0
+                ) * 100) 
+                ELSE 0 
+                END as margin_percentage
+            ');
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('products.name', 'like', '%' . $search . '%')
+                  ->orWhere('products.barcode', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($categoryFilter) {
+            $query->where('products.category_id', $categoryFilter);
+        }
+
+        if ($marginFilter === 'positive') {
+            $query->havingRaw('margin_amount > 0');
+        } elseif ($marginFilter === 'negative') {
+            $query->havingRaw('margin_amount < 0');
+        } elseif ($marginFilter === 'high') {
+            $query->havingRaw('margin_percentage > 30');
+        } elseif ($marginFilter === 'low') {
+            $query->havingRaw('margin_percentage < 10 AND margin_percentage >= 0');
+        }
+
+        $products = $query->orderBy('products.name')->get();
+
+        $statistics = [
+            'total_products' => $products->count(),
+            'products_with_positive_margin' => $products->where('margin_amount', '>', 0)->count(),
+            'products_with_negative_margin' => $products->where('margin_amount', '<', 0)->count(),
+            'average_margin_percentage' => $products->where('last_buy_price', '>', 0)->avg('margin_percentage'),
+            'total_margin_value' => $products->sum('margin_amount'),
+        ];
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.product-margin-report', [
+            'products' => $products,
+            'statistics' => $statistics,
+            'store' => $store,
+            'marginFilter' => $marginFilter,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+        
+        $filename = 'Laporan-Margin-Produk-' . Carbon::now()->format('Ymd') . '.pdf';
+        
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
     /**
      * Export Transaction History to PDF
      */

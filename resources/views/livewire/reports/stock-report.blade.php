@@ -7,6 +7,20 @@
             </h2>
             <p class="text-sm text-gray-500 font-medium">Informasi ketersediaan barang dan valuasi inventaris secara real-time.</p>
         </div>
+        <div class="flex gap-2">
+            <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="hidden sm:inline">Export Excel</span>
+            </button>
+            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <span class="hidden sm:inline">Export PDF</span>
+            </a>
+        </div>
     </div>
 
     <!-- Print Header (Simplified) -->
@@ -20,124 +34,77 @@
         </div>
     </div>
 
-            <!-- Summary Cards (Original Colors) [no-print] -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
-                <!-- Value Card -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] font-bold text-blue-600 uppercase mb-1">Estimasi Nilai Barang (HPP)</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-xs font-semibold text-gray-400">Rp</span>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalInventoryValue, 0, ',', '.') }}</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Stock Card -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] font-bold text-emerald-600 uppercase mb-1">Total Unit Stok</p>
-                        <div class="flex items-baseline gap-1">
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalStock, 0) }}</p>
-                            <span class="text-xs font-semibold text-gray-400">item</span>
-                        </div>
-                    </div>
-                </div>
+    <!-- Header Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center">
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-1">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Produk</label>
+                <input wire:model.live.debounce.300ms="search" 
+                    type="text" placeholder="Nama atau barcode..." 
+                    class="w-full md:w-48 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
 
-                <!-- Info Card -->
-                <div class="bg-indigo-900 rounded-lg shadow-md p-6 text-white flex items-center justify-between">
-                    <div class="truncate mr-2">
-                        <p class="text-[10px] font-bold text-indigo-100 uppercase mb-1 opacity-70">Pencarian & Filter</p>
-                        @if($search || $startExpiry || $endExpiry)
-                            <p class="text-lg font-bold truncate">
-                                @if($search) "{{ $search }}" @else Filter Aktif @endif
-                            </p>
-                        @else
-                            <p class="text-lg font-bold">Semua Data</p>
-                        @endif
-                    </div>
-                    <div class="bg-white/10 rounded-full p-2 flex-shrink-0">
-                        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
+            <!-- Category Filter (Order 2) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Kategori</label>
+                <select wire:model.live="categoryFilter" class="w-full md:w-32 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
+                    <option value="">Semua</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Stock Status Filter (Order 3) -->
+            <div class="flex items-center gap-2 flex-1 md:flex-none order-3">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Status</label>
+                <button wire:click="toggleStockStatus" 
+                    class="w-full md:w-32 px-3 py-2 rounded-lg border text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2
+                    {{ $stockStatus === 'low' 
+                        ? 'bg-orange-500 text-white border-orange-600 shadow-inner' 
+                        : 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:bg-gray-100' }}"
+                    title="{{ $stockStatus === 'low' ? 'Tampilkan Semua' : 'Tampilkan Stok Menipis' }}">
+                    <div class="w-2 h-2 rounded-full {{ $stockStatus === 'low' ? 'bg-white animate-pulse' : 'bg-gray-400' }}"></div>
+                    {{ $stockStatus === 'low' ? 'Menipis' : 'Semua' }}
+                </button>
+            </div>
+
+            <!-- Expiry Periode (Order 4) -->
+            <div class="flex items-center gap-2 w-full md:w-auto order-4">
+                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Kadaluarsa</label>
+                <div class="flex items-center gap-1.5 flex-1 md:flex-none">
+                    <input type="date" wire:model.live="startExpiry" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                    <span class="text-gray-400 font-bold">-</span>
+                    <input type="date" wire:model.live="endExpiry" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
             </div>
 
-            <!-- Main Content Area: Filter & Table Unified in one Card -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-xl overflow-hidden print:rounded-none print:shadow-none print:border-none border border-gray-200 dark:border-gray-700">
-                <!-- Filter Header (Hidden in Print) -->
-                <div class="px-4 py-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 no-print">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <!-- Search Box -->
-                        <div class="w-full sm:w-48 flex-shrink-0">
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
-                                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                </span>
-                                <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari..." class="block w-full pl-8 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none">
-                            </div>
-                        </div>
+            <!-- Reset (Order 5) -->
+            <div class="order-5 md:ml-auto">
+                <button wire:click="resetFilters" class="px-3 md:px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 shadow-sm font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Reset semua filter">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span class="hidden md:inline">Reset Filter</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-                        <!-- Category Filter -->
-                        <div class="flex-shrink-0 w-full sm:w-40 leading-none">
-                            <select wire:model.live="categoryFilter" class="block w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none h-[38px]">
-                                <option value="">Semua Kategori</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Stock Status Filter -->
-                        <div class="flex-shrink-0 w-full sm:w-40 leading-none">
-                            <select wire:model.live="stockStatus" class="block w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 outline-none h-[38px]">
-                                <option value="all">Semua Status</option>
-                                <option value="low">Stok Menipis</option>
-                            </select>
-                        </div>
-
-                        <!-- Date Range Selection -->
-                        <div class="shrink-0 w-full md:w-auto">
-                            <div class="flex items-center gap-2">
-                                <div class="relative">
-                                    <input wire:model.live="startExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 h-[38px]" placeholder="Dari">
-                                </div>
-                                <span class="text-gray-400">-</span>
-                                <div class="relative">
-                                    <input wire:model.live="endExpiry" type="date" class="w-full sm:w-32 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 h-[38px]" placeholder="Sampai">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Export Buttons -->
-                        <div class="flex-shrink-0 ml-auto self-end sm:self-center flex gap-2">
-                         <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            <span class="hidden sm:inline">Export Excel</span>
-                        </button>
-                            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                </svg>
-                                <span class="hidden sm:inline">Export PDF</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Table Content -->
-                <div class="overflow-x-auto">
+    <!-- Table Section -->
+    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse custom-print-table">
-                        <thead>
-                            <tr class="bg-gray-50 dark:bg-gray-900/50 print:bg-transparent">
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">NO.</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">KODE BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">NAMA BARANG</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">SATUAN</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">STOK</th>
-                                <th class="px-4 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">Harga Beli</th>
-                                <th class="px-6 py-3 print:px-2 print:py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase text-right border-b border-gray-200 dark:border-gray-700 print:border-t print:border-gray-800 print:text-gray-900 whitespace-nowrap">Saldo</th>
+                        <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs print:bg-transparent">
+                            <tr>
+                                <th class="px-6 py-4 text-left">NO.</th>
+                                <th class="px-4 py-4 text-left">KODE BARANG</th>
+                                <th class="px-4 py-4 text-left">NAMA BARANG</th>
+                                <th class="px-4 py-4 text-left">SATUAN</th>
+                                <th class="px-4 py-4 text-right">STOK</th>
+                                <th class="px-4 py-4 text-right">Harga Beli</th>
+                                <th class="px-6 py-4 text-right">Saldo</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-800 print:divide-none">

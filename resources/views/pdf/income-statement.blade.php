@@ -2,200 +2,226 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Laba Rugi</title>
+    <title>Laba Rugi (Standar)</title>
     <style>
-        @page { margin: 1.5cm 1cm; }
-        body { font-family: sans-serif; font-size: 9pt; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; table-layout: fixed; }
-        .header-table td { padding: 0; vertical-align: top; }
-        .store-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; text-align: center; margin: 0; }
-        .report-title { font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #555; text-align: center; margin-top: 5px; }
-        .period { font-size: 10pt; color: #666; text-align: center; margin-top: 5px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; word-wrap: break-word; }
-        th, td { padding: 8px 10px; vertical-align: top; }
-        thead th { background-color: #00BFFF; color: white; text-align: left; font-weight: bold; border-bottom: 2px solid #009ACD; }
-        
-        .section-header { 
-            background-color: #f3f4f6; 
-            font-weight: bold; 
-            padding-top: 15px; 
-            padding-bottom: 5px;
-            color: #111;
-            border-bottom: 1px solid #ddd;
+        @page { 
+            size: A4; 
+            margin: 15mm 1cm 10mm 1cm; 
         }
         
-        .account-row td { padding-left: 20px; border-bottom: 1px solid #eee; }
-        
-        .subtotal-row td { 
-            font-weight: bold; 
-            background-color: #fce7f3; /* Light pink for expense subtotal */
-            color: #be123c;
-            border-top: 1px solid #fecdd3;
-            padding-top: 5px;
-            padding-bottom: 10px;
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-size: 10pt; 
+            color: #000; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.2;
         }
 
-        .revenue-total-row td {
-            font-weight: bold;
-            background-color: #e0f2fe;
-            color: #0369a1;
-            border-top: 1px solid #bae6fd;
-            padding-top: 5px;
-            padding-bottom: 10px;
-        }
-        
-        .section-total-row td {
-            font-weight: bold;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            background-color: #f0f9ff;
-            color: #0e7490;
-        }
-
-        .grand-total-row td {
-            font-weight: bold;
-            font-size: 12pt;
-            background-color: #333; /* Dark background like Cash Flow */
-            color: white;
-            padding: 10px;
-        }
-        
+        .full-width { width: 100%; }
+        .text-center { text-align: center; }
         .text-right { text-align: right; }
-        
-        .footer {
-            position: fixed;
-            bottom: 10pt;
-            left: 0;
-            right: 0;
-            font-size: 8pt;
-            color: #999;
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 5px;
-            height: 30px;
+        .text-left { text-align: left; }
+        .font-bold { font-weight: bold; }
+        .uppercase { text-transform: uppercase; }
+
+        .report-header { 
+            margin-bottom: 25px; 
+            text-align: center;
         }
-        .footer .right {
-            float: right;
+        .store-name { 
+            font-size: 11pt; 
+            margin-bottom: 5px; 
+        }
+        .report-title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            color: #800000; /* Maroon */
+            margin: 0;
+        }
+        .period-info { 
+            font-size: 10pt; 
+            margin-top: 5px; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; 
+        }
+        
+        /* Table Header Style */
+        .column-headers td {
+            padding: 5px 0;
+            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            font-weight: bold;
+            color: #4a7ebb;
+        }
+
+        td { 
+            padding: 3px 0; 
+            vertical-align: bottom; 
+        }
+        
+        /* Hierarchy Levels */
+        .level-0 { font-weight: bold; padding-top: 10px; text-transform: uppercase; }
+        .level-1 { font-weight: bold; padding-left: 15px; padding-top: 5px; }
+        .level-2 { font-weight: normal; padding-left: 30px; }
+        .level-3 { font-weight: normal; padding-left: 45px; }
+
+        .timestamp {
+            position: fixed;
+            top: -10mm;
+            right: 0;
+            font-size: 7pt;
+            color: #666;
+        }
+        
+        /* Summary Lines */
+        .summary-label { font-weight: bold; }
+        .summary-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            text-align: right;
+            width: 35%;
+        }
+
+        .grand-total-label { 
+            font-weight: bold; 
+            text-transform: uppercase;
+            padding-top: 15px;
+        }
+        .grand-total-value { 
+            font-weight: bold; 
+            border-top: 0.5pt solid #000; 
+            border-bottom: 3pt double #000;
+            text-align: right;
+            padding-top: 2px;
         }
     </style>
 </head>
 <body>
-    <table class="header-table" width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="5%"></td>
-            <td width="90%" align="center">
-                <div class="store-name">{{ trim($store['name']) }}</div>
-                <div class="report-title">LAPORAN LABA RUGI</div>
-                <div class="period">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
-                </div>
-                <div style="font-size: 9pt; margin-top: 5px; font-style: italic; color: #666; text-align: center;">(dalam IDR)</div>
-            </td>
-            <td width="5%"></td>
-        </tr>
-    </table>
+    <div class="timestamp">
+        Waktu Cetak: {{ $printedAt }}
+    </div>
+    <div class="report-header">
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">Laba Rugi (Standar)</div>
+        <div class="period-info">
+            Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+        </div>
+    </div>
 
     <table>
         <thead>
-            <tr>
-                <th style="width: 70%">Tanggal</th>
-                <th style="width: 30%; text-align: right;">{{ \Carbon\Carbon::parse($endDate)->format('Y') }}</th>
+            <tr class="column-headers">
+                <td style="width: 65%">Deskripsi</td>
+                <td style="width: 35%; text-align: right;">Nilai</td>
             </tr>
         </thead>
         <tbody>
-            {{-- Pendapatan --}}
-            <tr class="section-header"><td colspan="2">Pendapatan</td></tr>
+            {{-- PENDAPATAN --}}
+            <tr class="level-0"><td colspan="2">PENDAPATAN</td></tr>
+            <tr class="level-1"><td colspan="2">PENDAPATAN OPERASIONAL</td></tr>
             @foreach($reportData['revenue_accounts'] as $account)
-                <tr class="account-row">
-                    <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                    <td class="text-right">{{ number_format($account->balance, 2, ',', '.') }}</td>
-                </tr>
+            <tr class="level-2"><td colspan="2">{{ $account->name }}</td></tr>
+            <tr class="level-3">
+                <td>Jumlah {{ $account->name }}</td>
+                <td class="summary-value">{{ format_accounting_standard($account->amount) }}</td>
+            </tr>
             @endforeach
-            <tr class="subtotal-row">
-                <td>Total dari Pendapatan</td>
-                <td class="text-right">{{ number_format($reportData['total_revenue'], 2, ',', '.') }}</td>
+            
+            <tr class="level-1">
+                <td class="summary-label">Jumlah Pendapatan</td>
+                <td class="summary-value">{{ format_accounting_standard($reportData['total_revenue']) }}</td>
             </tr>
 
-            {{-- Harga Pokok Penjualan (HPP) --}}
-            <tr class="section-header"><td colspan="2">Harga Pokok Penjualan (HPP)</td></tr>
+            {{-- HARGA POKOK PENJUALAN --}}
+            <tr class="level-0"><td colspan="2">HARGA POKOK PENJUALAN</td></tr>
             @foreach($reportData['cogs_accounts'] as $account)
-                 <tr class="account-row">
-                    <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                    <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
-                </tr>
+            <tr class="level-1"><td colspan="2">{{ $account->name }}</td></tr>
+            <tr class="level-2">
+                <td>Jumlah {{ $account->name }}</td>
+                <td class="summary-value">{{ format_accounting_standard($account->amount) }}</td>
+            </tr>
             @endforeach
-             <tr class="subtotal-row">
-                <td>Total HPP</td>
-                <td class="text-right">( {{ number_format($reportData['total_cogs'], 2, ',', '.') }} )</td>
+            
+            <tr class="level-0">
+                <td class="summary-label">JUMLAH BEBAN POKOK PENJUALAN</td>
+                <td class="summary-value">{{ format_accounting_standard($reportData['total_cogs']) }}</td>
             </tr>
 
-             {{-- Laba Kotor --}}
-            <tr class="section-total-row">
-                <td>Laba Kotor</td>
-                <td class="text-right">{{ number_format($reportData['gross_profit'], 2, ',', '.') }}</td>
+            <tr class="grand-total-label">
+                <td>LABA KOTOR</td>
+                <td class="grand-total-value">{{ format_accounting_standard($reportData['gross_profit']) }}</td>
             </tr>
 
-            {{-- Beban Operasional --}}
-            <tr class="section-header"><td colspan="2">Beban Operasional</td></tr>
-             @foreach($reportData['operating_expense_accounts'] as $account)
-                 <tr class="account-row">
-                    <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                    <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
-                </tr>
+            {{-- BEBAN OPERASIONAL --}}
+            <tr class="level-0"><td colspan="2">BEBAN</td></tr>
+            <tr class="level-1"><td colspan="2">BEBAN OPERASIONAL</td></tr>
+            @foreach($reportData['operating_expense_accounts'] as $account)
+            <tr class="level-2"><td colspan="2">{{ $account->name }}</td></tr>
+            <tr class="level-3">
+                <td>Jumlah {{ $account->name }}</td>
+                <td class="summary-value">{{ format_accounting_standard($account->amount) }}</td>
+            </tr>
             @endforeach
-            <tr class="subtotal-row">
-                <td>Total Beban Operasional</td>
-                <td class="text-right">( {{ number_format($reportData['total_operating_expenses'], 2, ',', '.') }} )</td>
+            
+            <tr class="level-1">
+                <td class="summary-label">Jumlah Beban Operasional</td>
+                <td class="summary-value">{{ format_accounting_standard($reportData['total_operating_expenses']) }}</td>
             </tr>
 
-            {{-- Beban Lain-lain --}}
-             @if($reportData['other_expense_accounts']->count() > 0)
-                 <tr class="section-header"><td colspan="2">Beban Lain-Lain</td></tr>
-                @foreach($reportData['other_expense_accounts'] as $account)
-                     <tr class="account-row">
-                        <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                        <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
-                    </tr>
-                @endforeach
-                 <tr class="subtotal-row">
-                    <td>Total Beban Lain-lain</td>
-                    <td class="text-right">( {{ number_format($reportData['total_other_expenses'], 2, ',', '.') }} )</td>
-                </tr>
-             @endif
-             
-            {{-- Laba Sebelum Pajak --}}
-            <tr class="section-total-row">
-                <td>Laba Sebelum Pajak</td>
-                <td class="text-right">{{ number_format($reportData['net_income_before_tax'] ?? $reportData['net_income'], 2, ',', '.') }}</td>
+            {{-- BEBAN LAIN-LAIN --}}
+            @if($reportData['other_expense_accounts']->count() > 0)
+            <tr class="level-1"><td colspan="2">BEBAN LAIN-LAIN</td></tr>
+            @foreach($reportData['other_expense_accounts'] as $account)
+            <tr class="level-2"><td colspan="2">{{ $account->name }}</td></tr>
+            <tr class="level-3">
+                <td>Jumlah {{ $account->name }}</td>
+                <td class="summary-value">{{ format_accounting_standard($account->amount) }}</td>
             </tr>
-
-            {{-- Beban Pajak --}}
-            @if(isset($reportData['tax_accounts']) && $reportData['tax_accounts']->count() > 0)
-                <tr class="section-header"><td colspan="2">Beban Pajak (PPh)</td></tr>
-                @foreach($reportData['tax_accounts'] as $account)
-                     <tr class="account-row">
-                        <td>{{ $account->code ?? '' }} {{ $account->name }}</td>
-                        <td class="text-right">( {{ number_format($account->balance, 2, ',', '.') }} )</td>
-                    </tr>
-                @endforeach
-                 <tr class="subtotal-row">
-                    <td>Total Beban Pajak (PPh)</td>
-                    <td class="text-right">( {{ number_format($reportData['total_tax_expenses'], 2, ',', '.') }} )</td>
-                </tr>
+            @endforeach
+            <tr class="level-1">
+                <td class="summary-label">Jumlah Beban Lain-lain</td>
+                <td class="summary-value">{{ format_accounting_standard($reportData['total_other_expenses']) }}</td>
+            </tr>
             @endif
 
-             <tr class="grand-total-row">
-                <td>Laba Bersih</td>
-                <td class="text-right">{{ number_format($reportData['net_income'], 2, ',', '.') }}</td>
+            <tr class="grand-total-label">
+                <td>LABA SEBELUM PAJAK</td>
+                <td class="grand-total-value">{{ format_accounting_standard($reportData['net_income_before_tax']) }}</td>
             </tr>
 
+            {{-- PAJAK --}}
+            @if($reportData['tax_accounts']->count() > 0)
+            <tr class="level-0"><td colspan="2">BEBAN PAJAK</td></tr>
+            @foreach($reportData['tax_accounts'] as $account)
+            <tr class="level-1"><td colspan="2">{{ $account->name }}</td></tr>
+            <tr class="level-2">
+                <td>Jumlah {{ $account->name }}</td>
+                <td class="summary-value">{{ format_accounting_standard($account->amount) }}</td>
+            </tr>
+            @endforeach
+            <tr class="level-0">
+                <td class="summary-label">JUMLAH BEBAN PAJAK</td>
+                <td class="summary-value">{{ format_accounting_standard($reportData['total_tax_expenses']) }}</td>
+            </tr>
+            @endif
+
+            <tr class="grand-total-label">
+                <td style="color: #800000">LABA BERSIH</td>
+                <td class="grand-total-value" style="color: #800000">{{ format_accounting_standard($reportData['net_income']) }}</td>
+            </tr>
         </tbody>
     </table>
 
-    <div class="footer">
-        Dicetak oleh: {{ $printedBy }}
-        <span class="right">Waktu Cetak: {{ $printedAt }}</span>
-    </div>
+    @php
+    function format_accounting_standard($number) {
+        $formatted = number_format(abs($number), 2, ',', '.');
+        if ($formatted == '0,00') return '0';
+        return ($number < 0 ? '-' : '') . $formatted;
+    }
+    @endphp
 </body>
 </html>

@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>Laporan Umur Hutang</title>
     <style>
+        @page { 
+            size: A4; 
+            margin:    10mm 1cm 10mm 1cm; 
+        }
         * {
             margin: 0;
             padding: 0;
@@ -87,11 +91,6 @@
             border: 1px solid #ddd;
             font-size: 10px;
         }
-        .footer {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-        }
         .signature-box {
             text-align: center;
             width: 45%;
@@ -110,28 +109,30 @@
     </style>
 </head>
 <body>
-    {{-- Header --}}
-    <div class="header">
-        <h1>LAPORAN UMUR HUTANG (AP AGING REPORT)</h1>
-        <p>Per Tanggal: {{ now()->format('d/m/Y') }}</p>
-        <p style="font-size: 10px; color: #999;">Dicetak: {{ now()->format('d/m/Y H:i') }} oleh {{ auth()->user()->name }}</p>
+    <div class="report-header text-center">
+        <div class="store-name uppercase">{{ trim(\App\Models\Setting::get('store_name', 'APOTEK')) }}</div>
+        <div class="report-title">LAPORAN UMUR HUTANG (AP AGING REPORT)</div>
+        <div class="period-info">Per Tanggal: {{ now()->translatedFormat('d F Y') }}</div>
     </div>
 
-    {{-- Summary --}}
-    <div style="margin-bottom: 20px;">
-        @foreach(['0-30', '31-60', '61-90', '>90'] as $key)
-        <div class="summary-box">
-            <div class="summary-title">{{ $key }} HARI</div>
-            <div class="summary-value">Rp {{ number_format($data['summary'][$key], 0, ',', '.') }}</div>
-        </div>
-        @endforeach
-    </div>
+    <table class="summary-table">
+        <tr>
+            @foreach(['0-30', '31-60', '61-90', '>90'] as $key)
+            <td style="padding: 5px; border: none;">
+                <div class="summary-box">
+                    <div class="summary-title">{{ $key }} HARI</div>
+                    <div class="summary-value">Rp {{ number_format($data['summary'][$key], 0, ',', '.') }}</div>
+                </div>
+            </td>
+            @endforeach
+        </tr>
+    </table>
 
     {{-- Detail Tables per Bucket --}}
     @foreach(['0-30', '31-60', '61-90', '>90'] as $key)
         @if(count($data[$key]) > 0)
             <div class="section-title">KATEGORI UMUR: {{ $key }} HARI (Total: Rp {{ number_format($data['summary'][$key], 0, ',', '.') }})</div>
-            <table>
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th style="width: 25%;">Supplier</th>
@@ -161,20 +162,23 @@
     @endforeach
 
     {{-- Total --}}
-    <div style="text-align: right; margin-top: 20px; font-size: 14px; font-weight: bold; border-top: 2px solid #333; padding-top: 10px;">
+    <div class="total-highlight">
         TOTAL HUTANG OUTSTANDING: Rp {{ number_format($data['summary']['total'], 0, ',', '.') }}
     </div>
 
-    {{-- Footer --}}
-    <div class="footer">
-        <div class="signature-box">
-            <div>Disetujui Oleh</div>
-            <div class="signature-line">(...........................)</div>
-        </div>
-        <div class="signature-box">
-            <div>Dibuat Oleh</div>
-            <div class="signature-line">(...........................)</div>
-        </div>
-    </div>
-</body>
+    <table class="signature-section">
+        <tr>
+            <td class="signature-box" style="border:none">
+                <div class="font-bold">Disetujui Oleh</div>
+                <div class="signature-line">(...........................)</div>
+            </td>
+            <td style="width: 10%; border:none"></td>
+            <td class="signature-box" style="border:none">
+                <div class="font-bold">Dibuat Oleh</div>
+                <div class="signature-line">(...........................)</div>
+            </td>
+        </tr>
+    </table>
+
+    </body>
 </html>

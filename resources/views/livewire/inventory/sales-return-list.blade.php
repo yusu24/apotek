@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="mb-6">
-        <h2 class="text-2xl font-normal text-gray-800">Retur Penjualan</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Retur Penjualan</h2>
         <p class="text-sm text-gray-500">Kelola pengembalian barang dari pelanggan.</p>
     </div>
 
@@ -84,7 +84,7 @@
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
                 <div class="px-6 pt-6 pb-4">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-normal text-gray-900">Tambah Retur Penjualan Baru</h3>
+                        <h3 class="text-xl font-bold text-gray-900">Tambah Retur Penjualan Baru</h3>
                         <button type="button" wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-500 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
@@ -211,7 +211,7 @@
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
                 <div class="px-6 pt-6 pb-4">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-normal text-gray-900">Detail Retur Penjualan</h3>
+                        <h3 class="text-xl font-bold text-gray-900">Detail Retur Penjualan</h3>
                         <button type="button" wire:click="$set('showDetailModal', false)" class="text-gray-400 hover:text-gray-500 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>

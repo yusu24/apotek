@@ -580,6 +580,27 @@
                         </div>
                     @endif
 
+                    <!-- Email Receipt Checkbox -->
+                    @php
+                        $customer = $selectedCustomerId ? \App\Models\Customer::find($selectedCustomerId) : null;
+                        $hasEmail = $customer && !empty($customer->email);
+                    @endphp
+                    @if($hasEmail)
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" 
+                                   id="sendEmail" 
+                                   wire:model.live="sendEmail"
+                                   class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                            <label for="sendEmail" class="text-sm font-bold text-green-900 cursor-pointer flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                Kirim Struk via Email
+                            </label>
+                        </div>
+                        <p class="text-xs text-green-700 mt-2 ml-7">Struk akan dikirim ke: <span class="font-bold">{{ $customer->email }}</span></p>
+                    </div>
+                    @endif
+
                     <!-- Patient Information Section -->
                     @if($payment_method !== 'tempo')
                     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4" x-data="{ showPatient: @entangle('includePatientInfo').live }">

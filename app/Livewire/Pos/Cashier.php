@@ -128,6 +128,9 @@ class Cashier extends Component
     public $patientPhone = '';
     public $patientEmail = '';
 
+    // Email Receipt
+    public $sendEmail = false;
+
 
     public function loadPendingOrders()
     {
@@ -971,7 +974,20 @@ class Cashier extends Component
                 \Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
             }
 
-
+            // 12. Send Email Receipt if requested
+            if ($this->sendEmail && $this->selectedCustomerId) {
+                try {
+                    $customer = \App\Models\Customer::find($this->selectedCustomerId);
+                    if ($customer && $customer->email) {
+                        \Illuminate\Support\Facades\Mail::to($customer->email)
+                            ->send(new \App\Mail\ReceiptMail($sale));
+                        \Log::info('Receipt email sent to ' . $customer->email . ' for ' . $sale->invoice_no);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send receipt email: ' . $e->getMessage());
+                    // Don't fail the transaction if email fails
+                }
+            }
 
             if ($status === 'pending') {
                  $this->dispatch('cart-updated', message: 'Pesanan berhasil disimpan ke Pending list.');

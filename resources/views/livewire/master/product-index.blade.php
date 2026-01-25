@@ -28,19 +28,18 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="p-4 border-b bg-gray-50">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <!-- Search & Filters -->
                 <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto flex-1 md:items-center">
                     <!-- Search Box -->
-                    <div class="relative w-full md:w-48">
+                    <div class="relative w-full md:w-64">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </span>
                         <input type="text" wire:model.live="search" placeholder="Cari obat..." 
-                            class="block w-full pr-3 py-1.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm"
-                            style="padding-left: 2.75rem !important;">
+                            class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm">
                     </div>
 
                     <!-- Category Filter -->
@@ -61,14 +60,14 @@
 
                 <!-- Right: Buttons -->
                 <div class="flex gap-2 w-full md:w-auto justify-end">
-                    <button wire:click="exportExcel" class="px-3 py-1.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Export Excel">
+                    <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <span class="hidden sm:inline">Export Excel</span>
                     </button>
                     @can('import_master_data')
-                    <button x-data @click="$dispatch('open-import-modal')" class="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Import Excel">
+                    <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                         </svg>
@@ -77,7 +76,7 @@
                     @endcan
 
                     @can('create products')
-                    <a href="{{ route('products.create') }}" wire:navigate class="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Tambah Produk">
+                    <a href="{{ route('products.create') }}" wire:navigate class="btn btn-primary" title="Tambah Produk">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>

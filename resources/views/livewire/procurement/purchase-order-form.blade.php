@@ -262,6 +262,33 @@
                 </a>
                 @endif
 
+                @if($purchaseOrder)
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" type="button"
+                        class="px-5 py-2.5 bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-bold shadow-md transition text-sm flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        Cetak PO
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    
+                    <div x-show="open" @click.away="open = false" x-transition
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                        <a href="{{ route('pdf.purchase-order', $purchaseOrder->id) }}" target="_blank"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg">
+                            📄 A5 Landscape
+                        </a>
+                        <a href="{{ route('pdf.purchase-order-a4', $purchaseOrder->id) }}" target="_blank"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            📄 A4 Portrait
+                        </a>
+                        <a href="{{ route('pdf.purchase-order-ncr', $purchaseOrder->id) }}" target="_blank"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-b-lg">
+                            📋 Kertas NCR
+                        </a>
+                    </div>
+                </div>
+                @endif
+
                 @if(!$isReadOnly)
                 <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-white shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
                     Batal

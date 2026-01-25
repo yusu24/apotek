@@ -24,54 +24,54 @@
     @endif
 
     <!-- Financial Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <!-- Kas & Bank -->
-        <div class="bg-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-200">
+        <div class="bg-blue-600 rounded-2xl p-4 text-white shadow-lg shadow-blue-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-blue-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kas & Bank</p>
-                    <h3 class="text-3xl font-bold text-white">Rp {{ number_format($this->totalCashBank, 0, ',', '.') }}</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalCashBank, 0, ',', '.') }}</h3>
                 </div>
-                <div class="bg-white/20 p-2.5 rounded-xl">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-white/20 p-2 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20 flex gap-2">
-                <button wire:click="createBankAccount" class="text-xs bg-white text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-sm">
+                <button wire:click="createBankAccount" class="text-[10px] bg-white text-blue-700 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-sm">
                     + Tambah Akun Bank
                 </button>
             </div>
         </div>
 
         <!-- Piutang Usaha -->
-        <div class="bg-orange-500 rounded-2xl p-6 text-white shadow-lg shadow-orange-200">
+        <div class="bg-orange-500 rounded-2xl p-4 text-white shadow-lg shadow-orange-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-white font-bold text-xs mb-1 uppercase tracking-wider opacity-90">Total Piutang Usaha</p>
-                    <h3 class="text-3xl font-bold text-white">Rp {{ number_format($this->totalReceivable, 0, ',', '.') }}</h3>
+                    <h2 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalReceivable, 0, ',', '.') }}</h2>
                 </div>
-                <div class="bg-white/20 p-2.5 rounded-xl">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <div class="bg-white/20 p-2 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white opacity-90">Estimasi tagihan masuk</p>
+                <p class="text-[10px] text-white opacity-90 uppercase font-bold tracking-tight">Estimasi tagihan masuk</p>
             </div>
         </div>
 
         <!-- Utang Usaha -->
-        <div class="bg-red-600 rounded-2xl p-6 text-white shadow-lg shadow-red-200">
+        <div class="bg-red-600 rounded-2xl p-4 text-white shadow-lg shadow-red-200">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-red-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kewajiban Lancar</p>
-                    <h3 class="text-3xl font-bold text-white">Rp {{ number_format($this->totalPayable, 0, ',', '.') }}</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalPayable, 0, ',', '.') }}</h3>
                 </div>
-                <div class="bg-white/20 p-2.5 rounded-xl">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div class="bg-white/20 p-2 rounded-xl">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-red-100">Kewajiban segera jatuh tempo</p>
+                <p class="text-[10px] text-red-100 uppercase font-bold tracking-tight">Kewajiban segera jatuh tempo</p>
             </div>
         </div>
     </div>
@@ -93,6 +93,13 @@
                     <span class="hidden sm:inline">Import Excel</span>
                 </button>
                 @endcan
+
+                <a href="{{ route('excel.accounts', ['search' => $search, 'typeFilter' => $typeFilter]) }}" target="_blank" class="btn btn-export-excel">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Export Excel</span>
+                </a>
                 
                 <div class="flex-1 md:w-auto md:min-w-[200px]">
                     <select wire:model.live="typeFilter" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -106,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="w-full md:flex-1 relative">
+            <div class="w-full md:w-64 relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>

@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Manajemen Satuan Produk</h1>
+            <h2 class="text-2xl font-bold text-gray-800">Manajemen Satuan Produk</h2>
             <p class="text-gray-500 text-sm">Atur satuan dasar dan konversi bertingkat untuk setiap produk.</p>
         </div>
     </div>
@@ -10,17 +10,27 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4">
-            <div class="w-full md:w-64">
-                <select wire:model.live="category_id" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                    @endforeach
-                </select>
+            <div class="w-full md:w-48">
+                <div class="relative">
+                    <select wire:model.live="category_id" class="w-full appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition">
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="flex-none">
-                 <input type="text" wire:model.live.debounce.300ms="search" 
-                    class="w-full md:w-64 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            <div class="relative w-full md:w-64">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input type="text" wire:model.live.debounce.300ms="search" 
+                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm"
                     placeholder="Cari produk...">
             </div>
         </div>
@@ -115,7 +125,7 @@
                         <div>
                             <div class="flex justify-between items-center mb-3">
                                 <label class="block text-sm font-medium text-gray-700">Satuan Bertingkat (Konversi)</label>
-                                <button type="button" wire:click="addConversion" class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200">
+                                <button type="button" wire:click="addConversion" class="btn btn-primary btn-sm">
                                     + Tambah Satuan
                                 </button>
                             </div>
@@ -180,11 +190,11 @@
                 </div>
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                     <button type="button" wire:click="$set('showModal', false)"
-                        class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        class="btn btn-secondary">
                         Batal
                     </button>
                     <button type="button" wire:click="save"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        class="btn btn-primary">
                         Simpan
                     </button>
                 </div>

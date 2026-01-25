@@ -42,9 +42,9 @@ class PdfController extends Controller
         $pdf = Pdf::loadView('pdf.goods-receipt-pdf', $data);
         $pdf->setPaper('a4', 'portrait');
 
-        // Download PDF
+        // Stream PDF to browser for printing
         $filename = 'Penerimaan-Barang-' . $receipt->delivery_note_number . '.pdf';
-        return $pdf->download($filename);
+        return $pdf->stream($filename);
     }
 
     /**
@@ -833,5 +833,100 @@ class PdfController extends Controller
         $filename = 'Neraca-Saldo-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
         
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Purchase Order to PDF - A5 Landscape (Default)
+     */
+    public function exportPurchaseOrder($id)
+    {
+        return $this->exportPurchaseOrderFormat($id, 'a5');
+    }
+
+    /**
+     * Export Purchase Order to PDF - A4 Portrait
+     */
+    public function exportPurchaseOrderA4($id)
+    {
+        return $this->exportPurchaseOrderFormat($id, 'a4');
+    }
+
+    /**
+     * Export Purchase Order to PDF - NCR Paper (Half Letter)
+     */
+    public function exportPurchaseOrderNCR($id)
+    {
+        return $this->exportPurchaseOrderFormat($id, 'ncr');
+    }
+
+    /**
+     * Common method to export PO in different formats
+     */
+    private function exportPurchaseOrderFormat($id, $format = 'a5')
+    {
+        $po = \App\Models\PurchaseOrder::with(['supplier', 'items.product.unit', 'user'])->findOrFail($id);
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        // Calculate subtotal
+        $subtotal = $po->items->sum(function($item) {
+            return ($item->price ?? 0) * $item->qty;
+        });
+
+        // Generate terbilang (simplified)
+        $terbilang = $this->numberToWords($subtotal);
+
+        $data = [
+            'po' => $po,
+            'store' => $store,
+            'terbilang' => $terbilang,
+            'approvedBy' => auth()->user()->name ?? 'Manager',
+            'printedAt' => Carbon::now()->format('d M Y H:i:s'),
+            'format' => $format,
+        ];
+
+        $pdf = Pdf::loadView('pdf.purchase-order', $data);
+
+        $filename = 'PO-' . $po->po_number . '-' . strtoupper($format) . '.pdf';
+
+        // Set paper size based on format
+        switch($format) {
+            case 'a4':
+                // A4 Portrait (210mm x 297mm)
+                return $pdf->setPaper('a4', 'portrait')->stream($filename);
+            
+            case 'ncr':
+                // NCR/Half Letter (5.5" x 8.5" = 396pt x 612pt)
+                return $pdf->setPaper([0, 0, 396, 612], 'portrait')->stream($filename);
+            
+            case 'a5':
+            default:
+                // A5 Landscape (210mm x 148mm)
+                return $pdf->setPaper([0, 0, 595.28, 419.53], 'landscape')->stream($filename);
+        }
+    }
+
+    /**
+     * Convert number to Indonesian words (simplified)
+     */
+    private function numberToWords($number)
+    {
+        if ($number == 0) return 'Nol rupiah';
+        
+        $words = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan'];
+        $teens = ['sepuluh', 'sebelas', 'dua belas', 'tiga belas', 'empat belas', 'lima belas', 
+                  'enam belas', 'tujuh belas', 'delapan belas', 'sembilan belas'];
+        
+        // Simplified version - just return formatted text
+        return ucfirst(number_format($number, 0, ',', '.')) . ' rupiah';
     }
 }

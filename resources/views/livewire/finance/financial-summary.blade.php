@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Ringkasan Keuangan</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Ringkasan Keuangan</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">Ikhtisar saldo Kas, Bank, dan Hutang saat ini.</p>
         </div>
         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
@@ -15,7 +15,7 @@
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Total Cash & Bank -->
-        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #1e40af;">
+        <div class="rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #1e40af;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-blue-800">
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Total Debt -->
-        <div class="rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #b91c1c;">
+        <div class="rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #b91c1c;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-red-800">
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Net Balance -->
-        <div class="rounded-3xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #000000 !important;">
+        <div class="rounded-xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #000000 !important;">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-white rounded-xl text-black">
@@ -70,7 +70,7 @@
         <!-- Details Lists -->
         <div class="space-y-6">
             <!-- Cash & Bank Details -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
                     <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                         <div class="w-1.5 h-4 bg-blue-600 rounded-full"></div>
@@ -99,7 +99,7 @@
             </div>
 
             <!-- Debt Details -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
                     <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                         <div class="w-1.5 h-4 bg-orange-500 rounded-full"></div>
@@ -129,7 +129,7 @@
         </div>
 
         <!-- Recent Transactions -->
-        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
                 <h3 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>

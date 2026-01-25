@@ -2,8 +2,8 @@
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                {{ __('Laporan Penjualan') }}
+            <h2 class="text-2xl font-bold text-gray-800">
+                Laporan Penjualan
             </h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">Daftar transaksi penjualan terperinci per periode.</p>
         </div>
@@ -14,7 +14,13 @@
                 </svg>
                 <span>Lihat Grafik</span>
             </a>
-            <a href="{{ route('pdf.sales-report', ['startDate' => $startDate, 'endDate' => $endDate, 'paymentMethod' => $paymentMethod, 'search' => $search]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
+            <a href="{{ route('excel.sales-report', ['startDate' => $startDate, 'endDate' => $endDate, 'paymentMethod' => $paymentMethod, 'search' => $search]) }}" target="_blank" class="btn btn-export-excel">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="hidden sm:inline">Export Excel</span>
+            </a>
+            <a href="{{ route('pdf.sales-report', ['startDate' => $startDate, 'endDate' => $endDate, 'paymentMethod' => $paymentMethod, 'search' => $search]) }}" target="_blank" class="btn btn-export-pdf">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
@@ -38,9 +44,14 @@
 
             <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
                 <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Invois</label>
-                <input wire:model.live.debounce.300ms="search" 
-                    type="text" placeholder="No Invois/Kasir..." 
-                    class="w-full md:w-64 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
+                <div class="relative w-full md:w-64">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input wire:model.live.debounce.300ms="search" 
+                        type="text" placeholder="No Invois/Kasir..." 
+                        class="w-full pl-10 pr-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
             </div>
 
             <!-- Payment Method (Order 3) -->
@@ -113,11 +124,25 @@
                                 </tr>
                             @endforelse
                         </tbody>
-                        <tfoot class="bg-emerald-50/50 dark:bg-emerald-900/20 font-bold border-t-2 border-emerald-100 dark:border-emerald-800">
+                        <tfoot class="bg-gray-50 dark:bg-gray-900/40 font-bold border-t-2 border-gray-100 dark:border-gray-800">
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-emerald-700 dark:text-emerald-400 text-right uppercase tracking-wider text-xs">Total Penjualan</td>
-                                <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-300">
+                                <td colspan="4" class="px-6 py-3 text-gray-500 dark:text-gray-400 text-right uppercase tracking-wider text-[10px]">Total Penjualan Kotor</td>
+                                <td class="px-6 py-3 text-right text-gray-900 dark:text-white text-sm">
                                     Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-3 no-print"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="px-6 py-3 text-red-600 dark:text-red-400 text-right uppercase tracking-wider text-[10px]">Total Retur</td>
+                                <td class="px-6 py-3 text-right text-red-600 dark:text-red-300 text-sm">
+                                    - Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-3 no-print"></td>
+                            </tr>
+                            <tr class="bg-emerald-50/50 dark:bg-emerald-900/20 border-t border-emerald-100 dark:border-emerald-800">
+                                <td colspan="4" class="px-6 py-4 text-emerald-700 dark:text-emerald-400 text-right uppercase tracking-wider text-xs">Total Penjualan Bersih</td>
+                                <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-300 text-lg">
+                                    Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}
                                 </td>
                                 <td class="px-6 py-4 no-print"></td>
                             </tr>

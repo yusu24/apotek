@@ -8,7 +8,7 @@
     <!-- Print Header (Simplified) -->
     <div class="hidden print:block">
         <div class="border-b-2 border-gray-900 pb-2 text-center uppercase">
-            <h1 class="text-xl font-bold text-gray-950">LAPORAN STOK & OPNAME</h1>
+            <h2 class="text-xl font-bold text-gray-800">LAPORAN STOK & OPNAME</h2>
             <div class="text-[9px] text-gray-500 mt-1 italic normal-case">Dicetak pada: {{ now()->translatedFormat('d F Y H:i:s') }}</div>
         </div>
     </div>
@@ -31,26 +31,26 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow overflow-hidden print:shadow-none print:rounded-none">
-        <div class="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print">
+    <div class="bg-white rounded-xl shadow overflow-hidden print:shadow-none print:rounded-none">
+        <div class="p-4 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print">
             <div class="flex gap-2">
                 <a href="{{ route('inventory.index', ['filter_status' => 'all']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-medium rounded-lg transition duration-200 {{ $filter_status == 'all' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
+                    class="btn {{ $filter_status == 'all' ? 'btn-primary' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Semua
                 </a>
                 <a href="{{ route('inventory.index', ['filter_status' => 'low_stock']) }}" wire:navigate 
-                    class="px-4 py-2 text-sm font-medium rounded-lg transition duration-200 {{ $filter_status == 'low_stock' ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
+                    class="btn {{ $filter_status == 'low_stock' ? 'btn-primary' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' }}">
                     Stok Menipis
                 </a>
                 
-                <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center gap-2 transition duration-200 text-sm" title="Export Excel">
+                <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <span class="hidden sm:inline">Export Excel</span>
                 </button>
 
-                <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export PDF">
+                <button onclick="window.print()" class="btn btn-export-pdf" title="Export PDF">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                     </svg>
@@ -58,8 +58,8 @@
                 </button>
 
                 @can('import stock')
-                <button x-data @click="$dispatch('open-import-modal')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center gap-2 transition duration-200 text-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                     </svg>
                     <span class="hidden sm:inline">Import Excel</span>
@@ -67,7 +67,13 @@
                 @endcan
             </div>
 
-            <input type="text" wire:model.live="search" placeholder="Cari Produk..." class="w-full md:w-1/3 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <div class="relative w-full md:w-64">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input type="text" wire:model.live="search" placeholder="Cari Produk..." 
+                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm">
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 custom-print-table">

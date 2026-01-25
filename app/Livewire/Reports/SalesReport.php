@@ -69,8 +69,15 @@ class SalesReport extends Component
 
         $sales = (clone $salesQuery)->latest('date')->paginate(15);
 
+        $totalReturns = \App\Models\SalesReturn::whereBetween('created_at', [
+            Carbon::parse($this->startDate)->startOfDay(),
+            Carbon::parse($this->endDate)->endOfDay()
+        ])->sum('total_amount');
+
         $stats = [
             'total_sales' => (clone $salesQuery)->sum('grand_total'),
+            'total_returns' => $totalReturns,
+            'net_sales' => (clone $salesQuery)->sum('grand_total') - $totalReturns,
             'transaction_count' => (clone $salesQuery)->count(),
         ];
 

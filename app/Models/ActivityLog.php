@@ -58,6 +58,11 @@ class ActivityLog extends Model
      */
     public static function log(array $data): void
     {
+        // Skip log if user is developer
+        if (auth()->check() && auth()->user()->is_developer) {
+            return;
+        }
+
         $request = request();
         
         static::create([

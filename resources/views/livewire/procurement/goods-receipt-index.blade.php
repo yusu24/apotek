@@ -5,20 +5,25 @@
         </h2>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="p-4 border-b">
         <div class="mb-4 flex flex-row justify-between items-center gap-4">
-            <div class="flex flex-1 sm:flex-none">
+            <div class="relative w-full md:w-64">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
                 <input type="text" wire:model.live="search" placeholder="Cari No Surat Jalan / Supplier..." 
-                    class="w-full sm:w-48 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3">
+                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm">
             </div>
 
             <div class="shrink-0">
                 <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
-                    class="bg-blue-600 text-white p-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap" title="Buat Penerimaan">
+                    class="btn btn-primary" title="Buat Penerimaan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span class="hidden sm:inline">Buat Penerimaan</span>
                 </a>
             </div>
+        </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -106,7 +111,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
+        <div class="p-4 border-t">
             {{ $receipts->links() }}
         </div>
     </div>

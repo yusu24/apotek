@@ -1,8 +1,9 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
-            Neraca Saldo (Trial Balance)
-        </h2>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Neraca Saldo (Trial Balance)</h2>
+            <p class="text-sm text-gray-500 mt-1">Laporan saldo debet and kredit seluruh akun.</p>
+        </div>
         <div class="flex gap-2">
             <a href="{{ route('excel.trial-balance', ['startDate' => $startDate, 'endDate' => $endDate]) }}" 
                 class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
@@ -21,21 +22,21 @@
     <div class="bg-white rounded-lg shadow p-6 mb-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Filter Periode</h3>
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+        <div class="flex flex-col md:flex-row gap-4 items-end mb-4">
+            <div class="w-full md:w-auto">
+                <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai</label>
                 <input type="date" wire:model="startDate" 
-                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
+            <div class="w-full md:w-auto">
+                <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Akhir</label>
                 <input type="date" wire:model="endDate" 
-                    class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
             </div>
-            <div class="flex items-end">
+            <div class="w-full md:w-auto flex items-end">
                 <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span>Generate Laporan</span>
+                    <span>Generate</span>
                 </button>
             </div>
         </div>

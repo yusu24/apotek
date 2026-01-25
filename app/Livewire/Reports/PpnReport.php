@@ -36,6 +36,21 @@ class PpnReport extends Component
         }
     }
 
+    public function setThisMonth()
+    {
+        $this->month = now()->month;
+        $this->year = now()->year;
+        $this->generateReport();
+    }
+
+    public function setLastMonth()
+    {
+        $lastMonth = now()->subMonth();
+        $this->month = $lastMonth->month;
+        $this->year = $lastMonth->year;
+        $this->generateReport();
+    }
+
     public function exportPdf()
     {
         return redirect()->route('pdf.ppn-report', [

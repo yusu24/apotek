@@ -1,22 +1,23 @@
 <div class="p-6">
-    <div class="flex justify-between items-center mb-6">
-        <div>
+    {{-- Header --}}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Laporan Umur Hutang & Piutang</h2>
-            <p class="text-sm text-gray-500 mt-1">AP & AR Aging Report</p>
+            <p class="text-sm text-gray-500 mt-1">Analisis keterlambatan pembayaran hutang supplier dan piutang pelanggan • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             @can('export aging report')
             <a href="{{ route('excel.aging-report', ['showPaid' => $showPaid]) }}" 
                target="_blank"
                class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
-               title="Export Excel (AP & AR)">
+               title="Export Excel AP and AR">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 <span class="hidden sm:inline">Export Excel</span>
             </a>
             @endcan
-            <a href="{{ route('pdf.aging-report', ['type' => $type, 'showPaid' => $showPaid]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+            <a href="{{ route('pdf.aging-report', ['type' => $type, 'showPaid' => $showPaid]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Export PDF">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
@@ -39,49 +40,50 @@
     </div>
 
     @if($reportData)
-    {{-- Summary Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        @foreach(['0-7' => 'green', '8-15' => 'blue', '16-30' => 'yellow', '31-45' => 'orange', '45+' => 'red'] as $key => $color)
-            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-{{ $color }}-500 cursor-pointer hover:bg-gray-50 transition" wire:click="setActiveTab('{{ $key }}')">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase">{{ $key }} Hari</h3>
-                    <div class="p-1.5 bg-{{ $color }}-100 rounded-lg">
-                        <svg class="w-4 h-4 text-{{ $color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                </div>
-                <p class="text-xl font-bold text-gray-800">Rp {{ number_format($reportData['summary'][$key] ?? 0, 0, ',', '.') }}</p>
-                <p class="text-xs mt-1 text-gray-500">Total Outstanding</p>
+    @php
+        $summary = $reportData['summary'] ?? [];
+        // Accurate color hex sequence from image: Purple, Light Green, Dark, Blue, Green, Brown
+        $colorSequence = [
+            'all'   => ['hex' => '#bf50bc', 'label' => 'Semua'], 
+            '0-7'   => ['hex' => '#9ffd7b', 'label' => '0-7'],   
+            '8-15'  => ['hex' => '#534a78', 'label' => '8-15'],  
+            '16-30' => ['hex' => '#3182f7', 'label' => '16-30'], 
+            '31-45' => ['hex' => '#2da01d', 'label' => '31-45'], 
+            '45+'   => ['hex' => '#9f6941', 'label' => '45+'],   
+        ];
+    @endphp
+
+    <div class="flex flex-row flex-nowrap gap-2 mb-8 py-2 overflow-x-auto custom-scrollbar">
+        @foreach($colorSequence as $key => $config)
+            @php
+                $isActive = ($activeTab === $key);
+                $ringClass = $isActive ? "ring-2 ring-white ring-offset-2 scale-[1.03] z-10" : "";
+            @endphp
+            <div class="flex-1 min-w-[120px] rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 {{ $ringClass }}" 
+                style="background-color: {{ $config['hex'] }};"
+                wire:click="setActiveTab('{{ $key }}')">
+                <h3 class="text-[10px] font-black text-white uppercase tracking-wider text-center opacity-90">{{ $config['label'] }}</h3>
+                <p class="text-[13px] font-black text-white truncate text-center leading-tight mt-1">Rp{{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}</p>
             </div>
         @endforeach
     </div>
 
-    {{-- Tabs --}}
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="border-b border-gray-200">
-            <div class="px-4 py-3">
-                <label for="aging_period" class="block text-sm font-medium text-gray-700 mb-1">Pilih Jangka Waktu</label>
-                <select wire:model.live="activeTab" id="aging_period" class="block w-64 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="all">Semua (Rp {{ number_format($reportData['summary']['total'], 0, ',', '.') }})</option>
-                    @foreach(['0-7', '8-15', '16-30', '31-45', '45+'] as $key)
-                        <option value="{{ $key }}">
-                            {{ $key === '45+' ? '> 45 Hari' : $key . ' Hari' }} 
-                            (Rp {{ number_format($reportData['summary'][$key] ?? 0, 0, ',', '.') }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="flex justify-end px-4 py-2 bg-gray-50 border-t border-gray-200">
+    {{-- Transaction List Card --}}
+    <div class="bg-white rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden border border-gray-100">
+        <div class="flex justify-between items-center px-6 py-3 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-tight">
+                Detail Transaksi: {{ $activeTab === 'all' ? 'Semua Periode' : $activeTab . ' Hari' }}
+            </h3>
              <div class="flex items-center">
                 <input type="checkbox" wire:model.live="showPaid" id="showPaid" class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
-                <label for="showPaid" class="ml-2 text-sm text-gray-600 font-bold cursor-pointer">Tampilkan Data Lunas</label>
+                <label for="showPaid" class="ml-2 text-xs text-gray-500 cursor-pointer">Tampilkan Data Lunas</label>
             </div>
         </div>
 
         {{-- Table --}}
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-800 font-bold uppercase text-xs">
                     <tr>
                         <th class="px-6 py-4 text-left">
                             {{ $type === 'ap' ? 'Supplier' : 'Customer' }}
@@ -117,8 +119,8 @@
                     @endphp
 
                     @forelse($displayData as $item)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                             {{ $type === 'ap' ? ($item['supplier'] ?? '-') : ($item['customer'] ?? '-') }}
                             @if($type === 'ar' && isset($item['customer_phone']))
                                 <span class="block text-xs text-gray-500">{{ $item['customer_phone'] }}</span>
@@ -130,7 +132,7 @@
                             {{ $item['due_date'] && $item['due_date'] !== '-' ? \Carbon\Carbon::parse($item['due_date'])->format('d/m/Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full 
                                 {{ $item['age'] > 90 ? 'bg-red-100 text-red-800' : 
                                    ($item['age'] > 60 ? 'bg-yellow-100 text-yellow-800' : 
                                    ($item['age'] > 30 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800')) }}">
@@ -172,8 +174,11 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                             @if($item['outstanding'] > 0)
-                                <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ $type === 'ap' ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer') }}')" 
-                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                                @php
+                                    $entityName = ($type === 'ap') ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer');
+                                @endphp
+                                <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ addslashes($entityName) }}')"
+                                    class="inline-flex items-center px-4 py-1.5 border border-transparent text-xs font-bold rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-sm">
                                     Bayar
                                 </button>
                             @else

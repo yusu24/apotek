@@ -93,6 +93,7 @@ class UserManagement extends Component
     public function render()
     {
         $users = User::with('roles')
+            ->where('is_developer', false)
             ->when($this->search, function($query) {
                 $query->where(function($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')

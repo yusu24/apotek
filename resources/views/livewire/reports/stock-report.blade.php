@@ -2,19 +2,19 @@
     <!-- Page Title (Web View Only) -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 no-print">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+            <h2 class="text-2xl font-bold text-gray-800">
                 {{ __('Laporan Stok & Nilai') }}
             </h2>
-            <p class="text-sm text-gray-500 font-medium">Informasi ketersediaan barang dan valuasi inventaris secara real-time.</p>
+            <p class="text-sm text-gray-500">Laporan ketersediaan stok obat and nilai inventori.</p>
         </div>
         <div class="flex gap-2">
-            <button wire:click="exportExcel" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold flex items-center justify-center gap-2 transition duration-200 text-sm" title="Export Excel">
+            <button wire:click="exportExcel" class="btn btn-export-excel">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
                 <span class="hidden sm:inline">Export Excel</span>
             </button>
-            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="btn btn-export-pdf">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
@@ -26,7 +26,7 @@
     <!-- Print Header (Simplified) -->
     <div class="hidden print:block">
         <div class="border-b-2 border-gray-900 pb-2 text-center uppercase">
-            <h1 class="text-xl font-bold text-gray-950">LAPORAN STOK</h1>
+            <h2 class="text-xl font-bold text-gray-800">LAPORAN STOK</h2>
             <div class="text-[12px] font-bold mt-1">
                 PERIODE: {{ $startExpiry ? \Carbon\Carbon::parse($startExpiry)->format('d-m-Y') : 'AWAL' }} s/d {{ $endExpiry ? \Carbon\Carbon::parse($endExpiry)->format('d-m-Y') : 'AKHIR' }}
             </div>

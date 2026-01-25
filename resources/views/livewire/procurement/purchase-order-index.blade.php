@@ -34,7 +34,8 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="p-4 border-b">
         <div class="mb-4 flex flex-row justify-between items-center gap-4">
             <div class="flex flex-col sm:flex-row items-center gap-4 flex-1 sm:flex-none">
                 <!-- Status Dropdown -->
@@ -50,24 +51,24 @@
                 </div>
 
                 <!-- Search Box -->
-                <div class="relative w-full sm:w-48">
+                <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
                     <input type="text" wire:model.live="search" placeholder="Cari No PO / Supplier..." 
-                        class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2"
-                        style="padding-left: 2.75rem !important;">
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
                 </div>
             </div>
 
             <!-- Action Button -->
             <div class="shrink-0">
                 <a href="{{ route('procurement.purchase-orders.create') }}" wire:navigate
-                    class="bg-blue-600 text-white p-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap" title="Buat Pesanan">
+                    class="btn btn-primary" title="Buat Pesanan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span class="hidden sm:inline">Buat Pesanan</span>
                 </a>
             </div>
+        </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -136,7 +137,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
+        <div class="p-4 border-t">
             {{ $orders->links() }}
         </div>
     </div>

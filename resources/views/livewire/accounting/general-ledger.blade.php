@@ -1,8 +1,10 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
-            Buku Besar (General Ledger)
-        </h2>
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">
+                Buku Besar (General Ledger)
+            </h2>
+        </div>
         <div class="flex gap-2">
             @can('export general ledger')
             <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" 
@@ -29,7 +31,7 @@
         <!-- Filter Bar -->
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center">
             <div class="w-full md:w-1/3">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Pilih Akun</label>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Pilih Akun</label>
                 <select wire:model.live="accountId" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <option value="">-- Pilih Akun --</option>
                     @foreach($accounts as $account)
@@ -39,24 +41,25 @@
             </div>
             
             <div class="w-full md:w-auto">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Dari Tanggal</label>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Dari Tanggal</label>
                 <input type="date" wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             </div>
 
             <div class="w-full md:w-auto">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Sampai Tanggal</label>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Sampai Tanggal</label>
                 <input type="date" wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             </div>
 
-            <div class="w-full md:flex-1">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Cari Transaksi</label>
+            <div class="w-full md:w-64">
+                <label class="block text-sm font-bold text-gray-700 mb-1">Cari Transaksi</label>
                 <div class="relative">
-                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari ket, no. jurnal..." class="block w-full py-2 px-3 pl-10 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                    </div>
+                    </span>
+                    <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari ket, no. jurnal..." 
+                        class="block w-full py-2 pl-10 pr-4 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
                 </div>
             </div>
         </div>

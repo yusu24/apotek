@@ -1,7 +1,7 @@
 <div class="p-6">
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
-        <div>
+        <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Laporan Margin Produk</h2>
             <p class="text-sm text-gray-500 mt-1">Analisis profitabilitas berdasarkan harga beli dan harga jual</p>
         </div>
@@ -44,9 +44,14 @@
     {{-- Filters --}}
     <div class="bg-white rounded-lg shadow p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
+            <div class="md:w-64">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cari Produk</label>
-                <input type="text" wire:model.live.debounce.300ms="search" class="w-full rounded-lg border-gray-300 text-sm py-2" placeholder="Nama atau barcode...">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input type="text" wire:model.live.debounce.300ms="search" class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2" placeholder="Nama atau barcode...">
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>

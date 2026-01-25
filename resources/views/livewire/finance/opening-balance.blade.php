@@ -89,7 +89,7 @@
                             <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Saldo Awal</label>
                             <input type="date" wire:model.live="balance_date" 
                                 {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
-                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 font-bold disabled:bg-gray-100 disabled:text-gray-500">
+                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500">
                             <p class="text-[10px] text-gray-500 mt-1 italic">Sangat disarankan: Gunakan H-1 sebelum toko mulai beroperasi di sistem ini.</p>
                             @error('balance_date') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>

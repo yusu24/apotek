@@ -1,10 +1,9 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Manajemen Aset Tetap</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Manajemen Aset Tetap</h2>
         <div class="flex space-x-2">
             <button wire:click="$set('showDepreciationModal', true)" 
-                class="btn btn-depreciation text-white" 
-                style="background-color: #d97706 !important;"
+                class="btn btn-depreciation" 
                 title="Proses Penyusutan">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="hidden sm:inline">Proses Penyusutan</span>
@@ -25,7 +24,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
                 <input wire:model.live="search" type="text" placeholder="Cari aset..." 
-                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
+                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
             </div>
             
             <button wire:click="createAsset" class="btn btn-primary shrink-0" title="Tambah Aset">
@@ -35,7 +34,7 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+                <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-normal">
                     <tr>
                         <th class="px-6 py-4 whitespace-nowrap">Kode & Nama</th>
                         <th class="px-6 py-4 whitespace-nowrap">Kelompok Pajak</th>

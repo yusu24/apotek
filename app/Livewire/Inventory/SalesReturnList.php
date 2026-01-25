@@ -188,7 +188,7 @@ class SalesReturnList extends Component
                 StockMovement::create([
                     'product_id' => $item['product_id'],
                     'batch_id' => $item['batch_id'],
-                    'type' => 'in',
+                    'type' => 'return',
                     'quantity' => $item['quantity'],
                     'reference' => $salesReturn->return_no,
                     'notes' => 'Retur Penjualan INV: ' . $this->selectedSale->invoice_no,

@@ -7,6 +7,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\GeneralLedgerExport;
 use App\Exports\AgingReportExport;
 use App\Exports\IncomeStatementExport;
+use App\Exports\SalesReportExport;
+use App\Exports\AccountsExport;
 use App\Models\Account;
 use App\Services\AccountingService;
 
@@ -83,6 +85,43 @@ class ExcelController extends Controller
 
         return Excel::download(
             new \App\Exports\TrialBalanceExport($reportData),
+            $filename
+        );
+    }
+
+    public function exportSalesReport(Request $request)
+    {
+        abort_if(!auth()->user()->can('view sales reports'), 403, 'Unauthorized');
+
+        $request->validate([
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
+        ]);
+
+        $filename = 'Laporan_Penjualan_' . $request->startDate . '_to_' . $request->endDate . '.xlsx';
+
+        return Excel::download(
+            new SalesReportExport(
+                $request->startDate,
+                $request->endDate,
+                $request->paymentMethod ?? 'all',
+                $request->search ?? ''
+            ),
+            $filename
+        );
+    }
+
+    public function exportAccounts(Request $request)
+    {
+        abort_if(!auth()->user()->can('view accounts'), 403, 'Unauthorized');
+
+        $filename = 'Daftar_Akun_' . date('Ymd_His') . '.xlsx';
+
+        return Excel::download(
+            new AccountsExport(
+                $request->search ?? '',
+                $request->typeFilter ?? ''
+            ),
             $filename
         );
     }

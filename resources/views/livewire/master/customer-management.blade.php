@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">Kelola Pelanggan</h1>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white leading-tight">Kelola Pelanggan</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daftar pelanggan / pasien terdaftar.</p>
             </div>
             
@@ -22,18 +22,18 @@
         @endif
 
         <!-- Card Container -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col flex-1 min-h-0">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col flex-1 min-h-0">
             <!-- Search Bar -->
-            <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex flex-row items-center justify-between gap-3">
+            <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex flex-row items-center justify-between gap-3">
                 <div class="relative w-full md:w-64">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" wire:model.live="search" class="block w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition dark:text-white" placeholder="Cari nama atau telepon...">
+                    <input type="text" wire:model.live="search" class="block w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition dark:text-white" placeholder="Cari nama atau telepon...">
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <button wire:click="exportExcel" class="px-3 md:px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Export Excel">
+                    <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
@@ -42,7 +42,7 @@
 
                     @can('import customers')
                     <div x-data="{ showImport: false }" class="relative">
-                        <button @click="showImport = !showImport" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0" title="Import Excel">
+                        <button @click="showImport = !showImport" class="btn btn-import" title="Import Excel">
                             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                             <span class="hidden sm:inline">Import Excel</span>
                         </button>
@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="flex justify-between items-center pt-2">
                                         <a href="{{ route('import.download-customer-template') }}" class="text-xs text-blue-600 hover:underline dark:text-blue-400">Download Template</a>
-                                        <button type="submit" class="bg-green-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-green-700 transition">Import Sekarang</button>
+                                        <button type="submit" class="btn btn-import btn-sm">Import Sekarang</button>
                                     </div>
                                 </div>
                             </form>
@@ -66,7 +66,7 @@
                     @endcan
 
                     @can('create customers')
-                    <button wire:click="openModal" class="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm shrink-0" title="Tambah Pelanggan">
+                    <button wire:click="openModal" class="btn btn-primary" title="Tambah Pelanggan">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         <span class="hidden sm:inline">Tambah Pelanggan</span>
                     </button>

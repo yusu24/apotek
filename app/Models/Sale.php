@@ -53,6 +53,11 @@ class Sale extends Model
         return $this->hasOne(\App\Models\Receivable::class);
     }
     
+    public function salesReturns()
+    {
+        return $this->hasMany(\App\Models\SalesReturn::class);
+    }
+
     public function journalEntries()
     {
         return \App\Models\JournalEntry::where('source', 'sale')->where('source_id', $this->id);

@@ -58,6 +58,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::get('/import/download-expense-category-template', 'downloadExpenseCategoryTemplate')->name('import.download-expense-category-template');
         Route::post('/import/expense-categories', 'importExpenseCategories')->name('import.expense-categories');
+        
+        Route::get('/import/download-category-template', 'downloadCategoryTemplate')->name('import.download-category-template');
+        Route::post('/import/categories', 'importCategories')->name('import.categories');
     });
 
 
@@ -134,12 +137,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/product-margin', [App\Http\Controllers\PdfController::class, 'exportProductMarginReport'])->name('pdf.product-margin');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');
     Route::get('/pdf/trial-balance', [App\Http\Controllers\PdfController::class, 'exportTrialBalance'])->name('pdf.trial-balance');
+    Route::get('/pdf/purchase-order/{id}', [App\Http\Controllers\PdfController::class, 'exportPurchaseOrder'])->name('pdf.purchase-order');
+    Route::get('/pdf/purchase-order-a4/{id}', [App\Http\Controllers\PdfController::class, 'exportPurchaseOrderA4'])->name('pdf.purchase-order-a4');
+    Route::get('/pdf/purchase-order-ncr/{id}', [App\Http\Controllers\PdfController::class, 'exportPurchaseOrderNCR'])->name('pdf.purchase-order-ncr');
 
     // Excel Exports
     Route::get('/excel/aging-report', [App\Http\Controllers\ExcelController::class, 'exportAgingReport'])->name('excel.aging-report');
     Route::get('/excel/general-ledger', [App\Http\Controllers\ExcelController::class, 'exportGeneralLedger'])->name('excel.general-ledger');
     Route::get('/excel/income-statement', [App\Http\Controllers\ExcelController::class, 'exportIncomeStatement'])->name('excel.income-statement');
     Route::get('/excel/trial-balance', [App\Http\Controllers\ExcelController::class, 'exportTrialBalance'])->name('excel.trial-balance');
+    Route::get('/excel/sales-report', [App\Http\Controllers\ExcelController::class, 'exportSalesReport'])->name('excel.sales-report');
+    Route::get('/excel/accounts', [App\Http\Controllers\ExcelController::class, 'exportAccounts'])->name('excel.accounts');
 
 
     // Settings (Super Admin only)

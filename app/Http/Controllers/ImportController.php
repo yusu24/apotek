@@ -9,11 +9,13 @@ use App\Imports\SuppliersImport;
 use App\Imports\StockImport;
 use App\Imports\CustomersImport;
 use App\Imports\AccountsImport;
+use App\Imports\CategoriesImport;
 use App\Exports\ProductTemplateExport;
 use App\Exports\SupplierTemplateExport;
 use App\Exports\StockTemplateExport;
 use App\Exports\CustomerTemplateExport;
 use App\Exports\AccountTemplateExport;
+use App\Exports\CategoryTemplateExport;
 
 class ImportController extends Controller
 {
@@ -191,6 +193,27 @@ class ImportController extends Controller
         try {
             Excel::import(new \App\Imports\ExpenseCategoriesImport, $request->file('file'));
             return redirect()->back()->with('message', 'Kategori Pengeluaran berhasil diimport!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
+        }
+    }
+
+    public function downloadCategoryTemplate()
+    {
+        abort_if(!auth()->user()->can('manage categories'), 403);
+        return Excel::download(new CategoryTemplateExport, 'template_kategori.xlsx');
+    }
+
+    public function importCategories(Request $request)
+    {
+        abort_if(!auth()->user()->can('manage categories'), 403);
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        try {
+            Excel::import(new CategoriesImport, $request->file('file'));
+            return redirect()->back()->with('message', 'Kategori berhasil diimport!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
         }

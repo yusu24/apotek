@@ -181,9 +181,14 @@ class UserForm extends Component
             
             // Check direct permissions
             foreach (array_keys($this->menu_permissions) as $perm) {
-                // Ensure permission exists in DB to avoid errors, although we assume they do
-                // For safety we can use check
-                $this->menu_permissions[$perm] = $user->hasDirectPermission($perm);
+                // Ensure permission exists in DB to avoid errors
+                try {
+                    $this->menu_permissions[$perm] = $user->hasDirectPermission($perm);
+                } catch (\Spatie\Permission\Exceptions\PermissionDoesNotExist $e) {
+                    // Permission doesn't exist in DB yet, default to false
+                    $this->menu_permissions[$perm] = false;
+                    \Log::warning("Permission '{$perm}' not found in database for guard 'web'");
+                }
             }
         }
     }
@@ -244,10 +249,15 @@ class UserForm extends Component
         // Manage Direct Permissions
         if ($this->role_name !== 'super-admin') {
             foreach ($this->menu_permissions as $perm => $enabled) {
-                if ($enabled) {
-                    $user->givePermissionTo($perm);
-                } else {
-                    $user->revokePermissionTo($perm);
+                try {
+                    if ($enabled) {
+                        $user->givePermissionTo($perm);
+                    } else {
+                        $user->revokePermissionTo($perm);
+                    }
+                } catch (\Spatie\Permission\Exceptions\PermissionDoesNotExist $e) {
+                    // Permission doesn't exist, skip it
+                    \Log::warning("Cannot assign permission '{$perm}' - not found in database");
                 }
             }
         } else {

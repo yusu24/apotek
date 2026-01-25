@@ -42,9 +42,11 @@ class AddFinancialPermissionSeeder extends Seeder
             ]);
         }
 
-        // 3. Clear Cache
-        if (app()->bound(\Spatie\Permission\PermissionRegistrar::class)) {
-            app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        // 3. Clear Permission Cache manually
+        try {
+            \Illuminate\Support\Facades\Cache::forget('spatie.permission.cache');
+        } catch (\Exception $e) {
+            // Ignore cache errors
         }
 
         $this->command->info("Successfully ensured '$permissionName' exists and is assigned to Admin roles.");

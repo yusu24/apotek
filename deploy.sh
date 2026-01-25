@@ -24,6 +24,9 @@ npm run build
 echo "Running database migrations..."
 php artisan migrate --force
 
+echo "Resetting permission cache..."
+php artisan permission:cache-reset
+
 echo "Clearing and optimizing Laravel caches..."
 php artisan optimize:clear
 php artisan config:cache

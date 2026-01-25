@@ -21,6 +21,9 @@ echo "Building assets with Vite..."
 npm run build
 
 # 4. Clear and Optimize Laravel
+echo "Running database migrations..."
+php artisan migrate --force
+
 echo "Clearing and optimizing Laravel caches..."
 php artisan optimize:clear
 php artisan config:cache

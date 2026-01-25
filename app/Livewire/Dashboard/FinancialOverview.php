@@ -20,12 +20,22 @@ class FinancialOverview extends Component
     public function mount()
     {
         // 1. Permission Check
-        if (!auth()->user()->can('view financial overview')) {
+        if (!$this->hasFinancialPermission()) {
             return;
         }
 
         $this->calculateTotals();
         $this->fetchTopDueItems();
+    }
+
+    protected function hasFinancialPermission()
+    {
+        try {
+            return auth()->check() && auth()->user()->can('view financial overview');
+        } catch (\Exception $e) {
+            // If permission doesn't exist in DB, it throws PermissionDoesNotExist
+            return false;
+        }
     }
 
     public function calculateTotals()
@@ -80,7 +90,7 @@ class FinancialOverview extends Component
     public function render()
     {
         // If user doesn't have permission, we can render an empty view or check in blade
-        if (!auth()->user()->can('view financial overview')) {
+        if (!$this->hasFinancialPermission()) {
              return view('livewire.dashboard.empty-state'); 
              // Or simply return a div that says nothing, but since it's used inside dashboard
              // we'll handle the UI hiding in the parent or verify permission in blade

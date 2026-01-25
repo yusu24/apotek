@@ -13,21 +13,40 @@ class AddFinancialPermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Define the new permission
         $permissionName = 'view financial overview';
+        $guardName = 'web';
 
-        // Create permission if it doesn't exist
-        $permission = Permission::firstOrCreate(['name' => $permissionName]);
+        // 1. Ensure permission exists (Raw DB for maximum reliability)
+        $permission = \DB::table('permissions')
+            ->where('name', $permissionName)
+            ->where('guard_name', $guardName)
+            ->first();
 
-        // Assign to Super Admin and Admin roles
-        $roles = ['Super Admin', 'Admin'];
-
-        foreach ($roles as $roleName) {
-            $role = Role::firstOrCreate(['name' => $roleName]);
-            if (!$role->hasPermissionTo($permissionName)) {
-                $role->givePermissionTo($permissionName);
-                $this->command->info("Granted '$permissionName' to '$roleName'");
-            }
+        if (!$permission) {
+            $permissionId = \DB::table('permissions')->insertGetId([
+                'name' => $permissionName,
+                'guard_name' => $guardName,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } else {
+            $permissionId = $permission->id;
         }
+
+        // 2. Assign to roles
+        $roles = \DB::table('roles')->whereIn('name', ['Super Admin', 'Admin'])->get();
+        foreach ($roles as $role) {
+            \DB::table('role_has_permissions')->insertOrIgnore([
+                'permission_id' => $permissionId,
+                'role_id' => $role->id,
+            ]);
+        }
+
+        // 3. Clear Cache
+        if (app()->bound(\Spatie\Permission\PermissionRegistrar::class)) {
+            app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        }
+
+        $this->command->info("Successfully ensured '$permissionName' exists and is assigned to Admin roles.");
     }
 }

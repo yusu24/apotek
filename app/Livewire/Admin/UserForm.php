@@ -248,18 +248,23 @@ class UserForm extends Component
 
         // Manage Direct Permissions
         if ($this->role_name !== 'super-admin') {
-            foreach ($this->menu_permissions as $perm => $enabled) {
+            // Get only enabled permissions
+            $enabledPermissions = array_keys(array_filter($this->menu_permissions, fn($enabled) => $enabled === true));
+            
+            // Filter out permissions that don't exist in database
+            $validPermissions = [];
+            foreach ($enabledPermissions as $perm) {
                 try {
-                    if ($enabled) {
-                        $user->givePermissionTo($perm);
-                    } else {
-                        $user->revokePermissionTo($perm);
-                    }
+                    // Check if permission exists
+                    \Spatie\Permission\Models\Permission::findByName($perm, 'web');
+                    $validPermissions[] = $perm;
                 } catch (\Spatie\Permission\Exceptions\PermissionDoesNotExist $e) {
-                    // Permission doesn't exist, skip it
                     \Log::warning("Cannot assign permission '{$perm}' - not found in database");
                 }
             }
+            
+            // Sync permissions (this will add new ones and remove unchecked ones)
+            $user->syncPermissions($validPermissions);
         } else {
             // Clear direct permissions for super-admin to keep it clean
             $user->syncPermissions([]);

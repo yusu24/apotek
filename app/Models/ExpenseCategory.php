@@ -15,6 +15,12 @@ class ExpenseCategory extends Model
         'is_active' => 'boolean',
     ];
 
+    // Auto-format name to Title Case
+    protected function setNameAttribute($value)
+    {
+        $this->attributes['name'] = \Illuminate\Support\Str::title($value);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

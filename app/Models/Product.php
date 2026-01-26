@@ -19,6 +19,12 @@ class Product extends Model
         'sell_price' => 'float',
     ];
 
+    // Auto-format name to Title Case
+    protected function setNameAttribute($value)
+    {
+        $this->attributes['name'] = \Illuminate\Support\Str::title($value);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

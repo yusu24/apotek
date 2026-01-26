@@ -11,6 +11,12 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug'];
 
+    // Auto-format name to Title Case
+    protected function setNameAttribute($value)
+    {
+        $this->attributes['name'] = \Illuminate\Support\Str::title($value);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

@@ -21,6 +21,12 @@ class AccountingCategory extends Model
         'is_active' => 'boolean',
     ];
 
+    // Auto-format name to Title Case
+    protected function setNameAttribute($value)
+    {
+        $this->attributes['name'] = \Illuminate\Support\Str::title($value);
+    }
+
     // Scope for active categories
     public function scopeActive($query)
     {

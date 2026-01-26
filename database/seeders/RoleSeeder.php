@@ -62,6 +62,7 @@ class RoleSeeder extends Seeder
             'adjust stock',
             'view stock movements',
             'manage expired products',
+            'import stock',
             
             // Purchasing / Procurement
             'manage purchasing',

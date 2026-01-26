@@ -29,6 +29,14 @@
             <div x-init="showAlertFn('{{ session('success') }}')" class="hidden"></div>
         @endif
 
+        @if (session()->has('email_sent'))
+            <div x-init="showAlertFn('📧 {{ session('email_sent') }}')" class="hidden"></div>
+        @endif
+
+        @if (session()->has('email_error'))
+            <div x-init="showAlertFn('❌ {{ session('email_error') }}')" class="hidden"></div>
+        @endif
+
     <!-- Zoom Image Modal -->
     <div x-data="{ 
         zoomImage: null,
@@ -580,28 +588,51 @@
                         </div>
                     @endif
 
-                    <!-- Email Receipt Checkbox -->
-                    @php
-                        $customer = $selectedCustomerId ? \App\Models\Customer::find($selectedCustomerId) : null;
-                        $hasEmail = $customer && !empty($customer->email);
-                    @endphp
-                    @if($hasEmail)
+                    <!-- SECTION: DIGITAL RECEIPT (EMAIL) -->
                     <div class="bg-green-50 border border-green-200 rounded-xl p-4">
-                        <div class="flex items-center gap-3">
-                            <input type="checkbox" 
-                                   id="sendEmail" 
-                                   wire:model.live="sendEmail"
-                                   class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                            <label for="sendEmail" class="text-sm font-bold text-green-900 cursor-pointer flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-sm font-bold text-green-900 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 Kirim Struk via Email
                             </label>
+                            
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" 
+                                       id="sendEmailMain" 
+                                       wire:model.live="sendEmail"
+                                       class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer">
+                                <label for="sendEmailMain" class="text-xs font-bold text-green-800 cursor-pointer">Aktifkan</label>
+                            </div>
                         </div>
-                        <p class="text-xs text-green-700 mt-2 ml-7">Struk akan dikirim ke: <span class="font-bold">{{ $customer->email }}</span></p>
-                    </div>
-                    @endif
 
-                    <!-- Patient Information Section -->
+                        <div class="relative">
+                            <input type="email" 
+                                wire:model.live.debounce.500ms="patientEmail"
+                                class="w-full text-sm border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-white/50"
+                                placeholder="Masukkan email penerima...">
+                            
+                            @if($selectedCustomerId)
+                                @php
+                                    $cust = \App\Models\Customer::find($selectedCustomerId);
+                                @endphp
+                                @if($cust && $cust->email)
+                                    <div class="mt-2 flex items-center gap-1">
+                                        <span class="text-[10px] text-gray-500">Email Member:</span>
+                                        <button type="button" 
+                                            wire:click="$set('patientEmail', '{{ $cust->email }}')"
+                                            class="text-[10px] font-bold text-blue-600 hover:underline">
+                                            {{ $cust->email }}
+                                        </button>
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                        <p class="text-[10px] text-green-700 mt-1.5">*Struk PDF akan otomatis dikirim setelah pembayaran selesai.</p>
+                    </div>
+
+
+
+                    <!-- Patient Information Section (Now without Email) -->
                     @if($payment_method !== 'tempo')
                     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4" x-data="{ showPatient: @entangle('includePatientInfo').live }">
                         <div class="flex items-center gap-3 mb-3">
@@ -610,7 +641,7 @@
                                    wire:model.live="includePatientInfo"
                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                             <label for="includePatient" class="text-sm font-bold text-blue-900 cursor-pointer">
-                                Tambahkan Data Pasien
+                                Tambahkan Data Pasien / Dokter
                             </label>
                         </div>
                         
@@ -659,18 +690,11 @@
                                               class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                                               placeholder="Alamat lengkap pasien"></textarea>
                                 </div>
-                                
-                                <div class="col-span-2">
-                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Email (Opsional)</label>
-                                    <input type="email" 
-                                           wire:model="patientEmail"
-                                           class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                           placeholder="email@example.com">
-                                </div>
                             </div>
                         </div>
                     </div>
                     @endif
+
 
                     <!-- Cash Input (Only for Cash) -->
                     @if($payment_method == 'cash')

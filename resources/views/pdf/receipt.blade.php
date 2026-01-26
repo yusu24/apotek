@@ -2,15 +2,15 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Struk Transaksi</title>
     <style>
         body {
             font-family: sans-serif;
             font-size: 11px;
-            width: 58mm;
-            margin: 0 auto;
-            padding: 10px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
             color: #000;
         }
         .text-center { text-align: center; }
@@ -23,10 +23,6 @@
         .header { margin-bottom: 10px; }
         .shop-name { font-size: 14px; font-weight: bold; text-transform: uppercase; }
         .meta { font-size: 10px; margin: 5px 0; }
-        @media print { 
-            .no-print { display: none; }
-            body { width: 58mm; }
-        }
     </style>
 </head>
 <body>
@@ -177,19 +173,5 @@
         Terima Kasih atas Kunjungan Anda<br>
         Semoga Lekas Sembuh
     </div>
-
-    <div class="no-print" style="margin-top: 20px; text-align: center;">
-        <button onclick="window.print()" style="width: 100%; padding: 12px; margin-bottom: 10px; background: #000; color: #fff; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">📄 CETAK STRUK</button>
-        <button onclick="window.location.href='{{ route('pos.cashier') }}'" style="width: 100%; padding: 12px; background: #ddd; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">← KEMBALI KE KASIR</button>
-    </div>
-
-    <script>
-        // Auto-print dengan delay
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.print();
-            }, 1000);
-        });
-    </script>
 </body>
 </html>

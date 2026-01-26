@@ -130,6 +130,21 @@ class Cashier extends Component
 
     // Email Receipt
     public $sendEmail = false;
+    public $sendWA = false;
+
+    public function updatedPatientEmail()
+    {
+        if (!empty($this->patientEmail)) {
+            $this->sendEmail = true;
+        }
+    }
+
+    public function updatedPatientPhone()
+    {
+        if (!empty($this->patientPhone)) {
+            $this->sendWA = true;
+        }
+    }
 
 
     public function loadPendingOrders()
@@ -761,6 +776,11 @@ class Cashier extends Component
         $this->calculateTotal();
     }
 
+    public function updatedCashAmount()
+    {
+        $this->calculateChange();
+    }
+
     public function calculateChange()
     {
         if ((float)$this->cash_amount >= (float)$this->grand_total) {
@@ -806,6 +826,13 @@ class Cashier extends Component
 
     public function processPayment($status = 'completed')
     {
+        \Log::info('ProcessPayment Start State:', [
+            'sendWA' => $this->sendWA,
+            'patientPhone' => $this->patientPhone,
+            'sendEmail' => $this->sendEmail,
+            'patientEmail' => $this->patientEmail,
+        ]);
+
         if (!$this->validateStock()) {
             return;
         }
@@ -959,13 +986,6 @@ class Cashier extends Component
                 'new_values' => $sale->toArray()
             ]);
 
-            $this->showPaymentModal = false;
-            $this->cart = [];
-            $this->resetCustomer();
-            $this->resetPatientInfo();
-            $this->calculateTotal();
-            $this->generateInvoiceNo(); // Generate new invoice for next order
-
             // 11. Accounting Integration
             try {
                 $accountingService = new \App\Services\AccountingService();
@@ -975,19 +995,45 @@ class Cashier extends Component
             }
 
             // 12. Send Email Receipt if requested
-            if ($this->sendEmail && $this->selectedCustomerId) {
+            if ($this->sendEmail) {
                 try {
-                    $customer = \App\Models\Customer::find($this->selectedCustomerId);
-                    if ($customer && $customer->email) {
-                        \Illuminate\Support\Facades\Mail::to($customer->email)
+                    $recipientEmail = null;
+                    
+                    // Priority 1: Manual Email Input (Now decoupled from includePatientInfo)
+                    if (!empty($this->patientEmail)) {
+                        $recipientEmail = $this->patientEmail;
+                    } 
+                    // Priority 2: Registered Customer Email
+                    elseif ($this->selectedCustomerId) {
+                        $customer = \App\Models\Customer::find($this->selectedCustomerId);
+                        if ($customer && $customer->email) {
+                            $recipientEmail = $customer->email;
+                        }
+                    }
+
+                    if ($recipientEmail) {
+                        // Ensure relations are loaded for the PDF
+                        $sale->load(['saleItems.product', 'user', 'customer']);
+                        
+                        \Illuminate\Support\Facades\Mail::to($recipientEmail)
                             ->send(new \App\Mail\ReceiptMail($sale));
-                        \Log::info('Receipt email sent to ' . $customer->email . ' for ' . $sale->invoice_no);
+                            
+                        \Log::info('Receipt email sent to ' . $recipientEmail . ' for ' . $sale->invoice_no);
+                        session()->flash('email_sent', "Struk berhasil dikirim ke: $recipientEmail");
                     }
                 } catch (\Exception $e) {
                     \Log::error('Failed to send receipt email: ' . $e->getMessage());
-                    // Don't fail the transaction if email fails
+                    session()->flash('email_error', "Gagal kirim email: " . $e->getMessage());
                 }
             }
+
+            // 13. State Reset (Moved to the end)
+            $this->showPaymentModal = false;
+            $this->cart = [];
+            $this->resetCustomer();
+            $this->resetPatientInfo();
+            $this->calculateTotal();
+            $this->generateInvoiceNo(); 
 
             if ($status === 'pending') {
                  $this->dispatch('cart-updated', message: 'Pesanan berhasil disimpan ke Pending list.');

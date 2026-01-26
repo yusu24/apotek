@@ -44,9 +44,6 @@ class ReceiptMail extends Mailable
             view: 'emails.receipt',
             with: [
                 'sale' => $this->sale,
-                'invoiceNo' => $this->sale->invoice_no,
-                'total' => number_format($this->sale->grand_total, 0, ',', '.'),
-                'date' => $this->sale->date->format('d/m/Y H:i'),
             ],
         );
     }

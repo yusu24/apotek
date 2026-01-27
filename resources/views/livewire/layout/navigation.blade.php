@@ -54,7 +54,7 @@ new class extends Component
             @endcan
 
             <!-- Inventory & Procurement Group -->
-            @canany(['view stock', 'adjust stock', 'view purchase orders', 'view goods receipts'])
+            @canany(['view stock', 'import stock', 'adjust stock', 'view purchase orders', 'view goods receipts', 'manage expired products'])
             @php
                 $isStockActive = (request()->routeIs('inventory.*') || request()->routeIs('procurement.*')) && !request()->routeIs('inventory.returns.*');
             @endphp
@@ -120,7 +120,7 @@ new class extends Component
             @endcanany
 
             <!-- Products Group (Master Data) -->
-            @canany(['view products', 'manage categories', 'manage product units', 'manage suppliers'])
+            @canany(['view products', 'manage categories', 'manage units', 'manage product units', 'manage suppliers', 'manage customers'])
             <div x-data="{ expanded: {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'true' : 'false' }} }">
                 <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'text-white' : 'text-gray-400' }}">
                     <div class="flex items-center gap-3">
@@ -251,7 +251,7 @@ new class extends Component
             @endcanany
 
             <!-- Group: Laporan Operasional -->
-            @canany(['view sales reports', 'view stock', 'view stock movements'])
+            @canany(['view reports', 'view sales reports', 'view stock', 'view product margin report', 'view stock movements'])
             @php
                 $isOperationalReportActive = request()->routeIs('reports.*') && !request()->routeIs(['finance.*', 'accounting.*']);
             @endphp
@@ -296,7 +296,7 @@ new class extends Component
             @endcanany
 
             <!-- Group: Keuangan & Administrasi -->
-            @canany(['view accounts', 'view journals', 'manage opening balances', 'view expenses', 'manage expense categories', 'view reports'])
+            @canany(['view accounts', 'manage accounts', 'view journals', 'view opening balances', 'edit opening balances', 'lock opening balances', 'unlock opening balances', 'view expenses', 'manage expense categories', 'manage finance'])
             @php
                 $isFinanceActive = request()->routeIs([
                                      'finance.opening-balance', 

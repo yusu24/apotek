@@ -28,8 +28,7 @@ class UserForm extends Component
                 'icon' => 'home',
                 'color' => 'blue',
                 'items' => [
-                    'view dashboard' => ['label' => 'Halaman Dashboard', 'type' => 'view'],
-                    'view financial overview' => ['label' => 'Ringkasan Keuangan (Hutang/Piutang)', 'type' => 'view'],
+                    'view dashboard' => ['label' => 'Halaman Dashboard (Utama)', 'type' => 'view'],
                 ]
             ],
             'Kasir (POS)' => [
@@ -37,8 +36,6 @@ class UserForm extends Component
                 'color' => 'purple',
                 'items' => [
                     'access pos' => ['label' => 'Akses Mesin Kasir', 'type' => 'view'],
-                    'create sale' => ['label' => 'Input Penjualan', 'type' => 'action'], // Core action of POS
-                    'void transaction' => ['label' => 'Batalkan Transaksi', 'type' => 'action'], // Critical action
                     'view sales history' => ['label' => 'Riwayat Penjualan (Kasir)', 'type' => 'view'],
                 ]
             ],
@@ -52,7 +49,6 @@ class UserForm extends Component
                     'view stock movements' => ['label' => 'Riwayat Mutasi Stok', 'type' => 'view'],
                     'view purchase orders' => ['label' => 'Pesanan Pembelian (PO)', 'type' => 'view'],
                     'view goods receipts' => ['label' => 'Penerimaan Pesanan', 'type' => 'view'],
-                    'manage expired products' => ['label' => 'Kelola Produk Kadaluarsa', 'type' => 'view'], // Menu access
                 ]
             ],
             'Retur Barang' => [
@@ -76,7 +72,6 @@ class UserForm extends Component
                     'manage product units' => ['label' => 'Konversi Satuan', 'type' => 'view'], // Menu access
                     'manage suppliers' => ['label' => 'Supplier', 'type' => 'view'], // Menu access
                     'manage customers' => ['label' => 'Pelanggan', 'type' => 'view'], // Menu access
-                    'import_master_data' => ['label' => 'Import Excel Master Data (Produk/Supplier/Pelanggan)', 'type' => 'action'],
                 ]
             ],
             'Laporan Keuangan' => [
@@ -96,7 +91,6 @@ class UserForm extends Component
                 'icon' => 'clipboard-list',
                 'color' => 'teal',
                 'items' => [
-                    'view reports' => ['label' => 'Akses Menu Laporan', 'type' => 'view'],
                     'view sales reports' => ['label' => 'Laporan Penjualan Detail', 'type' => 'view'],
                     'view stock' => ['label' => 'Laporan Stok', 'type' => 'view'], 
                     'view product margin report' => ['label' => 'Laporan Margin Produk', 'type' => 'view'],
@@ -108,7 +102,6 @@ class UserForm extends Component
                 'color' => 'cyan',
                 'items' => [
                     'view accounts' => ['label' => 'Daftar Akun (COA)', 'type' => 'view'],
-                    'manage accounts' => ['label' => 'Kelola Akun', 'type' => 'action'], // Usually a critical action page
                     'view journals' => ['label' => 'Lihat Jurnal Umum', 'type' => 'view'],
                     'create journal' => ['label' => 'Input Jurnal Manual', 'type' => 'action'],
                     'edit journals' => ['label' => 'Edit Jurnal Draft', 'type' => 'action'],
@@ -119,7 +112,6 @@ class UserForm extends Component
                     'unlock opening balances' => ['label' => 'Buka Kunci Neraca Awal', 'type' => 'action'],
                     'view expenses' => ['label' => 'Daftar Pengeluaran', 'type' => 'view'],
                     'manage expense categories' => ['label' => 'Kategori Pengeluaran', 'type' => 'view'], // Menu access
-                    'manage finance' => ['label' => 'Manajemen Aset Tetap', 'type' => 'view'], // Menu access
                 ]
             ],
             'Pengaturan Sistem' => [

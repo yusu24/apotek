@@ -20,7 +20,6 @@ class RoleSeeder extends Seeder
         $permissions = [
             // Dashboard & Reports
             'view dashboard',
-            'view reports',
             'view sales reports',
             'view profit loss',
             'view balance sheet',
@@ -46,8 +45,6 @@ class RoleSeeder extends Seeder
             'view suppliers',
             'manage suppliers',
             'manage product units',
-            'manage suppliers',
-            'manage product units',
             'upload product images',
             'view customers',
             'create customers',
@@ -61,7 +58,6 @@ class RoleSeeder extends Seeder
             'view stock',
             'adjust stock',
             'view stock movements',
-            'manage expired products',
             'import stock',
             
             // Purchasing / Procurement
@@ -75,8 +71,6 @@ class RoleSeeder extends Seeder
             
             // POS & Sales
             'access pos',
-            'create sale',
-            'void transaction',
             'view sales history',
             
             // Returns
@@ -103,7 +97,6 @@ class RoleSeeder extends Seeder
 
             // Accounting
             'view accounts',
-            'manage accounts',
             'create journal',
             'view general ledger',
             'export general ledger',
@@ -125,7 +118,6 @@ class RoleSeeder extends Seeder
             'manage purchase returns',
             'view trial balance',
             'export aging report',
-            'import_master_data',
         ];
 
         foreach ($permissions as $permission) {
@@ -142,13 +134,7 @@ class RoleSeeder extends Seeder
         $roleAdmin->syncPermissions([]);
 
         $roleKasir = Role::firstOrCreate(['name' => 'kasir']);
-        $roleKasir->syncPermissions([
-            'access pos',
-            'create sale',
-            'view stock',
-            'view sales history',
-            'view dashboard',
-        ]);
+        $roleKasir->syncPermissions([]);
 
         $roleGudang = Role::firstOrCreate(['name' => 'gudang']);
         $roleGudang->syncPermissions([]);

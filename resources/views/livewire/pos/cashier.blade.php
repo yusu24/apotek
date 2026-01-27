@@ -3,14 +3,16 @@
         showAlert: false, 
         mobileCartOpen: false,
         alertMsg: '',
-        showAlertFn(msg) {
+        alertType: 'error',
+        showAlertFn(msg, type = 'error') {
             this.alertMsg = msg;
+            this.alertType = type;
             this.showAlert = true;
             setTimeout(() => this.showAlert = false, 3000);
         }
      }" 
-     @cart-error.window="showAlertFn($event.detail.message)"
-     @cart-updated.window="showAlertFn($event.detail.message)">
+     @cart-error.window="showAlertFn($event.detail.message, 'error')"
+     @cart-updated.window="showAlertFn($event.detail.message, 'success')">
     <!-- Notification -->
     <div>
         
@@ -19,8 +21,14 @@
              x-transition:enter-start="opacity-0 -translate-y-4"
              x-transition:enter-end="opacity-100 translate-y-0"
              class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm">
-            <div class="bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <div :class="alertType === 'success' ? 'bg-blue-600' : 'bg-red-500'" 
+                 class="text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
+                <template x-if="alertType === 'success'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                </template>
+                <template x-if="alertType === 'error'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </template>
                 <p class="text-sm font-bold" x-text="alertMsg"></p>
             </div>
         </div>
@@ -30,11 +38,11 @@
         @endif
 
         @if (session()->has('email_sent'))
-            <div x-init="showAlertFn('📧 {{ session('email_sent') }}')" class="hidden"></div>
+            <div x-init="showAlertFn('{{ session('email_sent') }}', 'success')" class="hidden"></div>
         @endif
 
         @if (session()->has('email_error'))
-            <div x-init="showAlertFn('❌ {{ session('email_error') }}')" class="hidden"></div>
+            <div x-init="showAlertFn('{{ session('email_error') }}', 'error')" class="hidden"></div>
         @endif
 
     <!-- Zoom Image Modal -->
@@ -461,13 +469,13 @@
     <div class="fixed inset-0 z-[60] overflow-y-auto">
         <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
         <div class="flex min-h-full items-center justify-center p-4">
-            <form wire:submit.prevent="processPayment" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <form wire:submit.prevent="processPayment" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm">
                 
                 <!-- Modal Header -->
-                <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">Proses Pembayaran</h3>
-                        <p class="text-sm text-gray-500 mt-1">Selesaikan transaksi</p>
+                        <h3 class="text-lg font-bold text-gray-900">Proses Pembayaran</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Selesaikan transaksi</p>
                     </div>
                     <button type="button" wire:click="$set('showPaymentModal', false)" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -475,13 +483,13 @@
                 </div>
                 
                 <!-- Modal Body -->
-                <div class="p-6 space-y-6">
+                <div class="p-4 space-y-4">
 
 
                     <!-- Total Display -->
-                    <div class="text-center p-6 bg-gray-900 rounded-xl">
-                        <p class="text-sm text-gray-400 mb-2">Total Akhir</p>
-                        <p class="text-4xl font-bold text-white">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
+                    <div class="text-center p-4 bg-gray-900 rounded-xl">
+                        <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-bold">Total Akhir</p>
+                        <p class="text-3xl font-bold text-white">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
                     </div>
 
                     @error('checkout')
@@ -492,18 +500,18 @@
                     @enderror
 
                     <!-- Payment Method -->
-                    <div class="grid grid-cols-3 gap-3">
+                    <div class="grid grid-cols-3 gap-2">
                         <button type="button" wire:click="$set('payment_method', 'cash')" 
-                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'cash' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
-                            <span class="text-xl">💵</span> Tunai
+                            class="p-2 border-2 rounded-xl font-semibold transition-all text-[11px] flex flex-col items-center gap-1 {{ $payment_method == 'cash' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-lg">💵</span> Tunai
                         </button>
                         <button type="button" wire:click="$set('payment_method', 'qris')" 
-                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'qris' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
-                            <span class="text-xl">📱</span> QRIS
+                            class="p-2 border-2 rounded-xl font-semibold transition-all text-[11px] flex flex-col items-center gap-1 {{ $payment_method == 'qris' ? 'border-blue-600 bg-blue-50 text-blue-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-lg">📱</span> QRIS
                         </button>
                         <button type="button" wire:click="$set('payment_method', 'tempo')" 
-                            class="p-3 border-2 rounded-xl font-semibold transition-all text-sm flex flex-col items-center gap-1 {{ $payment_method == 'tempo' ? 'border-amber-600 bg-amber-50 text-amber-600' : 'border-gray-200 hover:border-gray-300' }}">
-                            <span class="text-xl">📅</span> Tempo
+                            class="p-2 border-2 rounded-xl font-semibold transition-all text-[11px] flex flex-col items-center gap-1 {{ $payment_method == 'tempo' ? 'border-amber-600 bg-amber-50 text-amber-600' : 'border-gray-200 hover:border-gray-300' }}">
+                            <span class="text-lg">📅</span> Tempo
                         </button>
                     </div>
 
@@ -589,10 +597,10 @@
                     @endif
 
                     <!-- SECTION: DIGITAL RECEIPT (EMAIL) -->
-                    <div class="bg-green-50 border border-green-200 rounded-xl p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="text-sm font-bold text-green-900 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-3">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-[11px] font-bold text-green-900 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 v10a2 2 0 002 2z"></path></svg>
                                 Kirim Struk via Email
                             </label>
                             
@@ -600,15 +608,15 @@
                                 <input type="checkbox" 
                                        id="sendEmailMain" 
                                        wire:model.live="sendEmail"
-                                       class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer">
-                                <label for="sendEmailMain" class="text-xs font-bold text-green-800 cursor-pointer">Aktifkan</label>
+                                       class="w-3.5 h-3.5 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer">
+                                <label for="sendEmailMain" class="text-[10px] font-bold text-green-800 cursor-pointer">Aktif</label>
                             </div>
                         </div>
 
                         <div class="relative">
                             <input type="email" 
                                 wire:model.live.debounce.500ms="patientEmail"
-                                class="w-full text-sm border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-white/50"
+                                class="w-full text-xs border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 bg-white/50 py-1.5"
                                 placeholder="Masukkan email penerima...">
                             
                             @if($selectedCustomerId)
@@ -634,13 +642,13 @@
 
                     <!-- Patient Information Section (Now without Email) -->
                     @if($payment_method !== 'tempo')
-                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4" x-data="{ showPatient: @entangle('includePatientInfo').live }">
-                        <div class="flex items-center gap-3 mb-3">
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-3" x-data="{ showPatient: @entangle('includePatientInfo').live }">
+                        <div class="flex items-center gap-3 mb-2">
                             <input type="checkbox" 
                                    id="includePatient" 
                                    wire:model.live="includePatientInfo"
-                                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="includePatient" class="text-sm font-bold text-blue-900 cursor-pointer">
+                                   class="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="includePatient" class="text-[11px] font-bold text-blue-900 cursor-pointer">
                                 Tambahkan Data Pasien / Dokter
                             </label>
                         </div>
@@ -698,20 +706,20 @@
 
                     <!-- Cash Input (Only for Cash) -->
                     @if($payment_method == 'cash')
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded-xl">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Uang Tunai</label>
+                    <div class="space-y-3">
+                        <div class="bg-gray-50 p-3 rounded-xl">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Uang Tunai</label>
                             <div class="flex items-center" x-data="money($wire.entangle('cash_amount').live)">
-                                <span class="text-2xl font-bold text-gray-400 mr-2">Rp</span>
+                                <span class="text-xl font-bold text-gray-400 mr-2">Rp</span>
                                 <input type="text" x-bind="input" 
-                                    class="flex-1 text-3xl font-bold border-0 bg-transparent p-0 focus:ring-0" 
+                                    class="flex-1 text-2xl font-bold border-0 bg-transparent p-0 focus:ring-0" 
                                     placeholder="0" autofocus>
                             </div>
-                            @error('cash_amount') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                            @error('cash_amount') <span class="text-red-500 text-[10px] font-bold mt-0.5 block">{{ $message }}</span> @enderror
                         </div>
-                        <div class="flex justify-between items-center p-4 bg-green-50 rounded-xl">
-                            <span class="text-sm font-semibold text-gray-700">Kembalian</span>
-                            <span class="text-2xl font-bold {{ $change_amount < 0 ? 'text-red-600' : 'text-green-600' }}">
+                        <div class="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                            <span class="text-xs font-semibold text-gray-700">Kembalian</span>
+                            <span class="text-xl font-bold {{ $change_amount < 0 ? 'text-red-600' : 'text-green-600' }}">
                                 Rp {{ number_format($change_amount, 0, ',', '.') }}
                             </span>
                         </div>
@@ -771,20 +779,18 @@
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="p-6 border-t border-gray-100 space-y-3">
+                <div class="p-4 border-t border-gray-100 space-y-2">
                     <button type="submit" 
-                        class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all"
+                        class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all text-sm"
                         @if($payment_method == 'qris' && !\App\Models\Setting::get('store_qris_path')) disabled @endif>
                         @if($payment_method == 'qris')
                             Konfirmasi Pembayaran QRIS
-                        @elseif($sendEmail)
-                            Bayar & Kirim Struk Email
                         @else
                             Cetak Struk Transaksi
                         @endif
                     </button>
                     <button type="button" wire:click="$set('showPaymentModal', false)" 
-                        class="w-full py-3 text-gray-600 hover:text-gray-900 font-semibold">
+                        class="w-full py-2 text-gray-600 hover:text-gray-900 font-semibold text-xs">
                         Kembali
                     </button>
                 </div>

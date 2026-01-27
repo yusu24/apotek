@@ -373,7 +373,7 @@
             <tbody>
                 @forelse($movements as $movement)
                 <tr>
-                    <td>{{ $movement->created_at->format('d/m/y H:i') }}</td>
+                    <td>{{ $movement->created_at->format('d/m/Y H:i') }}</td>
                     <td class="center">
                         @if($movement->type == 'in')
                             <span class="type-badge type-in">Masuk</span>

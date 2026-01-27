@@ -114,7 +114,7 @@
     <div class="bg-white rounded-lg shadow-md overflow-hidden print:hidden">
         <div class="bg-gray-900 px-6 py-4">
             <h3 class="text-xl font-bold text-white uppercase">DETAIL ARUS KAS</h3>
-             <p class="text-sm text-gray-300 mt-1 italic">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
+             <p class="text-sm text-gray-300 mt-1 italic">Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
         </div>
 
         <div class="p-6 space-y-6">

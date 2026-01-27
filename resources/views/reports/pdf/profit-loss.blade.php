@@ -81,7 +81,7 @@
                 <div style="font-size: 10pt; font-style: italic; text-align: center;">{{ trim($storeAddress) }}</div>
                 <div style="font-size: 16pt; font-weight: bold; margin-top: 15px; text-align: center;">LAPORAN LABA RUGI</div>
                 <div style="font-size: 11pt; margin-top: 5px; text-align: center;">
-                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
                 </div>
             </td>
             <td width="5%"></td>

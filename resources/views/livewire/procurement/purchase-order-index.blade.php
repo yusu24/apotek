@@ -87,7 +87,7 @@
                     @forelse($orders as $po)
                         <tr>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 border-l-4 border-blue-500 pl-4">{{ $po->po_number }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d M Y') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
                             {{-- <td class="px-6 py-4 text-sm text-gray-900 text-right font-bold">Rp {{ number_format($po->total_amount, 0, ',', '.') }}</td> --}}
                             <td class="px-6 py-4 text-sm">

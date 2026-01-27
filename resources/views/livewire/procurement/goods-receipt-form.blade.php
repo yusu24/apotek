@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-normal text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800">
              {{ $isEdit ? 'Edit Penerimaan Pesanan' : 'Penerimaan Pesanan' }}
         </h2>
         <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-normal flex items-center gap-1 transition">
@@ -208,7 +208,7 @@
                                     @endif
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
-                                    <input type="text" wire:model="items.{{ $index }}.batch_no" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 uppercase font-medium text-gray-700" placeholder="BATCH">
+                                    <input type="text" wire:model="items.{{ $index }}.batch_no" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 uppercase font-normal text-gray-700" placeholder="BATCH">
                                     @error("items.{$index}.batch_no") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
@@ -258,9 +258,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 align-top text-right text-sm font-bold text-gray-900 border-r border-gray-100">
                                     Rp <span x-text="new Intl.NumberFormat('id-ID').format((parseFloat(qty) || 0) * (parseFloat(buy_price) || 0))"></span>
-                                </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">
                                         <button type="button" wire:click="removeItem({{ $index }})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">

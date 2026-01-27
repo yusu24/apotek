@@ -87,7 +87,7 @@
         <div class="store-name uppercase">{{ trim($store['name']) }}</div>
         <div class="report-title">LAPORAN RIWAYAT TRANSAKSI</div>
         <div class="period-info">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
+            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
         </div>
     </div>
 

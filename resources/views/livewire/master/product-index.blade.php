@@ -222,7 +222,7 @@
                                         @forelse($sellPriceHistory as $history)
                                             <tr class="hover:bg-gray-50">
                                                 <td class="px-3 py-2 text-xs text-gray-900">
-                                                    {{ $history['date']->format('d M Y H:i') }}
+                                                    {{ $history['date']->format('d/m/Y H:i') }}
                                                     <div class="text-[10px] text-gray-500 uppercase">{{ $history['action'] }}</div>
                                                 </td>
                                                 <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
@@ -264,7 +264,7 @@
                                         @forelse($buyPriceHistory as $history)
                                             <tr class="hover:bg-gray-50">
                                                 <td class="px-3 py-2 text-xs text-gray-900">
-                                                    {{ \Carbon\Carbon::parse($history['date'])->format('d M Y') }}
+                                                    {{ \Carbon\Carbon::parse($history['date'])->format('d/m/Y') }}
                                                     <div class="text-[10px] text-blue-600">{{ $history['po_number'] }}</div>
                                                     <div class="text-[10px] text-gray-400">by {{ $history['user'] }}</div>
                                                 </td>

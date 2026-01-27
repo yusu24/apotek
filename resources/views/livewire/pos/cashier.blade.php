@@ -775,7 +775,13 @@
                     <button type="submit" 
                         class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all"
                         @if($payment_method == 'qris' && !\App\Models\Setting::get('store_qris_path')) disabled @endif>
-                        {{ $payment_method == 'qris' ? 'Konfirmasi Pembayaran QRIS' : 'Cetak Struk Transaksi' }}
+                        @if($payment_method == 'qris')
+                            Konfirmasi Pembayaran QRIS
+                        @elseif($sendEmail)
+                            Bayar & Kirim Struk Email
+                        @else
+                            Cetak Struk Transaksi
+                        @endif
                     </button>
                     <button type="button" wire:click="$set('showPaymentModal', false)" 
                         class="w-full py-3 text-gray-600 hover:text-gray-900 font-semibold">

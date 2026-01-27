@@ -175,7 +175,7 @@
             @endif
             <div class="info-row">
                 <div class="info-label">Tanggal Terima:</div>
-                <div class="info-value">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d F Y') }}</div>
+                <div class="info-value">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d/m/Y') }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Total Pembelian:</div>
@@ -192,7 +192,7 @@
             @if($receipt->due_date)
             <div class="info-row">
                 <div class="info-label">Jatuh Tempo:</div>
-                <div class="info-value">{{ \Carbon\Carbon::parse($receipt->due_date)->format('d F Y') }}</div>
+                <div class="info-value">{{ \Carbon\Carbon::parse($receipt->due_date)->format('d/m/Y') }}</div>
             </div>
             @endif
         </div>

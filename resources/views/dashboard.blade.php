@@ -1,5 +1,5 @@
 <x-app-layout>
-    @can('view dashboard')
+    @canany(['view dashboard', 'view reports', 'view sales reports', 'view stock', 'view financial overview', 'view profit loss', 'view balance sheet', 'view income statement', 'view general ledger'])
     <div class="p-6">
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">

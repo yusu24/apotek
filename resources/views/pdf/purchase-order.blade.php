@@ -178,7 +178,7 @@
                 </tr>
                 <tr>
                     <td class="info-label">Tanggal</td>
-                    <td>{{ \Carbon\Carbon::parse($po->date)->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</td>
                 </tr>
             </table>
         </div>
@@ -261,7 +261,7 @@
             <div>Disetujui Oleh,</div>
             <div class="signature-line"></div>
             <div><strong>{{ $approvedBy ?? 'Andri Halim Gunawan' }}</strong></div>
-            <div>{{ \Carbon\Carbon::parse($po->date)->format('d M Y') }}</div>
+            <div>{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</div>
         </div>
     </div>
 

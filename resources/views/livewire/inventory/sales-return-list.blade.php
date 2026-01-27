@@ -129,7 +129,7 @@
                                     </div>
                                     <div>
                                         <p class="text-gray-500">Tgl Transaksi</p>
-                                        <p class="font-normal text-blue-800">{{ $selectedSale->date->format('d M Y') }}</p>
+                                        <p class="font-normal text-blue-800">{{ $selectedSale->date->format('d/m/Y') }}</p>
                                     </div>
                                 </div>
                             </div>

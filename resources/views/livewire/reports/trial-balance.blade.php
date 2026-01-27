@@ -89,8 +89,8 @@
                 Neraca Saldo
             </h3>
             <p class="text-sm text-gray-600 mt-1">
-                Periode: {{ \Carbon\Carbon::parse($reportData['start_date'] ?? now())->format('d M Y') }} - 
-                {{ \Carbon\Carbon::parse($reportData['end_date'] ?? now())->format('d M Y') }}
+                Periode: {{ \Carbon\Carbon::parse($reportData['start_date'] ?? now())->format('d/m/Y') }} - 
+                {{ \Carbon\Carbon::parse($reportData['end_date'] ?? now())->format('d/m/Y') }}
             </p>
         </div>
 

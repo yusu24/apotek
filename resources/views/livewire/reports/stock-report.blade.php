@@ -28,9 +28,9 @@
         <div class="border-b-2 border-gray-900 pb-2 text-center uppercase">
             <h2 class="text-xl font-bold text-gray-800">LAPORAN STOK</h2>
             <div class="text-[12px] font-bold mt-1">
-                PERIODE: {{ $startExpiry ? \Carbon\Carbon::parse($startExpiry)->format('d-m-Y') : 'AWAL' }} s/d {{ $endExpiry ? \Carbon\Carbon::parse($endExpiry)->format('d-m-Y') : 'AKHIR' }}
+                PERIODE: {{ $startExpiry ? \Carbon\Carbon::parse($startExpiry)->format('d/m/Y') : 'AWAL' }} s/d {{ $endExpiry ? \Carbon\Carbon::parse($endExpiry)->format('d/m/Y') : 'AKHIR' }}
             </div>
-            <div class="text-[9px] text-gray-500 mt-1 italic normal-case">Dicetak pada: {{ now()->translatedFormat('d F Y H:i:s') }}</div>
+            <div class="text-[9px] text-gray-500 mt-1 italic normal-case">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</div>
         </div>
     </div>
 
@@ -117,7 +117,7 @@
                                     <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] font-mono text-gray-600 dark:text-gray-300">
                                         {{ $batch->product->barcode }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white uppercase font-medium">
+                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white capitalize font-medium">
                                         {{ $batch->product->name }}
                                         <div class="text-[11px] text-gray-400 no-print">{{ $batch->batch_no }} - Kadaluarsa: {{ $batch->expired_date->format('d/m/Y') }}</div>
                                     </td>

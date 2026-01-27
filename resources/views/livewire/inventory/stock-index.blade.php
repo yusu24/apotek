@@ -9,7 +9,7 @@
     <div class="hidden print:block">
         <div class="border-b-2 border-gray-900 pb-2 text-center uppercase">
             <h2 class="text-xl font-bold text-gray-800">LAPORAN STOK & OPNAME</h2>
-            <div class="text-[9px] text-gray-500 mt-1 italic normal-case">Dicetak pada: {{ now()->translatedFormat('d F Y H:i:s') }}</div>
+            <div class="text-[9px] text-gray-500 mt-1 italic normal-case">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</div>
         </div>
     </div>
 

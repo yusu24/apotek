@@ -43,7 +43,7 @@
                     @forelse($receipts as $gr)
                         <tr wire:key="receipt-{{ $gr->id }}" class="hover:bg-blue-50/50 transition-all duration-200">
                             <td class="px-6 py-4 text-sm font-bold text-gray-900 border-l-4 border-blue-500">{{ $gr->delivery_note_number }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($gr->received_date)->format('d M Y') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($gr->received_date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 <div class="font-medium text-gray-900">{{ $gr->purchaseOrder->supplier->name ?? 'Direct Receipt' }}</div>
                                 @if($gr->purchaseOrder)
@@ -148,7 +148,7 @@
                             </div>
                             <div>
                                 <span class="text-xs font-normal text-gray-400 block mb-1">Tanggal Terima</span>
-                                <span class="text-sm font-normal text-gray-700">{{ \Carbon\Carbon::parse($selectedReceipt->received_date)->format('d F Y') }}</span>
+                                <span class="text-sm font-normal text-gray-700">{{ \Carbon\Carbon::parse($selectedReceipt->received_date)->format('d/m/Y') }}</span>
                             </div>
                         </div>
                         <div class="space-y-4 text-right">

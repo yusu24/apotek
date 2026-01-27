@@ -115,7 +115,7 @@
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
         <div class="report-title">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
-        <div class="period-info">Per Tanggal: {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</div>
+        <div class="period-info">Per Tanggal: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
         <div class="currency-info">(dalam Mata Uang Rupiah IDR)</div>
     </div>
 

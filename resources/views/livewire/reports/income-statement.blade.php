@@ -93,7 +93,7 @@
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="bg-indigo-900 px-6 py-4">
             <h3 class="text-xl font-bold text-white uppercase">DETAIL LABA RUGI</h3>
-            <p class="text-sm text-indigo-200 mt-1 italic">Rincian Pendapatan dan Beban Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
+            <p class="text-sm text-indigo-200 mt-1 italic">Rincian Pendapatan dan Beban Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
         </div>
         
         <div class="p-6 space-y-6">

@@ -1040,6 +1040,11 @@ class Cashier extends Component
                  return;
             }
 
+            if ($this->sendEmail) {
+                $this->dispatch('cart-updated', message: 'Transaksi Berhasil & Struk telah dikirim ke email.');
+                return;
+            }
+
             return $this->redirect(route('pos.receipt', ['id' => $sale->id]));
 
         } catch (\Exception $e) {

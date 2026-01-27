@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-normal text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800">
             {{ $purchaseOrder ? 'Edit Pesanan' : 'Surat Pesanan Baru' }}
         </h2>
         <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="text-gray-600 hover:text-gray-900 font-normal flex items-center gap-1 transition">
@@ -161,14 +161,14 @@
                                     <tr class="group hover:bg-gray-50/80 transition-all duration-150">
                                         <td class="px-6 py-5">
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-[13px] font-medium text-gray-900 leading-none group-hover:text-blue-700 transition-colors truncate mb-1.5">{{ $product->name ?? '-' }}</div>
+                                                <div class="text-[13px] font-normal text-gray-900 leading-none group-hover:text-blue-700 transition-colors truncate mb-1.5">{{ $product->name ?? '-' }}</div>
                                                 <div class="flex items-center gap-2">
                                                     <span class="text-[9px] text-gray-400 tracking-widest uppercase bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{{ $product->barcode ?? 'No Barcode' }}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-lg group-hover:bg-blue-100 group-hover:text-blue-800 transition-colors">
+                                            <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-normal rounded-lg group-hover:bg-blue-100 group-hover:text-blue-800 transition-colors">
                                                 {{ $item['qty'] }}
                                             </span>
                                         </td>
@@ -328,7 +328,7 @@
                                         </span>
                                         <div>
                                             <h4 class="font-medium text-gray-900">{{ $receipt->delivery_note_number }}</h4>
-                                            <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d M Y') }} • oleh {{ $receipt->user->name ?? '-' }}</p>
+                                            <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($receipt->received_date)->format('d/m/Y') }} • oleh {{ $receipt->user->name ?? '-' }}</p>
                                         </div>
                                     </div>
                                     

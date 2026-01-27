@@ -5,7 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ \App\Models\Setting::get('store_name') ?? config('app.name', 'Apotek') }}</title>
+        <title>{{ \Illuminate\Support\Str::title(\App\Models\Setting::get('store_name') ?? config('app.name', 'Apotek')) }}</title>
+
+        @if($logoPath = \App\Models\Setting::get('store_logo_path'))
+            <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $logoPath) }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

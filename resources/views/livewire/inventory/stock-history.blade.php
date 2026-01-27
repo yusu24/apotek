@@ -45,7 +45,7 @@
                 <tr>
                     <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $batch->batch_no }}</td>
                     <td class="px-6 py-4 text-sm {{ $batch->expired_date < now() ? 'text-red-600 font-bold' : 'text-gray-500' }}">
-                        {{ $batch->expired_date ? \Carbon\Carbon::parse($batch->expired_date)->format('d M Y') : '-' }}
+                        {{ $batch->expired_date ? \Carbon\Carbon::parse($batch->expired_date)->format('d/m/Y') : '-' }}
                     </td>
                     <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $batch->stock_current }}</td>
                     <td class="px-6 py-4">

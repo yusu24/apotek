@@ -108,7 +108,7 @@
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
         <div class="report-title">Neraca (Standar)</div>
-        <div class="period-info">Per Tgl. {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d M Y') }}</div>
+        <div class="period-info">Per Tgl. {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
     </div>
 
     @if(!$reportData['balance_check'])
@@ -131,10 +131,9 @@
             {{-- ASET LANCAR --}}
             <tr class="level-1"><td colspan="2">ASET LANCAR</td></tr>
             @foreach($reportData['current_assets'] as $account)
-            <tr class="level-2"><td colspan="2">{{ $account->name }}</td></tr>
-            <tr class="level-3">
-                <td>Jumlah {{ $account->name }}</td>
-                <td class="summary-value">{{ format_accounting_standard($account->balance) }}</td>
+            <tr class="level-2">
+                <td>{{ $account->name }}</td>
+                <td class="text-right">{{ format_accounting_standard($account->balance) }}</td>
             </tr>
             @endforeach
             
@@ -146,10 +145,9 @@
             {{-- ASET TIDAK LANCAR (Fixed Assets) --}}
             <tr class="level-1"><td colspan="2">ASET TIDAK LANCAR</td></tr>
             @foreach($reportData['fixed_assets'] as $account)
-            <tr class="level-2"><td colspan="2">{{ $account->name }}</td></tr>
-            <tr class="level-3">
-                <td>Jumlah {{ $account->name }}</td>
-                <td class="summary-value">{{ format_accounting_standard($account->balance) }}</td>
+            <tr class="level-2">
+                <td>{{ $account->name }}</td>
+                <td class="text-right">{{ format_accounting_standard($account->balance) }}</td>
             </tr>
             @endforeach
             
@@ -176,10 +174,9 @@
             @if($reportData['current_liabilities']->count() > 0)
             <tr class="level-2"><td colspan="2">KEWAJIBAN JANGKA PENDEK</td></tr>
             @foreach($reportData['current_liabilities'] as $account)
-            <tr class="level-3"><td>{{ $account->name }}</td><td class="text-right">{{ format_accounting_standard($account->balance) }}</td></tr>
             <tr class="level-3">
-                <td class="font-bold">Jumlah {{ $account->name }}</td>
-                <td class="summary-value">{{ format_accounting_standard($account->balance) }}</td>
+                <td>{{ $account->name }}</td>
+                <td class="text-right">{{ format_accounting_standard($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="level-2">
@@ -192,10 +189,9 @@
             @if($reportData['long_term_liabilities']->count() > 0)
             <tr class="level-2"><td colspan="2">KEWAJIBAN JANGKA PANJANG</td></tr>
             @foreach($reportData['long_term_liabilities'] as $account)
-            <tr class="level-3"><td>{{ $account->name }}</td><td class="text-right">{{ format_accounting_standard($account->balance) }}</td></tr>
             <tr class="level-3">
-                <td class="font-bold">Jumlah {{ $account->name }}</td>
-                <td class="summary-value">{{ format_accounting_standard($account->balance) }}</td>
+                <td>{{ $account->name }}</td>
+                <td class="text-right">{{ format_accounting_standard($account->balance) }}</td>
             </tr>
             @endforeach
             <tr class="level-2">

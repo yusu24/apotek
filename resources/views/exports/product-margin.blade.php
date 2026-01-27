@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <th colspan="7" style="text-align: center; font-size: 12px;">
-                Dicetak: {{ date('d F Y H:i') }}
+                Dicetak: {{ date('d/m/Y H:i') }}
             </th>
         </tr>
         <tr></tr>

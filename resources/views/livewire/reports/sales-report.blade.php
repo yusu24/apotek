@@ -99,7 +99,7 @@
                                         {{ $sale->invoice_no }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                        {{ \Carbon\Carbon::parse($sale->date)->format('d M Y H:i') }}
+                                        {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 font-medium">
                                         {{ $sale->user->name }}

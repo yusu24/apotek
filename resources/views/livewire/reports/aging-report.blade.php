@@ -45,7 +45,7 @@
         // Accurate color hex sequence from image: Purple, Light Green, Dark, Blue, Green, Brown
         $colorSequence = [
             'all'   => ['hex' => '#bf50bc', 'label' => 'Semua'], 
-            '0-7'   => ['hex' => '#9ffd7b', 'label' => '0-7'],   
+            '0-7'   => ['hex' => '#d97706', 'label' => '0-7'],   
             '8-15'  => ['hex' => '#534a78', 'label' => '8-15'],  
             '16-30' => ['hex' => '#3182f7', 'label' => '16-30'], 
             '31-45' => ['hex' => '#2da01d', 'label' => '31-45'], 
@@ -59,17 +59,17 @@
                 $isActive = ($activeTab === $key);
                 $ringClass = $isActive ? "ring-2 ring-white ring-offset-2 scale-[1.03] z-10" : "";
             @endphp
-            <div class="flex-1 min-w-[120px] rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.2)] p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 {{ $ringClass }}" 
+            <div class="flex-1 min-w-[120px] rounded-xl shadow-xl p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 {{ $ringClass }}" 
                 style="background-color: {{ $config['hex'] }};"
                 wire:click="setActiveTab('{{ $key }}')">
-                <h3 class="text-[10px] font-black text-white uppercase tracking-wider text-center opacity-90">{{ $config['label'] }}</h3>
-                <p class="text-[13px] font-black text-white truncate text-center leading-tight mt-1">Rp{{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}</p>
+                <h3 class="text-[12px] font-black text-white uppercase tracking-wider text-center opacity-95">{{ $config['label'] }}</h3>
+                <p class="text-[12px] font-black text-white truncate text-center leading-tight mt-1">Rp{{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}</p>
             </div>
         @endforeach
     </div>
 
     {{-- Transaction List Card --}}
-    <div class="bg-white rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden border border-gray-100">
+    <div class="bg-white rounded-lg overflow-hidden border border-gray-100">
         <div class="flex justify-between items-center px-6 py-3 bg-gray-50 border-b border-gray-200">
             <h3 class="text-sm font-bold text-gray-700 uppercase tracking-tight">
                 Detail Transaksi: {{ $activeTab === 'all' ? 'Semua Periode' : $activeTab . ' Hari' }}

@@ -2,7 +2,7 @@
     <div class="flex justify-between items-start mb-6">
         <div>
                 <h2 class="text-2xl font-bold text-gray-800">
-                Laporan
+                Laporan Laba Rugi
             </h2>
             <p class="text-sm text-gray-500 mt-1">Laporan Kinerja Keuangan & Analisis Laba</p>
         </div>
@@ -45,7 +45,7 @@
                 </div>
             @else
                 <div class="h-10 flex items-center px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 font-bold">
-                    {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d F Y') }}
+                    {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
                 </div>
             @endif
 

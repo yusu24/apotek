@@ -28,17 +28,28 @@
                     </div>
                 </div>
 
-                <!-- Row 2: Role Selection -->
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Role / Jabatan *</label>
-                    <select wire:model.live="role_name" 
-                        class="w-full md:w-1/2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm">
-                        <option value="">Pilih Role</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-                        @endforeach
-                    </select>
-                    @error('role_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                <!-- Row 2: Role Selection & Status -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Role / Jabatan *</label>
+                        <select wire:model.live="role_name" 
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm">
+                            <option value="">Pilih Role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                            @endforeach
+                        </select>
+                        @error('role_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+                    @if($user_id !== auth()->id())
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 h-[42px]">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" wire:model="is_active" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            <span class="ml-3 text-sm font-bold text-gray-700 uppercase">Status Aktif</span>
+                        </label>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Hak Akses Section -->

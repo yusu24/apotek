@@ -27,12 +27,10 @@ class UserManagement extends Component
         }
     }
 
-    public function deleteUser($id)
+    public function toggleUserStatus($id)
     {
-        \Log::info("Attempting to delete user ID: " . $id . " by User: " . auth()->id());
-        
         if (!auth()->user()->can('manage users')) {
-            session()->flash('error', 'Anda tidak memiliki izin untuk menghapus user.');
+            session()->flash('error', 'Anda tidak memiliki izin untuk mengelola status user.');
             return;
         }
 
@@ -44,25 +42,27 @@ class UserManagement extends Component
         }
 
         if ($user->id === auth()->id()) {
-            session()->flash('error', 'Tidak dapat menghapus user sendiri.');
+            session()->flash('error', 'Tidak dapat menonaktifkan diri sendiri.');
             return;
         }
 
         try {
-            $userName = $user->name;
-            $userData = $user->toArray();
-            $user->delete();
+            $user->is_active = !$user->is_active;
+            $user->save();
+            
+            $statusText = $user->is_active ? 'mengaktifkan' : 'menonaktifkan';
             
             \App\Models\ActivityLog::log([
-                'action' => 'deleted',
+                'action' => 'updated',
                 'module' => 'users',
-                'description' => "Menghapus user: {$userName}",
-                'old_values' => $userData
+                'description' => "Berhasil {$statusText} user: {$user->name}",
+                'old_values' => ['is_active' => !$user->is_active],
+                'new_values' => ['is_active' => $user->is_active]
             ]);
 
-            session()->flash('message', "User {$userName} berhasil dihapus.");
+            session()->flash('message', "User {$user->name} berhasil " . ($user->is_active ? 'diaktifkan.' : 'dinonaktifkan.'));
         } catch (\Exception $e) {
-            session()->flash('error', 'Gagal menghapus user. User ini mungkin sudah memiliki data transaksi atau riwayat aktivitas.');
+            session()->flash('error', 'Gagal mengubah status user.');
         }
     }
 

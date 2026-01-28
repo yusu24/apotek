@@ -52,6 +52,7 @@
                         <th class="px-6 py-4 text-left">Nama</th>
                         <th class="px-6 py-4 text-left">Email</th>
                         <th class="px-6 py-4 text-left">Role</th>
+                        <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -73,6 +74,12 @@
                                     @endforeach
                                 </div>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider
+                                    {{ $user->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }}">
+                                    {{ $user->is_active ? 'Aktif' : 'Non-Aktif' }}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-3">
                                     @can('manage users')
@@ -92,10 +99,15 @@
                                     @if($user->id !== auth()->id())
                                         @can('manage users')
                                         <button 
-                                            wire:click.prevent="deleteUser({{ $user->id }})" 
+                                            wire:click.prevent="toggleUserStatus({{ $user->id }})" 
                                             wire:loading.attr="disabled"
-                                            class="text-red-600 hover:text-red-900 transition-colors disabled:opacity-50" title="Hapus User">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            class="{{ $user->is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900' }} transition-colors disabled:opacity-50" 
+                                            title="{{ $user->is_active ? 'Nonaktifkan User' : 'Aktifkan User' }}">
+                                            @if($user->is_active)
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                            @else
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            @endif
                                         </button>
                                         @endcan
                                     @endif
@@ -104,7 +116,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-500 italic">
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">
                                 Belum ada data user.
                             </td>
                         </tr>

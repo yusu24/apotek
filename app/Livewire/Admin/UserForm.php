@@ -18,6 +18,7 @@ class UserForm extends Component
     public $password;
     public $password_confirmation;
     public $role_name;
+    public $is_active = true;
     // Granular Menu Access
     public $menu_permissions = [];
 
@@ -170,6 +171,7 @@ class UserForm extends Component
             $this->name = $user->name;
             $this->email = $user->email;
             $this->role_name = $user->roles->first()?->name ?? '';
+            $this->is_active = $user->is_active;
             
             // Check direct permissions
             foreach (array_keys($this->menu_permissions) as $perm) {
@@ -207,6 +209,7 @@ class UserForm extends Component
             $user->update([
                 'name' => $this->name,
                 'email' => $this->email,
+                'is_active' => $this->is_active,
             ]);
 
             if ($this->password) {
@@ -225,6 +228,7 @@ class UserForm extends Component
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
+                'is_active' => $this->is_active,
             ]);
 
             ActivityLog::log([

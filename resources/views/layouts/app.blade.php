@@ -49,6 +49,14 @@
                     }
                 });
 
+                Alpine.store('sidebar', {
+                    collapsed: localStorage.getItem('sidebar_collapsed') === 'true',
+                    toggle() {
+                        this.collapsed = !this.collapsed;
+                        localStorage.setItem('sidebar_collapsed', this.collapsed);
+                    }
+                });
+
                 Alpine.data('money', (model) => ({
                     displayValue: '',
                     value: model,
@@ -143,6 +151,9 @@
         </script>
         <style>
             [x-cloak] { display: none !important; }
+            @media (max-width: 1279px) {
+                .desktop-toggle-btn { display: none !important; }
+            }
         </style>
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -158,7 +169,7 @@
             <livewire:layout.navigation />
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col overflow-y-auto xl:ml-64 relative pt-16 xl:pt-0">
+            <div class="flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:ml-20' : 'xl:ml-64'">
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">

@@ -15,37 +15,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             SettingSeeder::class,
+            HiddenDeveloperSeeder::class,
         ]);
 
-        // 2. Create Super Admin User
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'admin@apotek.com',
-            'password' => bcrypt('password'),
-        ]);
-        $user->assignRole('super-admin');
 
-        // 3. Create Additional Users
-        $admin = \App\Models\User::factory()->create([
-            'name' => 'Admin Apotek',
-            'email' => 'admin2@apotek.com',
-            'password' => bcrypt('password'),
-        ]);
-        $admin->assignRole('admin');
-
-        $kasir = \App\Models\User::factory()->create([
-            'name' => 'Kasir 1',
-            'email' => 'kasir@apotek.com',
-            'password' => bcrypt('password'),
-        ]);
-        $kasir->assignRole('kasir');
-
-        $gudang = \App\Models\User::factory()->create([
-            'name' => 'Staff Gudang',
-            'email' => 'gudang@apotek.com',
-            'password' => bcrypt('password'),
-        ]);
-        $gudang->assignRole('gudang');
 
         // 4. Seed Master Data
         $this->call([
@@ -69,7 +42,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 7. Sample Transactions (Optional - untuk testing)
-        $this->createSampleSales($user);
+        $devUser = \App\Models\User::where('email', env('DEV_EMAIL'))->first();
+        if ($devUser) {
+            $this->createSampleSales($devUser);
+        }
     }
 
     private function createSampleSales($user)

@@ -3,6 +3,7 @@
     
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         
+        @can('view dashboard receivables')
         <!-- Receivables Table -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
             <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
@@ -56,7 +57,9 @@
                 <span class="text-lg font-bold text-green-700">Rp {{ number_format($totalReceivables, 0, ',', '.') }}</span>
             </div>
         </div>
+        @endcan
 
+        @can('view dashboard payables')
         <!-- Payables Table -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
             <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
@@ -110,6 +113,7 @@
                 <span class="text-lg font-bold text-red-700">Rp {{ number_format($totalPayables, 0, ',', '.') }}</span>
             </div>
         </div>
+        @endcan
 
     </div>
 

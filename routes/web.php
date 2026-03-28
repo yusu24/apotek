@@ -157,6 +157,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/users', App\Livewire\Admin\UserManagement::class)->name('admin.users.index');
     Route::get('/admin/users/create', App\Livewire\Admin\UserForm::class)->name('admin.users.create');
     Route::get('/admin/users/{id}/edit', App\Livewire\Admin\UserForm::class)->name('admin.users.edit');
+
+    Route::get('/admin/roles', App\Livewire\Admin\RoleManagement::class)->name('admin.roles.index');
+    Route::get('/admin/roles/create', App\Livewire\Admin\RoleForm::class)->name('admin.roles.create');
+    Route::get('/admin/roles/{id}/edit', App\Livewire\Admin\RoleForm::class)->name('admin.roles.edit');
+
+    // Backup Management
+    Route::get('/admin/backups', App\Livewire\Admin\BackupManagement::class)->name('admin.backups');
     
     // Activity Log (Super Admin only)
     Route::get('/admin/activity-log', App\Livewire\ActivityLog\ActivityLogIndex::class)->name('admin.activity-log');

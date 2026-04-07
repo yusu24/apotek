@@ -374,11 +374,10 @@ class PdfController extends Controller
      */
     public function exportBalanceSheet(Request $request)
     {
-        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+        $asOfDate = $request->get('asOfDate', now()->endOfMonth()->format('Y-m-d'));
 
         $accountingService = new \App\Services\AccountingService();
-        $reportData = $accountingService->getBalanceSheet($startDate, $endDate);
+        $reportData = $accountingService->getBalanceSheet(null, $asOfDate);
         
         $storeName = \App\Models\Setting::get('store_name');
         if (!$storeName || $storeName === 'Laravel') {
@@ -386,21 +385,20 @@ class PdfController extends Controller
         }
 
         $store = [
-            'name' => $storeName,
+            'name'    => $storeName,
             'address' => \App\Models\Setting::get('store_address'),
-            'phone' => \App\Models\Setting::get('store_phone'),
+            'phone'   => \App\Models\Setting::get('store_phone'),
         ];
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.balance-sheet', [
             'reportData' => $reportData,
-            'store' => $store,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'printedBy' => auth()->user()->name ?? 'System',
-            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+            'store'      => $store,
+            'asOfDate'   => $asOfDate,
+            'printedBy'  => auth()->user()->name ?? 'System',
+            'printedAt'  => Carbon::now()->format('d/m/Y H:i'),
         ]);
         
-        $filename = 'Neraca-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+        $filename = 'Neraca-Per-' . Carbon::parse($asOfDate)->format('Ymd') . '.pdf';
         
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }

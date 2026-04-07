@@ -42,12 +42,12 @@
             
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-1">Dari Tanggal</label>
-                <input type="date" wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <x-date-picker wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
             </div>
 
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-1">Sampai Tanggal</label>
-                <input type="date" wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <x-date-picker wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
             </div>
 
             <div class="w-full md:w-64">

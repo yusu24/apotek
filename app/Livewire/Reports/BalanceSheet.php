@@ -8,8 +8,7 @@ use Carbon\Carbon;
 
 class BalanceSheet extends Component
 {
-    public $startDate;
-    public $endDate;
+    public $asOfDate;
     public $reportData = [];
 
     public function mount()
@@ -18,44 +17,40 @@ class BalanceSheet extends Component
             abort(403, 'Unauthorized');
         }
 
-        // Default to current month
-        $this->startDate = now()->startOfMonth()->format('Y-m-d');
-        $this->endDate = now()->endOfMonth()->format('Y-m-d');
-        
+        // Default to end of current month
+        $this->asOfDate = now()->endOfMonth()->format('Y-m-d');
+
         $this->generateReport();
     }
 
     public function generateReport()
     {
         $accountingService = new AccountingService();
-        $this->reportData = $accountingService->getBalanceSheet($this->startDate, $this->endDate);
+        $this->reportData = $accountingService->getBalanceSheet(null, $this->asOfDate);
     }
 
     public function updated($propertyName)
     {
-        if (in_array($propertyName, ['startDate', 'endDate'])) {
+        if ($propertyName === 'asOfDate') {
             $this->generateReport();
         }
     }
 
-    public function setThisMonth()
+    public function setEndOfThisMonth()
     {
-        $this->startDate = now()->startOfMonth()->format('Y-m-d');
-        $this->endDate = now()->endOfMonth()->format('Y-m-d');
+        $this->asOfDate = now()->endOfMonth()->format('Y-m-d');
         $this->generateReport();
     }
 
-    public function setLastMonth()
+    public function setEndOfLastMonth()
     {
-        $this->startDate = now()->subMonth()->startOfMonth()->format('Y-m-d');
-        $this->endDate = now()->subMonth()->endOfMonth()->format('Y-m-d');
+        $this->asOfDate = now()->subMonthNoOverflow()->endOfMonth()->format('Y-m-d');
         $this->generateReport();
     }
 
-    public function setThisYear()
+    public function setEndOfThisYear()
     {
-        $this->startDate = now()->startOfYear()->format('Y-m-d');
-        $this->endDate = now()->endOfYear()->format('Y-m-d');
+        $this->asOfDate = now()->endOfYear()->format('Y-m-d');
         $this->generateReport();
     }
 

@@ -6,9 +6,9 @@
             <p class="text-sm text-gray-500 dark:text-gray-400">Ikhtisar saldo Kas, Bank, dan Hutang saat ini.</p>
         </div>
         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-            <input type="date" wire:model.live="startDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300">
+            <x-date-picker wire:model.live="startDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300"></x-date-picker>
             <span class="text-gray-300 dark:text-gray-600">-</span>
-            <input type="date" wire:model.live="endDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300">
+            <x-date-picker wire:model.live="endDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300"></x-date-picker>
         </div>
     </div>
 

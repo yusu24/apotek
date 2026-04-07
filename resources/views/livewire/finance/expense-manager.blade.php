@@ -88,7 +88,7 @@
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Tanggal</label>
-                                        <input type="date" wire:model="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <x-date-picker wire:model="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
                                         @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>

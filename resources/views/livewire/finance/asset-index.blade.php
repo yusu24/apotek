@@ -135,7 +135,7 @@
                             <div class="grid grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Tgl Perolehan</label>
-                                    <input type="date" wire:model="acquisition_date" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" required>
+                                    <x-date-picker wire:model="acquisition_date" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm" required></x-date-picker>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Harga Perolehan</label>

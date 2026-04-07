@@ -58,9 +58,9 @@
             <div class="flex flex-wrap items-center gap-3">
                 @if($period === 'custom')
                     <div class="flex items-center gap-2">
-                         <input type="date" wire:model.live="startDate" class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm">
+                         <x-date-picker wire:model.live="startDate" class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm"></x-date-picker>
                          <span class="text-gray-500">-</span>
-                         <input type="date" wire:model.live="endDate" class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm">
+                         <x-date-picker wire:model.live="endDate" class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm"></x-date-picker>
                     </div>
                 @endif
                 <select wire:model.live="period" class="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm">

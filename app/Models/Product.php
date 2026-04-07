@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -43,5 +44,22 @@ class Product extends Model
     public function unitConversions()
     {
         return $this->hasMany(UnitConversion::class);
+    }
+
+    /**
+     * Scope for products with low stock (based on min_stock)
+     */
+    public function scopeLowStock($query)
+    {
+        return $query->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock')
+                     ->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) > 0');
+    }
+
+    /**
+     * Scope for products that are out of stock
+     */
+    public function scopeOutOfStock($query)
+    {
+        return $query->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= 0');
     }
 }

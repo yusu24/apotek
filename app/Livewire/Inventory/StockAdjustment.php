@@ -13,29 +13,25 @@ use Illuminate\Support\Facades\DB;
 #[Layout('layouts.app')]
 class StockAdjustment extends Component
 {
-    public $batch_id;
     public $product_id;
     public $product_name;
-    public $batch_no;
     public $current_stock;
     public $adjustment_type = 'add'; // add or subtract
     public $quantity;
     public $description;
     public $success_message = '';
 
-    public function mount($batchId)
+    public function mount($productId)
     {
         // Check permission - anyone with 'adjust stock' permission
         if (!auth()->user()->can('adjust stock')) {
             abort(403, 'Anda tidak memiliki akses untuk menyesuaikan stok.');
         }
 
-        $batch = Batch::with('product')->findOrFail($batchId);
-        $this->batch_id = $batch->id;
-        $this->product_id = $batch->product_id;
-        $this->product_name = $batch->product->name;
-        $this->batch_no = $batch->batch_no;
-        $this->current_stock = $batch->stock_current;
+        $product = Product::withSum('batches as total_stock', 'stock_current')->findOrFail($productId);
+        $this->product_id = $product->id;
+        $this->product_name = $product->name;
+        $this->current_stock = $product->total_stock ?? 0;
     }
 
     public function save()
@@ -48,55 +44,98 @@ class StockAdjustment extends Component
 
         DB::beginTransaction();
         try {
-            $batch = Batch::findOrFail($this->batch_id);
-            
-            // Calculate new stock
+            $product = Product::findOrFail($this->product_id);
+            $remainingToAdjust = $this->quantity;
+            $movements = [];
+
             if ($this->adjustment_type === 'add') {
-                $newStock = $batch->stock_current + $this->quantity;
-                $movementQty = $this->quantity;
+                // ADD LOGIC: Find latest batch or create one
+                $batch = Batch::where('product_id', $this->product_id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if (!$batch) {
+                    $batch = Batch::create([
+                        'product_id' => $this->product_id,
+                        'batch_no' => 'ADJ-' . now()->format('Ymd'),
+                        'stock_in' => 0,
+                        'stock_current' => 0,
+                        'expired_date' => now()->addYear(),
+                        'buy_price' => 0
+                    ]);
+                }
+
+                $batch->stock_current += $remainingToAdjust;
+                $batch->save();
+
+                $movements[] = [
+                    'batch_id' => $batch->id,
+                    'qty' => $remainingToAdjust
+                ];
+
             } else {
-                if ($this->quantity > $batch->stock_current) {
-                    $this->addError('quantity', 'Jumlah pengurangan tidak boleh lebih dari stok saat ini.');
+                // SUBTRACT LOGIC (FIFO)
+                if ($this->quantity > $this->current_stock) {
+                    $this->addError('quantity', 'Jumlah pengurangan tidak boleh lebih dari total stok saat ini.');
                     return;
                 }
-                $newStock = $batch->stock_current - $this->quantity;
-                $movementQty = -$this->quantity;
+
+                $batches = Batch::where('product_id', $this->product_id)
+                    ->where('stock_current', '>', 0)
+                    ->orderBy('expired_date', 'asc')
+                    ->orderBy('created_at', 'asc')
+                    ->get();
+
+                foreach ($batches as $batch) {
+                    if ($remainingToAdjust <= 0) break;
+
+                    $take = min($batch->stock_current, $remainingToAdjust);
+                    $batch->stock_current -= $take;
+                    $batch->save();
+
+                    $movements[] = [
+                        'batch_id' => $batch->id,
+                        'qty' => -$take
+                    ];
+
+                    $remainingToAdjust -= $take;
+                }
             }
 
-            // Update batch stock
-            $batch->update(['stock_current' => $newStock]);
-
-            // Record stock movement
-            StockMovement::create([
-                'product_id' => $this->product_id,
-                'batch_id' => $this->batch_id,
-                'user_id' => auth()->id(),
-                'type' => 'adjustment',
-                'quantity' => $movementQty,
-                'doc_ref' => 'ADJ-' . now()->format('YmdHis'),
-                'description' => $this->description,
-            ]);
+            // Record stock movements
+            $docRef = 'ADJ-' . now()->format('YmdHis');
+            foreach ($movements as $m) {
+                StockMovement::create([
+                    'product_id' => $this->product_id,
+                    'batch_id' => $m['batch_id'],
+                    'user_id' => auth()->id(),
+                    'type' => 'adjustment',
+                    'quantity' => $m['qty'],
+                    'doc_ref' => $docRef,
+                    'description' => $this->description ?: 'Penyesuaian stok total',
+                ]);
+            }
 
             DB::commit();
+
+            $newTotal = Product::where('id', $this->product_id)->withSum('batches as total_stock', 'stock_current')->first()->total_stock;
 
             ActivityLog::log([
                 'action' => 'updated',
                 'module' => 'stock',
-                'description' => "Penyesuaian stok ({$this->adjustment_type}) untuk {$this->product_name} (Batch: {$this->batch_no}): {$this->quantity} unit.",
+                'description' => "Penyesuaian stok total ({$this->adjustment_type}) untuk {$this->product_name}: {$this->quantity} unit.",
                 'new_values' => [
                     'product_id' => $this->product_id,
-                    'batch_id' => $this->batch_id,
                     'type' => $this->adjustment_type,
                     'quantity' => $this->quantity,
-                    'old_stock' => $this->current_stock,
-                    'new_stock' => $newStock,
+                    'old_total_stock' => $this->current_stock,
+                    'new_total_stock' => $newTotal,
                     'description' => $this->description
                 ]
             ]);
 
-            $this->success_message = 'Stok berhasil disesuaikan!';
-            $this->current_stock = $newStock;
-            $this->reset(['quantity', 'description']);
+            session()->flash('message', 'Stok berhasil disesuaikan secara keseluruhan!');
+            return $this->redirect(route('inventory.index'), navigate: true);
 
         } catch (\Exception $e) {
             DB::rollBack();

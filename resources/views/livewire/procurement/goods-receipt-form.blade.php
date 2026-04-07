@@ -84,7 +84,7 @@
                     <div class="flex items-center">
                         <label class="w-24 text-xs font-normal text-gray-700 uppercase tracking-wide">Tgl Terima <span class="text-red-500">*</span></label>
                         <div class="flex-1 max-w-xs">
-                            <input type="date" wire:model="received_date" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal bg-gray-50 py-1.5 h-8">
+                            <x-date-picker wire:model="received_date" class="block w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-xs font-normal bg-gray-50 py-1.5 h-8"></x-date-picker>
                             @error('received_date') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -212,7 +212,7 @@
                                     @error("items.{$index}.batch_no") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
-                                    <input type="date" wire:model="items.{{ $index }}.expired_date" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-normal">
+                                    <x-date-picker wire:model="items.{{ $index }}.expired_date" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-normal"></x-date-picker>
                                     @error("items.{$index}.expired_date") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">

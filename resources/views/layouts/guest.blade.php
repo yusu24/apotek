@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -19,7 +19,9 @@
             <div>
                 <a href="/" wire:navigate>
                     @if($logoPath = \App\Models\Setting::get('store_login_logo_path'))
-                        <img src="{{ asset('storage/' . $logoPath) }}" class="max-w-[120px] md:max-w-[150px] h-auto object-contain mx-auto" alt="Logo">
+                        <div class="flex justify-center mb-4">
+                            <img src="{{ asset('storage/' . $logoPath) }}" class="h-20 w-auto object-contain mx-auto" alt="Logo">
+                        </div>
                     @else
                         <x-application-logo class="w-16 h-16 md:w-20 md:h-20 fill-current text-gray-500" />
                     @endif

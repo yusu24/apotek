@@ -137,9 +137,9 @@
             <div class="flex items-center gap-2 w-full md:w-auto">
                 <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Periode</label>
                 <div class="flex items-center gap-1.5 flex-1 md:flex-none">
-                    <input type="date" wire:model.live="filterDateFrom" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                    <x-date-picker wire:model.live="filterDateFrom" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
                     <span class="text-gray-400 font-bold">-</span>
-                    <input type="date" wire:model.live="filterDateTo" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all">
+                    <x-date-picker wire:model.live="filterDateTo" class="flex-1 md:w-40 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
                 </div>
             </div>
         </div>

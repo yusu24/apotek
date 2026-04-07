@@ -6,14 +6,14 @@
             <p class="text-sm text-gray-500">Laporan Posisi Keuangan</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <button wire:click="setThisMonth" class="btn btn-secondary">
-                Bulan Ini
+            <button wire:click="setEndOfLastMonth" class="btn btn-secondary">
+                Akhir Bulan Lalu
             </button>
-            <button wire:click="setLastMonth" class="btn btn-secondary">
-                Bulan Lalu
+            <button wire:click="setEndOfThisMonth" class="btn btn-secondary">
+                Akhir Bulan Ini
             </button>
-            <button wire:click="setThisYear" class="btn btn-secondary">
-                Tahun Ini
+            <button wire:click="setEndOfThisYear" class="btn btn-secondary">
+                Akhir Tahun Ini
             </button>
         </div>
     </div>
@@ -26,19 +26,15 @@
         </div>
         <div class="flex flex-col md:flex-row gap-4 items-end">
             <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Mulai Tanggal</label>
-                <input type="date" wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
-            </div>
-            <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <label class="block text-sm font-bold text-gray-700 mb-2">Per Tanggal</label>
+                <x-date-picker wire:model.live="asOfDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"></x-date-picker>
             </div>
             <div class="w-full md:w-auto flex items-end gap-2">
                 <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Generate</span>
                 </button>
-                <a href="{{ route('pdf.balance-sheet', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                <a href="{{ route('pdf.balance-sheet', ['asOfDate' => $asOfDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                     </svg>
@@ -109,34 +105,64 @@
                 {{-- Current Assets --}}
                 <div>
                     <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Aset Lancar</h4>
-                    <div class="space-y-2">
-                        @foreach($reportData['current_assets'] as $account)
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                            <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
-                        </div>
+                    <div class="space-y-4">
+                        @foreach($reportData['current_asset_groups'] as $groupKey => $group)
+                            @if($group['accounts']->count() > 0)
+                            <div class="ml-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-blue-600 uppercase">{{ $group['label'] }}</span>
+                                </div>
+                                <div class="pl-2 border-l-2 border-blue-100 space-y-1">
+                                    @foreach($group['accounts'] as $account)
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    </div>
+                                    @endforeach
+                                    <div class="flex justify-between items-center pt-1 border-t border-blue-50">
+                                        <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                        <span class="text-sm font-bold text-gray-700">Total Aset Lancar</span>
-                        <span class="text-base font-bold text-blue-700">Rp {{ number_format($reportData['total_current_assets'], 0, ',', '.') }}</span>
+                    <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-blue-200 bg-blue-50/50 p-2 rounded">
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Aset Lancar</span>
+                        <span class="text-lg font-bold text-blue-800">Rp {{ number_format($reportData['total_current_assets'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 {{-- Fixed Assets --}}
                 <div>
                     <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Aset Tetap</h4>
-                    <div class="space-y-2">
-                        @foreach($reportData['fixed_assets'] as $account)
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                            <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
-                        </div>
+                    <div class="space-y-4">
+                        @foreach($reportData['fixed_asset_groups'] as $groupKey => $group)
+                            @if($group['accounts']->count() > 0)
+                            <div class="ml-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-indigo-600 uppercase">{{ $group['label'] }}</span>
+                                </div>
+                                <div class="pl-2 border-l-2 border-indigo-100 space-y-1">
+                                    @foreach($group['accounts'] as $account)
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    </div>
+                                    @endforeach
+                                    <div class="flex justify-between items-center pt-1 border-t border-indigo-50">
+                                        <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                        <span class="text-sm font-bold text-gray-700">Total Aset Tetap</span>
-                        <span class="text-base font-bold text-blue-700">Rp {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }}</span>
+                    <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-indigo-200 bg-indigo-50/50 p-2 rounded">
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Aset Tetap</span>
+                        <span class="text-lg font-bold text-indigo-800">Rp {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
@@ -157,61 +183,126 @@
             </div>
             
             <div class="p-6 space-y-6">
-                {{-- Current Liabilities --}}
+                {{-- Liabilitas Lancar --}}
                 <div>
                     <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Liabilitas Lancar</h4>
-                    <div class="space-y-2">
-                        @foreach($reportData['current_liabilities'] as $account)
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                            <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
-                        </div>
+                    <div class="space-y-4">
+                        @foreach($reportData['current_liability_groups'] as $groupKey => $group)
+                            @if($group['accounts']->count() > 0)
+                            <div class="ml-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-red-600 uppercase">{{ $group['label'] }}</span>
+                                </div>
+                                <div class="pl-2 border-l-2 border-red-100 space-y-1">
+                                    @foreach($group['accounts'] as $account)
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    </div>
+                                    @endforeach
+                                    <div class="flex justify-between items-center pt-1 border-t border-red-50">
+                                        <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                        <span class="text-sm font-bold text-gray-700">Total Liabilitas Lancar</span>
-                        <span class="text-base font-bold text-red-700">Rp {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }}</span>
+                    <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-red-200 bg-red-50/50 p-2 rounded">
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Liabilitas Lancar</span>
+                        <span class="text-lg font-bold text-red-800">Rp {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                {{-- Long-term Liabilities --}}
+                {{-- Liabilitas Jangka Panjang --}}
                 <div>
                     <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Liabilitas Jangka Panjang</h4>
-                    <div class="space-y-2">
-                        @foreach($reportData['long_term_liabilities'] as $account)
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                            <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
-                        </div>
+                    <div class="space-y-4">
+                        @foreach($reportData['long_term_liability_groups'] as $groupKey => $group)
+                            @if($group['accounts']->count() > 0)
+                            <div class="ml-2">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold text-orange-600 uppercase">{{ $group['label'] }}</span>
+                                </div>
+                                <div class="pl-2 border-l-2 border-orange-100 space-y-1">
+                                    @foreach($group['accounts'] as $account)
+                                    <div class="flex justify-between items-center py-1">
+                                        <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    </div>
+                                    @endforeach
+                                    <div class="flex justify-between items-center pt-1 border-t border-orange-50">
+                                        <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                        <span class="text-sm font-bold text-gray-700">Total Liabilitas Jangka Panjang</span>
-                        <span class="text-base font-bold text-red-700">Rp {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }}</span>
+                    <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-orange-200 bg-orange-50/50 p-2 rounded">
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Liabilitas Jangka Panjang</span>
+                        <span class="text-lg font-bold text-orange-800">Rp {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                {{-- Equity --}}
+                {{-- Ekuitas / Modal --}}
                 <div>
-                    <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Ekuitas</h4>
-                    <div class="space-y-2">
-                        @foreach($reportData['equity'] as $account)
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">{{ $account->name }}</span>
-                            <span class="text-sm font-bold text-gray-900">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                    <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Ekuitas / Modal</h4>
+                    <div class="space-y-4">
+
+                        {{-- 1. Modal Sendiri --}}
+                        <div class="ml-2">
+                            <span class="text-xs font-bold text-green-700 uppercase block mb-1">Modal Sendiri</span>
+                            <div class="pl-2 border-l-2 border-green-100 space-y-1">
+                                @foreach($reportData['equity_groups']['paid_in_capital']['accounts'] as $account)
+                                <div class="flex justify-between items-center py-1">
+                                    <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                    <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                </div>
+                                @endforeach
+                                <div class="flex justify-between items-center pt-1 border-t border-green-50">
+                                    <span class="text-sm font-bold text-gray-700">Subtotal Modal Sendiri</span>
+                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($reportData['equity_groups']['paid_in_capital']['total'], 0, ',', '.') }}</span>
+                                </div>
+                            </div>
                         </div>
-                        @endforeach
-                        {{-- Add Net Income --}}
-                        <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
-                            <span class="text-sm text-gray-700">Laba Bersih Periode Berjalan</span>
-                            <span class="text-sm font-bold {{ $reportData['net_income'] >= 0 ? 'text-green-700' : 'text-red-700' }}">
-                                Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}
-                            </span>
+
+                        {{-- 2. Laba Ditahan --}}
+                        <div class="ml-2">
+                            <span class="text-xs font-bold text-green-700 uppercase block mb-1">Laba Ditahan</span>
+                            <div class="pl-2 border-l-2 border-green-100 space-y-1">
+                                @foreach($reportData['equity_groups']['retained_earnings']['accounts'] as $account)
+                                <div class="flex justify-between items-center py-1">
+                                    <span class="text-sm text-gray-600">{{ $account->name }}</span>
+                                    <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                </div>
+                                @endforeach
+                                <div class="flex justify-between items-center pt-1 border-t border-green-50">
+                                    <span class="text-sm font-bold text-gray-700">Subtotal Laba Ditahan</span>
+                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($reportData['equity_groups']['retained_earnings']['total'], 0, ',', '.') }}</span>
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- 3. Laba Tahun Berjalan (otomatis dari Revenue - Expense) --}}
+                        <div class="ml-2">
+                            <span class="text-xs font-bold text-green-700 uppercase block mb-1">Laba Tahun Berjalan</span>
+                            <div class="pl-2 border-l-2 border-green-100">
+                                <div class="flex justify-between items-center py-1">
+                                    <span class="text-sm text-gray-600 italic">Laba Bersih s/d Per Tanggal</span>
+                                    <span class="text-sm font-bold {{ $reportData['net_income'] >= 0 ? 'text-green-700' : 'text-red-700' }}">
+                                        Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200 bg-green-50 px-2 py-1 rounded">
-                        <span class="text-sm font-bold text-gray-700">Total Ekuitas</span>
-                        <span class="text-base font-bold text-green-700">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
+                    <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-green-200 bg-green-50/50 p-2 rounded">
+                        <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Ekuitas</span>
+                        <span class="text-lg font-bold text-green-800">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
                     </div>
                 </div>
 

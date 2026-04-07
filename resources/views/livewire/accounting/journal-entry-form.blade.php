@@ -12,7 +12,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-gray-50 p-4 rounded-lg border border-gray-100">
                     <div>
                         <label for="date" class="block text-sm font-bold text-gray-700 mb-1">Tanggal Transaksi</label>
-                        <input type="date" wire:model="date" id="date" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <x-date-picker wire:model="date" id="date" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></x-date-picker>
                         @error('date') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                     </div>
                     

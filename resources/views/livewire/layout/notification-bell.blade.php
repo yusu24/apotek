@@ -1,7 +1,7 @@
 <div class="relative" x-data="{ open: false }">
     <!-- Menu-style Item -->
     <button @click="open = !open" 
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors group">
+            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-white hover:bg-gray-800 hover:text-white transition-colors group">
         <div class="relative flex items-center justify-center">
             <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -57,7 +57,7 @@
                             @endif
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs text-gray-200 leading-relaxed">{{ $notification->data['message'] }}</p>
+                            <p class="text-xs text-gray-200 leading-normal whitespace-normal break-words">{{ $notification->data['message'] }}</p>
                             <p class="text-[10px] text-gray-500 mt-1 italic">{{ $notification->created_at->diffForHumans() }}</p>
                         </div>
                         @unless($notification->read_at)

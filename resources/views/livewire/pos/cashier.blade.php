@@ -677,10 +677,10 @@
                                 
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
-                                    <input type="date" 
+                                    <x-date-picker 
                                            wire:model="patientBirthDate"
                                            class="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                           max="{{ date('Y-m-d') }}">
+                                           max="{{ date('Y-m-d') }}"></x-date-picker>
                                 </div>
                                 
                                 <div>

@@ -106,8 +106,12 @@ trait HasPermissionStructure
                     'manage settings' => ['label' => 'Identitas Toko', 'type' => 'view'],
                     'manage pos settings' => ['label' => 'Konfigurasi Kasir', 'type' => 'view'],
                     'manage users' => ['label' => 'Kelola User', 'type' => 'view'],
-                    'view activity logs' => ['label' => 'Log Aktivitas', 'type' => 'view'],
-                    'view audit log' => ['label' => 'Audit Log', 'type' => 'view'],
+                    'assign roles' => ['label' => 'Kelola Jabatan', 'type' => 'view'],
+                    'manage backups' => ['label' => 'Backup Data Utama', 'type' => 'action'],
+                    'view online users' => ['label' => 'Pantau Pengguna Online', 'type' => 'view'],
+                    'view notifications' => ['label' => 'Pusat Notifikasi', 'type' => 'view'],
+                    'view activity logs' => ['label' => 'Log Aktivitas (Perubahan Data)', 'type' => 'view'],
+                    'view audit log' => ['label' => 'Audit Log (Sistem)', 'type' => 'view'],
                 ]
             ],
         ];

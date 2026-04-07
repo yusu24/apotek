@@ -112,6 +112,9 @@ class RoleSeeder extends Seeder
             'view audit log',
             'view activity logs',
             'manage security',
+            'manage backups',
+            'view online users',
+            'view notifications',
             
             'system maintenance',
             'manage sales returns',

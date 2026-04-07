@@ -357,7 +357,7 @@ class AccountingService
             }
 
             // Calculate total purchase
-            $totalPurchase = $goodsReceipt->items->sum(function($item) {
+            $totalPurchase = collect($goodsReceipt->items)->sum(function($item) {
                 return $item->qty_received * $item->buy_price;
             });
 
@@ -770,23 +770,133 @@ class AccountingService
         return [
             'current_assets' => $currentAssets,
             'fixed_assets' => $fixedAssets,
+            
+            // Sub-grouped Assets
+            'current_asset_groups' => [
+                'cash' => [
+                    'label' => 'Kas & Bank',
+                    'accounts' => $currentAssets->where('sub_category', 'cash'),
+                    'total' => $currentAssets->where('sub_category', 'cash')->sum('balance'),
+                ],
+                'receivable' => [
+                    'label' => 'Piutang',
+                    'accounts' => $currentAssets->where('sub_category', 'receivable'),
+                    'total' => $currentAssets->where('sub_category', 'receivable')->sum('balance'),
+                ],
+                'inventory' => [
+                    'label' => 'Persediaan',
+                    'accounts' => $currentAssets->where('sub_category', 'inventory'),
+                    'total' => $currentAssets->where('sub_category', 'inventory')->sum('balance'),
+                ],
+                'other' => [
+                    'label' => 'Aset Lancar Lainnya',
+                    'accounts' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory']),
+                    'total' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory'])->sum('balance'),
+                ],
+            ],
+            
+            'fixed_asset_groups' => [
+                'equipment' => [
+                    'label' => 'Peralatan & Inventaris',
+                    'accounts' => $fixedAssets->where('sub_category', 'equipment'),
+                    'total' => $fixedAssets->where('sub_category', 'equipment')->sum('balance'),
+                ],
+                'vehicle' => [
+                    'label' => 'Kendaraan',
+                    'accounts' => $fixedAssets->where('sub_category', 'vehicle'),
+                    'total' => $fixedAssets->where('sub_category', 'vehicle')->sum('balance'),
+                ],
+                'land' => [
+                    'label' => 'Tanah',
+                    'accounts' => $fixedAssets->where('sub_category', 'land'),
+                    'total' => $fixedAssets->where('sub_category', 'land')->sum('balance'),
+                ],
+                'building' => [
+                    'label' => 'Bangunan Usaha',
+                    'accounts' => $fixedAssets->where('sub_category', 'building'),
+                    'total' => $fixedAssets->where('sub_category', 'building')->sum('balance'),
+                ],
+                'other' => [
+                    'label' => 'Aset Tetap Lainnya',
+                    'accounts' => $fixedAssets->whereNotIn('sub_category', ['equipment', 'vehicle', 'land', 'building']),
+                    'total' => $fixedAssets->whereNotIn('sub_category', ['equipment', 'vehicle', 'land', 'building'])->sum('balance'),
+                ],
+            ],
+
             'total_current_assets' => $totalCurrentAssets,
-            'total_fixed_assets' => $totalFixedAssets,
-            'total_assets' => $totalAssets,
-            
-            'current_liabilities' => $currentLiabilities,
-            'long_term_liabilities' => $longTermLiabilities,
-            'total_current_liabilities' => $totalCurrentLiabilities,
+            'total_fixed_assets'   => $totalFixedAssets,
+            'total_assets'         => $totalAssets,
+
+            // Sub-grouped Current Liabilities
+            'current_liability_groups' => [
+                'trade_payable' => [
+                    'label'    => 'Hutang Dagang',
+                    'accounts' => $currentLiabilities->where('sub_category', 'trade_payable'),
+                    'total'    => $currentLiabilities->where('sub_category', 'trade_payable')->sum('balance'),
+                ],
+                'salary_payable' => [
+                    'label'    => 'Hutang Gaji',
+                    'accounts' => $currentLiabilities->where('sub_category', 'salary_payable'),
+                    'total'    => $currentLiabilities->where('sub_category', 'salary_payable')->sum('balance'),
+                ],
+                'tax_payable' => [
+                    'label'    => 'Hutang Pajak',
+                    'accounts' => $currentLiabilities->where('sub_category', 'tax_payable'),
+                    'total'    => $currentLiabilities->where('sub_category', 'tax_payable')->sum('balance'),
+                ],
+                'bank_payable_current' => [
+                    'label'    => 'Hutang Bank/Lembaga Keuangan',
+                    'accounts' => $currentLiabilities->where('sub_category', 'bank_payable_current'),
+                    'total'    => $currentLiabilities->where('sub_category', 'bank_payable_current')->sum('balance'),
+                ],
+                'non_bank_payable_current' => [
+                    'label'    => 'Hutang Non-Lembaga Keuangan',
+                    'accounts' => $currentLiabilities->where('sub_category', 'non_bank_payable_current'),
+                    'total'    => $currentLiabilities->where('sub_category', 'non_bank_payable_current')->sum('balance'),
+                ],
+            ],
+
+            // Sub-grouped Long-Term Liabilities
+            'long_term_liability_groups' => [
+                'bank_payable_longterm' => [
+                    'label'    => 'Hutang Bank/Lembaga Keuangan',
+                    'accounts' => $longTermLiabilities->where('sub_category', 'bank_payable_longterm'),
+                    'total'    => $longTermLiabilities->where('sub_category', 'bank_payable_longterm')->sum('balance'),
+                ],
+                'non_bank_payable_longterm' => [
+                    'label'    => 'Hutang Non-Lembaga Keuangan',
+                    'accounts' => $longTermLiabilities->where('sub_category', 'non_bank_payable_longterm'),
+                    'total'    => $longTermLiabilities->where('sub_category', 'non_bank_payable_longterm')->sum('balance'),
+                ],
+            ],
+
+            'current_liabilities'         => $currentLiabilities,
+            'long_term_liabilities'       => $longTermLiabilities,
+            'total_current_liabilities'   => $totalCurrentLiabilities,
             'total_long_term_liabilities' => $totalLongTermLiabilities,
-            'total_liabilities' => $totalLiabilities,
-            
-            'equity' => $equity,
+            'total_liabilities'           => $totalLiabilities,
+
+            // Sub-grouped Equity
+            'equity_groups' => [
+                'paid_in_capital' => [
+                    'label'    => 'Modal Sendiri',
+                    'accounts' => $equity->where('sub_category', 'paid_in_capital'),
+                    'total'    => $equity->where('sub_category', 'paid_in_capital')->sum('balance'),
+                ],
+                'retained_earnings' => [
+                    'label'    => 'Laba Ditahan',
+                    'accounts' => $equity->where('sub_category', 'retained_earnings'),
+                    'total'    => $equity->where('sub_category', 'retained_earnings')->sum('balance'),
+                ],
+            ],
+
+            'equity'       => $equity,
             'total_equity' => $totalEquity,
-            'net_income' => $netIncome, // This effectively acts as "Current Year Earnings" + "Retained Earnings" not yet closed
-            
+            'net_income'   => $netIncome,
+
             'balance_check' => $balanceCheck,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate,
         ];
     }
 
@@ -1012,7 +1122,7 @@ class AccountingService
             $statuses[] = 'paid';
         }
 
-        $receipts = \App\Models\GoodsReceipt::with('purchaseOrder.supplier')
+        $receipts = GoodsReceipt::with('purchaseOrder.supplier')
             ->whereIn('payment_status', $statuses)
             ->get();
             
@@ -1229,7 +1339,7 @@ public function getGroupedAgingReport($type = 'ar', $includePaid = false)
         $statuses = ['pending', 'partial'];
         if ($includePaid) $statuses[] = 'paid';
         
-        $items = \App\Models\GoodsReceipt::with('purchaseOrder.supplier')
+        $items = GoodsReceipt::with('purchaseOrder.supplier')
             ->whereIn('payment_status', $statuses)
             ->get();
             
@@ -1305,7 +1415,7 @@ public function processReceivablePayment($receivableId, $data)
         throw new \Exception('Jumlah pembayaran melebihi sisa hutang.');
     }
 
-    \DB::beginTransaction();
+    DB::beginTransaction();
     try {
         // 1. Create Payment Record
         $payment = \App\Models\ReceivablePayment::create([
@@ -1377,11 +1487,11 @@ public function processReceivablePayment($receivableId, $data)
             $entry->post();
         }
 
-        \DB::commit();
+        DB::commit();
         return $payment;
 
     } catch (\Exception $e) {
-        \DB::rollBack();
+        DB::rollBack();
         throw $e;
     }
     }
@@ -1391,14 +1501,14 @@ public function processReceivablePayment($receivableId, $data)
      */
     public function processSupplierPayment($goodsReceiptId, $data)
     {
-        $gr = \App\Models\GoodsReceipt::findOrFail($goodsReceiptId);
+        $gr = GoodsReceipt::findOrFail($goodsReceiptId);
         $outstanding = $gr->total_amount - $gr->paid_amount;
 
         if ($data['amount'] > $outstanding + 0.01) {
             throw new \Exception('Jumlah pembayaran melebihi sisa hutang.');
         }
 
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             // 1. Create Payment Record
             $payment = \App\Models\SupplierPayment::create([
@@ -1462,11 +1572,11 @@ public function processReceivablePayment($receivableId, $data)
                 $entry->post();
             }
 
-            \DB::commit();
+            DB::commit();
             return $payment;
 
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             throw $e;
         }
     }
@@ -1773,7 +1883,7 @@ public function processReceivablePayment($receivableId, $data)
         $targetDate = \Carbon\Carbon::create($year, $month, 1)->endOfMonth();
         
         // Don't depreciate if before acquisition
-        if ($targetDate->lt($asset->acquisition_date->startOfMonth())) {
+        if ($targetDate->lt(\Carbon\Carbon::parse($asset->acquisition_date)->startOfMonth())) {
             return 0;
         }
 

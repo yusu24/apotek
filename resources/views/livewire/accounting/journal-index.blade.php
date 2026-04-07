@@ -40,11 +40,11 @@
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Dari Tanggal</label>
-                <input type="date" wire:model.live="startDate" class="w-full border-gray-300 rounded-lg">
+                <x-date-picker wire:model.live="startDate" class="w-full border-gray-300 rounded-lg"></x-date-picker>
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model.live="endDate" class="w-full border-gray-300 rounded-lg">
+                <x-date-picker wire:model.live="endDate" class="w-full border-gray-300 rounded-lg"></x-date-picker>
             </div>
         </div>
         <div class="mt-4 flex justify-end">

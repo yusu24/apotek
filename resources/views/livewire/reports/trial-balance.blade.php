@@ -25,13 +25,13 @@
         <div class="flex flex-col md:flex-row gap-4 items-end mb-4">
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai</label>
-                <input type="date" wire:model="startDate" 
-                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                <x-date-picker wire:model="startDate" 
+                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"></x-date-picker>
             </div>
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Akhir</label>
-                <input type="date" wire:model="endDate" 
-                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                <x-date-picker wire:model="endDate" 
+                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"></x-date-picker>
             </div>
             <div class="w-full md:w-auto flex items-end">
                 <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">

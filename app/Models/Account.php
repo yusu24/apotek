@@ -12,6 +12,7 @@ class Account extends Model
         'name',
         'type',
         'category',
+        'sub_category',
         'normal_balance',
         'balance',
         'is_system',
@@ -19,7 +20,7 @@ class Account extends Model
     ];
 
     protected $casts = [
-        'balance' => 'decimal:2',
+        'balance' => 'float',
         'is_system' => 'boolean',
         'is_active' => 'boolean',
     ];
@@ -66,9 +67,9 @@ class Account extends Model
         $increaseOnDebit = in_array($this->type, ['asset', 'expense']);
         
         if ($type === 'debit') {
-            $this->balance += $increaseOnDebit ? $amount : -$amount;
+            $this->balance = (float)$this->balance + ($increaseOnDebit ? $amount : -$amount);
         } else {
-            $this->balance += $increaseOnDebit ? -$amount : $amount;
+            $this->balance = (float)$this->balance + ($increaseOnDebit ? -$amount : $amount);
         }
         
         $this->save();
@@ -76,7 +77,7 @@ class Account extends Model
 
     public function getFormattedBalanceAttribute(): string
     {
-        return 'Rp ' . number_format($this->balance, 0, ',', '.');
+        return 'Rp ' . number_format((float)$this->balance, 0, ',', '.');
     }
 
     /**

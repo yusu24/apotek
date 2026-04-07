@@ -87,9 +87,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Saldo Awal</label>
-                            <input type="date" wire:model.live="balance_date" 
+                            <x-date-picker wire:model.live="balance_date" 
                                 {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
-                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500">
+                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500" />
                             <p class="text-[10px] text-gray-500 mt-1 italic">Sangat disarankan: Gunakan H-1 sebelum toko mulai beroperasi di sistem ini.</p>
                             @error('balance_date') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                         </div>
@@ -180,9 +180,9 @@
                                 <div class="flex gap-2">
                                     <div class="flex-1">
                                         <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Tgl Perolehan</label>
-                                        <input type="date" wire:model.live="assets.{{ $index }}.acquisition_date" 
+                                        <x-date-picker wire:model.live="assets.{{ $index }}.acquisition_date" 
                                             {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
-                                            class="w-full rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-50">
+                                            class="w-full rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 text-sm disabled:bg-gray-50" />
                                     </div>
                                     <button type="button" wire:click="removeAsset({{ $index }})" 
                                         @if($is_locked || !auth()->user()->can('edit opening balances')) disabled @endif

@@ -67,7 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Inventory
     Route::get('/stock', App\Livewire\Inventory\StockIndex::class)->name('inventory.index');
     Route::get('/stock/{productId}/history', App\Livewire\Inventory\StockHistory::class)->name('inventory.history');
-    Route::get('/stock/adjust/{batchId}', App\Livewire\Inventory\StockAdjustment::class)->name('inventory.adjust');
+    Route::get('/stock/adjust/{productId}', App\Livewire\Inventory\StockAdjustment::class)->name('inventory.adjust');
     Route::get('/inventory/returns/sales', App\Livewire\Inventory\SalesReturnList::class)->name('inventory.returns.sales');
     Route::get('/inventory/returns/purchase', App\Livewire\Inventory\PurchaseReturnList::class)->name('inventory.returns.purchase');
     Route::get('/inventory/returns/purchase/{id}/print', App\Livewire\Inventory\PurchaseReturnPrint::class)->name('inventory.returns.purchase.print');

@@ -102,17 +102,17 @@
                 <!-- Start Date -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-                    <input type="date" 
+                    <x-date-picker 
                         wire:model.live="startDate" 
-                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500"></x-date-picker>
                 </div>
 
                 <!-- End Date -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Akhir</label>
-                    <input type="date" 
+                    <x-date-picker 
                         wire:model.live="endDate" 
-                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500">
+                        class="w-full rounded-lg border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500"></x-date-picker>
                 </div>
 
                 <!-- Reset Button -->

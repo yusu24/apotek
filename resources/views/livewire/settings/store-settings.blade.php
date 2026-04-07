@@ -31,9 +31,9 @@
                                 <label class="border-2 border-dashed border-gray-200 rounded-xl p-4 h-full flex flex-col items-center justify-center bg-gray-50/50 transition-all hover:bg-gray-50 hover:border-blue-300 cursor-pointer overflow-hidden z-0">
                                     <input type="file" wire:model="store_logo" class="hidden">
                                     @if($store_logo)
-                                        <img src="{{ $store_logo->temporaryUrl() }}" class="max-w-full max-h-full object-contain">
-                                    @elseif($logo_url)
-                                        <img src="{{ $logo_url }}" class="max-w-full max-h-full object-contain">
+                                        <img src="{{ $store_logo->temporaryUrl() }}" class="h-full w-auto object-contain mx-auto">
+                                    @elseif($logoPath = \App\Models\Setting::get('store_logo_path'))
+                                        <img src="{{ asset('storage/' . $logoPath) }}" class="h-full w-auto object-contain mx-auto">
                                     @else
                                         <div class="flex flex-col items-center text-gray-400">
                                             <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -63,9 +63,9 @@
                                 <label class="border-2 border-dashed border-gray-200 rounded-xl p-4 h-full flex flex-col items-center justify-center bg-gray-50/50 transition-all hover:bg-gray-50 hover:border-blue-300 cursor-pointer overflow-hidden z-0">
                                     <input type="file" wire:model="login_logo" class="hidden">
                                     @if($login_logo)
-                                        <img src="{{ $login_logo->temporaryUrl() }}" class="max-w-full max-h-full object-contain">
+                                        <img src="{{ $login_logo->temporaryUrl() }}" class="h-full w-auto object-contain mx-auto">
                                     @elseif($login_logo_url)
-                                        <img src="{{ $login_logo_url }}" class="max-w-full max-h-full object-contain">
+                                        <img src="{{ $login_logo_url }}" class="h-full w-auto object-contain mx-auto">
                                     @else
                                         <div class="flex flex-col items-center text-gray-400">
                                             <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -95,9 +95,9 @@
                                 <label class="border-2 border-dashed border-gray-200 rounded-xl p-4 h-full flex flex-col items-center justify-center bg-gray-50/50 transition-all hover:bg-gray-50 hover:border-blue-300 cursor-pointer overflow-hidden z-0">
                                     <input type="file" wire:model="sidebar_logo" class="hidden">
                                     @if($sidebar_logo)
-                                        <img src="{{ $sidebar_logo->temporaryUrl() }}" class="max-w-full max-h-full object-contain">
+                                        <img src="{{ $sidebar_logo->temporaryUrl() }}" class="h-full w-auto object-contain mx-auto">
                                     @elseif($sidebar_logo_url)
-                                        <img src="{{ $sidebar_logo_url }}" class="max-w-full max-h-full object-contain">
+                                        <img src="{{ $sidebar_logo_url }}" class="h-full w-auto object-contain mx-auto">
                                     @else
                                         <div class="flex flex-col items-center text-gray-400">
                                             <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>

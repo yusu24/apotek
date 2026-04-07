@@ -36,11 +36,11 @@
                 <div class="flex gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Mulai</label>
-                        <input type="date" wire:model.live="startDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <x-date-picker wire:model.live="startDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Sampai</label>
-                        <input type="date" wire:model.live="endDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <x-date-picker wire:model.live="endDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
                     </div>
                 </div>
             @else

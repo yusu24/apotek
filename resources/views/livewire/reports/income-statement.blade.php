@@ -29,11 +29,11 @@
         <div class="flex flex-col md:flex-row gap-4 items-end">
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-2">Mulai Tanggal</label>
-                <input type="date" wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <x-date-picker wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"></x-date-picker>
             </div>
             <div class="w-full md:w-auto">
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <x-date-picker wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"></x-date-picker>
             </div>
             <div class="w-full md:w-auto flex flex-row gap-2">
                 <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">

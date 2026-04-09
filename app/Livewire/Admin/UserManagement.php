@@ -13,10 +13,12 @@ class UserManagement extends Component
     use WithPagination;
     
     public $search = '';
+    public $perPage = 10;
 
     protected $queryString = [
         'page' => ['except' => 1],
         'search' => ['except' => ''],
+        'perPage' => ['except' => 10],
     ];
 
     public function mount()
@@ -100,8 +102,8 @@ class UserManagement extends Component
                       ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             })
-            ->paginate(10)
-            ->onEachSide(2);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.admin.user-management', [
             'users' => $users,

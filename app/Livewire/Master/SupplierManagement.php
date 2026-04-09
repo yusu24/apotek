@@ -14,6 +14,7 @@ class SupplierManagement extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $name, $contact_person, $phone, $address;
     public $supplierId;
     public $isEditMode = false;
@@ -35,10 +36,11 @@ class SupplierManagement extends Component
 
     public function render()
     {
-        $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
+        $suppliers = \App\Models\Supplier::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('contact_person', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.master.supplier-management', [
             'suppliers' => $suppliers,

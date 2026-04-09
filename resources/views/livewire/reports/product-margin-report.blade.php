@@ -43,39 +43,53 @@
 
     {{-- Filters --}}
     <div class="bg-white rounded-lg shadow p-4 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="md:w-64">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Cari Produk</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
-                    <input type="text" wire:model.live.debounce.300ms="search" class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2" placeholder="Nama atau barcode...">
+        <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-end">
+                
+                <div class="flex flex-col shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+
+                <div class="flex-1 min-w-[200px] w-full">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari Produk</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" wire:model.live.debounce.300ms="search" class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm" placeholder="Nama atau barcode...">
+                    </div>
+                </div>
+                <div class="w-full md:w-48 shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kategori</label>
+                    <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="w-full md:w-48 shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Filter Margin</label>
+                    <select wire:model.live="marginFilter" class="w-full rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <option value="all">Semua</option>
+                        <option value="positive">Margin Positif</option>
+                        <option value="negative">Margin Negatif</option>
+                        <option value="high">Margin Tinggi (>30%)</option>
+                        <option value="low">Margin Rendah (<10%)</option>
+                    </select>
                 </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 text-sm py-2">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Margin</label>
-                <select wire:model.live="marginFilter" class="w-full rounded-lg border-gray-300 text-sm py-2">
-                    <option value="all">Semua</option>
-                    <option value="positive">Margin Positif</option>
-                    <option value="negative">Margin Negatif</option>
-                    <option value="high">Margin Tinggi (>30%)</option>
-                    <option value="low">Margin Rendah (<10%)</option>
-                </select>
-            </div>
-            <div class="flex items-end">
-                <button wire:click="$set('search', ''); $set('categoryFilter', ''); $set('marginFilter', 'all')" class="btn bg-gray-800 text-white hover:bg-gray-700 w-full shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Reset Filter
+            
+            <div class="shrink-0 flex items-center">
+                <button wire:click="$set('search', ''); $set('categoryFilter', ''); $set('marginFilter', 'all'); $set('perPage', 10);" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
         </div>
@@ -203,6 +217,8 @@
                     @endforelse
                 </tbody>
             </table>
+        <div class="p-4 border-t">
+            @include('components.custom-pagination', ['items' => $products])
         </div>
     </div>
 

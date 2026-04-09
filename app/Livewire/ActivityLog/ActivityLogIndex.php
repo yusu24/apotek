@@ -13,6 +13,7 @@ class ActivityLogIndex extends Component
 
     public $search = '';
     public $filterUser = '';
+    public $perPage = 10;
 
     public function mount()
     {
@@ -37,6 +38,7 @@ class ActivityLogIndex extends Component
         'filterAction' => ['except' => ''],
         'filterDateFrom' => ['except' => ''],
         'filterDateTo' => ['except' => ''],
+        'perPage' => ['except' => 10],
     ];
 
     public function updatingSearch()
@@ -102,7 +104,8 @@ class ActivityLogIndex extends Component
                 $q->whereDate('created_at', '<=', $this->filterDateTo);
             })
             ->latest()
-            ->paginate(20);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         \Log::info("ActivityLogIndex Rendering", [
             'page' => $this->getPage(),

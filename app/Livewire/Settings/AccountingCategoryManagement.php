@@ -11,6 +11,7 @@ class AccountingCategoryManagement extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $showModal = false;
     public $editMode = false;
     public $categoryId;
@@ -22,7 +23,7 @@ class AccountingCategoryManagement extends Component
     public $description;
     public $is_active = true;
 
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'perPage'];
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -132,7 +133,8 @@ class AccountingCategoryManagement extends Component
                       ->orWhere('description', 'like', '%' . $this->search . '%');
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.settings.accounting-category-management', [
             'categories' => $categories,

@@ -946,6 +946,21 @@
                  <span>- Rp {{ number_format($global_discount, 0, ',', '.') }}</span>
              </div>
              @endif
+
+             <div class="flex justify-between text-sm text-gray-700">
+                 <button wire:click="togglePpnMode" class="text-gray-600 hover:text-blue-600 transition-colors">
+                     PPN ({{ strtoupper($ppn_mode) }})
+                 </button>
+                 <span class="font-bold">Rp {{ number_format($tax, 0, ',', '.') }}</span>
+             </div>
+
+             @if($rounding != 0)
+             <div class="flex justify-between text-sm text-indigo-600">
+                 <span>Pembulatan</span>
+                 <span class="font-bold">{{ $rounding > 0 ? '+' : '' }} Rp {{ number_format($rounding, 0, ',', '.') }}</span>
+             </div>
+             @endif
+
              <div class="flex justify-between items-center pt-2">
                  <span class="font-bold text-gray-800 text-lg">Total Bayar</span>
                  <span class="font-bold text-blue-600 text-xl">Rp {{ number_format($grand_total, 0, ',', '.') }}</span>

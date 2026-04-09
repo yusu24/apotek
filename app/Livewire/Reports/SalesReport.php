@@ -17,6 +17,7 @@ class SalesReport extends Component
     public $startDate;
     public $endDate;
     public $paymentMethod = 'all';
+    public $perPage = 10;
     public $search = '';
 
     protected $queryString = [
@@ -67,7 +68,7 @@ class SalesReport extends Component
                 });
             });
 
-        $sales = (clone $salesQuery)->latest('date')->paginate(15);
+        $sales = (clone $salesQuery)->latest('date')->paginate($this->perPage)->onEachSide(1);
 
         $totalReturns = \App\Models\SalesReturn::whereBetween('created_at', [
             Carbon::parse($this->startDate)->startOfDay(),

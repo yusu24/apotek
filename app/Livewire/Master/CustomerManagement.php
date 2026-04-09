@@ -13,6 +13,7 @@ class CustomerManagement extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $name, $phone, $address;
     public $customerId;
     public $isEditMode = false;
@@ -111,10 +112,11 @@ class CustomerManagement extends Component
 
     public function render()
     {
-        $customers = Customer::where('name', 'like', '%' . $this->search . '%')
+        $customers = \App\Models\Customer::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('phone', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.master.customer-management', [
             'customers' => $customers

@@ -3,6 +3,7 @@
 namespace App\Livewire\Reports;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Product;
 use App\Models\ProcurementItem;
 use Illuminate\Support\Facades\DB;
@@ -11,13 +12,21 @@ use App\Exports\ProductMarginExport;
 
 class ProductMarginReport extends Component
 {
+    use WithPagination;
+
     public $search = '';
     public $categoryFilter = '';
     public $marginFilter = 'all'; // all, positive, negative, high (>30%), low (<10%)
     public $sortBy = 'name';
     public $sortDirection = 'asc';
+    public $perPage = 10;
 
-    protected $queryString = ['search', 'categoryFilter', 'marginFilter'];
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'categoryFilter' => ['except' => ''],
+        'marginFilter' => ['except' => 'all'],
+        'perPage' => ['except' => 10],
+    ];
 
     public function mount()
     {
@@ -27,6 +36,11 @@ class ProductMarginReport extends Component
     }
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
     {
         $this->resetPage();
     }
@@ -41,7 +55,7 @@ class ProductMarginReport extends Component
         }
     }
 
-    public function getProductsWithMarginProperty()
+    public function getBaseQueryProperty()
     {
         $query = Product::with(['category', 'unit'])
             ->select([
@@ -168,12 +182,12 @@ class ProductMarginReport extends Component
             $query->orderBy('products.' . $this->sortBy, $this->sortDirection);
         }
 
-        return $query->get();
+        return $query;
     }
 
     public function getStatisticsProperty()
     {
-        $products = $this->productsWithMargin;
+        $products = $this->baseQuery->get();
         
         return [
             'total_products' => $products->count(),
@@ -186,7 +200,7 @@ class ProductMarginReport extends Component
 
     public function exportExcel()
     {
-        $products = $this->productsWithMargin;
+        $products = $this->baseQuery->get();
         
         return Excel::download(
             new ProductMarginExport($products), 
@@ -199,7 +213,7 @@ class ProductMarginReport extends Component
         $categories = \App\Models\Category::orderBy('name')->get();
         
         return view('livewire.reports.product-margin-report', [
-            'products' => $this->productsWithMargin,
+            'products' => $this->baseQuery->paginate($this->perPage)->onEachSide(1),
             'categories' => $categories,
             'statistics' => $this->statistics,
         ]);

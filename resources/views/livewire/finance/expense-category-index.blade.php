@@ -8,7 +8,7 @@
 
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col md:flex-row justify-between items-center gap-3 mb-6">
-            <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
                 @can('manage expense categories')
                 <button wire:click="create" class="btn btn-primary shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,6 +22,17 @@
                     <span class="hidden sm:inline">Import Excel</span>
                 </button>
                 @endcan
+
+                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                    <span class="hidden sm:inline">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
 
             <div class="relative w-full md:w-64">
@@ -80,11 +91,9 @@
             </table>
         </div>
         
-        @if($categories->hasPages())
-        <div class="mt-4">
-             {{ $categories->links() }}
+        <div class="mt-4 border-t pt-4">
+            @include('components.custom-pagination', ['items' => $categories])
         </div>
-        @endif
     </div>
 
     {{-- Modal placeholder --}}

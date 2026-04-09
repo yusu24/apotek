@@ -9,7 +9,29 @@ class PurchaseOrderIndex extends Component
     use \Livewire\WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $status = '';
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'status' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedStatus()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
@@ -31,8 +53,8 @@ class PurchaseOrderIndex extends Component
                     });
             })
             ->latest()
-            ->paginate(10)
-            ->onEachSide(2);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.procurement.purchase-order-index', compact('orders'));
     }

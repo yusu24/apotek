@@ -9,6 +9,24 @@ class GoodsReceiptIndex extends Component
     use \Livewire\WithPagination;
 
     public $search = '';
+    public $perPage = 10;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public $showModal = false;
     public $showDetailModal = false;
     public $showPaymentModal = false;
     public $selectedId = null;
@@ -104,8 +122,8 @@ class GoodsReceiptIndex extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate(10)
-            ->onEachSide(2);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         $selectedReceipt = null;
         if ($this->showDetailModal && $this->selectedId) {

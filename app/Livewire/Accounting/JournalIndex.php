@@ -11,6 +11,7 @@ class JournalIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 15;
     public $sourceFilter = '';
     public $startDate = '';
     public $endDate = '';
@@ -37,6 +38,11 @@ class JournalIndex extends Component
     }
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
     {
         $this->resetPage();
     }
@@ -145,7 +151,8 @@ class JournalIndex extends Component
             }))
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate(15);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.accounting.journal-index', [
             'journals' => $journals,

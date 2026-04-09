@@ -14,6 +14,7 @@ class AssetIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $showAssetModal = false;
     public $showDepreciationModal = false;
     
@@ -37,12 +38,23 @@ class AssetIndex extends Component
         $this->depreciation_expense_account_id = Account::where('name', 'LIKE', '%Penyusutan%')->where('type', 'expense')->first()?->id;
     }
 
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $assets = FixedAsset::with(['assetAccount', 'accumulatedAccount'])
             ->where('asset_name', 'like', '%' . $this->search . '%')
             ->orWhere('asset_code', 'like', '%' . $this->search . '%')
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.finance.asset-index', [
             'assets' => $assets,

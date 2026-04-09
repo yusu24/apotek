@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationBell extends Component
 {
+    public $iconOnly = false;
+    public $direction = 'up';
+
     public function getUnreadCountProperty()
     {
         return Auth::user()->unreadNotifications()->count();

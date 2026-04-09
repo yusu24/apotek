@@ -47,7 +47,17 @@
                 <x-date-picker wire:model.live="endDate" class="w-full border-gray-300 rounded-lg"></x-date-picker>
             </div>
         </div>
-        <div class="mt-4 flex justify-end">
+        <div class="mt-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+                <span>Tampilkan</span>
+                <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
             <button wire:click="resetFilters" class="text-sm text-blue-600 font-bold hover:underline">Reset Filter</button>
         </div>
     </div>
@@ -144,7 +154,7 @@
                 <tfoot class="bg-gray-50">
                     <tr>
                         <td colspan="7" class="px-6 py-4">
-                            {{ $journals->links() }}
+                            @include('components.custom-pagination', ['items' => $journals])
                         </td>
                     </tr>
                 </tfoot>

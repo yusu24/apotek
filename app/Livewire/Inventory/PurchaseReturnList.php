@@ -19,6 +19,7 @@ class PurchaseReturnList extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $showModal = false;
 
     // Form
@@ -190,7 +191,8 @@ class PurchaseReturnList extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.inventory.purchase-return-list', [
             'returns' => $returns,

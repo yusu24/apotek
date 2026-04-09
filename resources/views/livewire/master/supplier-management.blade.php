@@ -16,34 +16,45 @@
         </div>
     @endif
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-        <div class="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 flex flex-row items-center justify-between gap-4">
-            <!-- Search Box (Left) -->
-            <div class="relative w-full md:w-64">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </span>
-                <input type="text" wire:model.live="search" placeholder="Cari supplier..." 
-                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm transition duration-150">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
+                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                    <span class="hidden sm:inline">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+
+                <div class="relative w-full md:w-64">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input type="text" wire:model.live="search" placeholder="Cari supplier..." 
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all focus:bg-white bg-white">
+                </div>
             </div>
 
-            <!-- Buttons (Right) -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button wire:click="exportExcel" class="px-3 md:px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0" title="Export Excel">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
+                <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <span class="hidden sm:inline">Export Excel</span>
+                    <span class="hidden sm:inline text-sm">Excel</span>
                 </button>
                 @can('import suppliers')
-                <button x-data @click="$dispatch('open-import-modal')" class="px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0" title="Import Excel">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span class="hidden sm:inline">Import Excel</span>
+                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <span class="hidden sm:inline text-sm">Import</span>
                 </button>
                 @endcan
 
-                <button wire:click="openModal" class="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0" title="Tambah Supplier">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <button wire:click="openModal" class="btn btn-primary" title="Tambah Supplier">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
                     <span class="hidden sm:inline">Tambah Supplier</span>
@@ -100,7 +111,7 @@
         </div>
 
         <div class="p-4 border-t dark:border-gray-700">
-            {{ $suppliers->links() }}
+            @include('components.custom-pagination', ['items' => $suppliers])
         </div>
     </div>
 

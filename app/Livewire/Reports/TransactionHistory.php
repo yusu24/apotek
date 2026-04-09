@@ -17,9 +17,17 @@ class TransactionHistory extends Component
     public $type = 'all'; // all, sale, purchase, adjustment, return, return-supplier
     public $startDate;
     public $endDate;
-    public $perPage = 50;
+    public $perPage = 10;
     public $sortBy = 'created_at';
     public $sortDirection = 'desc';
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'type' => ['except' => 'all'],
+        'startDate' => ['except' => ''],
+        'endDate' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
 
     public function mount()
     {
@@ -63,7 +71,7 @@ class TransactionHistory extends Component
         $this->type = 'all';
         $this->startDate = now()->subDays(30)->format('Y-m-d');
         $this->endDate = now()->format('Y-m-d');
-        $this->perPage = 50;
+        $this->perPage = 10;
         $this->sortBy = 'created_at';
         $this->sortDirection = 'desc';
         $this->resetPage();

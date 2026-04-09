@@ -18,39 +18,39 @@
         </div>
     </div>
 
-    <!-- Filter Section -->
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Filter Periode</h3>
-        
-        <div class="flex flex-col md:flex-row gap-4 items-end mb-4">
-            <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai</label>
-                <x-date-picker wire:model="startDate" 
-                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"></x-date-picker>
+    {{-- Period Filter --}}
+    <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden no-print mb-6 relative">
+        <div wire:loading wire:target="generateReport, setThisMonth, setLastMonth, setThisYear, startDate, endDate" class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-20">
+            <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm border">
+                <svg class="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span class="text-sm font-bold text-blue-600">Memperbarui Laporan...</span>
             </div>
-            <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Akhir</label>
-                <x-date-picker wire:model="endDate" 
-                    class="block w-full py-2 px-3 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"></x-date-picker>
+        </div>
+
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
+                <div class="w-full md:w-40">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
+                    <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
+                </div>
+                <div class="w-full md:w-40">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                    <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
+                </div>
             </div>
-            <div class="w-full md:w-auto flex items-end">
-                <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span>Generate</span>
+
+            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
+                <button wire:click="generateReport" class="btn btn-primary" title="Generate Report">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span class="hidden sm:inline text-sm">Generate</span>
                 </button>
             </div>
         </div>
 
-        <div class="flex gap-2">
-            <button wire:click="setThisMonth" class="btn btn-secondary">
-                Bulan Ini
-            </button>
-            <button wire:click="setLastMonth" class="btn btn-secondary">
-                Bulan Lalu
-            </button>
-            <button wire:click="setThisYear" class="btn btn-secondary">
-                Tahun Ini
-            </button>
+        <div class="px-4 py-3 bg-white flex flex-wrap gap-2">
+            <button wire:click="setThisMonth" class="btn btn-xs btn-secondary">Bulan Ini</button>
+            <button wire:click="setLastMonth" class="btn btn-xs btn-secondary">Bulan Lalu</button>
+            <button wire:click="setThisYear" class="btn btn-xs btn-secondary">Tahun Ini</button>
         </div>
     </div>
 

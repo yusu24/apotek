@@ -15,6 +15,7 @@ class ExpenseCategoryIndex extends Component
 
     public $isOpen = false;
     public $search = '';
+    public $perPage = 10;
     public $categoryId;
     public $name;
     public $description;
@@ -32,13 +33,19 @@ class ExpenseCategoryIndex extends Component
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $categories = ExpenseCategory::when($this->search, function($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.finance.expense-category-index', [
             'categories' => $categories,

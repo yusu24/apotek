@@ -16,6 +16,7 @@ class ExpenseManager extends Component
     use WithPagination;
 
     public $date;
+    public $perPage = 10;
     public $description;
     public $amount;
     public $category;
@@ -25,6 +26,8 @@ class ExpenseManager extends Component
     public $isEditing = false;
     public $editId;
 
+    public $search = ''; // Added search for consistency if used in view
+
     public function mount()
     {
         // Simple permission check
@@ -33,6 +36,11 @@ class ExpenseManager extends Component
         }
         
         $this->date = Carbon::now()->format('Y-m-d');
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
     }
 
     public function create()
@@ -146,8 +154,8 @@ class ExpenseManager extends Component
         $expenses = Expense::with(['user', 'account'])
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
-            ->onEachSide(2);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
         
         $categories = ExpenseCategory::active()->orderBy('name')->get();
         

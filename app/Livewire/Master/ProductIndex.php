@@ -15,6 +15,7 @@ class ProductIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $category_id = '';
 
     // History Modal
@@ -105,8 +106,8 @@ class ProductIndex extends Component
                 $query->where('category_id', $this->category_id);
             })
             ->latest()
-            ->paginate(10)
-            ->onEachSide(2);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.master.product-index', [
             'products' => $products,

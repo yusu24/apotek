@@ -12,6 +12,7 @@ class AccountIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $typeFilter = '';
     
     // Modal State
@@ -43,6 +44,11 @@ class AccountIndex extends Component
     }
 
     public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
     {
         $this->resetPage();
     }
@@ -188,7 +194,7 @@ class AccountIndex extends Component
         }
 
         // Order by Code ascending
-        $accounts = $query->orderBy('code')->paginate(10);
+        $accounts = $query->orderBy('code')->paginate($this->perPage)->onEachSide(1);
 
         return view('livewire.accounting.account-index', [
             'accounts' => $accounts

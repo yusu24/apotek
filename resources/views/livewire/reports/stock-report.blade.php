@@ -36,57 +36,70 @@
 
 
     <!-- Header Filters -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
-        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center">
-            <div class="flex items-center gap-2 flex-1 md:flex-none order-1">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Produk</label>
-                <input wire:model.live.debounce.300ms="search" 
-                    type="text" placeholder="Nama atau barcode..." 
-                    class="w-full md:w-48 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
-            </div>
+    <div class="bg-white rounded-xl shadow border overflow-hidden no-print">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-end gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-end">
+                <div class="flex flex-col shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 content-center pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
 
-            <!-- Category Filter (Order 2) -->
-            <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Kategori</label>
-                <select wire:model.live="categoryFilter" class="w-full md:w-32 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
-                    <option value="">Semua</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="flex-1 min-w-[200px] w-full">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari Produk</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input wire:model.live.debounce.300ms="search" 
+                            type="text" placeholder="Nama atau barcode..." 
+                            class="w-full pl-10 pr-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                    </div>
+                </div>
 
-            <!-- Stock Status Filter (Order 3) -->
-            <div class="flex items-center gap-2 flex-1 md:flex-none order-3">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Status</label>
-                <button wire:click="toggleStockStatus" 
-                    class="w-full md:w-32 px-3 py-2 rounded-lg border text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2
-                    {{ $stockStatus === 'low' 
-                        ? 'bg-orange-500 text-white border-orange-600 shadow-inner' 
-                        : 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:bg-gray-100' }}"
-                    title="{{ $stockStatus === 'low' ? 'Tampilkan Semua' : 'Tampilkan Stok Menipis' }}">
-                    <div class="w-2 h-2 rounded-full {{ $stockStatus === 'low' ? 'bg-white animate-pulse' : 'bg-gray-400' }}"></div>
-                    {{ $stockStatus === 'low' ? 'Menipis' : 'Semua' }}
-                </button>
-            </div>
+                <div class="w-full md:w-32 shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kategori</label>
+                    <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <option value="">Semua</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <!-- Expiry Periode (Order 4) -->
-            <div class="flex items-center gap-2 w-full md:w-auto order-4">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Kadaluarsa</label>
-                <div class="flex items-center gap-1.5 flex-1 md:flex-none">
-                    <x-date-picker wire:model.live="startExpiry" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
-                    <span class="text-gray-400 font-bold">-</span>
-                    <x-date-picker wire:model.live="endExpiry" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
+                <div class="w-full md:w-32 shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Status</label>
+                    <button wire:click="toggleStockStatus" 
+                        class="w-full px-3 py-2 rounded-lg border text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 shadow-sm
+                        {{ $stockStatus === 'low' 
+                            ? 'bg-orange-500 text-white border-orange-600' 
+                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' }}">
+                        <div class="w-2 h-2 rounded-full {{ $stockStatus === 'low' ? 'bg-white animate-pulse' : 'bg-gray-400' }}"></div>
+                        {{ $stockStatus === 'low' ? 'Menipis' : 'Semua' }}
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kadaluarsa Dari</label>
+                        <x-date-picker wire:model.live="startExpiry" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    </div>
+                    <span class="text-gray-400 font-bold self-end mb-2">-</span>
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                        <x-date-picker wire:model.live="endExpiry" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    </div>
                 </div>
             </div>
 
-            <!-- Reset (Order 5) -->
-            <div class="order-5 md:ml-auto">
-                <button wire:click="resetFilters" class="px-3 md:px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 shadow-sm font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Reset semua filter">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    <span class="hidden md:inline">Reset Filter</span>
+            <div class="shrink-0 flex items-center">
+                <button wire:click="resetFilters" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
         </div>
@@ -161,7 +174,7 @@
 
                 <!-- Footer Pagination [no-print] -->
                 <div class="px-6 py-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end no-print">
-                    {{ $batches->links() }}
+                    @include('components.custom-pagination', ['items' => $batches])
                 </div>
             </div>
     <style>

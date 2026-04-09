@@ -12,6 +12,7 @@ class UnitManagement extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $showModal = false;
     public $editMode = false;
     public $unitId;
@@ -31,9 +32,10 @@ class UnitManagement extends Component
 
     public function render()
     {
-        $units = Unit::where('name', 'like', '%' . $this->search . '%')
-            ->orderBy('name')
-            ->paginate(10);
+        $units = \App\Models\Unit::where('name', 'like', '%' . $this->search . '%')
+            ->latest()
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.master.unit-management', [
             'units' => $units

@@ -80,6 +80,16 @@
         <!-- Filter Actions Bar -->
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="flex flex-row gap-4 w-full md:w-auto items-center">
+                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                    <span class="hidden sm:inline">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
                 @can('manage accounts')
                 <button wire:click="create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -195,7 +205,7 @@
         </div>
         
         <div class="p-4 border-t">
-            {{ $accounts->links() }}
+            @include('components.custom-pagination', ['items' => $accounts])
         </div>
     </div>
 

@@ -7,12 +7,21 @@
 
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div class="flex gap-2">
+            <div class="flex items-center gap-4 flex-wrap">
                 <button wire:click="create" class="btn btn-primary">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span class="hidden sm:inline">Tambah Pengeluaran</span>
                 </button>
-                
+                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                    <span class="hidden sm:inline">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -67,8 +76,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-4">
-            {{ $expenses->links() }}
+        <div class="mt-4 border-t pt-4">
+            @include('components.custom-pagination', ['items' => $expenses])
         </div>
     </div>
 

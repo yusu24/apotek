@@ -23,28 +23,41 @@
 
         <!-- Card Container -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col flex-1 min-h-0">
-            <!-- Search Bar -->
-            <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex flex-row items-center justify-between gap-3">
-                <div class="relative w-full md:w-64">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
+                    <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                        <span class="hidden sm:inline">Tampilkan</span>
+                        <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
                     </div>
-                    <input type="text" wire:model.live="search" class="block w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition dark:text-white" placeholder="Cari nama atau telepon...">
+
+                    <div class="relative w-full md:w-64">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" wire:model.live="search" placeholder="Cari pelanggan..." 
+                            class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all focus:bg-white bg-white">
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-2 shrink-0">
+                <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
                     <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
-                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span class="hidden sm:inline">Export Excel</span>
+                        <span class="hidden sm:inline text-sm">Excel</span>
                     </button>
 
                     @can('import customers')
                     <div x-data="{ showImport: false }" class="relative">
                         <button @click="showImport = !showImport" class="btn btn-import" title="Import Excel">
-                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            <span class="hidden sm:inline">Import Excel</span>
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <span class="hidden sm:inline text-sm">Import</span>
                         </button>
 
                         <div x-show="showImport" @click.away="showImport = false" x-cloak class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 z-50">
@@ -53,11 +66,11 @@
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pilih File Excel (.xlsx)</label>
-                        <input type="file" name="file" required class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-400">
+                                        <input type="file" name="file" required class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-green-900/30 dark:file:text-green-400">
                                     </div>
                                     <div class="flex justify-between items-center pt-2">
                                         <a href="{{ route('import.download-customer-template') }}" class="text-xs text-blue-600 hover:underline dark:text-blue-400">Download Template</a>
-                                        <button type="submit" class="btn btn-import btn-sm">Import Sekarang</button>
+                                        <button type="submit" class="btn btn-import btn-sm">Import</button>
                                     </div>
                                 </div>
                             </form>
@@ -67,8 +80,8 @@
 
                     @can('create customers')
                     <button wire:click="openModal" class="btn btn-primary" title="Tambah Pelanggan">
-                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="hidden sm:inline">Tambah Pelanggan</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <span class="hidden sm:inline text-sm">Tambah</span>
                     </button>
                     @endcan
                 </div>
@@ -128,7 +141,7 @@
 
             <!-- Pagination -->
             <div class="p-6 bg-gray-50/50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-700">
-                {{ $customers->links() }}
+                @include('components.custom-pagination', ['items' => $customers])
             </div>
     </div>
 

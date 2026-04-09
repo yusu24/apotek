@@ -17,6 +17,13 @@ class ProductUnit extends Component
 
     public $search = '';
     public $category_id = '';
+    public $perPage = 10;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'category_id' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
     
     // Modal State
     public $showModal = false;
@@ -25,6 +32,21 @@ class ProductUnit extends Component
     // Form Data
     public $base_unit_id;
     public $conversions = []; // Array of ['id' => null, 'from_unit_id' => '', 'to_unit_id' => '', 'conversion_factor' => '']
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedCategoryId()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
@@ -46,7 +68,7 @@ class ProductUnit extends Component
                 $q->where('category_id', $this->category_id);
             })
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate($this->perPage);
 
         return view('livewire.master.product-unit', [
             'products' => $products,

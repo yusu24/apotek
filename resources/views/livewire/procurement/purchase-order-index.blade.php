@@ -35,9 +35,19 @@
     @endif
 
     <div class="bg-white rounded-xl shadow overflow-hidden">
-        <div class="p-4 border-b">
-        <div class="mb-4 flex flex-row justify-between items-center gap-4">
-            <div class="flex flex-col sm:flex-row items-center gap-4 flex-1 sm:flex-none">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
+                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
+                    <span class="hidden sm:inline">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+
                 <!-- Status Dropdown -->
                 <div class="w-full sm:w-auto">
                     <select wire:model.live="status" class="w-full sm:w-40 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
@@ -61,14 +71,13 @@
             </div>
 
             <!-- Action Button -->
-            <div class="shrink-0">
+            <div class="flex gap-2 w-full md:w-auto justify-end">
                 <a href="{{ route('procurement.purchase-orders.create') }}" wire:navigate
                     class="btn btn-primary" title="Buat Pesanan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span class="hidden sm:inline">Buat Pesanan</span>
                 </a>
             </div>
-        </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -138,7 +147,7 @@
             </table>
         </div>
         <div class="p-4 border-t">
-            {{ $orders->links() }}
+            @include('components.custom-pagination', ['items' => $orders])
         </div>
     </div>
     </div>

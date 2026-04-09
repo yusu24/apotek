@@ -16,6 +16,7 @@ class StockIndex extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     
     #[Url]
     public $filter_status = 'all'; // all, low_stock
@@ -42,7 +43,8 @@ class StockIndex extends Component
                 $q->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock');
             })
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.inventory.stock-index', [
             'products' => $products,

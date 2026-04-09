@@ -30,7 +30,7 @@ new class extends Component
             <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center justify-center text-xl tracking-tight transition-all duration-300 z-10" :class="$store.sidebar.collapsed ? 'w-full' : 'flex-1'">
                 @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
                     <img src="{{ asset('storage/' . $logoPath) }}" 
-                         class="object-contain object-center transition-all duration-300" 
+                         class="h-10 w-auto object-contain object-center transition-all duration-300" 
                          :class="$store.sidebar.collapsed ? 'h-7 max-w-[40px]' : 'h-10 w-auto scale-110'" 
                          alt="Logo">
                 @else
@@ -51,7 +51,7 @@ new class extends Component
             </button>
 
             <!-- Close button for mobile -->
-            <button @click="$store.mobileNav.close()" class="xl:hidden absolute right-4 text-white hover:text-white transition-colors p-1">
+            <button @click.prevent="$store.mobileNav.close()" class="xl:hidden absolute right-4 text-white hover:text-white transition-colors p-1 z-20">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -445,7 +445,7 @@ new class extends Component
         </div>
 
         <!-- Fixed Bottom Actions -->
-        <div class="px-3 py-2 space-y-1">
+        <div class="hidden xl:block px-3 py-2 space-y-1">
             @can('view notifications')
             <livewire:layout.notification-bell />
             @endcan
@@ -531,11 +531,16 @@ new class extends Component
                 <x-application-logo class="block h-6 w-auto fill-current text-blue-500" />
             @endif
         </div>
-        <button @click="$store.mobileNav.toggle()" class="text-gray-300 hover:text-white transition-colors p-1">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-        </button>
+        <div class="flex items-center gap-3">
+            @can('view notifications')
+            <livewire:layout.notification-bell :iconOnly="true" direction="down" />
+            @endcan
+            <button @click="$store.mobileNav.toggle()" class="text-gray-300 hover:text-white transition-colors p-1">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- Mobile Menu Backdrop -->

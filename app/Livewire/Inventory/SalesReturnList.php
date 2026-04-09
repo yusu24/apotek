@@ -18,6 +18,7 @@ class SalesReturnList extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $showModal = false;
     
     // New Return Form
@@ -229,7 +230,8 @@ class SalesReturnList extends Component
                 $q->where('invoice_no', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.inventory.sales-return-list', [
             'returns' => $returns,

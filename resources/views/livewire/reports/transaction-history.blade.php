@@ -16,45 +16,60 @@
         </a>
     </div>
             
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 no-print">
-        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 items-center">
-            <!-- Date Filters (Row 1 on Mobile, Left on Desktop) -->
-            <div class="flex items-center gap-2 w-full md:w-auto order-1">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Periode</label>
-                <div class="flex items-center gap-1.5 flex-1 md:flex-none">
-                    <x-date-picker wire:model.live="startDate" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
-                    <span class="text-gray-400 font-bold">-</span>
-                    <x-date-picker wire:model.live="endDate" class="flex-1 md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all"></x-date-picker>
+    <div class="bg-white rounded-xl shadow border overflow-hidden no-print">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-end gap-4">
+            <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-end">
+                <div class="flex flex-col shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 content-center pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+
+                <div class="flex-1 min-w-[200px] w-full">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari Produk</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input wire:model.live.debounce.300ms="search" 
+                            type="text" placeholder="Nama atau barcode..." 
+                            class="w-full pl-10 pr-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                    </div>
+                </div>
+
+                <div class="w-full md:w-36 shrink-0">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tipe</label>
+                    <select wire:model.live="type" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <option value="all">Semua Tipe</option>
+                        <option value="sale">Penjualan</option>
+                        <option value="in">Masuk (Beli)</option>
+                        <option value="adjustment">Opname</option>
+                        <option value="return">Retur Jual</option>
+                        <option value="return-supplier">Retur Beli</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Periode Dari</label>
+                        <x-date-picker wire:model.live="startDate" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    </div>
+                    <span class="text-gray-400 font-bold self-end mb-2">-</span>
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                        <x-date-picker wire:model.live="endDate" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 flex-1 md:flex-none order-2">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Cari Produk</label>
-                <input wire:model.live.debounce.300ms="search" 
-                    type="text" placeholder="Nama atau barcode..." 
-                    class="w-full md:w-64 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all">
-            </div>
-
-            <!-- Tipe Filter (Order 3) -->
-            <div class="flex items-center gap-2 flex-1 md:flex-none order-3">
-                <label class="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Tipe</label>
-                <select wire:model.live="type" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 !pr-12 focus:ring-2 focus:ring-blue-500 transition-all">
-                    <option value="all">Semua Tipe</option>
-                    <option value="sale">Penjualan</option>
-                    <option value="in">Masuk (Beli)</option>
-                    <option value="adjustment">Opname</option>
-                    <option value="return">Retur Jual</option>
-                    <option value="return-supplier">Retur Beli</option>
-                </select>
-            </div>
-
-            <!-- Reset (Row 2 on Mobile, Right on Desktop) -->
-            <div class="order-3 md:ml-auto">
-                <button wire:click="resetFilters" class="px-3 md:px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 shadow-sm font-bold text-sm flex items-center justify-center gap-2 transition duration-200" title="Reset semua filter">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    <span class="hidden md:inline">Reset Filter</span>
+            <div class="shrink-0 flex items-center">
+                <button wire:click="resetFilters" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
         </div>
@@ -174,7 +189,7 @@
         <!-- Pagination -->
         @if($transactions->hasPages())
             <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50">
-                {{ $transactions->links() }}
+                @include('components.custom-pagination', ['items' => $transactions])
             </div>
         @endif
     </div>

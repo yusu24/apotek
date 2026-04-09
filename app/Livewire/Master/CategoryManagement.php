@@ -13,6 +13,7 @@ class CategoryManagement extends Component
     use WithPagination;
 
     public $search = '';
+    public $perPage = 10;
     public $name = '';
     public $categoryId = null;
     public $showModal = false;
@@ -132,7 +133,8 @@ class CategoryManagement extends Component
     {
         $categories = Category::where('name', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate(10);
+            ->paginate($this->perPage)
+            ->onEachSide(1);
 
         return view('livewire.master.category-management', [
             'categories' => $categories

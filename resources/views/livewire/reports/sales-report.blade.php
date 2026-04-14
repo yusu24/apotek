@@ -135,22 +135,53 @@
                             @endforelse
                         </tbody>
                         <tfoot class="bg-gray-50 dark:bg-gray-900/40 font-bold border-t-2 border-gray-100 dark:border-gray-800">
+                            <!-- Gross Sales Row -->
                             <tr>
-                                <td colspan="4" class="px-6 py-3 text-gray-500 dark:text-gray-400 text-right uppercase tracking-wider text-[10px]">Total Penjualan Kotor</td>
-                                <td class="px-6 py-3 text-right text-gray-900 dark:text-white text-sm">
+                                <td colspan="4" class="px-6 py-2 text-gray-500 dark:text-gray-400 text-right uppercase tracking-wider text-[10px]">Total Penjualan Kotor (Uang Diterima)</td>
+                                <td class="px-6 py-2 text-right text-gray-900 dark:text-white text-sm">
                                     Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-3 no-print"></td>
+                                <td class="px-6 py-2 no-print"></td>
                             </tr>
+                            
+                            <!-- Breakdown Details (Smaller Text) -->
+                            <tr class="text-gray-400 font-normal italic">
+                                <td colspan="4" class="px-6 py-1 text-right text-[10px]">Pajak PPN (Liabilitas Negara)</td>
+                                <td class="px-6 py-1 text-right text-[10px]">- Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</td>
+                                <td class="px-6 py-1 no-print"></td>
+                            </tr>
+                            <tr class="text-gray-400 font-normal italic">
+                                <td colspan="4" class="px-6 py-1 text-right text-[10px]">Selisih Pembulatan Kasir</td>
+                                <td class="px-6 py-1 text-right text-[10px]">- Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</td>
+                                <td class="px-6 py-1 no-print"></td>
+                            </tr>
+
+                            <!-- Subtotal DPP -->
                             <tr>
-                                <td colspan="4" class="px-6 py-3 text-red-600 dark:text-red-400 text-right uppercase tracking-wider text-[10px]">Total Retur</td>
-                                <td class="px-6 py-3 text-right text-red-600 dark:text-red-300 text-sm">
+                                <td colspan="4" class="px-6 py-2 text-blue-600/70 text-right uppercase tracking-wider text-[10px]">Subtotal Transaksi Bersih (DPP)</td>
+                                <td class="px-6 py-2 text-right text-blue-600/70 text-sm">
+                                    Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-2 no-print"></td>
+                            </tr>
+
+                            <!-- Returns -->
+                            <tr>
+                                <td colspan="4" class="px-6 py-2 text-red-600 dark:text-red-400 text-right uppercase tracking-wider text-[10px]">Total Retur Penjualan</td>
+                                <td class="px-6 py-2 text-right text-red-600 dark:text-red-300 text-sm">
                                     - Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-3 no-print"></td>
+                                <td class="px-6 py-2 no-print"></td>
                             </tr>
+
+                            <!-- Final Net Sales -->
                             <tr class="bg-emerald-50/50 dark:bg-emerald-900/20 border-t border-emerald-100 dark:border-emerald-800">
-                                <td colspan="4" class="px-6 py-4 text-emerald-700 dark:text-emerald-400 text-right uppercase tracking-wider text-xs">Total Penjualan Bersih</td>
+                                <td colspan="4" class="px-6 py-4 text-emerald-700 dark:text-emerald-400 text-right uppercase tracking-wider text-xs">
+                                    <div class="flex flex-col items-end">
+                                        <span>Total Penjualan Bersih (Pendapatan Riil)</span>
+                                        <span class="text-[8px] opacity-60 normal-case">Rumus: DPP - Retur</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-300 text-lg">
                                     Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}
                                 </td>

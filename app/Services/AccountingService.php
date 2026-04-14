@@ -146,14 +146,20 @@ class AccountingService
             }
 
             // Cr. Penjualan & PPN
-            $ppnAccount = Account::where('code', '2-1300')->first(); // PPN Keluaran
+            $ppnAccount = Account::where('code', '2-1400')->first(); // PPN Keluaran
+
+            // Determine DPP (Revenue)
+            $dpp = (float)$sale->dpp;
+            if ($dpp < 0.01) {
+                $dpp = (float)$sale->grand_total - (float)$sale->tax - (float)$sale->rounding;
+            }
 
             // Cr. Penjualan (Revenue = DPP)
             JournalEntryLine::create([
                 'journal_entry_id' => $entry->id,
                 'account_id' => $salesAccount->id,
                 'debit' => 0,
-                'credit' => (float)$sale->dpp,
+                'credit' => $dpp,
                 'notes' => 'Penjualan (DPP) ' . $sale->invoice_no,
             ]);
 
@@ -166,6 +172,20 @@ class AccountingService
                     'credit' => (float)$sale->tax,
                     'notes' => 'PPN Penjualan ' . $sale->invoice_no,
                 ]);
+            }
+            
+            // Cr/Dr. Rounding (Selisih Pembulatan)
+            if (abs((float)$sale->rounding) > 0.01) {
+                $roundingAccount = Account::where('code', '5-2300')->first(); // Use General Expense as fallback
+                if ($roundingAccount) {
+                    JournalEntryLine::create([
+                        'journal_entry_id' => $entry->id,
+                        'account_id' => $roundingAccount->id,
+                        'debit' => $sale->rounding < 0 ? abs($sale->rounding) : 0,
+                        'credit' => $sale->rounding > 0 ? $sale->rounding : 0,
+                        'notes' => 'Pembulatan - ' . $sale->invoice_no,
+                    ]);
+                }
             }
 
             // Entry 2: Record COGS
@@ -198,6 +218,34 @@ class AccountingService
             DB::rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Repair/Regenerate missing journal entries for sales
+     */
+    public function repairMissingJournals(): array
+    {
+        $sales = Sale::all();
+        $repairedCount = 0;
+        $errors = [];
+
+        foreach ($sales as $sale) {
+            // Check if journal exists
+            if (!JournalEntry::where('source', 'sale')->where('source_id', $sale->id)->exists()) {
+                try {
+                    $this->postSaleJournal($sale->id);
+                    $repairedCount++;
+                } catch (\Exception $e) {
+                    $errors[] = "Sale ID {$sale->id} (INV: {$sale->invoice_no}): " . $e->getMessage();
+                }
+            }
+        }
+
+        return [
+            'total' => $sales->count(),
+            'repaired' => $repairedCount,
+            'errors' => $errors
+        ];
     }
 
     /**

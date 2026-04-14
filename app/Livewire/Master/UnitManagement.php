@@ -6,7 +6,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Unit;
 use App\Models\ActivityLog;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class UnitManagement extends Component
 {
     use WithPagination;
@@ -32,14 +34,15 @@ class UnitManagement extends Component
 
     public function render()
     {
-        $units = \App\Models\Unit::where('name', 'like', '%' . $this->search . '%')
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $units */
+        $units = Unit::where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate($this->perPage)
             ->onEachSide(1);
 
         return view('livewire.master.unit-management', [
             'units' => $units
-        ])->layout('layouts.app');
+        ]);
     }
 
     public function openModal()

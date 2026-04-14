@@ -399,21 +399,45 @@ class Cashier extends Component
         $this->highlightIndex = 0;
     }
 
-    public function incrementHighlight()
+    public function moveHighlight($direction, $cols)
     {
-        $count = count($this->products);
-        
-        if ($this->highlightIndex < $count - 1) {
-            $this->highlightIndex++;
+        $products = $this->products;
+        $count = count($products);
+        if ($count === 0) return;
+
+        // If searching, always do sequential navigation (1D list)
+        $isGrid = empty($this->search);
+        $jump = $isGrid ? (int)$cols : 1;
+
+        switch ($direction) {
+            case 'up':
+                $this->highlightIndex -= $jump;
+                if ($this->highlightIndex < 0) {
+                    $this->highlightIndex = $isGrid ? $this->highlightIndex + $count : $count - 1;
+                }
+                break;
+            case 'down':
+                $this->highlightIndex += $jump;
+                if ($this->highlightIndex >= $count) {
+                    $this->highlightIndex = $isGrid ? $this->highlightIndex - $count : 0;
+                }
+                break;
+            case 'left':
+                $this->highlightIndex--;
+                if ($this->highlightIndex < 0) $this->highlightIndex = $count - 1;
+                break;
+            case 'right':
+                $this->highlightIndex++;
+                if ($this->highlightIndex >= $count) $this->highlightIndex = 0;
+                break;
         }
+
+        // Clamp just in case of weird math
+        $this->highlightIndex = max(0, min($count - 1, $this->highlightIndex));
     }
 
-    public function decrementHighlight()
-    {
-        if ($this->highlightIndex > 0) {
-            $this->highlightIndex--;
-        }
-    }
+    public function incrementHighlight() { $this->moveHighlight('right', 1); }
+    public function decrementHighlight() { $this->moveHighlight('left', 1); }
 
     public function selectHighlighted()
     {
@@ -421,8 +445,12 @@ class Cashier extends Component
         
         if (!empty($products) && isset($products[$this->highlightIndex])) {
             $this->addToCart($products[$this->highlightIndex]->id);
-            $this->highlightIndex = 0;
-            $this->search = '';
+            // Don't reset highlightIndex so user can quickly add next item
+            // $this->highlightIndex = 0; 
+            if (!empty($this->search)) {
+                $this->search = '';
+                $this->highlightIndex = 0;
+            }
         }
     }
 

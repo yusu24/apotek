@@ -12,8 +12,11 @@ use App\Models\StockMovement;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 use App\Services\AccountingService;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class PurchaseReturnList extends Component
 {
     use WithPagination;
@@ -169,7 +172,7 @@ class PurchaseReturnList extends Component
                 $accountingService = new AccountingService();
                 $accountingService->postPurchaseReturnJournal($purchaseReturn->id);
             } catch (\Exception $e) {
-                \Log::error('Failed to post purchase return journal: ' . $e->getMessage());
+                Log::error('Failed to post purchase return journal: ' . $e->getMessage());
                 // Don't fail the transaction, just log the error
             }
 
@@ -185,6 +188,7 @@ class PurchaseReturnList extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $returns */
         $returns = PurchaseReturn::with('supplier', 'user')
             ->where('return_no', 'like', '%' . $this->search . '%')
             ->orWhereHas('supplier', function($q) {

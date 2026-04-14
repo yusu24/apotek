@@ -89,41 +89,45 @@
     </div>
 
     <div class="report-header">
-        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">LAPORAN MARGIN PRODUK</div>
+        <div class="store-name uppercase">{{ trim($storeName) }}</div>
+        <div class="report-title uppercase">LAPORAN {{ $reportMode === 'realized' ? 'REALISASI' : '' }} MARGIN PRODUK</div>
+        @if($reportMode === 'realized')
+            <div style="font-size: 10pt; margin-top: 5px;">Periode: {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }} {{ $year }}</div>
+        @endif
     </div>
 
     <div class="summary-box">
-        <table>
+        <table style="width: 60%">
             <tr>
-                <td class="summary-label">Total Produk Dianalisis</td>
-                <td>: {{ $statistics['total_products'] }}</td>
+                <td class="summary-label">Tipe Laporan</td>
+                <td>: {{ $reportMode === 'realized' ? 'Margin Realisasi (Penjualan)' : 'Potensi Margin (Stok)' }}</td>
             </tr>
             <tr>
-                <td class="summary-label">Produk dengan Margin Positif</td>
-                <td>: {{ $statistics['products_with_positive_margin'] }}</td>
+                <td class="summary-label">Total Produk Dianalisis</td>
+                <td>: {{ number_format($stats['total_products']) }}</td>
+            </tr>
+            <tr>
+                <td class="summary-label">Total {{ $reportMode === 'realized' ? 'Keuntungan' : 'Nilai Margin' }}</td>
+                <td class="font-bold">: Rp {{ number_format($stats['total_margin_value'], 0, ',', '.') }}</td>
             </tr>
             <tr>
                 <td class="summary-label">Rata-rata Margin Persentase</td>
-                <td>: {{ number_format($statistics['average_margin_percentage'], 2, ',', '.') }}%</td>
+                <td>: {{ number_format($stats['average_margin_percentage'], 2, ',', '.') }}%</td>
             </tr>
-            @if($marginFilter !== 'all')
-            <tr>
-                <td class="summary-label">Filter Margin</td>
-                <td class="uppercase">: {{ $marginFilter }}</td>
-            </tr>
-            @endif
         </table>
     </div>
 
     <table>
         <thead>
             <tr class="column-headers">
-                <th style="width: 35%">Produk</th>
-                <th style="width: 15%; text-align: right;">Beli Terakhir</th>
-                <th style="width: 15%; text-align: right;">Harga Jual</th>
+                <th style="width: 30%">Produk</th>
+                @if($reportMode === 'realized')
+                    <th style="width: 10%; text-align: center;">Qty</th>
+                @endif
+                <th style="width: 17.5%; text-align: right;">{{ $reportMode === 'realized' ? 'HPP Rerata' : 'Beli Terakhir' }}</th>
+                <th style="width: 17.5%; text-align: right;">{{ $reportMode === 'realized' ? 'Jual Rerata' : 'Harga Jual' }}</th>
                 <th style="width: 15%; text-align: right;">Margin (Rp)</th>
-                <th style="width: 20%; text-align: right;">Margin (%)</th>
+                <th style="width: 10%; text-align: right;">%</th>
             </tr>
         </thead>
         <tbody>
@@ -133,18 +137,21 @@
                     <div class="font-bold">{{ $product->name }}</div>
                     <div style="font-size: 7pt; color: #666;">{{ $product->barcode ?? '-' }}</div>
                 </td>
-                <td class="text-right">{{ number_format($product->last_buy_price, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($product->sell_price, 0, ',', '.') }}</td>
+                @if($reportMode === 'realized')
+                    <td class="text-center">{{ number_format($product->total_sold) }}</td>
+                @endif
+                <td class="text-right">{{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }}</td>
+                <td class="text-right">{{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }}</td>
                 <td class="text-right {{ $product->margin_amount >= 0 ? 'margin-positive' : 'margin-negative' }}">
                     {{ number_format($product->margin_amount, 0, ',', '.') }}
                 </td>
                 <td class="text-right {{ $product->margin_percentage >= 0 ? 'margin-positive' : 'margin-negative' }}">
-                    {{ number_format($product->margin_percentage, 2, ',', '.') }}%
+                    {{ number_format($product->margin_percentage, 1, ',', '.') }}%
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="text-center italic" style="padding: 20px; color: #777;">Data Tidak Ditemukan</td>
+                <td colspan="{{ $reportMode === 'realized' ? '6' : '5' }}" class="text-center italic" style="padding: 20px; color: #777;">Data Tidak Ditemukan</td>
             </tr>
             @endforelse
         </tbody>

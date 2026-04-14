@@ -40,6 +40,7 @@ class ExpenseCategoryIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = ExpenseCategory::when($this->search, function($q) {
                 $q->where('name', 'like', '%' . $this->search . '%');
             })

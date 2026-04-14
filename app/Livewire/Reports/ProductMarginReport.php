@@ -17,6 +17,11 @@ class ProductMarginReport extends Component
     public $search = '';
     public $categoryFilter = '';
     public $marginFilter = 'all'; // all, positive, negative, high (>30%), low (<10%)
+    public $reportMode = 'potential'; // potential, realized
+    public $startDate;
+    public $endDate;
+    public $month; // Keep for backward compatibility/legacy ref if needed, but primarily using dates now
+    public $year;
     public $sortBy = 'name';
     public $sortDirection = 'asc';
     public $perPage = 10;
@@ -25,6 +30,9 @@ class ProductMarginReport extends Component
         'search' => ['except' => ''],
         'categoryFilter' => ['except' => ''],
         'marginFilter' => ['except' => 'all'],
+        'reportMode' => ['except' => 'potential'],
+        'startDate' => ['except' => ''],
+        'endDate' => ['except' => ''],
         'perPage' => ['except' => 10],
     ];
 
@@ -33,9 +41,34 @@ class ProductMarginReport extends Component
         if (!auth()->user()->can('view product margin report')) {
             abort(403, 'Unauthorized');
         }
+
+        $this->startDate = now()->startOfMonth()->format('Y-m-d');
+        $this->endDate = now()->format('Y-m-d');
+        $this->month = now()->format('m');
+        $this->year = now()->format('Y');
     }
 
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReportMode()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedStartDate()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedEndDate()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedYear()
     {
         $this->resetPage();
     }
@@ -56,6 +89,15 @@ class ProductMarginReport extends Component
     }
 
     public function getBaseQueryProperty()
+    {
+        if ($this->reportMode === 'realized') {
+            return $this->getRealizedQuery();
+        }
+
+        return $this->getPotentialQuery();
+    }
+
+    private function getPotentialQuery()
     {
         $query = Product::with(['category', 'unit'])
             ->select([
@@ -145,7 +187,50 @@ class ProductMarginReport extends Component
                 END as margin_percentage
             ');
 
-        // Search
+        $this->applyFilters($query);
+        $this->applySorting($query);
+
+        return $query;
+    }
+
+    private function getRealizedQuery()
+    {
+        $query = Product::with(['category', 'unit'])
+            ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
+            ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
+            ->join('batches', 'sale_items.batch_id', '=', 'batches.id')
+            ->whereBetween('sales.date', [
+                \Carbon\Carbon::parse($this->startDate)->startOfDay(),
+                \Carbon\Carbon::parse($this->endDate)->endOfDay()
+            ])
+            ->select([
+                'products.id',
+                'products.name',
+                'products.barcode',
+                'products.category_id',
+                'products.unit_id',
+            ])
+            ->selectRaw('SUM(sale_items.quantity) as total_sold')
+            ->selectRaw('AVG(sale_items.sell_price) as avg_sell_price')
+            ->selectRaw('AVG(batches.buy_price) as avg_buy_price')
+            ->selectRaw('SUM((sale_items.sell_price - batches.buy_price) * sale_items.quantity) as margin_amount')
+            ->selectRaw('
+                CASE 
+                WHEN SUM(batches.buy_price * sale_items.quantity) > 0 
+                THEN (SUM((sale_items.sell_price - batches.buy_price) * sale_items.quantity) / SUM(batches.buy_price * sale_items.quantity) * 100) 
+                ELSE 0 
+                END as margin_percentage
+            ')
+            ->groupBy('products.id', 'products.name', 'products.barcode', 'products.category_id', 'products.unit_id');
+
+        $this->applyFilters($query, 'realized');
+        $this->applySorting($query, 'realized');
+
+        return $query;
+    }
+
+    private function applyFilters($query, $mode = 'potential')
+    {
         if ($this->search) {
             $query->where(function($q) {
                 $q->where('products.name', 'like', '%' . $this->search . '%')
@@ -153,12 +238,10 @@ class ProductMarginReport extends Component
             });
         }
 
-        // Category Filter
         if ($this->categoryFilter) {
             $query->where('products.category_id', $this->categoryFilter);
         }
 
-        // Margin Filter
         if ($this->marginFilter === 'positive') {
             $query->havingRaw('margin_amount > 0');
         } elseif ($this->marginFilter === 'negative') {
@@ -168,21 +251,23 @@ class ProductMarginReport extends Component
         } elseif ($this->marginFilter === 'low') {
             $query->havingRaw('margin_percentage < 10 AND margin_percentage >= 0');
         }
+    }
 
-        // Sorting
+    private function applySorting($query, $mode = 'potential')
+    {
+        $direction = $this->sortDirection;
+        
         if ($this->sortBy === 'margin_amount') {
-            $query->orderByRaw('margin_amount ' . $this->sortDirection);
+            $query->orderByRaw('margin_amount ' . $direction);
         } elseif ($this->sortBy === 'margin_percentage') {
-            $query->orderByRaw('margin_percentage ' . $this->sortDirection);
-        } elseif ($this->sortBy === 'last_buy_price') {
-            $query->orderByRaw('last_buy_price ' . $this->sortDirection);
-        } elseif ($this->sortBy === 'sell_price') {
-            $query->orderBy('products.sell_price', $this->sortDirection);
+            $query->orderByRaw('margin_percentage ' . $direction);
+        } elseif ($this->sortBy === 'last_buy_price' || $this->sortBy === 'avg_buy_price') {
+            $query->orderByRaw(($mode === 'potential' ? 'last_buy_price ' : 'avg_buy_price ') . $direction);
+        } elseif ($this->sortBy === 'sell_price' || $this->sortBy === 'avg_sell_price') {
+            $query->orderByRaw(($mode === 'potential' ? 'products.sell_price ' : 'avg_sell_price ') . $direction);
         } else {
-            $query->orderBy('products.' . $this->sortBy, $this->sortDirection);
+            $query->orderBy('products.' . $this->sortBy, $direction);
         }
-
-        return $query;
     }
 
     public function getStatisticsProperty()
@@ -193,7 +278,7 @@ class ProductMarginReport extends Component
             'total_products' => $products->count(),
             'products_with_positive_margin' => $products->where('margin_amount', '>', 0)->count(),
             'products_with_negative_margin' => $products->where('margin_amount', '<', 0)->count(),
-            'average_margin_percentage' => $products->where('last_buy_price', '>', 0)->avg('margin_percentage'),
+            'average_margin_percentage' => $products->count() > 0 ? $products->avg('margin_percentage') : 0,
             'total_margin_value' => $products->sum('margin_amount'),
         ];
     }
@@ -203,8 +288,8 @@ class ProductMarginReport extends Component
         $products = $this->baseQuery->get();
         
         return Excel::download(
-            new ProductMarginExport($products), 
-            'laporan-margin-produk-' . date('Y-m-d') . '.xlsx'
+            new ProductMarginExport($products, $this->reportMode, $this->startDate, $this->endDate), 
+            'laporan-margin-produk-' . ($this->reportMode === 'realized' ? $this->startDate . '_ke_' . $this->endDate : date('Y-m-d')) . '.xlsx'
         );
     }
 

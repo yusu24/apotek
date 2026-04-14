@@ -65,6 +65,17 @@ class ProfitLoss extends Component
         }, 'Laporan_Laba_Rugi_' . $this->startDate . '_to_' . $this->endDate . '.pdf');
     }
 
+    public function exportExcel()
+    {
+        $data = $this->calculateMetrics();
+        $filename = 'Laporan_Laba_Rugi_Detail_' . $this->startDate . '_to_' . $this->endDate . '.xlsx';
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\DetailedProfitLossExport($data, $this->startDate, $this->endDate),
+            $filename
+        );
+    }
+
     private function calculateMetrics()
     {
         // 1. Sales Details (Gross, Discount, Tax)
@@ -73,16 +84,10 @@ class ProfitLoss extends Component
             ->with('saleItems')
             ->get();
 
-        // Revenue (Net Sales) = Sum of Item Subtotals - Global Discount
-        // Note: SaleItem.subtotal is already (price - item_discount) * qty
-        $itemSubtotalSum = (float) $sales->sum(function($sale) {
-            return $sale->saleItems->sum('subtotal');
-        });
-        
-        $totalDiscount = (float) $sales->sum('discount'); // Global discount
-        $revenue = $itemSubtotalSum - $totalDiscount; 
+        $revenue = (float) $sales->sum('dpp');
         
         $totalTax = (float) $sales->sum('tax');
+        $totalDiscount = (float) $sales->sum('discount');
         $grandTotal = (float) $sales->sum('grand_total');
 
         // 2. COGS (HPP) - Detailed records for table

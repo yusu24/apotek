@@ -4,6 +4,9 @@ namespace App\Livewire\Procurement;
 
 use Livewire\Component;
 
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.app')]
 class PurchaseOrderIndex extends Component
 {
     use \Livewire\WithPagination;
@@ -42,6 +45,7 @@ class PurchaseOrderIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $orders */
         $orders = \App\Models\PurchaseOrder::with('supplier', 'user')
             ->when($this->status, function ($query) {
                 $query->where('status', $this->status);

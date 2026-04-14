@@ -8,7 +8,9 @@ use App\Services\AccountingService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class AssetIndex extends Component
 {
     use WithPagination;
@@ -50,6 +52,7 @@ class AssetIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $assets */
         $assets = FixedAsset::with(['assetAccount', 'accumulatedAccount'])
             ->where('asset_name', 'like', '%' . $this->search . '%')
             ->orWhere('asset_code', 'like', '%' . $this->search . '%')

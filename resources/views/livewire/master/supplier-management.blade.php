@@ -46,7 +46,7 @@
                     </svg>
                     <span class="hidden sm:inline text-sm">Excel</span>
                 </button>
-                @can('import suppliers')
+                @can('manage suppliers')
                 <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     <span class="hidden sm:inline text-sm">Import</span>

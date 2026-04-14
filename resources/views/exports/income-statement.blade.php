@@ -18,7 +18,7 @@
         @foreach($data['revenue_accounts'] as $account)
         <tr>
             <td>{{ $account->code }} - {{ $account->name }}</td>
-            <td style="text-align: right;">{{ $account->balance }}</td>
+            <td style="text-align: right;">{{ $account->amount }}</td>
         </tr>
         @endforeach
         <tr>
@@ -36,7 +36,7 @@
         @foreach($data['cogs_accounts'] as $account)
         <tr>
             <td>{{ $account->code }} - {{ $account->name }}</td>
-            <td style="text-align: right;">{{ $account->balance }}</td>
+            <td style="text-align: right;">{{ $account->amount }}</td>
         </tr>
         @endforeach
         <tr>
@@ -62,7 +62,7 @@
         @foreach($data['operating_expense_accounts'] as $account)
         <tr>
             <td>{{ $account->code }} - {{ $account->name }}</td>
-            <td style="text-align: right;">{{ $account->balance }}</td>
+            <td style="text-align: right;">{{ $account->amount }}</td>
         </tr>
         @endforeach
         <tr>
@@ -80,7 +80,7 @@
         @foreach($data['other_expense_accounts'] as $account)
         <tr>
             <td>{{ $account->code }} - {{ $account->name }}</td>
-            <td style="text-align: right;">{{ $account->balance }}</td>
+            <td style="text-align: right;">{{ $account->amount }}</td>
         </tr>
         @endforeach
         <tr>
@@ -99,7 +99,7 @@
         @foreach($data['tax_accounts'] as $account)
         <tr>
             <td>{{ $account->code }} - {{ $account->name }}</td>
-            <td style="text-align: right;">{{ $account->balance }}</td>
+            <td style="text-align: right;">{{ $account->amount }}</td>
         </tr>
         @endforeach
         <tr>

@@ -4,39 +4,30 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProductMarginExport implements FromView, WithTitle, ShouldAutoSize, WithStyles
+class DetailedProfitLossExport implements FromView, ShouldAutoSize, WithStyles
 {
-    protected $products;
-    protected $reportMode;
+    protected $data;
     protected $startDate;
     protected $endDate;
 
-    public function __construct($products, $reportMode = 'potential', $startDate = null, $endDate = null)
+    public function __construct($data, $startDate, $endDate)
     {
-        $this->products = $products;
-        $this->reportMode = $reportMode;
+        $this->data = $data;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
     }
 
     public function view(): View
     {
-        return view('exports.product-margin', [
-            'products' => $this->products,
-            'reportMode' => $this->reportMode,
+        return view('exports.detailed-profit-loss', [
+            'data' => $this->data,
             'startDate' => $this->startDate,
             'endDate' => $this->endDate,
         ]);
-    }
-
-    public function title(): string
-    {
-        return 'Laporan Margin';
     }
 
     public function styles(Worksheet $sheet)

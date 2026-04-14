@@ -7,7 +7,9 @@ use App\Models\ActivityLog;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class CategoryManagement extends Component
 {
     use WithPagination;
@@ -131,6 +133,7 @@ class CategoryManagement extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = Category::where('name', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate($this->perPage)

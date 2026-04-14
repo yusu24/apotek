@@ -12,7 +12,10 @@ use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
 use App\Services\AccountingService;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class SalesReturnList extends Component
 {
     use WithPagination;
@@ -209,7 +212,7 @@ class SalesReturnList extends Component
                 $accountingService = new AccountingService();
                 $accountingService->postSalesReturnJournal($salesReturn->id);
             } catch (\Exception $e) {
-                \Log::error('Failed to post sales return journal: ' . $e->getMessage());
+                Log::error('Failed to post sales return journal: ' . $e->getMessage());
                 // Don't fail the transaction, just log the error
             }
 
@@ -224,6 +227,7 @@ class SalesReturnList extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $returns */
         $returns = SalesReturn::with('sale', 'user')
             ->where('return_no', 'like', '%' . $this->search . '%')
             ->orWhereHas('sale', function($q) {

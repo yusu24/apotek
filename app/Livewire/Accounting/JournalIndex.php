@@ -5,7 +5,9 @@ namespace App\Livewire\Accounting;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\JournalEntry;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class JournalIndex extends Component
 {
     use WithPagination;
@@ -141,6 +143,7 @@ class JournalIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $journals */
         $journals = JournalEntry::with(['lines.account', 'user'])
             ->when($this->startDate, fn($q) => $q->whereDate('date', '>=', $this->startDate))
             ->when($this->endDate, fn($q) => $q->whereDate('date', '<=', $this->endDate))
@@ -156,6 +159,6 @@ class JournalIndex extends Component
 
         return view('livewire.accounting.journal-index', [
             'journals' => $journals,
-        ])->layout('layouts.app');
+        ]);
     }
 }

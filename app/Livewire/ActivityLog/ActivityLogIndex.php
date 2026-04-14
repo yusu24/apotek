@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Log;
 
 class ActivityLogIndex extends Component
 {
@@ -81,6 +82,7 @@ class ActivityLogIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $query */
         $query = ActivityLog::with('user')
             ->when($this->search, function ($q) {
                 $q->where(function($q2) {
@@ -107,7 +109,7 @@ class ActivityLogIndex extends Component
             ->paginate($this->perPage)
             ->onEachSide(1);
 
-        \Log::info("ActivityLogIndex Rendering", [
+        Log::info("ActivityLogIndex Rendering", [
             'page' => $this->getPage(),
             'search' => $this->search,
             'user' => $this->filterUser,

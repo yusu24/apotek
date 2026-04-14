@@ -20,23 +20,23 @@ new class extends Component
     <!-- Sidebar Navigation -->
     <nav id="sidebar" 
          class="fixed inset-y-0 left-0 z-[60] bg-blue-950 border-r border-blue-800/50 text-gray-100 flex flex-col transition-all duration-300 xl:translate-x-0 -translate-x-full scrollbar-hide overflow-visible"
-         :class="[$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full xl:translate-x-0', $store.sidebar.collapsed ? 'xl:w-20 w-64' : 'w-64']"
+         x-bind:class="[$store.mobileNav.open ? 'translate-x-0' : '-translate-x-full xl:translate-x-0', $store.sidebar.collapsed ? 'xl:w-20 w-64' : 'w-64']"
          >
         
         <!-- Sidebar Header -->
-        <div class="h-16 flex flex-row items-center justify-between relative px-4 transition-all duration-300" :class="$store.sidebar.collapsed ? 'flex-col justify-center gap-1' : ''">
-            <div class="w-8 xl:flex hidden" :class="{'xl:hidden': $store.sidebar.collapsed}"></div> <!-- Spacer for symmetry -->
+        <div class="h-16 flex flex-row items-center justify-between relative px-4 transition-all duration-300" x-bind:class="$store.sidebar.collapsed ? 'flex-col justify-center gap-1' : ''">
+            <div class="w-8 xl:flex hidden" x-bind:class="{'xl:hidden': $store.sidebar.collapsed}"></div> <!-- Spacer for symmetry -->
             
-            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center justify-center text-xl tracking-tight transition-all duration-300 z-10" :class="$store.sidebar.collapsed ? 'w-full' : 'flex-1'">
+            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center justify-center text-xl tracking-tight transition-all duration-300 z-10" x-bind:class="$store.sidebar.collapsed ? 'w-full' : 'flex-1'">
                 @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
                     <img src="{{ asset('storage/' . $logoPath) }}" 
                          class="h-10 w-auto object-contain object-center transition-all duration-300" 
-                         :class="$store.sidebar.collapsed ? 'h-7 max-w-[40px]' : 'h-10 w-auto scale-110'" 
+                         x-bind:class="$store.sidebar.collapsed ? 'h-7 max-w-[40px]' : 'h-10 w-auto scale-110'" 
                          alt="Logo">
                 @else
                     <x-application-logo 
                          class="block fill-current text-blue-500 transition-all duration-300" 
-                         :class="$store.sidebar.collapsed ? 'h-6 w-6' : 'h-8 w-auto'" />
+                         x-bind:class="$store.sidebar.collapsed ? 'h-6 w-6' : 'h-8 w-auto'" />
                 @endif
             </a>
             
@@ -44,8 +44,8 @@ new class extends Component
             <button @click="$store.sidebar.toggle()" 
                     class="hidden xl:flex w-5 h-5 bg-blue-600 text-white rounded-full items-center justify-center hover:bg-blue-700 transition-all shadow-sm shrink-0 z-20"
                     title="Toggle Sidebar"
-                    :class="$store.sidebar.collapsed ? 'mx-auto' : ''">
-                <svg class="w-3 h-3 transition-transform duration-500" :style="$store.sidebar.collapsed ? 'transform: rotate(180deg)' : 'transform: rotate(0deg)'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    x-bind:class="$store.sidebar.collapsed ? 'mx-auto' : ''">
+                <svg class="w-3 h-3 transition-transform duration-500" x-bind:style="$store.sidebar.collapsed ? 'transform: rotate(180deg)' : 'transform: rotate(0deg)'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
                 </svg>
             </button>
@@ -81,10 +81,10 @@ new class extends Component
             <div x-data="{ expanded: {{ $isStockActive ? 'true' : 'false' }} }">
                 <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Stok & Pengadaan</span>
+                        <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" x-bind:class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <span class="truncate" x-bind:class="{'xl:hidden': $store.sidebar.collapsed}">Stok & Pengadaan</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" x-bind:class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view stock')

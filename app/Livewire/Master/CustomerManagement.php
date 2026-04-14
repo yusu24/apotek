@@ -112,7 +112,8 @@ class CustomerManagement extends Component
 
     public function render()
     {
-        $customers = \App\Models\Customer::where('name', 'like', '%' . $this->search . '%')
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $customers */
+        $customers = Customer::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('phone', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate($this->perPage)

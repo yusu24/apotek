@@ -9,6 +9,9 @@ use App\Models\Sale;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PdfController extends Controller
 {
@@ -235,10 +238,10 @@ class PdfController extends Controller
         // If file doesn't exist, create it from the tutorial
         if (!file_exists($markdownPath)) {
             $tutorialContent = $this->getUserManualContent();
-            \Storage::put('user-manual.md', $tutorialContent);
+            Storage::put('user-manual.md', $tutorialContent);
         }
         
-        $markdown = \Storage::get('user-manual.md');
+        $markdown = Storage::get('user-manual.md');
         
         // Convert markdown to HTML (basic conversion)
         $html = $this->convertMarkdownToHtml($markdown);
@@ -279,8 +282,9 @@ class PdfController extends Controller
     private function convertMarkdownToHtml($markdown)
     {
         // Use parsedown or similar library if available, otherwise basic conversion
-        if (class_exists('\Parsedown')) {
-            $parsedown = new \Parsedown();
+        $parsedownClass = '\Parsedown';
+        if (class_exists($parsedownClass)) {
+            $parsedown = new $parsedownClass();
             return $parsedown->text($markdown);
         }
         
@@ -390,7 +394,7 @@ class PdfController extends Controller
             'phone'   => \App\Models\Setting::get('store_phone'),
         ];
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.balance-sheet', [
+        $pdf = Pdf::loadView('pdf.balance-sheet', [
             'reportData' => $reportData,
             'store'      => $store,
             'asOfDate'   => $asOfDate,
@@ -546,8 +550,18 @@ class PdfController extends Controller
 
         $sales = $salesQuery->latest('date')->limit(1000)->get();
 
+        $totalReturns = \App\Models\SalesReturn::whereBetween('created_at', [
+            Carbon::parse($startDate)->startOfDay(),
+            Carbon::parse($endDate)->endOfDay()
+        ])->sum('total_amount');
+
         $stats = [
             'total_sales' => $sales->sum('grand_total'),
+            'total_returns' => $totalReturns,
+            'net_sales' => $sales->sum('dpp') - $totalReturns,
+            'total_tax' => $sales->sum('tax'),
+            'total_rounding' => $sales->sum('rounding'),
+            'total_dpp' => $sales->sum('dpp'),
             'transaction_count' => $sales->count(),
         ];
 
@@ -586,94 +600,127 @@ class PdfController extends Controller
         $search = $request->get('search');
         $categoryFilter = $request->get('categoryFilter');
         $marginFilter = $request->get('marginFilter', 'all');
+        $reportMode = $request->get('reportMode', 'potential');
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->format('Y-m-d'));
 
-        $query = Product::with(['category', 'unit'])
-            ->select([
-                'products.id',
-                'products.name',
-                'products.barcode',
-                'products.sell_price',
-                'products.category_id',
-                'products.unit_id',
-            ])
-            ->selectRaw('
-                COALESCE(
-                    (SELECT AVG(buy_price) 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     AND batches.stock_current > 0
-                    ), 
-                    (SELECT buy_price 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     ORDER BY created_at DESC 
-                     LIMIT 1
-                    ),
-                    0
-                ) as last_buy_price
-            ')
-            ->selectRaw('
-                (products.sell_price - COALESCE(
-                    (SELECT AVG(buy_price) 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     AND batches.stock_current > 0
-                    ), 
-                    (SELECT buy_price 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     ORDER BY created_at DESC 
-                     LIMIT 1
-                    ),
-                    0
-                )) as margin_amount
-            ')
-            ->selectRaw('
-                CASE 
-                WHEN COALESCE(
-                    (SELECT AVG(buy_price) 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     AND batches.stock_current > 0
-                    ), 
-                    (SELECT buy_price 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     ORDER BY created_at DESC 
-                     LIMIT 1
-                    ),
-                    0
-                ) > 0 
-                THEN ((products.sell_price - COALESCE(
-                    (SELECT AVG(buy_price) 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     AND batches.stock_current > 0
-                    ), 
-                    (SELECT buy_price 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     ORDER BY created_at DESC 
-                     LIMIT 1
-                    ),
-                    0
-                )) / COALESCE(
-                    (SELECT AVG(buy_price) 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     AND batches.stock_current > 0
-                    ), 
-                    (SELECT buy_price 
-                     FROM batches 
-                     WHERE batches.product_id = products.id 
-                     ORDER BY created_at DESC 
-                     LIMIT 1
-                    ),
-                    0
-                ) * 100) 
-                ELSE 0 
-                END as margin_percentage
-            ');
+        if ($reportMode === 'realized') {
+            $query = Product::with(['category', 'unit'])
+                ->join('sale_items', 'products.id', '=', 'sale_items.product_id')
+                ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
+                ->join('batches', 'sale_items.batch_id', '=', 'batches.id')
+                ->whereBetween('sales.date', [
+                    \Carbon\Carbon::parse($startDate)->startOfDay(),
+                    \Carbon\Carbon::parse($endDate)->endOfDay()
+                ])
+                ->select([
+                    'products.id',
+                    'products.name',
+                    'products.barcode',
+                    'products.category_id',
+                    'products.unit_id',
+                ])
+                ->selectRaw('SUM(sale_items.quantity) as total_sold')
+                ->selectRaw('AVG(sale_items.sell_price) as avg_sell_price')
+                ->selectRaw('AVG(batches.buy_price) as avg_buy_price')
+                ->selectRaw('SUM((sale_items.sell_price - batches.buy_price) * sale_items.quantity) as margin_amount')
+                ->selectRaw('
+                    CASE 
+                    WHEN SUM(batches.buy_price * sale_items.quantity) > 0 
+                    THEN (SUM((sale_items.sell_price - batches.buy_price) * sale_items.quantity) / SUM(batches.buy_price * sale_items.quantity) * 100) 
+                    ELSE 0 
+                    END as margin_percentage
+                ')
+                ->groupBy('products.id', 'products.name', 'products.barcode', 'products.category_id', 'products.unit_id');
+        } else {
+            $query = Product::with(['category', 'unit'])
+                ->select([
+                    'products.id',
+                    'products.name',
+                    'products.barcode',
+                    'products.sell_price',
+                    'products.category_id',
+                    'products.unit_id',
+                ])
+                ->selectRaw('
+                    COALESCE(
+                        (SELECT AVG(buy_price) 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         AND batches.stock_current > 0
+                        ), 
+                        (SELECT buy_price 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         ORDER BY created_at DESC 
+                         LIMIT 1
+                        ),
+                        0
+                    ) as last_buy_price
+                ')
+                ->selectRaw('
+                    (products.sell_price - COALESCE(
+                        (SELECT AVG(buy_price) 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         AND batches.stock_current > 0
+                        ), 
+                        (SELECT buy_price 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         ORDER BY created_at DESC 
+                         LIMIT 1
+                        ),
+                        0
+                    )) as margin_amount
+                ')
+                ->selectRaw('
+                    CASE 
+                    WHEN COALESCE(
+                        (SELECT AVG(buy_price) 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         AND batches.stock_current > 0
+                        ), 
+                        (SELECT buy_price 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         ORDER BY created_at DESC 
+                         LIMIT 1
+                        ),
+                        0
+                    ) > 0 
+                    THEN ((products.sell_price - COALESCE(
+                        (SELECT AVG(buy_price) 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         AND batches.stock_current > 0
+                        ), 
+                        (SELECT buy_price 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         ORDER BY created_at DESC 
+                         LIMIT 1
+                        ),
+                        0
+                    )) / COALESCE(
+                        (SELECT AVG(buy_price) 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         AND batches.stock_current > 0
+                        ), 
+                        (SELECT buy_price 
+                         FROM batches 
+                         WHERE batches.product_id = products.id 
+                         ORDER BY created_at DESC 
+                         LIMIT 1
+                        ),
+                        0
+                    ) * 100) 
+                    ELSE 0 
+                    END as margin_percentage
+                ');
+        }
 
         if ($search) {
             $query->where(function($q) use ($search) {
@@ -698,35 +745,25 @@ class PdfController extends Controller
 
         $products = $query->orderBy('products.name')->get();
 
-        $statistics = [
+        $stats = [
             'total_products' => $products->count(),
-            'products_with_positive_margin' => $products->where('margin_amount', '>', 0)->count(),
-            'products_with_negative_margin' => $products->where('margin_amount', '<', 0)->count(),
-            'average_margin_percentage' => $products->where('last_buy_price', '>', 0)->avg('margin_percentage'),
             'total_margin_value' => $products->sum('margin_amount'),
+            'average_margin_percentage' => $products->count() > 0 ? $products->avg('margin_percentage') : 0,
         ];
 
-        $storeName = \App\Models\Setting::get('store_name');
-        if (!$storeName || $storeName === 'Laravel') {
-            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
-        }
-
-        $store = [
-            'name' => $storeName,
-            'address' => \App\Models\Setting::get('store_address'),
-            'phone' => \App\Models\Setting::get('store_phone'),
-        ];
-
+        $storeName = \App\Models\Setting::get('store_name') ?? 'APOTEK';
+        
         $pdf = Pdf::loadView('pdf.product-margin-report', [
             'products' => $products,
-            'statistics' => $statistics,
-            'store' => $store,
-            'marginFilter' => $marginFilter,
-            'printedBy' => auth()->user()->name ?? 'System',
-            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+            'stats' => $stats,
+            'reportMode' => $reportMode,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'storeName' => $storeName,
+            'printedAt' => now()->format('d/m/Y H:i'),
         ]);
         
-        $filename = 'Laporan-Margin-Produk-' . Carbon::now()->format('Ymd') . '.pdf';
+        $filename = 'Laporan-Margin-Produk-' . now()->format('Ymd') . '.pdf';
         
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
@@ -876,7 +913,9 @@ class PdfController extends Controller
         ];
 
         // Calculate subtotal
-        $subtotal = $po->items->sum(function($item) {
+        /** @var \Illuminate\Support\Collection $items */
+        $items = $po->items;
+        $subtotal = $items->sum(function($item) {
             return ($item->price ?? 0) * $item->qty;
         });
 

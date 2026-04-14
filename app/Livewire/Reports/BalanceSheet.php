@@ -5,7 +5,9 @@ namespace App\Livewire\Reports;
 use Livewire\Component;
 use App\Services\AccountingService;
 use Carbon\Carbon;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class BalanceSheet extends Component
 {
     public $asOfDate;
@@ -56,6 +58,6 @@ class BalanceSheet extends Component
 
     public function render()
     {
-        return view('livewire.reports.balance-sheet')->layout('layouts.app');
+        return view('livewire.reports.balance-sheet');
     }
 }

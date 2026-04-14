@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\ActivityLog;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 #[Layout('layouts.app')]
@@ -79,7 +80,7 @@ class ExpenseManager extends Component
             'accountId' => 'nullable|exists:accounts,id',
         ]);
 
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             if ($this->isEditing) {
                 $expense = Expense::findOrFail($this->editId);
@@ -123,12 +124,12 @@ class ExpenseManager extends Component
                 }
             }
 
-            \DB::commit();
+            DB::commit();
             $this->showModal = false;
             $this->reset(['description', 'amount', 'category', 'accountId', 'isEditing', 'editId']);
             session()->flash('message', 'Data pengeluaran berhasil disimpan.');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             session()->flash('error', 'Gagal menyimpan pengeluaran: ' . $e->getMessage());
         }
     }
@@ -151,6 +152,7 @@ class ExpenseManager extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $expenses */
         $expenses = Expense::with(['user', 'account'])
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')

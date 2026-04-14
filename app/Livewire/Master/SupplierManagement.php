@@ -36,7 +36,8 @@ class SupplierManagement extends Component
 
     public function render()
     {
-        $suppliers = \App\Models\Supplier::where('name', 'like', '%' . $this->search . '%')
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $suppliers */
+        $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('contact_person', 'like', '%' . $this->search . '%')
             ->latest()
             ->paginate($this->perPage)

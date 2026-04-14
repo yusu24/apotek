@@ -18,6 +18,33 @@ class ProductIndex extends Component
     public $perPage = 10;
     public $category_id = '';
 
+    // Selection properties
+    public $selectedProducts = [];
+    public $selectAll = false;
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selectedProducts = Product::when($this->search, function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('barcode', 'like', '%' . $this->search . '%');
+            })
+            ->when($this->category_id, function ($query) {
+                $query->where('category_id', $this->category_id);
+            })
+            ->pluck('id')
+            ->map(fn($id) => (string)$id)
+            ->toArray();
+        } else {
+            $this->selectedProducts = [];
+        }
+    }
+
+    public function updatedSelectedProducts()
+    {
+        $this->selectAll = false;
+    }
+
     // History Modal
     public $showHistoryModal = false;
     public $historyProduct = null;
@@ -97,6 +124,7 @@ class ProductIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
         $products = Product::with(['category', 'unit'])
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
@@ -149,6 +177,68 @@ class ProductIndex extends Component
             session()->flash('error', 'Gagal menghapus produk: ' . $e->getMessage());
         }
     }
+    public function deleteSelected()
+    {
+        if (!auth()->user()->can('delete products')) {
+            session()->flash('error', 'Anda tidak memiliki akses untuk menghapus produk.');
+            return;
+        }
+
+        if (empty($this->selectedProducts)) {
+            return;
+        }
+
+        $successCount = 0;
+        $failCount = 0;
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            foreach ($this->selectedProducts as $id) {
+                // Check for related stock movements
+                $hasMovements = \App\Models\StockMovement::where('product_id', $id)->exists();
+                
+                if ($hasMovements) {
+                    $failCount++;
+                    continue;
+                }
+
+                $product = Product::find($id);
+                if ($product) {
+                    $oldData = $product->toArray();
+                    $product->delete();
+
+                    ActivityLog::log([
+                        'action' => 'deleted',
+                        'module' => 'products',
+                        'description' => "Menghapus obat: {$oldData['name']} (Bulk)",
+                        'old_values' => $oldData
+                    ]);
+                    $successCount++;
+                }
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+            
+            $this->selectedProducts = [];
+            $this->selectAll = false;
+
+            if ($successCount > 0) {
+                $message = "Berhasil menghapus {$successCount} produk.";
+                if ($failCount > 0) {
+                    $message .= " Namun {$failCount} produk gagal dihapus karena memiliki riwayat transaksi.";
+                    session()->flash('error', $message);
+                } else {
+                    session()->flash('message', $message);
+                }
+            } elseif ($failCount > 0) {
+                session()->flash('error', "Gagal menghapus {$failCount} produk karena semua memiliki riwayat transaksi.");
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            session()->flash('error', 'Gagal memproses penghapusan massal: ' . $e->getMessage());
+        }
+    }
+
     public function exportExcel()
     {
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ProductsExport, 'Data-Obat-' . date('d-m-Y') . '.xlsx');

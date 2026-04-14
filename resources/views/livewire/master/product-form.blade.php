@@ -53,7 +53,7 @@
                     <label class="block text-sm font-bold text-gray-700 mb-1">
                         Stok Minimum <span class="text-red-500">*</span>
                         @if(!$canEditPrice)
-                            <span class="text-xs text-red-600 font-normal">(Hanya Super Admin)</span>
+                            <span class="text-xs text-red-600 font-normal">(Akses Terbatas)</span>
                         @endif
                     </label>
                     <input type="number" wire:model="min_stock" placeholder="0"
@@ -67,7 +67,7 @@
                     <label class="block text-sm font-bold text-gray-700 mb-1">
                         Harga Jual (Rp) <span class="text-red-500">*</span>
                         @if(!$canEditPrice)
-                            <span class="text-xs text-red-600 font-normal">(Hanya Super Admin)</span>
+                            <span class="text-xs text-red-600 font-normal">(Akses Terbatas)</span>
                         @endif
                     </label>
                     <div x-data="money($wire.entangle('sell_price'))">

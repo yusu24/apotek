@@ -3,7 +3,10 @@
 namespace App\Livewire\Procurement;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class GoodsReceiptIndex extends Component
 {
     use \Livewire\WithPagination;
@@ -104,7 +107,7 @@ class GoodsReceiptIndex extends Component
                 'notes' => $this->payment_notes,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to process supplier payment: ' . $e->getMessage());
+            Log::error('Failed to process supplier payment: ' . $e->getMessage());
             $this->addError('payment_amount', 'Gagal memproses pembayaran: ' . $e->getMessage());
             return;
         }
@@ -116,6 +119,7 @@ class GoodsReceiptIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $receipts */
         $receipts = \App\Models\GoodsReceipt::with('purchaseOrder.supplier', 'user', 'items')
             ->where('delivery_note_number', 'like', '%' . $this->search . '%')
             ->orWhereHas('purchaseOrder.supplier', function ($q) {

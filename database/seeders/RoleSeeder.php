@@ -37,6 +37,7 @@ class RoleSeeder extends Seeder
             'view products',
             'create products',
             'edit products',
+            'edit product price',
             'delete products',
             'view categories',
             'manage categories',

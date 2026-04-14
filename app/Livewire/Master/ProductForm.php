@@ -80,8 +80,8 @@ class ProductForm extends Component
             }
         }
 
-        // Check if user can edit price (Super Admin only)
-        $this->canEditPrice = auth()->user()->hasRole('super-admin');
+        // Check if user can edit price (Permission-based)
+        $this->canEditPrice = auth()->user()->can('edit product price');
         
         // Check permission for image upload
         $this->canUploadImage = auth()->user()->can('upload product images');
@@ -151,7 +151,7 @@ class ProductForm extends Component
             'description' => $this->description,
         ];
 
-        // Only Super Admin can modify price and min_stock on existing products.
+        // Only users with 'edit product price' permission can modify price and min_stock on existing products.
         // For NEW products, anyone allowed to create can set the initial values.
         if ($this->canEditPrice || !$this->product_id) {
             $data['min_stock'] = $this->min_stock;

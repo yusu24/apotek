@@ -18,12 +18,16 @@ class StockReportExport implements FromQuery, WithHeadings, WithMapping, ShouldA
     protected $search;
     protected $startExpiry;
     protected $endExpiry;
+    protected $categoryFilter;
+    protected $stockStatus;
 
-    public function __construct($search = '', $startExpiry = null, $endExpiry = null)
+    public function __construct($search = '', $startExpiry = null, $endExpiry = null, $categoryFilter = '', $stockStatus = 'all')
     {
         $this->search = $search;
         $this->startExpiry = $startExpiry;
         $this->endExpiry = $endExpiry;
+        $this->categoryFilter = $categoryFilter;
+        $this->stockStatus = $stockStatus;
     }
 
     public function query()
@@ -32,8 +36,14 @@ class StockReportExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             ->with(['product.category', 'product.unit'])
             ->where('stock_current', '>', 0)
             ->whereHas('product', function($q) {
-                $q->where('name', 'like', '%'.$this->search.'%')
-                  ->orWhere('barcode', 'like', '%'.$this->search.'%');
+                $q->where(function($sq) {
+                    $sq->where('name', 'like', '%'.$this->search.'%')
+                      ->orWhere('barcode', 'like', '%'.$this->search.'%');
+                });
+                
+                if ($this->categoryFilter) {
+                    $q->where('category_id', $this->categoryFilter);
+                }
             });
 
         if ($this->startExpiry) {
@@ -42,6 +52,12 @@ class StockReportExport implements FromQuery, WithHeadings, WithMapping, ShouldA
 
         if ($this->endExpiry) {
             $query->whereDate('expired_date', '<=', $this->endExpiry);
+        }
+
+        if ($this->stockStatus === 'low') {
+            $query->whereHas('product', function($q) {
+                $q->whereRaw('stock_current <= min_stock');
+            });
         }
 
         return $query->orderBy('expired_date');

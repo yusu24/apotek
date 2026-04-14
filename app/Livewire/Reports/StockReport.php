@@ -76,6 +76,7 @@ class StockReport extends Component
             });
         }
 
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $batches */
         $batches = (clone $query)->orderBy('expired_date')->paginate($this->perPage)->onEachSide(1);
 
         $totalInventoryValue = (clone $query)

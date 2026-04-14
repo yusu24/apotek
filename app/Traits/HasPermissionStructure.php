@@ -51,6 +51,7 @@ trait HasPermissionStructure
                     'view products' => ['label' => 'Lihat Produk', 'type' => 'view'],
                     'create products' => ['label' => 'Tambah Produk', 'type' => 'action'],
                     'edit products' => ['label' => 'Edit Produk', 'type' => 'action'],
+                    'edit product price' => ['label' => 'Edit Harga Produk', 'type' => 'action'],
                     'delete products' => ['label' => 'Hapus Produk', 'type' => 'action'],
                     'manage categories' => ['label' => 'Kategori Produk', 'type' => 'view'],
                     'manage units' => ['label' => 'Master Satuan', 'type' => 'view'],

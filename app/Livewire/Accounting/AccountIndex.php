@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 
+#[Layout('layouts.app')]
 class AccountIndex extends Component
 {
     use WithPagination;
@@ -194,10 +195,11 @@ class AccountIndex extends Component
         }
 
         // Order by Code ascending
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $accounts */
         $accounts = $query->orderBy('code')->paginate($this->perPage)->onEachSide(1);
 
         return view('livewire.accounting.account-index', [
             'accounts' => $accounts
-        ])->layout('layouts.app');
+        ]);
     }
 }

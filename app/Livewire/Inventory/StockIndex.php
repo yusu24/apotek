@@ -30,6 +30,7 @@ class StockIndex extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
         $products = Product::query()
             ->with(['category', 'unit', 'batches' => function($q) {
                 $q->orderBy('expired_date');

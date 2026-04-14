@@ -68,6 +68,7 @@ class SalesReport extends Component
                 });
             });
 
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $sales */
         $sales = (clone $salesQuery)->latest('date')->paginate($this->perPage)->onEachSide(1);
 
         $totalReturns = \App\Models\SalesReturn::whereBetween('created_at', [
@@ -78,7 +79,10 @@ class SalesReport extends Component
         $stats = [
             'total_sales' => (clone $salesQuery)->sum('grand_total'),
             'total_returns' => $totalReturns,
-            'net_sales' => (clone $salesQuery)->sum('grand_total') - $totalReturns,
+            'net_sales' => (clone $salesQuery)->sum('dpp') - $totalReturns,
+            'total_dpp' => (clone $salesQuery)->sum('dpp'),
+            'total_tax' => (clone $salesQuery)->sum('tax'),
+            'total_rounding' => (clone $salesQuery)->sum('rounding'),
             'transaction_count' => (clone $salesQuery)->count(),
         ];
 

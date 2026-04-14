@@ -98,11 +98,38 @@
             </div>
         </div>
 
+        <!-- Bulk Action Bar -->
+        @if(!empty($selectedProducts))
+        <div class="px-6 py-3 bg-blue-50 border-b flex items-center justify-between animate-fadeIn">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-blue-700">
+                    {{ count($selectedProducts) }} Produk Terpilih
+                </span>
+                <button wire:click="$set('selectedProducts', [])" class="text-xs text-blue-500 hover:text-blue-700 underline">
+                    Batalkan Seleksi
+                </button>
+            </div>
+            <div class="flex items-center gap-2">
+                @can('delete products')
+                <button wire:click="deleteSelected" 
+                    wire:confirm="Hapus {{ count($selectedProducts) }} produk terpilih? Tindakan ini tidak dapat dibatalkan."
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Hapus Terpilih
+                </button>
+                @endcan
+            </div>
+        </div>
+        @endif
+
         <!-- Scrollable Table Container -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
+                        <th class="px-6 py-4 w-10 text-center">
+                            <input type="checkbox" wire:model.live="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
+                        </th>
                         <th class="px-6 py-4 text-left">Info Produk</th>
                         <th class="px-6 py-4 text-left">Kategori</th>
                         <th class="px-6 py-4 text-left">Harga Jual</th>
@@ -112,7 +139,10 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($products as $product)
-                        <tr class="hover:bg-gray-50 transition duration-150">
+                        <tr class="hover:bg-gray-50 transition duration-150 {{ in_array($product->id, $selectedProducts) ? 'bg-blue-50/50' : '' }}">
+                            <td class="px-6 py-4 text-center">
+                                <input type="checkbox" wire:model.live="selectedProducts" value="{{ $product->id }}" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
+                            </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
                                 <div class="text-xs text-gray-500 mt-1 uppercase">{{ $product->barcode }}</div>
@@ -177,7 +207,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">Data obat tidak ditemukan.</td>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 italic">Data obat tidak ditemukan.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -88,8 +88,7 @@
         }
         .grand-total-value { 
             font-weight: bold; 
-            border-top: 0.5pt solid #000; 
-            border-bottom: 3pt double #000;
+            border-top: 1pt solid #000; 
             text-align: right;
             padding-top: 2px;
         }
@@ -139,8 +138,28 @@
             
             @if($sales->count() > 0)
             <tr>
-                <td colspan="4" class="grand-total-label text-right">TOTAL PENJUALAN ({{ $stats['transaction_count'] }} Transaksi)</td>
-                <td class="grand-total-value">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</td>
+                <td colspan="4" class="grand-total-label text-right" style="border-top: 1pt solid #000;">TOTAL PENJUALAN KOTOR</td>
+                <td class="grand-total-value" style="border-top: 1pt solid #000;">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">(-) TOTAL PPN (PAJAK)</td>
+                <td class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">(-) TOTAL PEMBULATAN</td>
+                <td class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="grand-total-label text-right" style="border-top: none; color: #4a7ebb; padding-top: 2px;">SUBTOTAL BERSIH (DPP)</td>
+                <td class="text-right font-bold" style="color: #4a7ebb; padding-top: 2px;">Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="grand-total-label text-right" style="color: red; border-top: none; padding-top: 2px;">(-) TOTAL RETUR</td>
+                <td class="text-right font-bold" style="color: red; padding-top: 2px;">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <td colspan="4" class="grand-total-label text-right" style="border-top: 1.5pt solid #000; padding-top: 5px;">TOTAL PENJUALAN BERSIH</td>
+                <td class="grand-total-value" style="background-color: #e2efda; border-top: 1.5pt solid #000; padding-top: 5px;">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</td>
             </tr>
             @endif
         </tbody>

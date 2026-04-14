@@ -109,7 +109,9 @@ class ImportController extends Controller
 
     public function importSuppliers(Request $request)
     {
-        abort_if(!auth()->user()->can('import suppliers'), 403);
+        // Try both permissions for maximum compatibility
+        abort_if(!auth()->user()->can('import suppliers') && !auth()->user()->can('manage suppliers'), 403);
+        
         $request->validate([
             'file' => 'required|mimes:xls,xlsx'
         ]);
@@ -117,6 +119,25 @@ class ImportController extends Controller
         try {
             Excel::import(new SuppliersImport, $request->file('file'));
             return redirect()->back()->with('message', 'Data Supplier berhasil diimport!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+            foreach ($failures as $failure) {
+                $row = $failure->row();
+                $attribute = $failure->attribute();
+                $errorMsg = implode(', ', $failure->errors());
+                $errorMessages[] = "Baris {$row}.{$attribute}: {$errorMsg}";
+            }
+            
+            $displayErrors = array_slice($errorMessages, 0, 5);
+            $remainingCount = count($errorMessages) - 5;
+            
+            $message = 'Gagal import: ' . implode(' | ', $displayErrors);
+            if ($remainingCount > 0) {
+                $message .= " (dan {$remainingCount} error lainnya)";
+            }
+            
+            return redirect()->back()->with('error', $message);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
         }

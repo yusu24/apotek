@@ -333,8 +333,6 @@
                         
                         <input type="text" 
                             wire:model.live.debounce.300ms="search"
-                            wire:keydown.arrow-down.prevent="incrementHighlight"
-                            wire:keydown.arrow-up.prevent="decrementHighlight"
                             wire:keydown.enter="selectHighlighted"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Cari produk / Scan barcode (F2)..." 
@@ -410,13 +408,26 @@
                             </button>
                         @endforeach
                     </div>
+                    
+                    <!-- Stock Legend -->
+                    <div class="flex flex-wrap items-center gap-x-8 gap-y-2 mt-3 px-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">
+                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></span> Tersedia</span>
+                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]"></span> Terbatas (&le; 20)</span>
+                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]"></span> Menipis (&le; 5)</span>
+                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.4)]"></span> Habis</span>
+                    </div>
                 </div>
 
                 <!-- Product Grid (Scrollable) -->
-                <div class="flex-1 p-3 md:p-6 overflow-y-auto">
-                    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
-                        @forelse($products as $product)
-                        <div class="bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg transition-all group relative">
+                <div class="flex-1 p-3 md:p-6 overflow-y-auto" x-data="{ hIdx: @entangle('highlightIndex') }" x-init="$watch('hIdx', value => {
+                    const el = document.getElementById('grid-product-' + value);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                })">
+                    <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
+                        @forelse($products as $index => $product)
+                        <div id="grid-product-{{ $index }}" 
+                             wire:key="product-grid-{{ $product->id }}"
+                             class="bg-white border-2 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg transition-all group relative {{ (int)$highlightIndex === (int)$index ? 'border-blue-500 ring-4 ring-blue-50 shadow-md' : 'border-gray-100' }}">
                             
                             <!-- Stock Badge (Top Right Corner) -->
                             <div class="absolute top-2 right-2 z-10 pointer-events-none">
@@ -1104,7 +1115,37 @@
 
     <!-- Keyboard Shortcuts -->
     <script>
+        function getColumnCount() {
+            const grid = document.getElementById('product-grid');
+            if (!grid || !grid.children || grid.children.length === 0) return 1;
+            
+            const firstChild = grid.children[0];
+            const firstTop = firstChild.offsetTop;
+            let count = 0;
+            
+            for (let i = 0; i < grid.children.length; i++) {
+                if (grid.children[i].offsetTop === firstTop) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+            return count || 1;
+        }
+
         document.addEventListener('keydown', function(event) {
+            const searchInput = document.getElementById('pos-search-input');
+            const isSearchFocused = document.activeElement === searchInput;
+
+            if (isSearchFocused) {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                    event.preventDefault();
+                    const direction = event.key.replace('Arrow', '').toLowerCase();
+                    @this.moveHighlight(direction, getColumnCount());
+                    return;
+                }
+            }
+
             if (event.key === 'F2') {
                 event.preventDefault();
                 document.getElementById('pos-search-input').focus();

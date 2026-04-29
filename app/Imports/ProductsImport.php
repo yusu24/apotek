@@ -35,6 +35,7 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
     */
     public function model(array $row)
     {
+        $this->currentRow++;
         // Check if row is essentially empty
         $isEmpty = true;
         foreach ($row as $value) {
@@ -149,11 +150,16 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
              $validationFailures[] = new Failure($this->currentRow, 'satuan', ['Satuan wajib diisi atau tidak valid'], $row);
         }
 
-        if ($barcode) {
+        if ($barcode !== null && $barcode !== '') {
             // Check if barcode exists in DB
             if (Product::where('barcode', $barcode)->exists()) {
                 $validationFailures[] = new Failure($this->currentRow, 'barcode', ['Barcode sudah digunakan oleh produk lain'], $row);
             }
+        }
+
+        // Also check if product name already exists
+        if ($productName && Product::where('name', $productName)->exists()) {
+             $validationFailures[] = new Failure($this->currentRow, 'nama_produk', ['Nama produk sudah terdaftar dalam sistem'], $row);
         }
 
         if (!empty($validationFailures)) {

@@ -126,6 +126,7 @@ class AccountingCategoryManagement extends Component
 
     public function render()
     {
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = AccountingCategory::query()
             ->when($this->search, function($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
@@ -133,8 +134,8 @@ class AccountingCategoryManagement extends Component
                       ->orWhere('description', 'like', '%' . $this->search . '%');
             })
             ->orderBy('created_at', 'desc')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $categories->onEachSide(1);
 
         return view('livewire.settings.accounting-category-management', [
             'categories' => $categories,

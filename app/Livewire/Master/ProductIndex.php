@@ -134,8 +134,8 @@ class ProductIndex extends Component
                 $query->where('category_id', $this->category_id);
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $products->onEachSide(1);
 
         return view('livewire.master.product-index', [
             'products' => $products,

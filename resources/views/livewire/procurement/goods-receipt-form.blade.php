@@ -258,7 +258,9 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="px-4 py-3 align-top border-r border-gray-100 text-right font-normal text-sm text-gray-800">
                                     Rp <span x-text="new Intl.NumberFormat('id-ID').format((parseFloat(qty) || 0) * (parseFloat(buy_price) || 0))"></span>
+                                </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">
                                         <button type="button" wire:click="removeItem({{ $index }})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">

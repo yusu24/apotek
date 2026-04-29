@@ -40,8 +40,8 @@ class SupplierManagement extends Component
         $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('contact_person', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $suppliers->onEachSide(1);
 
         return view('livewire.master.supplier-management', [
             'suppliers' => $suppliers,

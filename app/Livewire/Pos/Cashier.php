@@ -12,6 +12,7 @@ use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\SalesDraft;
 use App\Models\Customer;
@@ -854,7 +855,7 @@ class Cashier extends Component
 
     public function processPayment($status = 'completed')
     {
-        \Log::info('ProcessPayment Start State:', [
+        Log::info('ProcessPayment Start State:', [
             'sendWA' => $this->sendWA,
             'patientPhone' => $this->patientPhone,
             'sendEmail' => $this->sendEmail,
@@ -872,7 +873,7 @@ class Cashier extends Component
         } else if (!$this->selectedCustomerId) {
                 // If customer not selected, check if inline details are provided
                 if (!empty($this->newCustomerName)) {
-                    $customer = \App\Models\Customer::create([
+                    $customer = Customer::create([
                         'name' => $this->newCustomerName,
                         'phone' => $this->newCustomerPhone,
                         'address' => $this->newCustomerAddress,
@@ -925,7 +926,7 @@ class Cashier extends Component
             if ($sale->payment_method === 'tempo') {
                 $remaining = (float)$sale->grand_total - (float)$this->cash_amount;
                 if ($remaining > 0.01) {
-                    \App\Models\Receivable::create([
+                    Receivable::create([
                         'sale_id' => $sale->id,
                         'customer_id' => $this->selectedCustomerId,
                         'amount' => $sale->grand_total,
@@ -1019,7 +1020,7 @@ class Cashier extends Component
                 $accountingService = new \App\Services\AccountingService();
                 $accountingService->postSaleJournal($sale->id);
             } catch (\Exception $e) {
-                \Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
+                Log::error('Failed to post sale journal for INV-' . $sale->invoice_no . ': ' . $e->getMessage());
             }
 
             // 12. Send Email Receipt if requested
@@ -1033,7 +1034,7 @@ class Cashier extends Component
                     } 
                     // Priority 2: Registered Customer Email
                     elseif ($this->selectedCustomerId) {
-                        $customer = \App\Models\Customer::find($this->selectedCustomerId);
+                        $customer = Customer::find($this->selectedCustomerId);
                         if ($customer && $customer->email) {
                             $recipientEmail = $customer->email;
                         }
@@ -1046,7 +1047,7 @@ class Cashier extends Component
                         \Illuminate\Support\Facades\Mail::to($recipientEmail)
                             ->send(new \App\Mail\ReceiptMail($sale));
                             
-                        \Log::info('Receipt email sent to ' . $recipientEmail . ' for ' . $sale->invoice_no);
+                        Log::info('Receipt email sent to ' . $recipientEmail . ' for ' . $sale->invoice_no);
                         session()->flash('email_sent', "Struk berhasil dikirim ke: $recipientEmail");
                     }
                 } catch (\Exception $e) {

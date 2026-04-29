@@ -77,7 +77,8 @@ class StockReport extends Component
         }
 
         /** @var \Illuminate\Pagination\LengthAwarePaginator $batches */
-        $batches = (clone $query)->orderBy('expired_date')->paginate($this->perPage)->onEachSide(1);
+        $batches = (clone $query)->orderBy('expired_date')->paginate($this->perPage);
+        $batches->onEachSide(1);
 
         $totalInventoryValue = (clone $query)
             ->selectRaw('SUM(batches.stock_current * batches.buy_price) as total_value')

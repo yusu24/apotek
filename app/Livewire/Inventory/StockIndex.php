@@ -44,8 +44,8 @@ class StockIndex extends Component
                 $q->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock');
             })
             ->orderBy('name')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $products->onEachSide(1);
 
         return view('livewire.inventory.stock-index', [
             'products' => $products,

@@ -57,8 +57,8 @@ class PurchaseOrderIndex extends Component
                     });
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $orders->onEachSide(1);
 
         return view('livewire.procurement.purchase-order-index', compact('orders'));
     }

@@ -154,8 +154,8 @@ class JournalIndex extends Component
             }))
             ->orderBy('date', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $journals->onEachSide(1);
 
         return view('livewire.accounting.journal-index', [
             'journals' => $journals,

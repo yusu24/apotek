@@ -9,6 +9,7 @@ use App\Models\ProcurementItem;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ProductMarginExport;
+use Carbon\Carbon;
 
 class ProductMarginReport extends Component
 {
@@ -200,8 +201,8 @@ class ProductMarginReport extends Component
             ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
             ->join('batches', 'sale_items.batch_id', '=', 'batches.id')
             ->whereBetween('sales.date', [
-                \Carbon\Carbon::parse($this->startDate)->startOfDay(),
-                \Carbon\Carbon::parse($this->endDate)->endOfDay()
+                Carbon::parse($this->startDate)->startOfDay(),
+                Carbon::parse($this->endDate)->endOfDay()
             ])
             ->select([
                 'products.id',
@@ -297,8 +298,11 @@ class ProductMarginReport extends Component
     {
         $categories = \App\Models\Category::orderBy('name')->get();
         
+        $products = $this->baseQuery->paginate($this->perPage);
+        $products->onEachSide(1);
+
         return view('livewire.reports.product-margin-report', [
-            'products' => $this->baseQuery->paginate($this->perPage)->onEachSide(1),
+            'products' => $products,
             'categories' => $categories,
             'statistics' => $this->statistics,
         ]);

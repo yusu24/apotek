@@ -106,8 +106,8 @@ class ActivityLogIndex extends Component
                 $q->whereDate('created_at', '<=', $this->filterDateTo);
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $query->onEachSide(1);
 
         Log::info("ActivityLogIndex Rendering", [
             'page' => $this->getPage(),

@@ -56,8 +56,8 @@ class AssetIndex extends Component
         $assets = FixedAsset::with(['assetAccount', 'accumulatedAccount'])
             ->where('asset_name', 'like', '%' . $this->search . '%')
             ->orWhere('asset_code', 'like', '%' . $this->search . '%')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $assets->onEachSide(1);
 
         return view('livewire.finance.asset-index', [
             'assets' => $assets,

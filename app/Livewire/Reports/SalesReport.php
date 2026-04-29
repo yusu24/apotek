@@ -69,7 +69,8 @@ class SalesReport extends Component
             });
 
         /** @var \Illuminate\Pagination\LengthAwarePaginator $sales */
-        $sales = (clone $salesQuery)->latest('date')->paginate($this->perPage)->onEachSide(1);
+        $sales = (clone $salesQuery)->latest('date')->paginate($this->perPage);
+        $sales->onEachSide(1);
 
         $totalReturns = \App\Models\SalesReturn::whereBetween('created_at', [
             Carbon::parse($this->startDate)->startOfDay(),

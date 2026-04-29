@@ -65,7 +65,7 @@ class PurchaseReturnList extends Component
                 // We use the batch_no from GR item to find the current batch status
                 // But wait, GR Item stores batch_no.
                 // We need the actual Batch model to check current stock.
-                $batch = \App\Models\Batch::where('product_id', $item->product_id)
+                $batch = Batch::where('product_id', $item->product_id)
                     ->where('batch_no', $item->batch_no)
                     ->first();
                 
@@ -144,7 +144,7 @@ class PurchaseReturnList extends Component
                 ]);
 
                 // Update Stock
-                $batch = \App\Models\Batch::find($batchId);
+                $batch = Batch::find($batchId);
                 $batch->decrement('stock_current', $item['quantity']);
 
                 // Record Stock Movement
@@ -195,8 +195,8 @@ class PurchaseReturnList extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $returns->onEachSide(1);
 
         return view('livewire.inventory.purchase-return-list', [
             'returns' => $returns,

@@ -156,8 +156,8 @@ class ExpenseManager extends Component
         $expenses = Expense::with(['user', 'account'])
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $expenses->onEachSide(1);
         
         $categories = ExpenseCategory::active()->orderBy('name')->get();
         

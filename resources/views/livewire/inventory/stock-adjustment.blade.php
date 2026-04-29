@@ -10,7 +10,7 @@
         <!-- Header inside box -->
         <div class="px-5 py-3 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
             <h2 class="text-sm font-bold text-gray-700 truncate mr-4">{{ $product_name }}</h2>
-            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-black shrink-0">
+            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-black shrink-0">
                 Stok: {{ $current_stock }}
             </span>
         </div>
@@ -18,16 +18,16 @@
         <form wire:submit="save" class="p-5 space-y-4">
             <!-- Type Toggle -->
             <div class="flex items-center justify-between gap-4">
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tipe:</label>
-                <div class="flex bg-gray-50 p-1 rounded-lg border border-gray-100">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Tipe:</label>
+                <div class="flex bg-gray-50 p-1.5 rounded-lg border border-gray-100">
                     <button type="button" 
                             wire:click="$set('adjustment_type', 'add')"
-                            class="px-3 py-1 rounded text-[10px] font-bold transition-all {{ $adjustment_type === 'add' ? 'bg-white shadow text-green-600' : 'text-gray-400' }}">
+                            class="px-4 py-1.5 rounded text-xs font-bold transition-all {{ $adjustment_type === 'add' ? 'bg-white shadow text-green-600' : 'text-gray-400' }}">
                         Tambah
                     </button>
                     <button type="button" 
                             wire:click="$set('adjustment_type', 'subtract')"
-                            class="px-3 py-1 rounded text-[10px] font-bold transition-all {{ $adjustment_type === 'subtract' ? 'bg-white shadow text-red-600' : 'text-gray-400' }}">
+                            class="px-4 py-1.5 rounded text-xs font-bold transition-all {{ $adjustment_type === 'subtract' ? 'bg-white shadow text-red-600' : 'text-gray-400' }}">
                         Kurangi
                     </button>
                 </div>
@@ -36,7 +36,7 @@
             <!-- Amount Input -->
             <div>
                 <div class="flex justify-between mb-1">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jumlah Unit:</label>
+                    <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Jumlah Unit:</label>
                     @if($quantity)
                     <span class="text-[9px] font-bold text-gray-400 uppercase">
                         Hasil &rarr; <span class="{{ $adjustment_type === 'add' ? 'text-green-500' : 'text-red-500' }}">{{ $adjustment_type === 'add' ? ($current_stock + $quantity) : ($current_stock - $quantity) }}</span>
@@ -50,7 +50,7 @@
 
             <!-- Reason -->
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Alasan:</label>
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block mb-1">Alasan:</label>
                 <textarea wire:model="description" rows="2" 
                     placeholder="Contoh: Koreksi stok"
                     class="w-full bg-gray-50 border-gray-100 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-xs p-2 resize-none transition-all"></textarea>
@@ -76,7 +76,7 @@
     </div>
 
     <!-- FIFO Note -->
-    <p class="mt-3 text-center text-gray-400 text-[9px] font-medium uppercase tracking-tighter italic">
+    <p class="mt-3 text-center text-gray-400 text-[11px] font-medium tracking-tight italic">
         * Penyesuaian menggunakan logika FIFO
     </p>
 </div>

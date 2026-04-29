@@ -116,8 +116,8 @@ class CustomerManagement extends Component
         $customers = Customer::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('phone', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $customers->onEachSide(1);
 
         return view('livewire.master.customer-management', [
             'customers' => $customers

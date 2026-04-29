@@ -37,8 +37,8 @@ class UnitManagement extends Component
         /** @var \Illuminate\Pagination\LengthAwarePaginator $units */
         $units = Unit::where('name', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $units->onEachSide(1);
 
         return view('livewire.master.unit-management', [
             'units' => $units

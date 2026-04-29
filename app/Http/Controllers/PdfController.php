@@ -610,8 +610,8 @@ class PdfController extends Controller
                 ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
                 ->join('batches', 'sale_items.batch_id', '=', 'batches.id')
                 ->whereBetween('sales.date', [
-                    \Carbon\Carbon::parse($startDate)->startOfDay(),
-                    \Carbon\Carbon::parse($endDate)->endOfDay()
+                    Carbon::parse($startDate)->startOfDay(),
+                    Carbon::parse($endDate)->endOfDay()
                 ])
                 ->select([
                     'products.id',

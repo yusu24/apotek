@@ -136,8 +136,8 @@ class CategoryManagement extends Component
         /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = Category::where('name', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $categories->onEachSide(1);
 
         return view('livewire.master.category-management', [
             'categories' => $categories

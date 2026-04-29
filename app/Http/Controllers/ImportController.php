@@ -70,10 +70,10 @@ class ImportController extends Controller
                     $errorMessages[] = "Baris {$row}.{$attribute}: {$errorMsg}";
                 }
                 
-                $displayErrors = array_slice($errorMessages, 0, 5);
-                $remainingCount = count($errorMessages) - 5;
+                $displayErrors = array_slice($errorMessages, 0, 10);
+                $remainingCount = count($errorMessages) - 10;
                 
-                $message = 'Gagal import: ' . implode(' | ', $displayErrors);
+                $message = 'Import selesai dengan beberapa error: ' . implode(' | ', $displayErrors);
                 if ($remainingCount > 0) {
                     $message .= " (dan {$remainingCount} error lainnya)";
                 }
@@ -92,18 +92,12 @@ class ImportController extends Controller
                 $errorMessages[] = "Baris {$row}.{$attribute}: {$errorMsg}";
             }
             
-            $displayErrors = array_slice($errorMessages, 0, 5);
-            $remainingCount = count($errorMessages) - 5;
-            
+            $displayErrors = array_slice($errorMessages, 0, 10);
             $message = 'Gagal import: ' . implode(' | ', $displayErrors);
-            if ($remainingCount > 0) {
-                $message .= " (dan {$remainingCount} error lainnya)";
-            }
-            
             return redirect()->back()->with('error', $message);
         } catch (\Exception $e) {
             \Log::error('Product Import Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal import (Sistem Error): ' . $e->getMessage());
         }
     }
 
@@ -154,7 +148,27 @@ class ImportController extends Controller
             $import = new StockImport;
             Excel::import($import, $request->file('file'));
             
-            return redirect()->back()->with('message', 'Import berhasil! Data stok telah ditambahkan.');
+            $successCount = $import->getSuccessCount();
+            $failures = $import->failures();
+            
+            if ($failures->isNotEmpty()) {
+                $errorMessages = [];
+                foreach ($failures as $failure) {
+                    $errorMessages[] = "Baris {$failure->row()}: " . implode(', ', $failure->errors());
+                }
+                
+                $displayErrors = array_slice($errorMessages, 0, 5);
+                $remainingCount = count($errorMessages) - 5;
+                
+                $message = "Import selesai. Berhasil: {$successCount}, Gagal: " . count($errorMessages) . ". Error: " . implode(' | ', $displayErrors);
+                if ($remainingCount > 0) {
+                    $message .= " (dan {$remainingCount} error lainnya)";
+                }
+                
+                return redirect()->back()->with('error', $message);
+            }
+            
+            return redirect()->back()->with('message', "Import berhasil! {$successCount} data stok telah ditambahkan.");
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
             $errorMessages = [];
@@ -164,7 +178,7 @@ class ImportController extends Controller
             return redirect()->back()->with('error', 'Validasi gagal: ' . implode(' | ', $errorMessages));
         } catch (\Exception $e) {
             \Log::error('Stock Import Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal import (Sistem Error): ' . $e->getMessage());
         }
     }
 

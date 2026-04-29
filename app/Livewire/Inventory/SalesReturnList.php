@@ -234,8 +234,8 @@ class SalesReturnList extends Component
                 $q->where('invoice_no', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $returns->onEachSide(1);
 
         return view('livewire.inventory.sales-return-list', [
             'returns' => $returns,

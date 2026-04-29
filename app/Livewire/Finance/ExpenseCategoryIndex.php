@@ -45,8 +45,8 @@ class ExpenseCategoryIndex extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->orderBy('name')
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $categories->onEachSide(1);
 
         return view('livewire.finance.expense-category-index', [
             'categories' => $categories,

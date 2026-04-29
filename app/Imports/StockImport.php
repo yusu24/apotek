@@ -6,22 +6,31 @@ use App\Models\Product;
 use App\Models\Batch;
 use App\Models\StockMovement;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Validators\Failure;
 
-class StockImport implements ToCollection, WithHeadingRow, WithValidation
+class StockImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {
+    use SkipsFailures;
+
+    private $successCount = 0;
+    private $currentRow = 1; // Starts at 1 (heading), first data row will be 2
+
     public function collection(Collection $rows)
     {
         // Use transaction to ensure data integrity
         DB::transaction(function () use ($rows) {
             foreach ($rows as $row) {
+                $this->currentRow++;
                 $this->processRow($row);
             }
         });
+    }
+
+    public function getSuccessCount()
+    {
+        return $this->successCount;
     }
 
     private function processRow($row)
@@ -29,10 +38,6 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation
         // Convert row to array for easier access
         $data = $row->toArray();
         
-        // Log all available keys for debugging
-        \Log::info('Available columns: ' . implode(', ', array_keys($data)));
-        \Log::info('Row data: ', $data);
-
         // Helper function to find column value by multiple possible names
         $findColumn = function($possibleNames) use ($data) {
             foreach ($possibleNames as $name) {
@@ -43,83 +48,58 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation
             return null;
         };
 
-        // Get Product ID - try multiple variations
-        $productId = $findColumn([
-            'id_produk_jangan_diubah',
-            'id_produk',
-            'id',
-        ]);
+        // Get Product ID
+        $productId = $findColumn(['id_produk_jangan_diubah', 'id_produk', 'id']);
 
         // Get Barcode
-        $barcode = $findColumn(['barcode']);
+        $barcode = $findColumn(['kode_barcode', 'barcode', 'sku']);
 
         // Get Product Name
         $productName = $findColumn(['nama_produk', 'name']);
 
-        // Get Quantity - THIS IS THE CRITICAL ONE
+        // Get Quantity
         $qty = intval($findColumn([
             'jumlah_masuk_isi_disini',
             'jumlah_masuk',
+            'total_stok',
+            'stok',
             'qty',
             'quantity',
         ]) ?? 0);
 
-        \Log::info("Parsed - Product ID: $productId, Barcode: $barcode, Name: $productName, Qty: $qty");
+        // Skip if row is empty
+        if ($qty <= 0 && $productId === null && $barcode === null && $productName === null) {
+            return;
+        }
 
-        // Skip if no quantity input
+        // Validate Quantity
         if ($qty <= 0) {
-            \Log::info('Skipping row - no quantity or quantity is 0');
+            $this->failures[] = new Failure($this->currentRow, 'jumlah_masuk', ['Jumlah masuk harus lebih dari 0'], $data);
             return;
         }
 
         // 1. Find Product
         $product = null;
-        $foundBy = null;
 
-        // Priority 1: Try by Barcode (most reliable for stock operations)
-        if ($barcode) {
+        // Priority 1: Try by Barcode
+        if ($barcode !== null && $barcode !== '') {
             $product = Product::where('barcode', $barcode)->first();
-            if ($product) {
-                $foundBy = "Barcode";
-                \Log::info("✓ Found product by Barcode: {$product->name} (ID: {$product->id})");
-            }
         }
 
-        // Priority 2: Try by ID if barcode didn't work
-        if (!$product && $productId) {
+        // Priority 2: Try by ID
+        if (!$product && $productId !== null && $productId !== '') {
             $product = Product::find($productId);
-            if ($product) {
-                $foundBy = "ID";
-                \Log::info("✓ Found product by ID: {$product->name} (ID: {$product->id})");
-            }
         }
 
-        // Priority 3: Try by exact Name match
-        if (!$product && $productName) {
+        // Priority 3: Try by Name
+        if (!$product && $productName !== null && $productName !== '') {
             $product = Product::where('name', $productName)->first();
-            if ($product) {
-                $foundBy = "Name";
-                \Log::info("✓ Found product by Name: {$product->name} (ID: {$product->id})");
-            }
         }
 
         if (!$product) {
-            \Log::error('❌ PRODUCT NOT FOUND!');
-            \Log::error("   Searched by:");
-            \Log::error("   - Barcode: " . ($barcode ?: '(empty)'));
-            \Log::error("   - Product ID: " . ($productId ?: '(empty)'));
-            \Log::error("   - Name: " . ($productName ?: '(empty)'));
-            \Log::error("   Total products in database: " . Product::count());
-            
-            // Show some example products to help user
-            if (Product::count() > 0) {
-                \Log::error("   Example products in your database:");
-                Product::limit(3)->get(['id', 'barcode', 'name'])->each(function($p) {
-                    \Log::error("   - ID: {$p->id}, Barcode: {$p->barcode}, Name: {$p->name}");
-                });
-            }
-            
-            return; // Product not found, skip this row
+            $identifier = $barcode ?: ($productId ?: $productName);
+            $this->failures[] = new Failure($this->currentRow, 'produk', ["Produk tidak ditemukan ($identifier)"], $data);
+            return;
         }
 
         // Date parsing
@@ -133,48 +113,31 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation
         
         if (!empty($dateInput)) {
             try {
-                // Handle Excel date serial or string
                 if (is_numeric($dateInput)) {
                     $expiredDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($dateInput);
                 } else {
                     $expiredDate = Carbon::parse($dateInput);
                 }
             } catch (\Exception $e) {
-                $expiredDate = now()->addYear(); // Default fallback
+                $expiredDate = now()->addYear();
             }
         } else {
-             $expiredDate = now()->addYear(); // Default 1 year from now
+             $expiredDate = now()->addYear();
         }
 
         // Price parsing
         $currentSellPrice = $product->sell_price;
+        $inputBuyPrice = $findColumn(['harga_beli_update_jika_perlu', 'harga_beli', 'buy_price']);
+        $inputSellPrice = $findColumn(['harga_jual_update_jika_perlu', 'harga_jual', 'sell_price']);
 
-        $inputBuyPrice = $findColumn([
-            'harga_beli_update_jika_perlu',
-            'harga_beli',
-            'buy_price',
-        ]);
-        
-        $inputSellPrice = $findColumn([
-            'harga_jual_update_jika_perlu',
-            'harga_jual',
-            'sell_price',
-        ]);
-
-        // Use input if present, otherwise fallback to current
         $finalBuyPrice = is_numeric($inputBuyPrice) ? floatval($inputBuyPrice) : 0;
         $finalSellPrice = is_numeric($inputSellPrice) ? floatval($inputSellPrice) : ($currentSellPrice ?? 0);
 
-        // Update Product Sell Price if changed
         if ($finalSellPrice != $currentSellPrice && $finalSellPrice > 0) {
-            $product->update([
-                'sell_price' => $finalSellPrice
-            ]);
+            $product->update(['sell_price' => $finalSellPrice]);
         }
         
-        // Note: buy_price is stored per batch, not in products table
-
-        // 2. Create Batch (Add Stock)
+        // 2. Create Batch
         $batch = Batch::create([
             'product_id' => $product->id,
             'batch_no' => 'IMP-' . now()->format('ymd') . '-' . strtoupper(substr(uniqid(), -4)),
@@ -182,7 +145,6 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation
             'stock_in' => $qty,
             'stock_current' => $qty,
             'buy_price' => $finalBuyPrice,
-            // Note: sell_price is stored in Product table, not Batch table
         ]);
 
         // 3. Log Movement
@@ -190,19 +152,26 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation
             'product_id' => $product->id,
             'batch_id' => $batch->id,
             'user_id' => auth()->id(),
-            'type' => 'opening_stock', // Or 'import'
+            'type' => 'opening_stock',
             'quantity' => $qty,
             'doc_ref' => 'IMP-' . now()->timestamp,
             'description' => 'Import Stock via Excel',
         ]);
+
+        $this->successCount++;
     }
 
     public function rules(): array
     {
         return [
-            // We don't strictly require 'jumlah_masuk' because some rows might be left empty by user (only updating some items)
-            // But if it IS present, it must be numeric.
             'jumlah_masuk_isi_disini' => 'nullable|numeric|min:0',
+            'jumlah_masuk' => 'nullable|numeric|min:0',
+            'total_stok' => 'nullable|numeric|min:0',
+            'stok' => 'nullable|numeric|min:0',
+            'qty' => 'nullable|numeric|min:0',
+            'quantity' => 'nullable|numeric|min:0',
         ];
     }
+}
+
 }

@@ -126,8 +126,8 @@ class GoodsReceiptIndex extends Component
                 $q->where('name', 'like', '%' . $this->search . '%');
             })
             ->latest()
-            ->paginate($this->perPage)
-            ->onEachSide(1);
+            ->paginate($this->perPage);
+        $receipts->onEachSide(1);
 
         $selectedReceipt = null;
         if ($this->showDetailModal && $this->selectedId) {

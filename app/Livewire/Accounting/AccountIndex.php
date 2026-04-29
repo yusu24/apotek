@@ -196,7 +196,8 @@ class AccountIndex extends Component
 
         // Order by Code ascending
         /** @var \Illuminate\Pagination\LengthAwarePaginator $accounts */
-        $accounts = $query->orderBy('code')->paginate($this->perPage)->onEachSide(1);
+        $accounts = $query->orderBy('code')->paginate($this->perPage);
+        $accounts->onEachSide(1);
 
         return view('livewire.accounting.account-index', [
             'accounts' => $accounts

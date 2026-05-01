@@ -192,7 +192,8 @@
                     @empty
                     <tr>
                         <td colspan="{{ $type === 'ar' ? 8 : 7 }}" class="px-6 py-10 text-center text-gray-500 italic">
-                            Tidak ada data {{ $type === 'ap' ? 'hutang' : 'piutang' }} pada kategori ini.
+                            <span class="text-xs italic text-gray-400">Tidak ada data {{ $type === 'ap' ? 'hutang' : 'piutang' }} pada kategori ini.</span>
+
                         </td>
                     </tr>
                     @endforelse

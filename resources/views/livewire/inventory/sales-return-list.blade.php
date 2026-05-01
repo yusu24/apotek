@@ -5,7 +5,7 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700">
+        <div class="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700 text-xs font-medium">
             {{ session('message') }}
         </div>
     @endif

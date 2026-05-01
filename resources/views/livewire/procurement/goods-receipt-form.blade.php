@@ -318,7 +318,7 @@
     <div class="mt-8 flex items-center justify-end gap-4">
         <div class="flex items-center gap-3">
             @if(session()->has('message'))
-                <span class="text-green-600 text-sm font-bold bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">{{ session('message') }}</span>
+                <span class="text-green-600 text-xs font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">{{ session('message') }}</span>
             @endif
             <button type="submit" 
                 wire:loading.attr="disabled"

@@ -16,12 +16,12 @@
 
     <!-- Alerts -->
     @if (session()->has('success'))
-        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r shadow-sm" role="alert">
+        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded-r shadow-sm text-xs font-medium" role="alert">
             {{ session('success') }}
         </div>
     @endif
     @if (session()->has('error'))
-        <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r shadow-sm" role="alert">
+        <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-r shadow-sm text-xs font-medium" role="alert">
             {{ session('error') }}
         </div>
     @endif

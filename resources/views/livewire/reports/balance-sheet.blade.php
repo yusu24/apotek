@@ -104,31 +104,48 @@
         {{-- ASET (LEFT SIDE) --}}
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">ASET</h3>
+                <h3 class="text-base font-bold text-white">ASET</h3>
             </div>
             
             <div class="p-6 space-y-6">
                 {{-- Current Assets --}}
                 <div>
-                    <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2">Aset Lancar</h4>
-                    <div class="space-y-4">
+                    <h4 class="text-sm font-bold text-gray-700 uppercase mb-3 border-b pb-2 flex justify-between">
+                        <span>Aset Lancar</span>
+                        <span class="text-[10px] text-gray-400 normal-case font-normal italic">Kas, Piutang & Stok</span>
+                    </h4>
+                    <div class="space-y-5">
                         @foreach($reportData['current_asset_groups'] as $groupKey => $group)
-                            @if($group['accounts']->count() > 0)
-                            <div class="ml-2">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-xs font-bold text-blue-600 uppercase">{{ $group['label'] }}</span>
+                            {{-- Show key groups even if empty, show others only if they have accounts --}}
+                            @if(in_array($groupKey, ['cash', 'receivable', 'inventory']) || $group['accounts']->count() > 0)
+                            <div class="ml-2 group">
+                                <div class="flex justify-between items-end mb-1">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold text-blue-600 uppercase">{{ $group['label'] }}</span>
+                                        @if(isset($group['description']))
+                                            <span class="text-[10px] text-gray-400 italic leading-none mt-0.5">{{ $group['description'] }}</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="pl-2 border-l-2 border-blue-100 space-y-1">
-                                    @foreach($group['accounts'] as $account)
+                                <div class="pl-2 border-l-2 border-blue-100 space-y-1 mt-2">
+                                    @forelse($group['accounts'] as $account)
                                     <div class="flex justify-between items-center py-1">
                                         <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                        <span class="text-sm text-gray-800 font-medium">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
                                     </div>
-                                    @endforeach
-                                    <div class="flex justify-between items-center pt-1 border-t border-blue-50">
-                                        <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
+                                    @empty
+                                    <div class="flex justify-between items-center py-1 opacity-40">
+                                        <span class="text-xs italic text-gray-400">Belum ada data {{ $group['label'] }}</span>
+                                        <span class="text-xs text-gray-400 font-medium">Rp 0</span>
+                                    </div>
+                                    @endforelse
+                                    
+                                    @if($group['accounts']->count() > 0)
+                                    <div class="flex justify-between items-center pt-1 border-t border-blue-50 mt-1">
+                                        <span class="text-[11px] font-bold text-gray-400 uppercase">Subtotal</span>
                                         <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             @endif
@@ -185,7 +202,7 @@
         {{-- LIABILITAS & EKUITAS (RIGHT SIDE) --}}
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
-                <h3 class="text-xl font-bold text-white">LIABILITAS & EKUITAS</h3>
+                <h3 class="text-base font-bold text-white">LIABILITAS & EKUITAS</h3>
             </div>
             
             <div class="p-6 space-y-6">

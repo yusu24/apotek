@@ -30,7 +30,7 @@
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sumber</label>
-                <select wire:model.live="sourceFilter" class="w-full border-gray-300 rounded-lg">
+                <select wire:model.live="sourceFilter" class="w-full border-gray-300 rounded-lg text-sm">
                     <option value="">Semua Sumber</option>
                     <option value="manual">Manual</option>
                     <option value="sale">Penjualan</option>
@@ -40,11 +40,11 @@
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Dari Tanggal</label>
-                <x-date-picker wire:model.live="startDate" class="w-full border-gray-300 rounded-lg"></x-date-picker>
+                <x-date-picker wire:model.live="startDate" class="w-full border-gray-300 rounded-lg text-sm"></x-date-picker>
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <x-date-picker wire:model.live="endDate" class="w-full border-gray-300 rounded-lg"></x-date-picker>
+                <x-date-picker wire:model.live="endDate" class="w-full border-gray-300 rounded-lg text-sm"></x-date-picker>
             </div>
         </div>
         <div class="mt-4 flex justify-between items-center">

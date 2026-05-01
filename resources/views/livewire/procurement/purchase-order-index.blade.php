@@ -14,7 +14,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800">{{ session('message') }}</p>
+                    <p class="text-xs font-medium text-green-800">{{ session('message') }}</p>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                    <p class="text-xs font-medium text-red-800">{{ session('error') }}</p>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada pesanan pembelian.</td>
+                            <td colspan="7" class="px-6 py-8 text-center text-gray-400 text-xs italic">Belum ada pesanan pembelian.</td>
                         </tr>
                     @endforelse
                 </tbody>

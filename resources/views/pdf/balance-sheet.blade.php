@@ -108,7 +108,7 @@
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
         <div class="report-title">Neraca (Standar)</div>
-        <div class="period-info">Per Tgl. {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
+        <div class="period-info">Per Tgl. {{ \Carbon\Carbon::parse($asOfDate)->format('d/m/Y') }}</div>
     </div>
 
     @if(!$reportData['balance_check'])

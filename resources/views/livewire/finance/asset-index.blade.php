@@ -12,7 +12,7 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 mb-4 text-xs font-medium" role="alert">
             <p>{{ session('message') }}</p>
         </div>
     @endif

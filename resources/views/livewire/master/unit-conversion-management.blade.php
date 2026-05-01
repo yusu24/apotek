@@ -7,7 +7,7 @@
 
     @if (session()->has('message'))
         <div class="mb-4 bg-green-50 border-l-4 border-green-400 p-4">
-            <p class="text-sm text-green-700">{{ session('message') }}</p>
+            <p class="text-xs font-medium text-green-700">{{ session('message') }}</p>
         </div>
     @endif
 

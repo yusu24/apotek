@@ -823,21 +823,25 @@ class AccountingService
             'current_asset_groups' => [
                 'cash' => [
                     'label' => 'Kas & Bank',
+                    'description' => 'Saldo tunai & bank dari omset usaha',
                     'accounts' => $currentAssets->where('sub_category', 'cash'),
                     'total' => $currentAssets->where('sub_category', 'cash')->sum('balance'),
                 ],
                 'receivable' => [
-                    'label' => 'Piutang',
+                    'label' => 'Piutang Usaha',
+                    'description' => 'Tagihan penjualan tempo (Klinik/Instansi)',
                     'accounts' => $currentAssets->where('sub_category', 'receivable'),
                     'total' => $currentAssets->where('sub_category', 'receivable')->sum('balance'),
                 ],
                 'inventory' => [
-                    'label' => 'Persediaan',
+                    'label' => 'Persediaan Obat',
+                    'description' => 'Nilai aset barang (Stok Real-time)',
                     'accounts' => $currentAssets->where('sub_category', 'inventory'),
                     'total' => $currentAssets->where('sub_category', 'inventory')->sum('balance'),
                 ],
                 'other' => [
                     'label' => 'Aset Lancar Lainnya',
+                    'description' => 'Aset lancar pendukung lainnya',
                     'accounts' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory']),
                     'total' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory'])->sum('balance'),
                 ],

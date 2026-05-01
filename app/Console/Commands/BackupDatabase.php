@@ -45,12 +45,14 @@ class BackupDatabase extends Command
         $dbUser = config('database.connections.mysql.username');
         $dbPass = config('database.connections.mysql.password');
         
-        // Path to mysqldump in XAMPP (Windows)
-        $mysqldumpPath = 'C:\xampp\mysql\bin\mysqldump.exe';
+        // Detect OS and set mysqldump path
+        $mysqldumpPath = 'mysqldump'; // Default for Linux/VPS or if in PATH
         
-        if (!file_exists($mysqldumpPath)) {
-            $this->error("mysqldump not found at: {$mysqldumpPath}");
-            return 1;
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $xamppPath = 'C:\xampp\mysql\bin\mysqldump.exe';
+            if (file_exists($xamppPath)) {
+                $mysqldumpPath = $xamppPath;
+            }
         }
 
         $command = [
@@ -68,10 +70,12 @@ class BackupDatabase extends Command
             $process->mustRun();
             
             // Compress the backup
-            $zipFilename = $filename . ".gz";
-            $zipPath = $path . ".gz";
-            
-            $this->info("Backup created: {$filename}");
+            if (file_exists($path)) {
+                $content = file_get_contents($path);
+                file_put_contents($path . '.gz', gzencode($content, 9));
+                unlink($path); // Delete the uncompressed .sql file
+                $this->info("Backup created and compressed: {$filename}.gz");
+            }
             
             // Cleanup older backups (keep last 30 days)
             $this->cleanup();

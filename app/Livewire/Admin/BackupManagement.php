@@ -32,8 +32,14 @@ class BackupManagement extends Component
     public function createBackup()
     {
         try {
-            Artisan::call('app:backup-db');
-            session()->flash('success', 'Pencadangan berhasil dibuat.');
+            $exitCode = Artisan::call('app:backup-db');
+            
+            if ($exitCode === 0) {
+                session()->flash('success', 'Pencadangan berhasil dibuat.');
+            } else {
+                session()->flash('error', 'Gagal membuat pencadangan. Periksa log atau konfigurasi server.');
+            }
+            
             $this->loadBackups();
         } catch (\Exception $e) {
             session()->flash('error', 'Gagal membuat pencadangan: ' . $e->getMessage());

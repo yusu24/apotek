@@ -63,7 +63,13 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
         
         // Get sell price
         $sellPrice = $findColumn(['harga_jual', 'sell_price']);
+
+        // Get buy price
+        $buyPrice = $findColumn(['harga_beli', 'buy_price', 'purchase_price']);
         
+        // Get barcode
+        $barcode = $findColumn(['barcode']);
+
         // Try to get Category
         $categoryId = null;
         $categoryIdInput = $findColumn([
@@ -126,9 +132,40 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
             }
         }
 
-        $barcode = $findColumn(['barcode']);
-        
-        // Manual Validation to populate failures
+        // Check if product exists by barcode or name
+        $product = null;
+        if ($barcode) {
+            $product = Product::where('barcode', $barcode)->first();
+        }
+        if (!$product && $productName) {
+            $product = Product::where('name', $productName)->first();
+        }
+
+        if ($product) {
+            // Update mode: Update price if provided
+            if ($buyPrice !== null && is_numeric($buyPrice)) {
+                $product->purchase_price = $buyPrice;
+                $product->purchase_price_updated_at = now();
+            }
+            if ($sellPrice !== null && is_numeric($sellPrice)) {
+                $product->sell_price = $sellPrice;
+            }
+            
+            // Update other fields if provided and valid
+            if ($categoryId) $product->category_id = $categoryId;
+            if ($unitId) $product->unit_id = $unitId;
+            
+            $minStock = $findColumn(['stok_minimal', 'min_stock']);
+            if ($minStock !== null && is_numeric($minStock)) $product->min_stock = $minStock;
+            
+            $description = $findColumn(['keterangan', 'description']);
+            if ($description !== null) $product->description = $description;
+
+            $product->save();
+            return null; // Skip further processing for this row
+        }
+
+        // Manual Validation to populate failures (Only for NEW products)
         $validationFailures = [];
 
         // Skip empty rows (if product name is missing, assume it's an empty/trailing row and skip it without error)
@@ -150,18 +187,6 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
              $validationFailures[] = new Failure($this->currentRow, 'satuan', ['Satuan wajib diisi atau tidak valid'], $row);
         }
 
-        if ($barcode !== null && $barcode !== '') {
-            // Check if barcode exists in DB
-            if (Product::where('barcode', $barcode)->exists()) {
-                $validationFailures[] = new Failure($this->currentRow, 'barcode', ['Barcode sudah digunakan oleh produk lain'], $row);
-            }
-        }
-
-        // Also check if product name already exists
-        if ($productName && Product::where('name', $productName)->exists()) {
-             $validationFailures[] = new Failure($this->currentRow, 'nama_produk', ['Nama produk sudah terdaftar dalam sistem'], $row);
-        }
-
         if (!empty($validationFailures)) {
             foreach ($validationFailures as $failure) {
                 $this->failures[] = $failure;
@@ -176,6 +201,8 @@ class ProductsImport implements ToModel, WithHeadingRow, SkipsOnFailure
             'unit_id'       => $unitId,
             'min_stock'     => $findColumn(['stok_minimal', 'min_stock']) ?? 0,
             'sell_price'    => $sellPrice ?? 0,
+            'purchase_price' => $buyPrice ?? null,
+            'purchase_price_updated_at' => $buyPrice !== null ? now() : null,
             'description'   => $findColumn(['keterangan', 'description']) ?? null,
             'barcode'       => $barcode,
         ]);

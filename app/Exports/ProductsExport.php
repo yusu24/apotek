@@ -40,6 +40,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, Shoul
             $currentStock,
             $product->min_stock,
             $avgBuyPrice,
+            $product->purchase_price ?? 0,
             $product->sell_price,
             $totalValue, // Inventory Value
         ];
@@ -54,7 +55,8 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping, Shoul
             'Satuan',
             'Stok Saat Ini',
             'Stok Minimum',
-            'Harga Beli Rata-rata',
+            'Harga Beli Rata-rata (Stok)',
+            'Harga Beli Master',
             'Harga Jual',
             'Nilai Persediaan (Rp)',
         ];

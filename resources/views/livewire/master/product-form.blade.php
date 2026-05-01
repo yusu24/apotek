@@ -78,6 +78,22 @@
                     @error('sell_price') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
                 </div>
 
+                <!-- Harga Beli -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">
+                        Harga Beli (Rp)
+                        @if(!$canEditPrice)
+                            <span class="text-xs text-red-600 font-normal">(Akses Terbatas)</span>
+                        @endif
+                    </label>
+                    <div x-data="money($wire.entangle('purchase_price'))">
+                    <input type="text" x-bind="input" placeholder="0"
+                        {{ !$canEditPrice ? 'disabled' : '' }}
+                        class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm {{ !$canEditPrice ? 'bg-gray-100 cursor-not-allowed' : '' }}">
+                    </div>
+                    @error('purchase_price') <span class="text-red-500 text-sm italic">{{ $message }}</span> @enderror
+                </div>
+
                 <!-- Wholesale Pricing Section (only shown if unit conversions exist) -->
                 @if($product_id && count($unitPrices) > 0)
                 <div class="col-span-1 md:col-span-2 border-t pt-4 mt-2">

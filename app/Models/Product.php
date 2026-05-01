@@ -12,12 +12,15 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'unit_id', 'name', 'slug', 'barcode', 
-        'min_stock', 'sell_price', 'description', 'image_path'
+        'min_stock', 'sell_price', 'purchase_price', 'purchase_price_updated_at', 
+        'description', 'image_path'
     ];
 
     protected $casts = [
         'min_stock' => 'integer',
         'sell_price' => 'float',
+        'purchase_price' => 'float',
+        'purchase_price_updated_at' => 'datetime',
     ];
 
     // Auto-format name to Title Case

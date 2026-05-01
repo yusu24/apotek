@@ -116,18 +116,40 @@
 
                 <!-- Password -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    <div>
+                    <div x-data="{ show: false }">
                         <label class="block text-sm font-bold text-gray-700 mb-2">
                             Password {{ $user_id ? '(Kosongkan jika tidak ingin mengubah)' : '*' }}
                         </label>
-                        <input type="password" wire:model="password" 
-                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <div class="relative">
+                            <input :type="show ? 'text' : 'password'" wire:model="password" 
+                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm pr-10">
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <svg x-show="!show" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg x-show="show" x-cloak class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 1.253 0 2.426.223 3.5.625m9.933 3.39c.393.637.692 1.31.893 2.007-1.274 4.057-5.064 7-9.542 7-1.253 0-2.426-.223-3.5-.625M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.364-6.364l-4.596 4.596m-10.606 10.606l-3.484 3.484" />
+                                </svg>
+                            </button>
+                        </div>
                         @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
-                    <div>
+                    <div x-data="{ show: false }">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Konfirmasi Password</label>
-                        <input type="password" wire:model="password_confirmation" 
-                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <div class="relative">
+                            <input :type="show ? 'text' : 'password'" wire:model="password_confirmation" 
+                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm pr-10">
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <svg x-show="!show" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg x-show="show" x-cloak class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 1.253 0 2.426.223 3.5.625m9.933 3.39c.393.637.692 1.31.893 2.007-1.274 4.057-5.064 7-9.542 7-1.253 0-2.426-.223-3.5-.625M15 12a3 3 0 11-6 0 3 3 0 016 0zm6.364-6.364l-4.596 4.596m-10.606 10.606l-3.484 3.484" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -32,6 +32,7 @@ class ProductTemplateSheet implements WithHeadings, WithTitle, WithStyles, Shoul
             'nama_produk',
             'id_kategori_lihat_sheet_kategori',
             'id_satuan_lihat_sheet_satuan',
+            'harga_beli',
             'harga_jual',
             'stok_minimal',
             'barcode',

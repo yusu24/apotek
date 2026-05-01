@@ -133,6 +133,7 @@
                         <th class="px-6 py-4 text-left">Info Produk</th>
                         <th class="px-6 py-4 text-left">Kategori</th>
                         <th class="px-6 py-4 text-left">Harga Jual</th>
+                        <th class="px-6 py-4 text-left">Harga Beli</th>
                         <th class="px-6 py-4 text-left">Stok Min</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
@@ -175,6 +176,18 @@
                                 <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                    Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
+                                </div>
+                                @if($product->purchase_price_updated_at)
+                                    <div class="text-[10px] text-gray-500">
+                                        Update: {{ $product->purchase_price_updated_at->format('d/m/Y') }}
+                                    </div>
+                                @else
+                                    <div class="text-[10px] text-gray-400 italic">Belum ada data</div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm {{ $product->min_stock > 0 ? 'text-orange-600' : 'text-gray-500' }}">
                                     {{ $product->min_stock }}
                                 </div>
@@ -207,7 +220,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 italic">Data obat tidak ditemukan.</td>
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500 italic">Data obat tidak ditemukan.</td>
                         </tr>
                     @endforelse
                 </tbody>

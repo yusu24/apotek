@@ -122,6 +122,7 @@ class ProductMarginReport extends Component
                      ORDER BY created_at DESC 
                      LIMIT 1
                     ),
+                    products.purchase_price,
                     0
                 ) as last_buy_price
             ')
@@ -138,6 +139,7 @@ class ProductMarginReport extends Component
                      ORDER BY created_at DESC 
                      LIMIT 1
                     ),
+                    products.purchase_price,
                     0
                 )) as margin_amount
             ')
@@ -155,6 +157,7 @@ class ProductMarginReport extends Component
                      ORDER BY created_at DESC 
                      LIMIT 1
                     ),
+                    products.purchase_price,
                     0
                 ) > 0 
                 THEN ((products.sell_price - COALESCE(
@@ -169,6 +172,7 @@ class ProductMarginReport extends Component
                      ORDER BY created_at DESC 
                      LIMIT 1
                     ),
+                    products.purchase_price,
                     0
                 )) / COALESCE(
                     (SELECT AVG(buy_price) 
@@ -182,6 +186,7 @@ class ProductMarginReport extends Component
                      ORDER BY created_at DESC 
                      LIMIT 1
                     ),
+                    products.purchase_price,
                     0
                 ) * 100) 
                 ELSE 0 

@@ -539,19 +539,28 @@ class GoodsReceiptForm extends Component
                     $baseSellPrice = ($item['conversion_factor'] ?? 1) > 0 
                         ? $item['sell_price'] / ($item['conversion_factor'] ?? 1)
                         : $item['sell_price'];
+
+                    // Calculate Base Buy Price (Price / Factor) for Product Master
+                    $baseBuyPriceForProduct = ($item['conversion_factor'] ?? 1) > 0 
+                        ? $item['buy_price'] / ($item['conversion_factor'] ?? 1)
+                        : $item['buy_price'];
                     
                     $oldData = $product->toArray();
-                    $newData = array_merge($oldData, ['sell_price' => $baseSellPrice]);
+                    $updateData = ['sell_price' => $baseSellPrice];
+                    
+                    // Always update purchase price from Goods Receipt
+                    $updateData['purchase_price'] = $baseBuyPriceForProduct;
+                    $updateData['purchase_price_updated_at'] = now();
 
-                    if (abs((float)$product->sell_price - (float)$baseSellPrice) > 0.01) {
-                        $product->update(['sell_price' => $baseSellPrice]);
-                        
+                    $product->update($updateData);
+
+                    if (abs((float)$product->sell_price - (float)$baseSellPrice) > 0.01 || abs((float)$product->purchase_price - (float)$baseBuyPriceForProduct) > 0.01) {
                         \App\Models\ActivityLog::log([
                             'action' => 'updated',
                             'module' => 'products',
-                            'description' => "Penyesuaian harga jual via Penerimaan Barang (GR-{$gr->id})",
+                            'description' => "Penyesuaian harga jual/beli via Penerimaan Barang (GR-{$gr->id})",
                             'old_values' => $oldData,
-                            'new_values' => $newData,
+                            'new_values' => array_merge($oldData, $updateData),
                             'subject_id' => $product->id,
                             'subject_type' => \App\Models\Product::class,
                         ]);

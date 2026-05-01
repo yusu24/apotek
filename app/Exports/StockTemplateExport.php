@@ -48,7 +48,7 @@ class StockTemplateExport implements FromCollection, WithHeadings, WithMapping, 
             $product->total_stock ?? 0,
             '', // Jumlah Masuk - User fills this
             '', // Expired - User fills this
-            $product->buy_price, // Pre-fill with current buy price
+            $product->purchase_price, // Updated: Use purchase_price instead of non-existent buy_price
             $product->sell_price, // Pre-fill with current sell price
         ];
     }

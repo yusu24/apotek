@@ -127,14 +127,27 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation, Skips
 
         // Price parsing
         $currentSellPrice = $product->sell_price;
-        $inputBuyPrice = $findColumn(['harga_beli_update_jika_perlu', 'harga_beli', 'buy_price']);
+        $currentPurchasePrice = $product->purchase_price;
+        
+        $inputBuyPrice = $findColumn(['harga_beli_update_jika_perlu', 'harga_beli', 'buy_price', 'purchase_price']);
         $inputSellPrice = $findColumn(['harga_jual_update_jika_perlu', 'harga_jual', 'sell_price']);
 
         $finalBuyPrice = is_numeric($inputBuyPrice) ? floatval($inputBuyPrice) : 0;
         $finalSellPrice = is_numeric($inputSellPrice) ? floatval($inputSellPrice) : ($currentSellPrice ?? 0);
 
+        // Update Product Master if prices changed
+        $updateData = [];
         if ($finalSellPrice != $currentSellPrice && $finalSellPrice > 0) {
-            $product->update(['sell_price' => $finalSellPrice]);
+            $updateData['sell_price'] = $finalSellPrice;
+        }
+        
+        if ($finalBuyPrice > 0 && $finalBuyPrice != $currentPurchasePrice) {
+            $updateData['purchase_price'] = $finalBuyPrice;
+            $updateData['purchase_price_updated_at'] = now();
+        }
+
+        if (!empty($updateData)) {
+            $product->update($updateData);
         }
         
         // 2. Create Batch

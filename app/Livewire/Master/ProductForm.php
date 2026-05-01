@@ -25,6 +25,7 @@ class ProductForm extends Component
     public $barcode;
     public $min_stock; // Default null
     public $sell_price; // Default null
+    public $purchase_price; // Default null
     public $description;
     public $image; // Temporary uploaded file
     public $current_image_path; // Existing path from DB
@@ -95,6 +96,7 @@ class ProductForm extends Component
             $this->barcode = $product->barcode;
             $this->min_stock = $product->min_stock;
             $this->sell_price = $product->sell_price;
+            $this->purchase_price = $product->purchase_price;
             $this->description = $product->description;
             $this->current_image_path = $product->image_path;
 
@@ -133,6 +135,7 @@ class ProductForm extends Component
             'barcode' => 'required|unique:products,barcode,' . $this->product_id,
             'min_stock' => 'required|integer|min:1', // Tidak boleh 0
             'sell_price' => 'required|numeric|min:1', // Tidak boleh 0
+            'purchase_price' => 'nullable|numeric|min:0',
             'description' => 'nullable',
             'image' => 'nullable|image|max:2048', // 2MB Max
         ];
@@ -156,6 +159,14 @@ class ProductForm extends Component
         if ($this->canEditPrice || !$this->product_id) {
             $data['min_stock'] = $this->min_stock;
             $data['sell_price'] = $this->sell_price;
+            $data['purchase_price'] = $this->purchase_price;
+            
+            // Update timestamp if purchase price is set or changed
+            if ($this->purchase_price !== null) {
+                if (!$this->product_id || (float)Product::find($this->product_id)->purchase_price !== (float)$this->purchase_price) {
+                    $data['purchase_price_updated_at'] = now();
+                }
+            }
         }
 
         // Handle Image Deletion

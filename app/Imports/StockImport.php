@@ -6,9 +6,14 @@ use App\Models\Product;
 use App\Models\Batch;
 use App\Models\StockMovement;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Validators\Failure;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class StockImport implements ToCollection, WithHeadingRow, WithValidation, SkipsOnFailure
 {

@@ -186,5 +186,3 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation, Skips
         ];
     }
 }
-
-}

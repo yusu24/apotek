@@ -90,6 +90,7 @@ class StockIndex extends Component
 
         return view('livewire.inventory.stock-index', [
             'products' => $products,
+            'searchResults' => $this->searchResults,
             'low_stock_products' => Product::query()
                 ->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock')
                 ->get(),

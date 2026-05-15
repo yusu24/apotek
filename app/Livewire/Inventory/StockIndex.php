@@ -21,6 +21,47 @@ class StockIndex extends Component
     #[Url]
     public $filter_status = 'all'; // all, low_stock
 
+    public $highlightIndex = 0;
+    
+    public function updatedSearch()
+    {
+        $this->resetPage();
+        $this->highlightIndex = 0;
+    }
+
+    public function getSearchResultsProperty()
+    {
+        $query = Product::query();
+
+        if (!empty($this->search)) {
+            $search = '%' . $this->search . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('barcode', 'like', $search);
+            });
+        }
+
+        return $query->orderBy('name', 'asc')->take(10)->get();
+    }
+
+    public function selectProductByIndex($index)
+    {
+        $searchResults = $this->searchResults;
+        if (!empty($searchResults) && isset($searchResults[$index])) {
+            $this->search = $searchResults[$index]->name;
+            $this->resetPage();
+        }
+    }
+
+    public function selectProduct($id)
+    {
+        $product = Product::find($id);
+        if ($product) {
+            $this->search = $product->name;
+            $this->resetPage();
+        }
+    }
+
     public function mount()
     {
         if (!auth()->user()->can('view stock')) {

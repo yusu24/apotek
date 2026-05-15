@@ -83,12 +83,59 @@
                     </select>
                 </div>
 
-                <div class="relative w-full md:w-64">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
-                    <input type="text" wire:model.live="search" placeholder="Cari Produk..." 
-                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all focus:bg-white bg-white">
+                <div class="relative w-full md:w-80" x-data="{ 
+                    showDropdown: false, 
+                    highlightIndex: @entangle('highlightIndex'),
+                    scrollToHighlight() {
+                        this.$nextTick(() => {
+                            const container = this.$refs.dropdownContainer;
+                            const activeItem = container?.querySelector(`li[data-index='${this.highlightIndex}']`);
+                            if (activeItem && container) {
+                                const containerRect = container.getBoundingClientRect();
+                                const itemRect = activeItem.getBoundingClientRect();
+
+                                if (itemRect.bottom > containerRect.bottom) {
+                                    activeItem.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                                } else if (itemRect.top < containerRect.top) {
+                                    activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                }
+                            }
+                        });
+                    }
+                }" @click.away="showDropdown = false" x-effect="highlightIndex; scrollToHighlight()">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" 
+                            wire:model.live.debounce.150ms="search" 
+                            @focus="showDropdown = true"
+                            @keydown.down.prevent="showDropdown = true; highlightIndex = (highlightIndex + 1) % {{ max(1, count($searchResults)) }}"
+                            @keydown.up.prevent="showDropdown = true; highlightIndex = (highlightIndex - 1 + {{ max(1, count($searchResults)) }}) % {{ max(1, count($searchResults)) }}"
+                            @keydown.enter.prevent="if(showDropdown) { $wire.selectProductByIndex(highlightIndex); showDropdown = false; } else { $wire.resetPage(); }"
+                            placeholder="Cari Produk..." 
+                            class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all focus:bg-white bg-white"
+                            autocomplete="off">
+                    </div>
+
+                    <!-- Dropdown List -->
+                    <div x-show="showDropdown" x-transition x-ref="dropdownContainer" style="display: none;" class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                        <ul class="py-1 text-left">
+                            @forelse($searchResults as $index => $p)
+                                <li wire:click="selectProduct({{ $p->id }}); showDropdown = false"
+                                    data-index="{{ $index }}"
+                                    :class="highlightIndex === {{ $index }} ? 'bg-blue-100' : 'hover:bg-blue-50'"
+                                    class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">{{ $p->name }}</div>
+                                        <div class="text-xs text-gray-500">{{ $p->barcode }}</div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="px-4 py-2 text-sm text-gray-500 text-center">Produk tidak ditemukan.</li>
+                            @endforelse
+                        </ul>
+                    </div>
                 </div>
             </div>
 

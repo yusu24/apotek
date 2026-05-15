@@ -366,10 +366,15 @@ class PurchaseOrderForm extends Component
 
     public function selectHighlighted()
     {
+        $this->selectProductByIndex($this->highlightIndex);
+    }
+
+    public function selectProductByIndex($index)
+    {
         $searchResults = $this->searchResults;
 
-        if (!empty($searchResults) && isset($searchResults[$this->highlightIndex])) {
-            $this->openModal(null, $searchResults[$this->highlightIndex]->id);
+        if (!empty($searchResults) && isset($searchResults[$index])) {
+            $this->openModal(null, $searchResults[$index]->id);
         }
     }
 

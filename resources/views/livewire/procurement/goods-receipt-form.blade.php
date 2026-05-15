@@ -122,8 +122,25 @@
             <div class="p-4 border-b border-gray-200 bg-gray-50/50 h-16 flex items-center">
                 <div class="relative w-full max-w-xl" x-data="{ 
                     showDropdown: false, 
-                    highlightIndex: @entangle('highlightIndex') 
-                }" @click.away="showDropdown = false">
+                    highlightIndex: @entangle('highlightIndex'),
+                    scrollToHighlight() {
+                        this.$nextTick(() => {
+                            const container = this.$refs.dropdownContainer;
+                            const activeItem = container?.querySelector(`li[data-index='${this.highlightIndex}']`);
+                            if (activeItem && container) {
+                                // Ensure the item is visible within the container
+                                const containerRect = container.getBoundingClientRect();
+                                const itemRect = activeItem.getBoundingClientRect();
+
+                                if (itemRect.bottom > containerRect.bottom) {
+                                    activeItem.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                                } else if (itemRect.top < containerRect.top) {
+                                    activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                }
+                            }
+                        });
+                    }
+                }" @click.away="showDropdown = false" x-effect="highlightIndex; scrollToHighlight()">
                     <div class="relative">
                         <input type="text" 
                             wire:model.live.debounce.150ms="productSearch"
@@ -142,10 +159,11 @@
                     </div>
 
                     <!-- Dropdown List -->
-                    <div x-show="showDropdown" x-transition style="display: none;" class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                    <div x-show="showDropdown" x-transition x-ref="dropdownContainer" style="display: none;" class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
                         <ul class="py-1">
                             @forelse($searchResults as $index => $p)
                                 <li wire:click="selectProduct({{ $p->id }}); showDropdown = false"
+                                    data-index="{{ $index }}"
                                     :class="highlightIndex === {{ $index }} ? 'bg-blue-100' : 'hover:bg-blue-50'"
                                     class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
                                     <div>

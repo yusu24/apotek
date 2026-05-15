@@ -143,7 +143,6 @@
                     <span class="hidden sm:inline ml-1">Reset</span>
                 </button>
             </div>
-            </div>
 
             <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
                 <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">

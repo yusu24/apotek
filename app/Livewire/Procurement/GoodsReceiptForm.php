@@ -210,9 +210,14 @@ class GoodsReceiptForm extends Component
 
     public function selectHighlighted()
     {
+        $this->selectProductByIndex($this->highlightIndex);
+    }
+
+    public function selectProductByIndex($index)
+    {
         $searchResults = $this->searchResults;
-        if (!empty($searchResults) && isset($searchResults[$this->highlightIndex])) {
-            $this->selectProduct($searchResults[$this->highlightIndex]->id);
+        if (!empty($searchResults) && isset($searchResults[$index])) {
+            $this->selectProduct($searchResults[$index]->id);
         }
     }
 
@@ -618,14 +623,17 @@ class GoodsReceiptForm extends Component
 
     public function getSearchResultsProperty()
     {
-        if (strlen($this->productSearch) < 1) {
-            return [];
+        $query = \App\Models\Product::query();
+
+        if (!empty($this->productSearch)) {
+            $search = '%' . $this->productSearch . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('barcode', 'like', $search);
+            });
         }
 
-        return \App\Models\Product::where('name', 'like', '%' . $this->productSearch . '%')
-            ->orWhere('barcode', 'like', '%' . $this->productSearch . '%')
-            ->limit(10)
-            ->get();
+        return $query->orderBy('name', 'asc')->take(10)->get();
     }
 
     public function render()

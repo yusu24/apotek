@@ -120,15 +120,21 @@
         <!-- Items Table Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="p-4 border-b border-gray-200 bg-gray-50/50 h-16 flex items-center">
-                <div class="relative w-full max-w-xl">
+                <div class="relative w-full max-w-xl" x-data="{ 
+                    showDropdown: false, 
+                    highlightIndex: @entangle('highlightIndex') 
+                }" @click.away="showDropdown = false">
                     <div class="relative">
                         <input type="text" 
-                            wire:model.live.debounce.300ms="productSearch"
-                            wire:keydown.arrow-down.prevent="incrementHighlight"
-                            wire:keydown.arrow-up.prevent="decrementHighlight"
-                            wire:keydown.enter="selectHighlighted"
+                            wire:model.live.debounce.150ms="productSearch"
+                            @focus="showDropdown = true"
+                            @input="highlightIndex = 0"
+                            @keydown.down.prevent="showDropdown = true; highlightIndex = (highlightIndex + 1) % {{ max(1, count($searchResults)) }}"
+                            @keydown.up.prevent="showDropdown = true; highlightIndex = (highlightIndex - 1 + {{ max(1, count($searchResults)) }}) % {{ max(1, count($searchResults)) }}"
+                            @keydown.enter.prevent="if(showDropdown) { $wire.selectProductByIndex(highlightIndex); showDropdown = false; }"
                             class="w-full text-xs rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm py-2 pl-10 pr-4"
-                            placeholder="Cari produk atau scan barcode untuk menambah item...">
+                            placeholder="Cari produk atau scan barcode untuk menambah item..."
+                            autocomplete="off">
                         
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -136,22 +142,23 @@
                     </div>
 
                     <!-- Dropdown List -->
-                    @if(!empty($productSearch) && count($searchResults) > 0)
-                    <div class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
+                    <div x-show="showDropdown" x-transition style="display: none;" class="absolute z-50 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-y-auto">
                         <ul class="py-1">
-                            @foreach($searchResults as $index => $p)
-                                <li wire:click="selectProduct({{ $p->id }})"
-                                    class="px-4 py-2 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }} cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
+                            @forelse($searchResults as $index => $p)
+                                <li wire:click="selectProduct({{ $p->id }}); showDropdown = false"
+                                    :class="highlightIndex === {{ $index }} ? 'bg-blue-100' : 'hover:bg-blue-50'"
+                                    class="px-4 py-2 cursor-pointer flex justify-between items-center group transition-colors border-b border-gray-50 last:border-0">
                                     <div>
                                         <div class="text-xs font-bold text-gray-800">{{ $p->name }}</div>
                                         <div class="text-[10px] text-gray-500">{{ $p->barcode }}</div>
                                     </div>
                                     <svg class="w-4 h-4 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 </li>
-                            @endforeach
+                            @empty
+                                <li class="px-4 py-2 text-sm text-gray-500 text-center">Produk tidak ditemukan.</li>
+                            @endforelse
                         </ul>
                     </div>
-                    @endif
                 </div>
             </div>
 

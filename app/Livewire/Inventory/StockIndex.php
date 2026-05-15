@@ -62,6 +62,14 @@ class StockIndex extends Component
         }
     }
 
+    public function resetFilters()
+    {
+        $this->search = '';
+        $this->filter_status = 'all';
+        $this->highlightIndex = 0;
+        $this->resetPage();
+    }
+
     public function mount()
     {
         if (!auth()->user()->can('view stock')) {

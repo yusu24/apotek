@@ -375,15 +375,17 @@ class PurchaseOrderForm extends Component
 
     public function getSearchResultsProperty()
     {
-        if (empty($this->productSearch)) {
-            return [];
+        $query = \App\Models\Product::query();
+
+        if (!empty($this->productSearch)) {
+            $search = '%' . $this->productSearch . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('barcode', 'like', $search);
+            });
         }
 
-        $search = '%' . $this->productSearch . '%';
-        return \App\Models\Product::where(function ($q) use ($search) {
-            $q->where('name', 'like', $search)
-              ->orWhere('barcode', 'like', $search);
-        })->take(10)->get();
+        return $query->orderBy('name', 'asc')->take(10)->get();
     }
 
     public function render()

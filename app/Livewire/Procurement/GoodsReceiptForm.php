@@ -107,6 +107,7 @@ class GoodsReceiptForm extends Component
                 'conversion_factor' => (float)($item->conversion_factor ?? 1),
                 'po_item_id' => $poItem ? $poItem->id : null,
                 'po_info' => $poItem ? 'Item PO (' . ($poItem->qty_ordered) . ' ' . ($poItem->unit->name ?? 'Unit') . ')' : null,
+                'row_id' => uniqid('row_'),
             ];
         }
     }
@@ -157,6 +158,7 @@ class GoodsReceiptForm extends Component
                                 'conversion_factor' => $poItem->conversion_factor,
                                 'po_info' => $infoLabel . (float)$remainingQty . ' ' . ($poItem->unit->name ?? 'Unit'),
                                 'max_qty_allowed' => (float)$remainingQty, // Store for validation
+                                'row_id' => uniqid('row_'),
                             ];
                         $hasItems = true;
                     }
@@ -182,6 +184,7 @@ class GoodsReceiptForm extends Component
             'margin' => 0,
             'unit_id' => null,
             'conversion_factor' => 1,
+            'row_id' => uniqid('row_'),
         ];
     }
 
@@ -229,6 +232,7 @@ class GoodsReceiptForm extends Component
                 'margin' => 0,
                 'unit_id' => $product->unit_id,
                 'conversion_factor' => 1,
+                'row_id' => uniqid('row_'),
             ];
         }
 

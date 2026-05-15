@@ -332,12 +332,34 @@
                         </span>
                         
                         <input type="text" 
+                            x-data="{ 
+                                isThrottled: false, 
+                                handleKey(dir, cols = 1) {
+                                    if (this.isThrottled) return;
+                                    this.isThrottled = true;
+                                    setTimeout(() => this.isThrottled = false, 100);
+                                    $wire.moveHighlight(dir, cols);
+                                } 
+                            }"
                             wire:model.live.debounce.300ms="search"
                             wire:keydown.enter="selectHighlighted"
+                            @keydown.down.prevent="
+                                let isGrid = !$wire.get('search');
+                                let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
+                                handleKey('down', cols);
+                            "
+                            @keydown.up.prevent="
+                                let isGrid = !$wire.get('search');
+                                let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
+                                handleKey('up', cols);
+                            "
+                            @keydown.right.prevent="handleKey('right', 1)"
+                            @keydown.left.prevent="handleKey('left', 1)"
                             class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Cari produk / Scan barcode (F2)..." 
                             id="pos-search-input"
-                            autocomplete="off">
+                            autocomplete="off"
+                            autofocus>
 
                         <!-- Dropdown Results -->
                         @if(!empty($search) && count($products) > 0)
@@ -1134,17 +1156,8 @@
         }
 
         document.addEventListener('keydown', function(event) {
-            const searchInput = document.getElementById('pos-search-input');
-            const isSearchFocused = document.activeElement === searchInput;
+            // Arrow keys are handled by Alpine.js on the pos-search-input element
 
-            if (isSearchFocused) {
-                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-                    event.preventDefault();
-                    const direction = event.key.replace('Arrow', '').toLowerCase();
-                    @this.moveHighlight(direction, getColumnCount());
-                    return;
-                }
-            }
 
             if (event.key === 'F2') {
                 event.preventDefault();

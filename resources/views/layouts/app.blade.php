@@ -24,21 +24,6 @@
                 // that stores are correctly re-bound if Alpine re-initializes
                 // during a Livewire navigation event.
                 
-                Alpine.store('theme', {
-                    on: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
-
-                    toggle() {
-                        this.on = !this.on;
-                        if (this.on) {
-                            document.documentElement.classList.add('dark');
-                            localStorage.setItem('theme', 'dark');
-                        } else {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.setItem('theme', 'light');
-                        }
-                    }
-                });
-
                 Alpine.store('mobileNav', {
                     open: false, // Ensure it's always false on initial load/nav
                     toggle() {
@@ -54,6 +39,11 @@
                     toggle() {
                         this.collapsed = !this.collapsed;
                         localStorage.setItem('sidebar_collapsed', this.collapsed);
+                        if (this.collapsed) {
+                            document.documentElement.classList.add('sidebar-collapsed');
+                        } else {
+                            document.documentElement.classList.remove('sidebar-collapsed');
+                        }
                     }
                 });
 
@@ -65,7 +55,18 @@
                     init() {
                         this.$watch('value', (newValue) => {
                             // Only update displayValue if we are not currently typing/debouncing
-                            if (!this.timeout && newValue !== this.unformat(this.displayValue)) {
+                            // Compare unformatted values to prevent strict inequality bugs when Livewire passes string numbers
+                            let unformattedNew = this.unformat(newValue);
+                            let unformattedCurrent = this.unformat(this.displayValue);
+                            
+                            // Check if the user is currently typing
+                            let inputEl = this.$el.tagName === 'INPUT' ? this.$el : this.$el.querySelector('input');
+                            let isFocused = inputEl && document.activeElement === inputEl;
+
+                            // Do not format if the user is actively typing (isFocused).
+                            // This prevents stale Livewire responses from reverting the input text
+                            // and causing the value to jump back (e.g. 10.000 reverting to 1.000).
+                            if (!this.timeout && unformattedNew !== unformattedCurrent && !isFocused) {
                                 this.formatDisplay();
                             }
                         });
@@ -78,14 +79,27 @@
                     formatDisplay() {
                         if (this.value === null || this.value === '' || this.value === undefined) {
                             this.displayValue = '';
-                            return;
+                        } else {
+                            let parsed = this.unformat(this.value);
+                            if (parsed === null) {
+                                this.displayValue = '';
+                            } else {
+                                this.displayValue = new Intl.NumberFormat('id-ID').format(parsed);
+                            }
                         }
-                        this.displayValue = new Intl.NumberFormat('id-ID').format(this.value);
+                        
+                        // Sync to DOM manually to avoid x-model cursor conflicts
+                        let inputEl = this.$el.tagName === 'INPUT' ? this.$el : this.$el.querySelector('input');
+                        if (inputEl && inputEl.value !== this.displayValue) {
+                            inputEl.value = this.displayValue;
+                        }
                     },
 
                     unformat(val) {
-                        if (!val) return null;
-                        return parseInt(val.toString().replace(/\./g, '')) || 0;
+                        if (val === null || val === undefined || val === '') return null;
+                        let cleaned = val.toString().replace(/[^0-9]/g, '');
+                        if (cleaned === '') return null;
+                        return parseInt(cleaned, 10);
                     },
 
                     input: {
@@ -94,9 +108,16 @@
                             const selectionStart = input.selectionStart;
                             const oldLength = input.value.length;
                             
+                            // Always clear any pending debounce timeout immediately on any keystroke/deletion
+                            if (this.timeout) {
+                                clearTimeout(this.timeout);
+                                this.timeout = null;
+                            }
+                            
                             let raw = input.value.replace(/[^0-9]/g, '');
                             if (raw === '') {
                                 this.displayValue = '';
+                                input.value = '';
                                 this.value = null;
                                 return;
                             }
@@ -119,21 +140,48 @@
 
                             // Debounce the update to 'value' (Livewire entangle)
                             // This prevents server roundtrips from interrupting typing
-                            clearTimeout(this.timeout);
                             this.timeout = setTimeout(() => {
                                 this.value = number;
                                 this.timeout = null;
                             }, 500);
                         },
+                        ['@keydown.down.prevent']($event) {
+                            const input = $event.target;
+                            const col = input.dataset.col;
+                            const row = parseInt(input.dataset.row, 10);
+                            if (col && !isNaN(row)) {
+                                const nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
+                                if (nextInput) {
+                                    nextInput.focus();
+                                    nextInput.select();
+                                }
+                            }
+                        },
+                        ['@keydown.up.prevent']($event) {
+                            const input = $event.target;
+                            const col = input.dataset.col;
+                            const row = parseInt(input.dataset.row, 10);
+                            if (col && !isNaN(row) && row > 0) {
+                                const prevInput = document.querySelector(`input[data-col="${col}"][data-row="${row - 1}"]`);
+                                if (prevInput) {
+                                    prevInput.focus();
+                                    prevInput.select();
+                                }
+                            }
+                        },
                         ['@blur']() {
+                            let currentUnformatted = this.unformat(this.displayValue);
                             if (this.timeout) {
                                 clearTimeout(this.timeout);
-                                this.value = this.unformat(this.displayValue);
                                 this.timeout = null;
+                                this.value = currentUnformatted;
+                            } else if (this.value !== currentUnformatted) {
+                                // If the timeout already fired but a stale Livewire response reverted the value,
+                                // we force Livewire's entangle to sync back to the actual typed value.
+                                this.value = currentUnformatted;
                             }
                             this.formatDisplay();
                         },
-                        ['x-model']: 'displayValue',
                         ['inputmode']: 'numeric',
                         ['placeholder']: '0',
                     }
@@ -154,13 +202,27 @@
             @media (max-width: 1279px) {
                 .desktop-toggle-btn { display: none !important; }
             }
+            
+            /* Anti-Bounce Sidebar & Content Layout Constraints */
+            @media (min-width: 1280px) {
+                html:not(.sidebar-collapsed) .main-content-wrapper {
+                    margin-left: 16rem !important; /* xl:ml-64 */
+                }
+                html.sidebar-collapsed .main-content-wrapper {
+                    margin-left: 5rem !important; /* xl:ml-20 */
+                }
+                html:not(.sidebar-collapsed) .sidebar-nav {
+                    width: 16rem !important; /* w-64 */
+                }
+                html.sidebar-collapsed .sidebar-nav {
+                    width: 5rem !important; /* w-20 */
+                }
+            }
         </style>
     <script>
-        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+        // Apply sidebar state immediately to prevent layout bounce
+        if (localStorage.getItem('sidebar_collapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed');
         }
     </script>
     </head>
@@ -169,7 +231,7 @@
             <livewire:layout.navigation />
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:ml-20' : 'xl:ml-64'">
+            <div class="main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-0 transition-all duration-300">
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">

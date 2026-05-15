@@ -173,19 +173,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($items as $index => $item)
-                            <tr wire:key="item-{{ $index }}" 
-                                x-data="{ 
-                                    qty: $wire.entangle('items.{{ $index }}.qty_received').live, 
-                                    buy_price: $wire.entangle('items.{{ $index }}.buy_price').live, 
-                                    sell_price: $wire.entangle('items.{{ $index }}.sell_price').live,
-                                    get margin() {
-                                        let buy = parseFloat(this.buy_price) || 0;
-                                        let sell = parseFloat(this.sell_price) || 0;
-                                        if (buy <= 0) return 0;
-                                        return ((sell - buy) / buy) * 100;
-                                    }
-                                }"
-                                class="group hover:bg-blue-50/30 transition-colors">
+                            <tr wire:key="item-{{ $item['row_id'] ?? $index }}" class="group hover:bg-blue-50/30 transition-colors">
                                 <td class="px-4 py-3 align-top border-r border-gray-100">
                                     @if(!empty($item['po_info']) || ($isEdit && $purchase_order_id))
                                         <div class="text-sm font-normal text-gray-800">{{ $item['product_name'] }}</div>
@@ -216,7 +204,10 @@
                                     @error("items.{$index}.expired_date") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
-                                    <input type="number" x-model="qty" class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-normal text-gray-900" placeholder="0" min="0">
+                                    <input type="number" wire:model.live.debounce.300ms="items.{{ $index }}.qty_received" wire:key="qty-{{ $index }}" data-col="qty" data-row="{{ $index }}"
+                                        @keydown.down.prevent="let next = document.querySelector(`input[data-col='qty'][data-row='{{ $index + 1 }}']`); if(next) { next.focus(); next.select(); }"
+                                        @keydown.up.prevent="let prev = document.querySelector(`input[data-col='qty'][data-row='{{ $index - 1 }}']`); if(prev) { prev.focus(); prev.select(); }"
+                                        class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-normal text-gray-900" placeholder="0" min="0">
                                     @error("items.{$index}.qty_received") <span class="text-red-500 text-[10px] mt-1 block text-center leading-tight">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
@@ -235,31 +226,31 @@
                                      @endif
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
-                                    <div class="relative" x-data="money(buy_price)" x-modelable="value" x-model="buy_price">
+                                    <div class="relative" wire:key="wrap-buy-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.buy_price').live)">
                                         <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
-                                        <input type="text" x-bind="input" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
+                                        <input type="text" x-bind="input" wire:key="input-buy-{{ $item['row_id'] ?? $index }}" data-col="buy_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.buy_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
-                                    <div class="relative" x-data="money(sell_price)" x-modelable="value" x-model="sell_price">
+                                    <div class="relative" wire:key="wrap-sell-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.sell_price').live)">
                                         <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
-                                        <input type="text" x-bind="input" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
+                                        <input type="text" x-bind="input" wire:key="input-sell-{{ $item['row_id'] ?? $index }}" data-col="sell_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.sell_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
                                     <div class="flex items-center justify-center h-8">
                                         <div class="flex flex-col items-center">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border"
-                                                :class="margin < 0 ? 'bg-red-100 text-red-700 border-red-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'"
-                                                x-text="new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(margin) + '%'">
+                                            @php $marginVal = (float)($item['margin'] ?? 0); @endphp
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border {{ $marginVal < 0 ? 'bg-red-100 text-red-700 border-red-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200' }}">
+                                                {{ number_format($marginVal, 2, ',', '.') }}%
                                             </span>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right font-normal text-sm text-gray-800">
-                                    Rp <span x-text="new Intl.NumberFormat('id-ID').format((parseFloat(qty) || 0) * (parseFloat(buy_price) || 0))"></span>
+                                    Rp {{ number_format(((float)($item['qty_received'] ?? 0)) * ((float)($item['buy_price'] ?? 0)), 0, ',', '.') }}
                                 </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">

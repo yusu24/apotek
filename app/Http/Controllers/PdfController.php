@@ -16,6 +16,15 @@ use Illuminate\Support\Facades\Log;
 class PdfController extends Controller
 {
     /**
+     * Set high limits for memory and execution time to prevent PDF timeouts
+     */
+    public function __construct()
+    {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 300);
+    }
+
+    /**
      * Export Goods Receipt as PDF
      */
     public function exportGoodsReceipt($id)

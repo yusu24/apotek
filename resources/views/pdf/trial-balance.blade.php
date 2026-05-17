@@ -29,10 +29,11 @@
             display: block;
             width: 100%;
         }
-        .store-name { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            margin: 0; 
+        .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
         .report-title { 
             font-size: 13pt; 
@@ -90,7 +91,7 @@
 <body>
     <div class="report-header text-center">
         <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
+        <div class="report-title">Neraca Saldo (Trial Balance)</div>
         <div class="period-info">
             Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
         </div>

@@ -43,8 +43,7 @@
         .apotek-name {
             font-size: 16pt;
             font-weight: bold;
-            color: #1e40af;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
 
         .doc-title {
@@ -289,13 +288,19 @@
         .footer .right {
             float: right;
         }
+            .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
     <div class="report-header text-center">
         <div class="store-name uppercase">{{ trim($apotekName) }}</div>
-        <div class="report-title">KARTU STOK</div>
+        <div class="report-title">Kartu Stok</div>
         <div style="font-size: 12pt; font-weight: bold; color: #059669; margin-top: 4px;">{{ trim($product->name) }}</div>
         <div class="period-info">Periode: {{ $period }}</div>
     </div>

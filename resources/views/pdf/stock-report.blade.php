@@ -29,9 +29,11 @@
             margin-bottom: 25px; 
             text-align: center;
         }
-        .store-name { 
-            font-size: 11pt; 
-            margin-bottom: 5px; 
+        .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
         .report-title { 
             font-size: 16pt; 
@@ -96,7 +98,7 @@
 
     <div class="report-header">
         <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">LAPORAN STOK BARANG</div>
+        <div class="report-title">Laporan Stok Barang</div>
     </div>
 
     <table>

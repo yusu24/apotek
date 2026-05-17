@@ -31,10 +31,11 @@
             display: block;
             width: 100%;
         }
-        .store-name { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            margin: 0; 
+        .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
         .report-title { 
             font-size: 13pt; 
@@ -154,7 +155,7 @@
     <div class="container">
     <div class="report-header text-center">
         <div class="store-name uppercase">{{ trim($apotekName) }}</div>
-        <div class="report-title">PENERIMAAN BARANG</div>
+        <div class="report-title">Penerimaan Barang</div>
     </div>
 
         <!-- Receipt Information -->

@@ -29,9 +29,11 @@
             margin-bottom: 25px; 
             text-align: center;
         }
-        .store-name { 
-            font-size: 11pt; 
-            margin-bottom: 5px; 
+        .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
         .report-title { 
             font-size: 16pt; 
@@ -114,7 +116,7 @@
 
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
-        <div class="report-title">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
+        <div class="report-title">Laporan Aging {{ $type === 'ar' ? 'Piutang' : 'Hutang' }}</div>
         <div class="period-info">Per Tanggal: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
         <div class="currency-info">(dalam Mata Uang Rupiah IDR)</div>
     </div>

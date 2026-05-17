@@ -520,6 +520,51 @@ class PdfController extends Controller
 
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
+    
+    /**
+     * Export Stock Opname to PDF (Stok & Opname)
+     */
+    public function exportStockOpname(Request $request)
+    {
+        $search = $request->get('search');
+        $filterStatus = $request->get('filter_status', 'all');
+
+        $query = Product::query()
+            ->with(['category', 'unit'])
+            ->withSum('batches as total_stock', 'stock_current');
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('barcode', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($filterStatus === 'low_stock') {
+            $query->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock');
+        }
+
+        $products = $query->orderBy('name')->get();
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $pdf = Pdf::loadView('pdf.stock-opname', [
+            'products' => $products,
+            'search' => $search,
+            'filterStatus' => $filterStatus,
+            'storeName' => $storeName,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i:s'),
+        ]);
+
+        $filename = 'Stok-Opname-' . Carbon::now()->format('d-m-Y') . '.pdf';
+
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
     /**
      * Export Sales Report to PDF
      */

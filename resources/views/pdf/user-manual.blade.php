@@ -33,11 +33,11 @@
             border-bottom: 3pt solid #1e40af;
             padding-bottom: 20px;
         }
-        .store-name { 
-            font-size: 20pt; 
-            font-weight: bold; 
-            color: #1e40af;
-            margin: 0; 
+        .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
         .report-title { 
             font-size: 14pt; 

@@ -106,12 +106,18 @@
             font-style: italic;
             padding: 10px;
         }
+            .store-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="report-header text-center">
         <div class="store-name uppercase">{{ trim(\App\Models\Setting::get('store_name', 'APOTEK')) }}</div>
-        <div class="report-title">LAPORAN UMUR HUTANG (AP AGING REPORT)</div>
+        <div class="report-title">Laporan Umur Hutang (AP Aging Report)</div>
         <div class="period-info">Per Tanggal: {{ now()->format('d/m/Y') }}</div>
     </div>
 

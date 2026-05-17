@@ -133,6 +133,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/balance-sheet', [App\Http\Controllers\PdfController::class, 'exportBalanceSheet'])->name('pdf.balance-sheet');
     Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
     Route::get('/pdf/stock-report', [App\Http\Controllers\PdfController::class, 'exportStockReport'])->name('pdf.stock-report');
+    Route::get('/pdf/stock-opname', [App\Http\Controllers\PdfController::class, 'exportStockOpname'])->name('pdf.stock-opname');
     Route::get('/pdf/sales-report', [App\Http\Controllers\PdfController::class, 'exportSalesReport'])->name('pdf.sales-report');
     Route::get('/pdf/product-margin', [App\Http\Controllers\PdfController::class, 'exportProductMarginReport'])->name('pdf.product-margin');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');

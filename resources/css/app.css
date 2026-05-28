@@ -142,3 +142,94 @@
 .flatpickr-current-month .flatpickr-monthDropdown-months {
     font-weight: bold !important;
 }
+
+/* Flatpickr Navy Theme Customization */
+.flatpickr-calendar {
+    border-radius: 12px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid #e2e8f0 !important;
+    font-family: inherit !important;
+    overflow: hidden !important;
+}
+
+.flatpickr-months {
+    background: #172554 !important; /* Navy bg matching sidebar */
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+.flatpickr-months .flatpickr-month {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.flatpickr-current-month {
+    color: #ffffff !important;
+}
+
+.flatpickr-current-month input.cur-year {
+    color: #ffffff !important;
+}
+
+.flatpickr-months .flatpickr-prev-month, 
+.flatpickr-months .flatpickr-next-month {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover svg, 
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: #ffffff !important;
+}
+
+.flatpickr-weekdays {
+    background: #172554 !important;
+}
+
+span.flatpickr-weekday {
+    background: #172554 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: bold !important;
+}
+
+/* Selected / active day */
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange, 
+.flatpickr-day.selected.inRange, 
+.flatpickr-day.startRange.inRange, 
+.flatpickr-day.endRange.inRange, 
+.flatpickr-day.selected:focus, 
+.flatpickr-day.startRange:focus, 
+.flatpickr-day.endRange:focus, 
+.flatpickr-day.selected:hover, 
+.flatpickr-day.startRange:hover, 
+.flatpickr-day.endRange:hover, 
+.flatpickr-day.selected.prevMonthDay, 
+.flatpickr-day.selected.nextMonthDay {
+    background: #172554 !important;
+    border-color: #172554 !important;
+    color: #ffffff !important;
+}
+
+/* Today indicator */
+.flatpickr-day.today {
+    border-color: #172554 !important;
+}
+
+.flatpickr-day.today:hover {
+    background: #172554 !important;
+    color: #ffffff !important;
+    border-color: #172554 !important;
+}
+
+/* Day hover */
+.flatpickr-day:hover, 
+.flatpickr-day.prevMonthDay:hover, 
+.flatpickr-day.nextMonthDay:hover, 
+.flatpickr-day:focus, 
+.flatpickr-day.prevMonthDay:focus, 
+.flatpickr-day.nextMonthDay:focus {
+    background: #f1f5f9 !important;
+    border-color: #f1f5f9 !important;
+}

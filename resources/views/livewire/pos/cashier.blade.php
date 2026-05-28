@@ -532,6 +532,49 @@
                     </div>
                     @enderror
 
+                    <!-- Transaction Date Input -->
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tanggal Transaksi</label>
+                        <div wire:ignore class="w-full relative">
+                            <input 
+                                x-data="{
+                                    value: @entangle('transaction_date'),
+                                    instance: undefined,
+                                    init() {
+                                        this.instance = flatpickr(this.$refs.txDateInput, {
+                                            dateFormat: 'Y-m-d',
+                                            defaultDate: this.value,
+                                            minDate: '{{ date('Y-m-01') }}',
+                                            maxDate: '{{ date('Y-m-d') }}',
+                                            onChange: (selectedDates, dateStr) => {
+                                                this.value = dateStr;
+                                            }
+                                        });
+                                        this.$watch('value', value => {
+                                            if (this.instance.selectedDates[0] !== undefined) {
+                                                let current = this.instance.formatDate(this.instance.selectedDates[0], 'Y-m-d');
+                                                if (current !== value) {
+                                                    this.instance.setDate(value);
+                                                }
+                                            } else if(value) {
+                                                this.instance.setDate(value);
+                                            } else {
+                                                this.instance.clear();
+                                            }
+                                        });
+                                    }
+                                }"
+                                x-ref="txDateInput"
+                                type="text"
+                                placeholder="Pilih tanggal..."
+                                class="w-full rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"
+                            />
+                        </div>
+                        @error('transaction_date') 
+                            <span class="text-red-500 text-xs block font-bold mt-0.5">{{ $message }}</span> 
+                        @enderror
+                    </div>
+
                     <!-- Payment Method -->
                     <div class="grid grid-cols-3 gap-2">
                         <button type="button" wire:click="$set('payment_method', 'cash')" 
@@ -608,7 +651,7 @@
                                 </select>
                                 <div class="flex justify-between text-xs mt-1">
                                     <span class="text-amber-700">Jatuh Tempo:</span>
-                                    <span class="font-bold text-amber-900">{{ now()->addDays((int)$tempoDuration)->format('d/m/Y') }}</span>
+                                    <span class="font-bold text-amber-900">{{ \Carbon\Carbon::parse($transaction_date)->addDays((int)$tempoDuration)->format('d/m/Y') }}</span>
                                 </div>
                             </div>
 

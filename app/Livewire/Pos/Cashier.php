@@ -49,6 +49,7 @@ class Cashier extends Component
     public $change_amount = 0;
     public $success_message = '';
     public $showPaymentModal = false;
+    public $transaction_date;
     public $showPendingModal = false;
     public $pendingOrders = [];
 
@@ -159,6 +160,8 @@ class Cashier extends Component
 
     public function mount($id = null)
     {
+        $this->transaction_date = date('Y-m-d');
+
         // Check permission
         if (!auth()->user()->can('access pos')) {
             abort(403, 'Unauthorized');
@@ -855,6 +858,13 @@ class Cashier extends Component
 
     public function processPayment($status = 'completed')
     {
+        $this->validate([
+            'transaction_date' => 'required|date|after_or_equal:' . date('Y-m-01') . '|before_or_equal:' . date('Y-m-d'),
+        ], [
+            'transaction_date.after_or_equal' => 'Tanggal transaksi harus berada dalam bulan ini (tidak boleh sebelum tanggal 1).',
+            'transaction_date.before_or_equal' => 'Tanggal transaksi tidak boleh melebihi hari ini.',
+        ]);
+
         Log::info('ProcessPayment Start State:', [
             'sendWA' => $this->sendWA,
             'patientPhone' => $this->patientPhone,
@@ -897,7 +907,7 @@ class Cashier extends Component
                 'user_id' => Auth::id() ?? 1,
                 'customer_id' => $this->selectedCustomerId,
                 'invoice_no' => $this->invoice_no,
-                'date' => now(),
+                'date' => $this->transaction_date . ' ' . date('H:i:s'),
                 'total_amount' => $this->subtotal,
                 'discount' => (float)$this->global_discount,
                 'service_charge_amount' => $this->service_charge_amount,
@@ -932,7 +942,7 @@ class Cashier extends Component
                         'amount' => $sale->grand_total,
                         'paid_amount' => (float)$this->cash_amount, // DP
                         'remaining_balance' => $remaining,
-                        'due_date' => now()->addDays((int)($this->tempoDuration ?? 30)),
+                        'due_date' => \Carbon\Carbon::parse($this->transaction_date)->addDays((int)($this->tempoDuration ?? 30)),
                         'status' => ((float)$this->cash_amount > 0) ? 'partial' : 'unpaid',
                         'notes' => 'Tempo Payment for ' . $sale->invoice_no,
                     ]);
@@ -1059,6 +1069,7 @@ class Cashier extends Component
             // 13. State Reset (Moved to the end)
             $this->showPaymentModal = false;
             $this->cart = [];
+            $this->transaction_date = date('Y-m-d');
             $this->resetCustomer();
             $this->resetPatientInfo();
             $this->calculateTotal();

@@ -196,6 +196,72 @@
                     initAlpineStores();
                 }
             });
+
+            // Auto-scroll to top on save/submit except for Cashier
+            let isSubmitting = false;
+
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('button, input[type="submit"], a');
+                if (btn) {
+                    const isSubmitType = btn.getAttribute('type') === 'submit';
+                    const wireClick = btn.getAttribute('wire:click') || '';
+                    const isSaveAction = wireClick.includes('save') || 
+                                         wireClick.includes('store') || 
+                                         wireClick.includes('update') || 
+                                         wireClick.includes('delete') || 
+                                         wireClick.includes('submit');
+                    
+                    if (isSubmitType || isSaveAction) {
+                        isSubmitting = true;
+                    }
+                }
+            });
+
+            document.addEventListener('submit', () => {
+                isSubmitting = true;
+            });
+
+            function registerLivewireScrollHook() {
+                if (window.hasRegisteredLivewireScrollHook) return;
+                
+                if (typeof Livewire !== 'undefined') {
+                    Livewire.hook('request', ({ succeed }) => {
+                        succeed(() => {
+                            if (window.location.pathname.includes('/cashier')) {
+                                isSubmitting = false;
+                                return;
+                            }
+
+                            // Use a short setTimeout to allow the DOM to fully settle and paint
+                            setTimeout(() => {
+                                // Check if an alert, success message, or validation error is present in the DOM
+                                const hasAlert = document.querySelector(
+                                    '.bg-green-50, .bg-green-100, .bg-red-50, .bg-red-100, .bg-emerald-50, .bg-rose-50, [role="alert"], .border-green-400, .border-red-400, .border-green-500, .border-red-500, .text-red-500, .text-red-600'
+                                );
+
+                                if (isSubmitting || hasAlert) {
+                                    const wrapper = document.querySelector('.main-content-wrapper');
+                                    if (wrapper) {
+                                        wrapper.scrollTo({ top: 0, behavior: 'smooth' });
+                                        wrapper.scrollTop = 0;
+                                    }
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    isSubmitting = false;
+                                }
+                            }, 100);
+                        });
+                    });
+                    window.hasRegisteredLivewireScrollHook = true;
+                }
+            }
+
+            // Bind hook using multiple lifecycle hooks to guarantee registration
+            if (typeof Livewire !== 'undefined') {
+                registerLivewireScrollHook();
+            } else {
+                document.addEventListener('livewire:init', registerLivewireScrollHook);
+            }
+            document.addEventListener('livewire:navigated', registerLivewireScrollHook);
         </script>
         <style>
             [x-cloak] { display: none !important; }

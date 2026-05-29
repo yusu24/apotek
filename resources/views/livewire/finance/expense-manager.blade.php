@@ -27,13 +27,49 @@
 
         <div class="overflow-x-auto rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-[10px] tracking-wider">
                     <tr>
-                        <th class="px-6 py-4 text-left">Tanggal</th>
-                        <th class="px-6 py-4 text-left">Keterangan</th>
-                        <th class="px-6 py-4 text-left">Kategori</th>
+                        <th wire:click="sortByColumn('date')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Tanggal
+                                @if($sortBy === 'date')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('description')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Keterangan
+                                @if($sortBy === 'description')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('category')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Kategori
+                                @if($sortBy === 'category')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">Sumber Dana</th>
-                        <th class="px-6 py-4 text-right">Jumlah (Rp)</th>
+                        <th wire:click="sortByColumn('amount')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center justify-end gap-1">
+                                Jumlah (Rp)
+                                @if($sortBy === 'amount')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">User</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
@@ -97,7 +133,41 @@
                                 <div class="mt-4 space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Tanggal</label>
-                                        <x-date-picker wire:model="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
+                                        <div wire:ignore class="w-full relative mt-1">
+                                            <input 
+                                                x-data="{
+                                                    value: @entangle('date'),
+                                                    instance: undefined,
+                                                    init() {
+                                                        this.instance = flatpickr(this.$refs.expenseDateInput, {
+                                                            dateFormat: 'Y-m-d',
+                                                            defaultDate: this.value,
+                                                            minDate: '{{ date('Y-m-01') }}',
+                                                            maxDate: '{{ date('Y-m-d') }}',
+                                                            onChange: (selectedDates, dateStr) => {
+                                                                this.value = dateStr;
+                                                            }
+                                                        });
+                                                        this.$watch('value', value => {
+                                                            if (this.instance.selectedDates[0] !== undefined) {
+                                                                let current = this.instance.formatDate(this.instance.selectedDates[0], 'Y-m-d');
+                                                                if (current !== value) {
+                                                                    this.instance.setDate(value);
+                                                                }
+                                                            } else if(value) {
+                                                                this.instance.setDate(value);
+                                                            } else {
+                                                                this.instance.clear();
+                                                            }
+                                                        });
+                                                    }
+                                                }"
+                                                x-ref="expenseDateInput"
+                                                type="text"
+                                                placeholder="Pilih tanggal..."
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm block"
+                                            />
+                                        </div>
                                         @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>

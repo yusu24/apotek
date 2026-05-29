@@ -17,7 +17,22 @@ class GoodsReceiptIndex extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'perPage' => ['except' => 10],
+        'sortBy' => ['except' => 'received_date'],
+        'sortDirection' => ['except' => 'desc'],
     ];
+
+    public $sortBy = 'received_date';
+    public $sortDirection = 'desc';
+
+    public function sortByColumn($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
 
     public function updatedSearch()
     {
@@ -119,13 +134,23 @@ class GoodsReceiptIndex extends Component
 
     public function render()
     {
+        $sortableColumns = [
+            'received_date' => 'received_date',
+            'delivery_note_number' => 'delivery_note_number',
+            'payment_status' => 'payment_status',
+            'total_amount' => 'total_amount',
+        ];
+        $orderColumn = $sortableColumns[$this->sortBy] ?? 'received_date';
+
         /** @var \Illuminate\Pagination\LengthAwarePaginator $receipts */
         $receipts = \App\Models\GoodsReceipt::with('purchaseOrder.supplier', 'user', 'items')
-            ->where('delivery_note_number', 'like', '%' . $this->search . '%')
-            ->orWhereHas('purchaseOrder.supplier', function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
+            ->where(function ($q) {
+                $q->where('delivery_note_number', 'like', '%' . $this->search . '%')
+                  ->orWhereHas('purchaseOrder.supplier', function ($q2) {
+                      $q2->where('name', 'like', '%' . $this->search . '%');
+                  });
             })
-            ->latest()
+            ->orderBy($orderColumn, $this->sortDirection)
             ->paginate($this->perPage);
         $receipts->onEachSide(1);
 

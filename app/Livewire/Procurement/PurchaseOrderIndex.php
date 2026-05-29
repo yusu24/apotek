@@ -19,7 +19,22 @@ class PurchaseOrderIndex extends Component
         'search' => ['except' => ''],
         'status' => ['except' => ''],
         'perPage' => ['except' => 10],
+        'sortBy' => ['except' => 'date'],
+        'sortDirection' => ['except' => 'desc'],
     ];
+
+    public $sortBy = 'date';
+    public $sortDirection = 'desc';
+
+    public function sortByColumn($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
 
     public function updatedSearch()
     {
@@ -45,6 +60,14 @@ class PurchaseOrderIndex extends Component
 
     public function render()
     {
+        // Map sortable columns to actual DB columns
+        $sortableColumns = [
+            'date' => 'date',
+            'po_number' => 'po_number',
+            'status' => 'status',
+        ];
+        $orderColumn = $sortableColumns[$this->sortBy] ?? 'date';
+
         /** @var \Illuminate\Pagination\LengthAwarePaginator $orders */
         $orders = \App\Models\PurchaseOrder::with('supplier', 'user')
             ->when($this->status, function ($query) {
@@ -56,7 +79,7 @@ class PurchaseOrderIndex extends Component
                         $q->where('name', 'like', '%' . $this->search . '%');
                     });
             })
-            ->latest()
+            ->orderBy($orderColumn, $this->sortDirection)
             ->paginate($this->perPage);
         $orders->onEachSide(1);
 

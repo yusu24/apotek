@@ -140,7 +140,7 @@
 .flatpickr-current-month .cur-month, 
 .flatpickr-current-month .cur-year,
 .flatpickr-current-month .flatpickr-monthDropdown-months {
-    font-weight: bold !important;
+    font-weight: normal !important;
 }
 
 /* Flatpickr Navy Theme Customization */
@@ -159,11 +159,22 @@
 }
 
 .flatpickr-months .flatpickr-month {
+    background: #172554 !important;
     color: #ffffff !important;
     fill: #ffffff !important;
 }
 
 .flatpickr-current-month {
+    color: #ffffff !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: #172554 !important;
+    color: #ffffff !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+    background-color: #172554 !important;
     color: #ffffff !important;
 }
 

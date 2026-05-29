@@ -82,12 +82,39 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-[10px] tracking-wider">
                     <tr>
-                        <th class="px-6 py-4 text-left">No. PO</th>
-                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th wire:click="sortByColumn('po_number')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                No. PO
+                                @if($sortBy === 'po_number')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('date')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Tanggal
+                                @if($sortBy === 'date')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">Supplier</th>
-                        <th class="px-6 py-4 text-left">Status</th>
+                        <th wire:click="sortByColumn('status')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Status
+                                @if($sortBy === 'status')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">User</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>

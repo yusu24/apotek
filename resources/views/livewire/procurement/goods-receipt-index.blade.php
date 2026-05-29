@@ -39,13 +39,49 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-[10px] tracking-wider">
                     <tr>
-                        <th class="px-6 py-4 text-left">No. Surat Jalan</th>
-                        <th class="px-6 py-4 text-left">Tanggal</th>
+                        <th wire:click="sortByColumn('delivery_note_number')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                No. Surat Jalan
+                                @if($sortBy === 'delivery_note_number')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('received_date')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Tanggal
+                                @if($sortBy === 'received_date')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">Supplier (PO)</th>
-                        <th class="px-6 py-4 text-left">Status Bayar</th>
-                        <th class="px-6 py-4 text-right">Total</th>
+                        <th wire:click="sortByColumn('payment_status')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-1">
+                                Status Bayar
+                                @if($sortBy === 'payment_status')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
+                        <th wire:click="sortByColumn('total_amount')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center justify-end gap-1">
+                                Total
+                                @if($sortBy === 'total_amount')
+                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-4 text-left">User</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>

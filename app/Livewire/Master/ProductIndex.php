@@ -18,6 +18,19 @@ class ProductIndex extends Component
     public $perPage = 10;
     public $category_id = '';
 
+    public $sortBy = 'name';
+    public $sortDirection = 'asc';
+
+    public function sortByColumn($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+    }
+
     // Selection properties
     public $selectedProducts = [];
     public $selectAll = false;
@@ -133,7 +146,7 @@ class ProductIndex extends Component
             ->when($this->category_id, function ($query) {
                 $query->where('category_id', $this->category_id);
             })
-            ->latest()
+            ->orderBy($this->sortBy, $this->sortDirection)
             ->paginate($this->perPage);
         $products->onEachSide(1);
 

@@ -21,8 +21,22 @@ class StockIndex extends Component
     #[Url]
     public $filter_status = 'all'; // all, low_stock
 
+    public $sortBy = 'name';
+    public $sortDirection = 'asc';
+
     public $highlightIndex = 0;
     
+    public function sortByColumn($column)
+    {
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
+
     public function updatedSearch()
     {
         $this->resetPage();
@@ -79,6 +93,9 @@ class StockIndex extends Component
 
     public function render()
     {
+        $allowedSortColumns = ['name', 'total_stock', 'min_stock'];
+        $sortColumn = in_array($this->sortBy, $allowedSortColumns) ? $this->sortBy : 'name';
+
         /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
         $products = Product::query()
             ->with(['category', 'unit', 'batches' => function($q) {
@@ -92,7 +109,7 @@ class StockIndex extends Component
             ->when($this->filter_status === 'low_stock', function($q) {
                 $q->whereRaw('(select coalesce(sum(stock_current), 0) from batches where batches.product_id = products.id) <= products.min_stock');
             })
-            ->orderBy('name')
+            ->orderBy($sortColumn, $this->sortDirection)
             ->paginate($this->perPage);
         $products->onEachSide(1);
 

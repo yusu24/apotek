@@ -544,7 +544,6 @@
                                         this.instance = flatpickr(this.$refs.txDateInput, {
                                             dateFormat: 'Y-m-d',
                                             defaultDate: this.value,
-                                            minDate: '{{ date('Y-m-01') }}',
                                             maxDate: '{{ date('Y-m-d') }}',
                                             onChange: (selectedDates, dateStr) => {
                                                 this.value = dateStr;

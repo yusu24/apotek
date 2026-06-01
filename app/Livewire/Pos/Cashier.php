@@ -859,9 +859,8 @@ class Cashier extends Component
     public function processPayment($status = 'completed')
     {
         $this->validate([
-            'transaction_date' => 'required|date|after_or_equal:' . date('Y-m-01') . '|before_or_equal:' . date('Y-m-d'),
+            'transaction_date' => 'required|date|before_or_equal:' . date('Y-m-d'),
         ], [
-            'transaction_date.after_or_equal' => 'Tanggal transaksi harus berada dalam bulan ini (tidak boleh sebelum tanggal 1).',
             'transaction_date.before_or_equal' => 'Tanggal transaksi tidak boleh melebihi hari ini.',
         ]);
 

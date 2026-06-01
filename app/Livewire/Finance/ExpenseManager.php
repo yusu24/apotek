@@ -86,7 +86,7 @@ class ExpenseManager extends Component
     public function save()
     {
         $this->validate([
-            'date' => ['required', 'date', 'after_or_equal:' . date('Y-m-01'), 'before_or_equal:' . date('Y-m-d')],
+            'date' => ['required', 'date', 'before_or_equal:' . date('Y-m-d')],
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',

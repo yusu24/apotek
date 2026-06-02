@@ -6,9 +6,8 @@ use App\Models\Account;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\WithPrepareForValidation;
 
-class AccountsImport implements ToModel, WithHeadingRow, WithValidation, WithPrepareForValidation
+class AccountsImport implements ToModel, WithHeadingRow, WithValidation
 {
     public function model(array $row)
     {

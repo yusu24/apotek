@@ -41,7 +41,8 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
 
         // Normalize Kategori Akun
         if (isset($data['kategori'])) {
-            $data['kategori'] = $this->normalizeCategory($data['kategori']);
+            $type = $data['tipe'] ?? '';
+            $data['kategori'] = $this->normalizeCategory($data['kategori'], $type);
         }
 
         return $data;
@@ -88,9 +89,30 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
         }
     }
 
-    private function normalizeCategory($value): string
+    private function normalizeCategory($value, $type = ''): string
     {
         $val = strtolower(trim($value));
+        
+        // Capital / Modal -> equity
+        if ($val === 'capital' || $val === 'modal' || $val === 'modal sendiri') {
+            return 'equity';
+        }
+        
+        // Sales -> operating_revenue
+        if ($val === 'sales' || $val === 'penjualan') {
+            return 'operating_revenue';
+        }
+        
+        // Other (based on Type)
+        if ($val === 'other' || $val === 'lain' || $val === 'lainnya' || $val === 'lain lain' || $val === 'lain-lain') {
+            if ($type === 'revenue') {
+                return 'other_revenue';
+            }
+            if ($type === 'expense') {
+                return 'other';
+            }
+            return 'other';
+        }
         
         // Kas & Bank
         if (str_contains($val, 'kas') || str_contains($val, 'bank')) {
@@ -126,7 +148,7 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
         }
         
         // Equity / Ekuitas
-        if (str_contains($val, 'equity') || str_contains($val, 'ekuitas') || str_contains($val, 'modal')) {
+        if (str_contains($val, 'equity') || str_contains($val, 'ekuitas')) {
             return 'equity';
         }
         
@@ -136,7 +158,7 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
         }
         
         // Other Revenue
-        if (str_contains($val, 'pendapatan') && (str_contains($val, 'lain') || str_contains($val, 'other'))) {
+        if (str_contains($val, 'pendapatan')) {
             return 'other_revenue';
         }
         
@@ -146,10 +168,7 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
         }
         
         // Other Expense
-        if ((str_contains($val, 'beban') || str_contains($val, 'biaya')) && (str_contains($val, 'lain') || str_contains($val, 'other'))) {
-            return 'other';
-        }
-        if ($val === 'other' || $val === 'lain' || $val === 'lainnya') {
+        if (str_contains($val, 'beban') || str_contains($val, 'biaya')) {
             return 'other';
         }
         

@@ -92,83 +92,124 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
     {
         $val = strtolower(trim($value));
         
-        // Remove spaces, dashes and underscores for easy comparison
-        $valNormalized = str_replace(['_', '-'], ' ', $val);
+        // Kas & Bank
+        if (str_contains($val, 'kas') || str_contains($val, 'bank')) {
+            return 'cash_bank';
+        }
         
+        // HPP / COGS
+        if (str_contains($val, 'hpp') || str_contains($val, 'cogs') || str_contains($val, 'pokok penjualan')) {
+            return 'cogs';
+        }
+        
+        // Fixed Asset / Aset Tetap
+        if (str_contains($val, 'tetap') || str_contains($val, 'fixed') || str_contains($val, 'peralatan') || str_contains($val, 'gedung')) {
+            return 'fixed_asset';
+        }
+        
+        // Current Asset / Aset Lancar
+        if (str_contains($val, 'lancar') && (str_contains($val, 'aset') || str_contains($val, 'asset') || str_contains($val, 'harta') || str_contains($val, 'aktiva'))) {
+            return 'current_asset';
+        }
+        if (str_contains($val, 'piutang') || str_contains($val, 'stok') || str_contains($val, 'persediaan')) {
+            return 'current_asset';
+        }
+        
+        // Long Term Liability / Kewajiban Jangka Panjang
+        if (str_contains($val, 'panjang') || str_contains($val, 'long term') || str_contains($val, 'long-term')) {
+            return 'long_term_liability';
+        }
+        
+        // Current Liability / Kewajiban Lancar
+        if (str_contains($val, 'lancar') && (str_contains($val, 'kewajiban') || str_contains($val, 'liability') || str_contains($val, 'utang') || str_contains($val, 'pasiva'))) {
+            return 'current_liability';
+        }
+        
+        // Equity / Ekuitas
+        if (str_contains($val, 'equity') || str_contains($val, 'ekuitas') || str_contains($val, 'modal')) {
+            return 'equity';
+        }
+        
+        // Operating Revenue / Pendapatan Operasional
+        if (str_contains($val, 'pendapatan') && (str_contains($val, 'operasional') || str_contains($val, 'usaha') || str_contains($val, 'operating'))) {
+            return 'operating_revenue';
+        }
+        
+        // Other Revenue
+        if (str_contains($val, 'pendapatan') && (str_contains($val, 'lain') || str_contains($val, 'other'))) {
+            return 'other_revenue';
+        }
+        
+        // Operating Expense / Beban Operasional
+        if ((str_contains($val, 'beban') || str_contains($val, 'biaya')) && (str_contains($val, 'operasional') || str_contains($val, 'usaha') || str_contains($val, 'operating'))) {
+            return 'operating_expense';
+        }
+        
+        // Other Expense
+        if ((str_contains($val, 'beban') || str_contains($val, 'biaya')) && (str_contains($val, 'lain') || str_contains($val, 'other'))) {
+            return 'other';
+        }
+        if ($val === 'other' || $val === 'lain' || $val === 'lainnya') {
+            return 'other';
+        }
+        
+        // Generic word mappings
+        if ($val === 'aset' || $val === 'asset' || $val === 'assets' || $val === 'harta') {
+            return 'current_asset';
+        }
+        if ($val === 'kewajiban' || $val === 'liability' || $val === 'liabilities' || $val === 'utang') {
+            return 'current_liability';
+        }
+        if ($val === 'pendapatan' || $val === 'revenue' || $val === 'revenues') {
+            return 'operating_revenue';
+        }
+        if ($val === 'beban' || $val === 'biaya' || $val === 'expense' || $val === 'expenses') {
+            return 'operating_expense';
+        }
+        
+        // Fallback to exact switch checks for other values
+        $valNormalized = str_replace(['_', '-'], ' ', $val);
         switch ($valNormalized) {
-            case 'kas bank':
-            case 'kas dan bank':
-            case 'kas & bank':
             case 'cash bank':
             case 'cash & bank':
                 return 'cash_bank';
-                
             case 'current asset':
             case 'current assets':
             case 'aset lancar':
             case 'aset lancar lainnya':
-            case 'piutang':
-            case 'stok':
-            case 'inventaris':
                 return 'current_asset';
-                
             case 'fixed asset':
             case 'fixed assets':
             case 'aset tetap':
-            case 'harta tetap':
-            case 'peralatan':
-            case 'gedung':
                 return 'fixed_asset';
-                
             case 'current liability':
             case 'current liabilities':
             case 'kewajiban lancar':
-            case 'utang lancar':
                 return 'current_liability';
-                
             case 'long term liability':
             case 'long term liabilities':
             case 'kewajiban jangka panjang':
-            case 'utang jangka panjang':
                 return 'long_term_liability';
-                
             case 'equity':
             case 'ekuitas':
-            case 'modal':
                 return 'equity';
-                
             case 'operating revenue':
             case 'pendapatan operasional':
-            case 'pendapatan usaha':
                 return 'operating_revenue';
-                
             case 'other revenue':
             case 'pendapatan lain lain':
-            case 'pendapatan lainlain':
-            case 'pendapatan diluar usaha':
                 return 'other_revenue';
-                
             case 'cogs':
             case 'hpp':
-            case 'harga pokok penjualan':
                 return 'cogs';
-                
             case 'operating expense':
             case 'operating expenses':
             case 'beban operasional':
-            case 'biaya operasional':
-            case 'beban usaha':
                 return 'operating_expense';
-                
             case 'other':
             case 'other expense':
-            case 'other expenses':
             case 'beban lain lain':
-            case 'beban lainlain':
-            case 'biaya lain lain':
-            case 'biaya lainlain':
                 return 'other';
-                
             default:
                 return $value;
         }

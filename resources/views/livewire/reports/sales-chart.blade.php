@@ -28,23 +28,42 @@
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
-            <div class="text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Total Transaksi</div>
-            <div class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['transaction_count']) }}</div>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-100 text-sm font-medium">Total Pendapatan</p>
+                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-blue-500/30 rounded-full p-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
-            <div class="text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Penjualan Kotor (Uang Diterima)</div>
-            <div class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</div>
+
+        <div class="bg-gradient-to-br from-orange-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm font-medium">Total Transaksi</p>
+                    <p class="text-2xl font-bold mt-1">{{ number_format($totalTransactions, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-orange-500/30 rounded-full p-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+            </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
-            <div class="text-[10px] font-extrabold text-rose-500 uppercase tracking-wider mb-1">Total Retur Penjualan</div>
-            <div class="text-xl font-bold text-rose-600">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-emerald-500/30 bg-emerald-50/10">
-            <div class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider mb-1">Total Penjualan Bersih (Pendapatan Riil)</div>
-            <div class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</div>
+
+        <div class="bg-gradient-to-br from-emerald-600 to-green-700 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-emerald-100 text-sm font-medium">Rata-rata per Transaksi</p>
+                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($overallAverage, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-emerald-500/30 rounded-full p-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                </div>
+            </div>
         </div>
     </div>
 

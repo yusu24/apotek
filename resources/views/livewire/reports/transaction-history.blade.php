@@ -4,7 +4,6 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 {{ __('Riwayat Transaksi') }}
             </h2>
-            <p class="text-sm text-gray-500">Riwayat lengkap mutasi stok obat per item.</p>
         </div>
         <a href="{{ route('pdf.transaction-history', ['startDate' => $startDate, 'endDate' => $endDate, 'type' => $type, 'search' => $search]) }}" 
            target="_blank"

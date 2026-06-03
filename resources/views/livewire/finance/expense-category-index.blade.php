@@ -3,7 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">
             Kelola Kategori Pengeluaran
         </h2>
-        <p class="text-sm text-gray-500 mt-1">Klasifikasi biaya operasional and pengeluaran apotek.</p>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">

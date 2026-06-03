@@ -1,32 +1,31 @@
 <div class="p-6">
-    <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
-            Neraca Saldo Awal
-        </h2>
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-1">
-            <p class="text-sm text-gray-500">Input saldo awal untuk menyeimbangkan laporan neraca Anda.</p>
-            
-            <div class="flex items-center gap-3">
-                @if($is_locked)
-                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold flex items-center gap-1 border border-red-200">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                        TERKUNCI
-                    </span>
-                    @can('unlock opening balances')
-                        <button type="button" wire:click="unlock" class="text-xs text-blue-600 font-bold hover:underline">Buka Kunci</button>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">
+                Neraca Saldo Awal
+            </h2>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            @if($is_locked)
+                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold flex items-center gap-1 border border-red-200">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                    TERKUNCI
+                </span>
+                @can('unlock opening balances')
+                    <button type="button" wire:click="unlock" class="text-xs text-blue-600 font-bold hover:underline">Buka Kunci</button>
+                @endcan
+            @else
+                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 border border-green-200">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
+                    DRAFT
+                </span>
+                @if($openingBalanceId)
+                    @can('lock opening balances')
+                        <button type="button" wire:click="lock" class="text-xs text-red-600 font-bold hover:underline" wire:confirm="Yakin ingin mengunci neraca saldo awal? Data tidak akan bisa diubah setelah dikunci.">Kunci Sekarang</button>
                     @endcan
-                @else
-                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 border border-green-200">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
-                        DRAFT
-                    </span>
-                    @if($openingBalanceId)
-                        @can('lock opening balances')
-                            <button type="button" wire:click="lock" class="text-xs text-red-600 font-bold hover:underline" wire:confirm="Yakin ingin mengunci neraca saldo awal? Data tidak akan bisa diubah setelah dikunci.">Kunci Sekarang</button>
-                        @endcan
-                    @endif
                 @endif
-            </div>
+            @endif
         </div>
     </div>
 

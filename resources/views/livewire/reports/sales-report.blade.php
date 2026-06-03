@@ -28,12 +28,26 @@
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 no-print">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 no-print">
+        <!-- Total Transaksi -->
+        <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm font-medium">Total Transaksi</p>
+                    <p class="text-2xl font-bold mt-1">{{ number_format($stats['transaction_count']) }}</p>
+                </div>
+                <div class="bg-orange-400/30 rounded-full p-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Penjualan Kotor -->
         <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100 text-sm font-medium">Total Pendapatan</p>
+                    <p class="text-blue-100 text-sm font-medium">Penjualan Kotor</p>
                     <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</p>
                 </div>
                 <div class="bg-blue-500/30 rounded-full p-3">
@@ -42,23 +56,25 @@
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-orange-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
+        <!-- Total Retur -->
+        <div class="bg-gradient-to-br from-rose-500 to-pink-700 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-orange-100 text-sm font-medium">Total Transaksi</p>
-                    <p class="text-2xl font-bold mt-1">{{ number_format($stats['transaction_count']) }}</p>
+                    <p class="text-rose-100 text-sm font-medium">Total Retur Penjualan</p>
+                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</p>
                 </div>
-                <div class="bg-orange-500/30 rounded-full p-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <div class="bg-rose-400/30 rounded-full p-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
                 </div>
             </div>
         </div>
 
+        <!-- Penjualan Bersih -->
         <div class="bg-gradient-to-br from-emerald-600 to-green-700 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-emerald-100 text-sm font-medium">Rata-rata per Transaksi</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['transaction_count'] > 0 ? $stats['total_sales'] / $stats['transaction_count'] : 0, 0, ',', '.') }}</p>
+                    <p class="text-emerald-100 text-sm font-medium">Penjualan Bersih (Riil)</p>
+                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</p>
                 </div>
                 <div class="bg-emerald-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>

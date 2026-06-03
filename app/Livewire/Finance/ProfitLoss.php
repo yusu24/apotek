@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\SalesReturn;
 use App\Models\Expense;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -128,38 +129,49 @@ class ProfitLoss extends Component
 
     private function calculateMetrics()
     {
-        // 1. Sales Details (Gross, Discount, Tax)
-        $sales = Sale::whereDate('created_at', '>=', $this->startDate)
-            ->whereDate('created_at', '<=', $this->endDate)
+        // 1. Sales Details (Gross, Discount, Tax) — pakai kolom 'date' agar sinkron dengan Laporan Penjualan
+        $sales = Sale::whereDate('date', '>=', $this->startDate)
+            ->whereDate('date', '<=', $this->endDate)
             ->with('saleItems')
             ->get();
 
-        $revenue = (float) $sales->sum('dpp');
+        $grossRevenue = (float) $sales->sum('dpp');
         
         $totalTax = (float) $sales->sum('tax');
         $totalDiscount = (float) $sales->sum('discount');
         $grandTotal = (float) $sales->sum('grand_total');
 
-        // 2. COGS (HPP) - Detailed records for table
+        // 2. Sales Returns (Retur Penjualan) — sinkron dengan Laporan Penjualan
+        $salesReturns = SalesReturn::whereBetween('created_at', [
+            Carbon::parse($this->startDate)->startOfDay(),
+            Carbon::parse($this->endDate)->endOfDay()
+        ])->get();
+
+        $totalReturns = (float) $salesReturns->sum('total_amount');
+
+        // Revenue = DPP - Retur (Pendapatan Riil, sinkron dengan Laporan Penjualan)
+        $revenue = $grossRevenue - $totalReturns;
+
+        // 3. COGS (HPP) - Detailed records for table — pakai kolom 'date'
         $cogsDetails = SaleItem::select(
                 'sale_items.*', 
                 'products.name as product_name', 
                 'batches.buy_price as cost_price',
-                'sales.created_at as sale_date'
+                'sales.date as sale_date'
             )
             ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
             ->join('batches', 'sale_items.batch_id', '=', 'batches.id') 
             ->join('products', 'sale_items.product_id', '=', 'products.id')
-            ->whereDate('sales.created_at', '>=', $this->startDate)
-            ->whereDate('sales.created_at', '<=', $this->endDate)
-            ->orderBy('sales.created_at', 'desc')
+            ->whereDate('sales.date', '>=', $this->startDate)
+            ->whereDate('sales.date', '<=', $this->endDate)
+            ->orderBy('sales.date', 'desc')
             ->get();
 
         $cogs = (float) $cogsDetails->sum(function($item) {
             return (float) $item->quantity * (float) $item->cost_price;
         });
 
-        // 3. Expenses (Beban Operasional & Pajak)
+        // 4. Expenses (Beban Operasional & Pajak)
         $allExpenses = Expense::whereDate('date', '>=', $this->startDate)
             ->whereDate('date', '<=', $this->endDate)
             ->orderBy('date', 'desc')
@@ -177,24 +189,27 @@ class ProfitLoss extends Component
         $operatingExpenses = (float) $operatingExpenseDetails->sum('amount');
         $taxExpenses = (float) $taxExpenseDetails->sum('amount');
 
-        // 4. Final Calculations
+        // 5. Final Calculations
         $grossProfit = $revenue - $cogs;
         $netProfitBeforeTax = $grossProfit - $operatingExpenses;
         $netProfit = $netProfitBeforeTax - $taxExpenses;
         
         return [
-            'revenue' => $revenue, // Net Sales
+            'grossRevenue' => $grossRevenue, // DPP sebelum retur
+            'totalReturns' => $totalReturns, // Total retur penjualan
+            'revenue' => $revenue, // DPP - Retur = Pendapatan Riil
             'totalTax' => $totalTax,
             'totalDiscount' => $totalDiscount,
             'grandTotal' => $grandTotal,
             'cogs' => $cogs,
-            'operatingExpenses' => $operatingExpenses, // Replaces 'expenses' for clarity
-            'expenses' => $operatingExpenses, // Keep backward compatibility just in case, but view uses this for Operating
+            'operatingExpenses' => $operatingExpenses,
+            'expenses' => $operatingExpenses,
             'taxExpenses' => $taxExpenses,
             'grossProfit' => $grossProfit,
             'netProfitBeforeTax' => $netProfitBeforeTax,
             'netProfit' => $netProfit,
             'salesDetails' => $sales,
+            'salesReturns' => $salesReturns,
             'cogsDetails' => $cogsDetails,
             'expenseDetails' => $operatingExpenseDetails,
             'taxDetails' => $taxExpenseDetails,

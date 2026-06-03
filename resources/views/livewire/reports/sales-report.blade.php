@@ -143,9 +143,14 @@
                                         Rp {{ number_format($sale->grand_total, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 text-right no-print">
-                                        <a href="{{ route('pos.receipt', $sale->id) }}" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors" title="Print Struk">
-                                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button wire:click="viewSale({{ $sale->id }})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Lihat Detail">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            </button>
+                                            <a href="{{ route('pos.receipt', $sale->id) }}" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors" title="Print Struk">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -221,4 +226,143 @@
                     </div>
                 </div>
             </div>
+
+    <!-- Sale Detail Modal -->
+    @if($showDetailModal && $selectedSale)
+    <div class="fixed inset-0 z-50 overflow-y-auto" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" wire:click="closeDetail"></div>
+
+            <!-- Modal Content -->
+            <div class="relative inline-block w-full max-w-3xl overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-2xl rounded-2xl">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Detail Transaksi</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $selectedSale['invoice_no'] }}</p>
+                    </div>
+                    <button wire:click="closeDetail" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Invoice Info -->
+                <div class="px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 border-b border-gray-100 dark:border-gray-700 text-sm">
+                    <div>
+                        <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal</span>
+                        <span class="text-gray-900 dark:text-white font-medium">{{ \Carbon\Carbon::parse($selectedSale['date'])->format('d/m/Y H:i') }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Kasir</span>
+                        <span class="text-gray-900 dark:text-white font-medium">{{ $selectedSale['user_name'] }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Metode Bayar</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{{ $selectedSale['payment_method'] }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pelanggan</span>
+                        <span class="text-gray-900 dark:text-white font-medium">{{ $selectedSale['customer_name'] ?? 'Umum' }}</span>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <div class="px-6 py-4 max-h-[50vh] overflow-y-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400 font-normal uppercase text-xs tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3 text-left">#</th>
+                                <th class="px-4 py-3 text-left">Produk</th>
+                                <th class="px-4 py-3 text-center">Qty</th>
+                                <th class="px-4 py-3 text-right">Harga</th>
+                                <th class="px-4 py-3 text-right">Diskon</th>
+                                <th class="px-4 py-3 text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                            @foreach($selectedSale['sale_items'] as $index => $item)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                                <td class="px-4 py-3 text-gray-400">{{ $index + 1 }}</td>
+                                <td class="px-4 py-3">
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ $item['product_name'] }}</div>
+                                    <div class="text-[10px] text-gray-400 mt-0.5">
+                                        {{ $item['unit_name'] }}
+                                        @if($item['batch_number'] !== '-')
+                                            · Batch: {{ $item['batch_number'] }}
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-center font-bold text-gray-700 dark:text-gray-300">{{ $item['quantity'] }}</td>
+                                <td class="px-4 py-3 text-right text-gray-600 dark:text-gray-400">Rp {{ number_format($item['sell_price'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right text-rose-500">
+                                    @if($item['discount_amount'] > 0)
+                                        -Rp {{ number_format($item['discount_amount'], 0, ',', '.') }}
+                                    @else
+                                        <span class="text-gray-300">-</span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white">Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Payment Summary -->
+                <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col gap-1.5 max-w-xs ml-auto text-sm">
+                        <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                            <span>Subtotal</span>
+                            <span>Rp {{ number_format($selectedSale['total_amount'], 0, ',', '.') }}</span>
+                        </div>
+                        @if(($selectedSale['discount'] ?? 0) > 0)
+                        <div class="flex justify-between text-rose-500">
+                            <span>Diskon</span>
+                            <span>-Rp {{ number_format($selectedSale['discount'], 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        @if(($selectedSale['tax'] ?? 0) > 0)
+                        <div class="flex justify-between text-gray-500">
+                            <span>PPN</span>
+                            <span>Rp {{ number_format($selectedSale['tax'], 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        @if(($selectedSale['service_charge_amount'] ?? 0) > 0)
+                        <div class="flex justify-between text-gray-500">
+                            <span>Service Charge</span>
+                            <span>Rp {{ number_format($selectedSale['service_charge_amount'], 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                        <div class="flex justify-between font-bold text-base text-gray-900 dark:text-white pt-2 border-t border-gray-200 dark:border-gray-600">
+                            <span>Grand Total</span>
+                            <span>Rp {{ number_format($selectedSale['grand_total'], 0, ',', '.') }}</span>
+                        </div>
+                        @if($selectedSale['payment_method'] === 'cash' && ($selectedSale['cash_amount'] ?? 0) > 0)
+                        <div class="flex justify-between text-gray-500 text-xs">
+                            <span>Bayar Tunai</span>
+                            <span>Rp {{ number_format($selectedSale['cash_amount'], 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex justify-between text-emerald-600 text-xs font-medium">
+                            <span>Kembalian</span>
+                            <span>Rp {{ number_format($selectedSale['change_amount'], 0, ',', '.') }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                    <a href="{{ route('pos.receipt', $selectedSale['id']) }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1.5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        Print Struk
+                    </a>
+                    <button wire:click="closeDetail" class="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

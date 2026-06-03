@@ -20,6 +20,10 @@ class SalesReport extends Component
     public $perPage = 10;
     public $search = '';
 
+    // Modal state
+    public $showDetailModal = false;
+    public $selectedSale = null;
+
     protected $queryString = [
         'search' => ['except' => ''],
         'startDate' => ['except' => ''],
@@ -48,6 +52,36 @@ class SalesReport extends Component
         $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
         $this->resetPage();
+    }
+
+    public function viewSale($saleId)
+    {
+        $sale = Sale::with(['saleItems.product', 'saleItems.unit', 'saleItems.batch', 'user', 'customer'])->find($saleId);
+        
+        if ($sale) {
+            $this->selectedSale = $sale->toArray();
+            $this->selectedSale['sale_items'] = $sale->saleItems->map(function($item) {
+                return [
+                    'product_name' => $item->product->name ?? '-',
+                    'unit_name' => $item->unit->name ?? '-',
+                    'batch_number' => $item->batch->batch_number ?? '-',
+                    'quantity' => $item->quantity,
+                    'sell_price' => $item->sell_price,
+                    'discount_amount' => $item->discount_amount ?? 0,
+                    'subtotal' => $item->subtotal,
+                    'notes' => $item->notes,
+                ];
+            })->toArray();
+            $this->selectedSale['user_name'] = $sale->user->name ?? '-';
+            $this->selectedSale['customer_name'] = $sale->customer->name ?? null;
+            $this->showDetailModal = true;
+        }
+    }
+
+    public function closeDetail()
+    {
+        $this->showDetailModal = false;
+        $this->selectedSale = null;
     }
 
     public function render()

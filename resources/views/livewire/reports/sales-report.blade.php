@@ -29,6 +29,26 @@
         </div>
     </div>
 
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 no-print">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
+            <div class="text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Total Transaksi</div>
+            <div class="text-xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['transaction_count']) }}</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
+            <div class="text-[10px] font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Penjualan Kotor (Uang Diterima)</div>
+            <div class="text-xl font-bold text-gray-900 dark:text-white">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-gray-100 dark:border-gray-700">
+            <div class="text-[10px] font-extrabold text-rose-500 uppercase tracking-wider mb-1">Total Retur Penjualan</div>
+            <div class="text-xl font-bold text-rose-600">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 border border-emerald-500/30 bg-emerald-50/10">
+            <div class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider mb-1">Total Penjualan Bersih (Pendapatan Riil)</div>
+            <div class="text-xl font-bold text-emerald-700 dark:text-emerald-400">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</div>
+        </div>
+    </div>
+
     <!-- Filters & Stats Card -->
     <div class="bg-white rounded-xl shadow border overflow-hidden no-print">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-end gap-4">
@@ -135,54 +155,9 @@
                             @endforelse
                         </tbody>
                         <tfoot class="bg-gray-50 dark:bg-gray-900/40 font-bold border-t-2 border-gray-100 dark:border-gray-800">
-                            <!-- Gross Sales Row -->
                             <tr>
-                                <td colspan="4" class="px-6 py-2 text-gray-500 dark:text-gray-400 text-right uppercase tracking-wider text-[10px]">Total Penjualan Kotor (Uang Diterima)</td>
-                                <td class="px-6 py-2 text-right text-gray-900 dark:text-white text-sm">
-                                    Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-2 no-print"></td>
-                            </tr>
-                            
-                            <!-- Breakdown Details (Smaller Text) -->
-                            <tr class="text-gray-400 font-normal italic">
-                                <td colspan="4" class="px-6 py-1 text-right text-[10px]">Pajak PPN (Liabilitas Negara)</td>
-                                <td class="px-6 py-1 text-right text-[10px]">- Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</td>
-                                <td class="px-6 py-1 no-print"></td>
-                            </tr>
-                            <tr class="text-gray-400 font-normal italic">
-                                <td colspan="4" class="px-6 py-1 text-right text-[10px]">Selisih Pembulatan Kasir</td>
-                                <td class="px-6 py-1 text-right text-[10px]">- Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</td>
-                                <td class="px-6 py-1 no-print"></td>
-                            </tr>
-
-                            <!-- Subtotal DPP -->
-                            <tr>
-                                <td colspan="4" class="px-6 py-2 text-blue-600/70 text-right uppercase tracking-wider text-[10px]">Subtotal Transaksi Bersih (DPP)</td>
-                                <td class="px-6 py-2 text-right text-blue-600/70 text-sm">
-                                    Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-2 no-print"></td>
-                            </tr>
-
-                            <!-- Returns -->
-                            <tr>
-                                <td colspan="4" class="px-6 py-2 text-red-600 dark:text-red-400 text-right uppercase tracking-wider text-[10px]">Total Retur Penjualan</td>
-                                <td class="px-6 py-2 text-right text-red-600 dark:text-red-300 text-sm">
-                                    - Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-2 no-print"></td>
-                            </tr>
-
-                            <!-- Final Net Sales -->
-                            <tr class="bg-emerald-50/50 dark:bg-emerald-900/20 border-t border-emerald-100 dark:border-emerald-800">
-                                <td colspan="4" class="px-6 py-4 text-emerald-700 dark:text-emerald-400 text-right uppercase tracking-wider text-xs">
-                                    <div class="flex flex-col items-end">
-                                        <span>Total Penjualan Bersih (Pendapatan Riil)</span>
-                                        <span class="text-[8px] opacity-60 normal-case">Rumus: DPP - Retur</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-300 text-lg">
+                                <td colspan="4" class="px-6 py-4 text-gray-700 dark:text-gray-300 text-right uppercase text-xs">Total Penjualan Bersih (Pendapatan Riil)</td>
+                                <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-400 text-base">
                                     Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}
                                 </td>
                                 <td class="px-6 py-4 no-print"></td>
@@ -192,6 +167,58 @@
                 </div>
                 <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700">
                     @include('components.custom-pagination', ['items' => $sales])
+                </div>
+            </div>
+
+            <!-- Financial Reconciliation and Explanation Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                <!-- Info/Legend Card -->
+                <div class="md:col-span-2 bg-gray-50 dark:bg-gray-900/20 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 text-xs text-gray-500 space-y-2">
+                    <h4 class="font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Informasi & Rumus Laporan</h4>
+                    <p>• <strong>Penjualan Kotor (Uang Diterima)</strong>: Total akumulasi uang yang masuk ke kasir (termasuk pajak PPN dan pembulatan kembalian).</p>
+                    <p>• <strong>Subtotal Bersih (DPP)</strong>: Nilai dasar pengenaan pajak (penjualan kotor dikurangi PPN dan selisih pembulatan kasir).</p>
+                    <p>• <strong>Total Retur Penjualan</strong>: Total nominal transaksi penjualan yang dibatalkan/dikembalikan oleh pelanggan pada periode ini.</p>
+                    <p>• <strong>Total Penjualan Bersih (Pendapatan Riil)</strong>: Pendapatan riil yang diperoleh toko (Rumus: <strong>DPP - Retur Penjualan</strong>).</p>
+                </div>
+
+                <!-- Reconciliation Details Card -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                    <h4 class="text-xs font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider border-b pb-2">Rincian Rekonsiliasi Pendapatan</h4>
+                    
+                    <div class="space-y-2.5 text-sm">
+                        <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                            <span>Penjualan Kotor</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-400 dark:text-gray-500 pl-3 border-l-2 border-gray-200 dark:border-gray-700 italic">
+                            <span>Pajak PPN</span>
+                            <span>- Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-400 dark:text-gray-500 pl-3 border-l-2 border-gray-200 dark:border-gray-700 italic">
+                            <span>Selisih Pembulatan</span>
+                            <span>- Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between font-semibold text-blue-600 dark:text-blue-400 pt-1 border-t border-dashed border-gray-200 dark:border-gray-700">
+                            <span>Subtotal Bersih (DPP)</span>
+                            <span>Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-red-600 dark:text-red-400">
+                            <span>Retur Penjualan</span>
+                            <span>- Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-3 border-t-2 border-gray-100 dark:border-gray-700 font-bold text-emerald-600 dark:text-emerald-400">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase tracking-wider">Pendapatan Riil</span>
+                                <span class="text-[8px] text-gray-400 dark:text-gray-500 normal-case font-normal">Rumus: DPP - Retur</span>
+                            </div>
+                            <span class="text-base">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 </div>

@@ -162,7 +162,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-white border-b text-gray-500 font-bold">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
                             <th class="px-6 py-4">Tanggal</th>
                             <th class="px-6 py-4">No. Ref</th>
@@ -208,7 +208,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-white border-b text-gray-500 font-bold">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
                             <th class="px-6 py-4">Tanggal Jual</th>
                             <th class="px-6 py-4">Produk</th>
@@ -249,7 +249,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-white border-b text-gray-500 font-bold">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
                             <th class="px-6 py-4">Tanggal</th>
                             <th class="px-6 py-4">Keterangan</th>
@@ -289,7 +289,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-white border-b text-gray-500 font-bold">
+                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
                             <th class="px-6 py-4">Tanggal</th>
                             <th class="px-6 py-4">Keterangan</th>

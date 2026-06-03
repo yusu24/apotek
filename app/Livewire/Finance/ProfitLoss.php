@@ -4,18 +4,23 @@ namespace App\Livewire\Finance;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Expense;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 #[Layout('layouts.app')]
 class ProfitLoss extends Component
 {
+    use WithPagination;
+
     public $startDate;
     public $endDate;
     public $period = 'this_month'; // this_month, last_month, this_year, custom
+    public $perPage = 10;
 
     public function mount()
     {
@@ -31,6 +36,51 @@ class ProfitLoss extends Component
     public function updatedPeriod()
     {
         $this->updateDates();
+        $this->resetPage('salesPage');
+        $this->resetPage('cogsPage');
+        $this->resetPage('expensePage');
+        $this->resetPage('taxPage');
+    }
+
+    public function updatedStartDate()
+    {
+        $this->resetPage('salesPage');
+        $this->resetPage('cogsPage');
+        $this->resetPage('expensePage');
+        $this->resetPage('taxPage');
+    }
+
+    public function updatedEndDate()
+    {
+        $this->resetPage('salesPage');
+        $this->resetPage('cogsPage');
+        $this->resetPage('expensePage');
+        $this->resetPage('taxPage');
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage('salesPage');
+        $this->resetPage('cogsPage');
+        $this->resetPage('expensePage');
+        $this->resetPage('taxPage');
+    }
+
+    private function paginateCollection($items, $perPage, $pageName)
+    {
+        $currentPage = LengthAwarePaginator::resolveCurrentPage($pageName);
+        $currentItems = $items->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        
+        return new LengthAwarePaginator(
+            $currentItems,
+            $items->count(),
+            $perPage,
+            $currentPage,
+            [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+            ]
+        );
     }
 
     public function updateDates()
@@ -154,6 +204,12 @@ class ProfitLoss extends Component
     public function render()
     {
         $data = $this->calculateMetrics();
+
+        // Paginate collections for the view
+        $data['salesDetails'] = $this->paginateCollection($data['salesDetails'], $this->perPage, 'salesPage');
+        $data['cogsDetails'] = $this->paginateCollection($data['cogsDetails'], $this->perPage, 'cogsPage');
+        $data['expenseDetails'] = $this->paginateCollection($data['expenseDetails'], $this->perPage, 'expensePage');
+        $data['taxDetails'] = $this->paginateCollection($data['taxDetails'], $this->perPage, 'taxPage');
 
         return view('livewire.finance.profit-loss', $data);
     }

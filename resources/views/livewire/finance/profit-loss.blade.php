@@ -39,6 +39,17 @@
                     </select>
                 </div>
             </div>
+
+            <div class="w-full md:w-32">
+                <label class="block text-sm font-bold text-gray-700 mb-1">Tampilkan</label>
+                <select wire:model.live="perPage" class="block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm font-medium">
+                    <option value="5">5 Data</option>
+                    <option value="10">10 Data</option>
+                    <option value="25">25 Data</option>
+                    <option value="50">50 Data</option>
+                    <option value="100">100 Data</option>
+                </select>
+            </div>
             
             @if($period === 'custom')
                 <div class="flex gap-4">
@@ -147,7 +158,7 @@
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h3 class="font-bold text-gray-800">Detail Penjualan</h3>
-                <span class="text-xs font-bold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">{{ $salesDetails->count() }} Transaksi</span>
+                <span class="text-xs font-bold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">{{ $salesDetails->total() }} Transaksi</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
@@ -184,12 +195,16 @@
                     </tfoot>
                 </table>
             </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                @include('components.custom-pagination', ['items' => $salesDetails, 'pageName' => 'salesPage'])
+            </div>
         </div>
 
         <!-- COGS Detail -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h3 class="font-bold text-gray-800">Detail HPP (FIFO)</h3>
+                <span class="text-xs font-bold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">{{ $cogsDetails->total() }} Item</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
@@ -221,12 +236,16 @@
                     </tfoot>
                 </table>
             </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                @include('components.custom-pagination', ['items' => $cogsDetails, 'pageName' => 'cogsPage'])
+            </div>
         </div>
 
         <!-- Expenses Detail -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h3 class="font-bold text-gray-800">Detail Beban Operasional</h3>
+                <span class="text-xs font-bold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">{{ $expenseDetails->total() }} Beban</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
@@ -256,13 +275,17 @@
                     </tfoot>
                 </table>
             </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                @include('components.custom-pagination', ['items' => $expenseDetails, 'pageName' => 'expensePage'])
+            </div>
         </div>
         
         <!-- Tax Expenses Detail -->
-        @if($taxDetails->count() > 0)
+        @if($taxDetails->total() > 0)
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <h3 class="font-bold text-gray-800">Detail Beban Pajak (PPh)</h3>
+                <span class="text-xs font-bold text-gray-500 bg-gray-200 px-2.5 py-1 rounded-full">{{ $taxDetails->total() }} Transaksi</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
@@ -289,6 +312,9 @@
                         </tr>
                     </tfoot>
                 </table>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                @include('components.custom-pagination', ['items' => $taxDetails, 'pageName' => 'taxPage'])
             </div>
         </div>
         @endif

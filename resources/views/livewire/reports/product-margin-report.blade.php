@@ -129,7 +129,7 @@
     <div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-gray-100">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-100">
-                <thead class="bg-gray-50/50 text-gray-500 font-normal uppercase text-[10px] tracking-widest">
+                <thead class="bg-gray-50/50 text-gray-500 font-normal uppercase text-xs tracking-widest">
                     <tr>
                         <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center gap-1">

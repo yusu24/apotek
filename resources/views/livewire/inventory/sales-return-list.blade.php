@@ -149,7 +149,7 @@
 
                             <div class="overflow-x-auto border border-gray-100 rounded-xl">
                                 <table class="w-full text-sm text-left">
-                                    <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-[10px]">
+                                    <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs">
                                         <tr>
                                             <th class="px-4 py-3">Produk</th>
                                             <th class="px-4 py-3 text-center">Qty Jual</th>
@@ -251,7 +251,7 @@
 
                     <div class="overflow-x-auto border border-gray-100 rounded-xl mb-4">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-widest">
+                            <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-xs tracking-widest">
                                 <tr>
                                     <th class="px-4 py-3">Produk</th>
                                     <th class="px-4 py-3 text-center">Batch</th>

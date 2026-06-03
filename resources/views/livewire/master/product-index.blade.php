@@ -125,7 +125,7 @@
         <!-- Scrollable Table Container -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-[10px] tracking-wider">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider">
                     <tr>
                         <th class="px-6 py-4 w-10 text-center">
                             <input type="checkbox" wire:model.live="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">

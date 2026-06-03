@@ -31,13 +31,13 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 no-print">
         <!-- Total Transaksi -->
-        <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
+        <div class="bg-gradient-to-br from-orange-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-orange-100 text-sm font-medium">Total Transaksi</p>
                     <p class="text-2xl font-bold mt-1">{{ number_format($stats['transaction_count']) }}</p>
                 </div>
-                <div class="bg-orange-400/30 rounded-full p-3">
+                <div class="bg-orange-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                 </div>
             </div>
@@ -57,13 +57,13 @@
         </div>
 
         <!-- Total Retur -->
-        <div class="bg-gradient-to-br from-rose-500 to-pink-700 rounded-lg shadow-lg p-6 text-white">
+        <div class="bg-gradient-to-br from-red-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-rose-100 text-sm font-medium">Total Retur Penjualan</p>
+                    <p class="text-red-100 text-sm font-medium">Total Retur Penjualan</p>
                     <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</p>
                 </div>
-                <div class="bg-rose-400/30 rounded-full p-3">
+                <div class="bg-red-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
                 </div>
             </div>

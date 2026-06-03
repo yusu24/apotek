@@ -7,7 +7,6 @@
         </a>
         <div>
             <h2 class="text-2xl font-bold text-gray-800">{{ $role_id ? 'Edit Jabatan' : 'Tambah Jabatan' }}</h2>
-            <p class="text-sm text-gray-500">Atur nama jabatan dan hak akses standar yang dimiliki.</p>
         </div>
     </div>
 

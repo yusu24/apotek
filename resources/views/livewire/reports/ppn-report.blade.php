@@ -1,9 +1,8 @@
 <div class="p-6">
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <div class="mb-6">
+        <div>
             <h2 class="text-2xl font-bold text-gray-800">Laporan PPN</h2>
-            <p class="text-sm text-gray-500">Pajak Pertambahan Nilai (Keluaran & Masukan) • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             <button wire:click="setThisMonth" class="btn btn-secondary">

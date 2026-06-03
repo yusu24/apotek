@@ -2,7 +2,6 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-white leading-tight">Kelola Pelanggan</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daftar pelanggan / pasien terdaftar.</p>
             </div>
             
         </div>

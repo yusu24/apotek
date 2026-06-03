@@ -5,7 +5,6 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 Laporan Laba Rugi
             </h2>
-            <p class="text-sm text-gray-500">Laporan Pendapatan & Beban • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             <button wire:click="setThisMonth" class="btn btn-secondary">

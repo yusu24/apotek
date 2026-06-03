@@ -3,13 +3,6 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Laporan Margin Produk</h2>
-            <p class="text-sm text-gray-500 mt-1">
-                @if($reportMode === 'potential')
-                    Analisis profitabilitas berdasarkan stok saat ini dan potensi harga jual
-                @else
-                    Analisis keuntungan nyata periode {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
-                @endif
-            </p>
         </div>
         <div class="flex flex-wrap gap-2">
             <div class="flex p-1 bg-gray-100 rounded-lg mr-2">

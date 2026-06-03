@@ -3,7 +3,6 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Neraca</h2>
-            <p class="text-sm text-gray-500">Laporan Posisi Keuangan</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <button wire:click="setEndOfLastMonth" class="btn btn-secondary">

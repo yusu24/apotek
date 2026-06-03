@@ -3,7 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">
             Kelola User / Karyawan
         </h2>
-        <p class="text-sm text-gray-500 mt-1">Kelola informasi and hak akses karyawan apotek.</p>
     </div>
 
     @if (session()->has('message'))

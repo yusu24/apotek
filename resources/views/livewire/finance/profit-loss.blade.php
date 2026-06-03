@@ -4,7 +4,6 @@
                 <h2 class="text-2xl font-bold text-gray-800">
                 Laporan Laba Rugi
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Laporan Kinerja Keuangan & Analisis Laba</p>
         </div>
         <div class="flex gap-2">
             <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">

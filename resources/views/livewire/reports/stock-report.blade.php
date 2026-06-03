@@ -5,7 +5,6 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 {{ __('Laporan Stok & Nilai') }}
             </h2>
-            <p class="text-sm text-gray-500">Laporan ketersediaan stok obat and nilai inventori.</p>
         </div>
         <div class="flex gap-2">
             <button wire:click="exportExcel" class="btn btn-export-excel">

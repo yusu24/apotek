@@ -2,7 +2,6 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Kategori Akuntansi</h2>
-            <p class="text-sm text-gray-600 mt-1">Kelola kategori untuk pencatatan akuntansi</p>
         </div>
     </div>
 

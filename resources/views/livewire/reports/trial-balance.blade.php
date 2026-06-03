@@ -2,7 +2,6 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Neraca Saldo (Trial Balance)</h2>
-            <p class="text-sm text-gray-500 mt-1">Laporan saldo debet and kredit seluruh akun.</p>
         </div>
         <div class="flex gap-2">
             <a href="{{ route('excel.trial-balance', ['startDate' => $startDate, 'endDate' => $endDate]) }}" 

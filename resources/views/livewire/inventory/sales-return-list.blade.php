@@ -1,7 +1,6 @@
 <div class="p-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Retur Penjualan</h2>
-        <p class="text-sm text-gray-500">Kelola pengembalian barang dari pelanggan.</p>
     </div>
 
     @if (session()->has('message'))

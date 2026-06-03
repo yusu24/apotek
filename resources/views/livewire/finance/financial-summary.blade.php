@@ -3,7 +3,6 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Ringkasan Keuangan</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Ikhtisar saldo Kas, Bank, dan Hutang saat ini.</p>
         </div>
         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
             <x-date-picker wire:model.live="startDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300"></x-date-picker>

@@ -3,7 +3,6 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Laporan Umur Hutang & Piutang</h2>
-            <p class="text-sm text-gray-500 mt-1">Analisis keterlambatan pembayaran hutang supplier dan piutang pelanggan • Terupdate: {{ now()->format('H:i:s') }}</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             @can('export aging report')

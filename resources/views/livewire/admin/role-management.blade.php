@@ -1,9 +1,6 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <div>
             <h2 class="text-2xl font-bold text-gray-800">Daftar Jabatan (Roles)</h2>
-            <p class="text-sm text-gray-500">Kelola peran dan hak akses standar untuk user.</p>
-        </div>
         <a href="{{ route('admin.roles.create') }}" wire:navigate class="btn btn-primary">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

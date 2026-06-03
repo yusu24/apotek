@@ -2,7 +2,6 @@
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h2 class="text-2xl font-bold text-gray-800">Manajemen Satuan Produk</h2>
-            <p class="text-gray-500 text-sm">Atur satuan dasar dan konversi bertingkat untuk setiap produk.</p>
         </div>
     </div>
 

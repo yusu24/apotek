@@ -1,9 +1,6 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div>
             <h2 class="text-2xl font-bold text-gray-800">Pencadangan Data (Backup)</h2>
-            <p class="text-sm text-gray-500 mt-1">Kelola dan unduh salinan database Anda secara aman.</p>
-        </div>
         <button wire:click="createBackup" 
                 wire:loading.attr="disabled"
                 class="btn btn-primary flex items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">

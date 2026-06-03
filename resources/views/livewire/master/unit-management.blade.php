@@ -1,7 +1,6 @@
 <div class="p-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Master Satuan</h2>
-        <p class="text-sm text-gray-500 mt-1">Kelola daftar satuan produk (contoh: Pcs, Strip, Box, Karton)</p>
     </div>
 
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

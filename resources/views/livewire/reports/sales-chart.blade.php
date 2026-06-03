@@ -5,7 +5,6 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 Laporan Penjualan (Grafik)
             </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Visualisasi dan ringkasan grafik penjualan per periode.</p>
         </div>
         <div class="flex gap-2">
             <a href="{{ route('reports.sales') }}" wire:navigate class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">

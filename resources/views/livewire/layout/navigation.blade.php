@@ -518,7 +518,7 @@ new class extends Component
 
     <!-- Desktop Fixed Top Navbar -->
     @if(!request()->routeIs('pos.cashier'))
-    <div class="fixed top-0 right-0 z-30 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
+    <div class="fixed top-0 right-0 z-40 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
          x-bind:style="$store.sidebar.collapsed ? 'left: 5rem' : 'left: 16rem'">
         <!-- Left Section: Empty spacer to match user mockup -->
         <div></div>

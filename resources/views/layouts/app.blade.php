@@ -296,8 +296,43 @@
         <div x-data="{}" class="h-screen bg-milky-white dark:bg-gray-900 overflow-hidden overflow-x-hidden flex flex-col">
             <livewire:layout.navigation />
 
+            <!-- Desktop Fixed Top Navbar -->
+            <div class="fixed top-0 right-0 z-30 h-16 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
+                 x-bind:class="$store.sidebar.collapsed ? 'left-20' : 'left-64'">
+                <!-- Left Section: Page title indicator -->
+                <div class="flex items-center gap-3">
+                    <button @click="$store.sidebar.toggle()" class="p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Toggle Sidebar">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <span id="nav-active-title" class="text-sm font-bold text-gray-800 dark:text-white uppercase tracking-wider">Apotek.POS</span>
+                </div>
+
+                <!-- Right Section: Profile & Actions -->
+                <div class="flex items-center gap-4">
+                    @can('view notifications')
+                    <div class="text-gray-600 dark:text-gray-300">
+                        <livewire:layout.notification-bell :iconOnly="true" direction="down" textColor="text-gray-600 dark:text-gray-300" />
+                    </div>
+                    @endcan
+                    
+                    <div class="my-1 border-r border-gray-200 dark:border-gray-800 h-6"></div>
+
+                    <!-- Compact user profile display -->
+                    <div class="flex items-center gap-2">
+                        @if (auth()->user()->profile_photo_path)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-800">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold ring-1 ring-gray-200 dark:ring-gray-800">
+                                {{ substr(auth()->user()->name, 0, 2) }}
+                            </div>
+                        @endif
+                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ auth()->user()->name }}</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Main Content Area -->
-            <div class="main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-0 transition-all duration-300">
+            <div class="main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-16 transition-all duration-300">
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">
@@ -325,5 +360,45 @@
                 </main>
             </div>
         </div>
+        <script>
+            function updateTopbarTitle() {
+                const titleEl = document.getElementById('nav-active-title');
+                if (!titleEl) return;
+                
+                // 1. Try to find the h2 or h1 in the main content area
+                const heading = document.querySelector('main h2, main h1, .main-content-wrapper h2, .main-content-wrapper h1');
+                if (heading) {
+                    titleEl.textContent = heading.textContent.trim();
+                    return;
+                }
+                
+                // 2. Fallback to active sidebar link text
+                const activeLink = document.querySelector('.sidebar-nav a.bg-blue-600, .sidebar-nav a.bg-blue-800');
+                if (activeLink) {
+                    const textSpan = activeLink.querySelector('span');
+                    if (textSpan) {
+                        titleEl.textContent = textSpan.textContent.trim();
+                        return;
+                    }
+                }
+                
+                // 3. Fallback to document title
+                titleEl.textContent = document.title.split('|')[0].trim();
+            }
+
+            document.addEventListener('DOMContentLoaded', updateTopbarTitle);
+            document.addEventListener('livewire:navigated', () => {
+                setTimeout(updateTopbarTitle, 50);
+            });
+            
+            // Watch for DOM changes to keep it in sync
+            const topbarObserver = new MutationObserver(() => {
+                updateTopbarTitle();
+            });
+            document.addEventListener('DOMContentLoaded', () => {
+                const target = document.querySelector('.main-content-wrapper') || document.body;
+                topbarObserver.observe(target, { childList: true, subtree: true });
+            });
+        </script>
     </body>
 </html>

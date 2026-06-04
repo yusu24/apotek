@@ -9,6 +9,7 @@ class NotificationBell extends Component
 {
     public $iconOnly = false;
     public $direction = 'up';
+    public $textColor = 'text-white';
 
     public function getUnreadCountProperty()
     {

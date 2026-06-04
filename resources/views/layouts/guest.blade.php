@@ -18,14 +18,14 @@
         <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 bg-gradient-to-tr from-slate-100 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
             <div class="w-full sm:max-w-md">
                 <!-- Logo Container -->
-                <div class="flex justify-center mb-4 transform hover:scale-105 transition-transform duration-300">
-                    <a href="/" wire:navigate class="focus:outline-none">
+                <div class="flex justify-center mb-6">
+                    <div class="focus:outline-none select-none">
                         @if($logoPath = \App\Models\Setting::get('store_login_logo_path'))
-                            <img src="{{ asset('storage/' . $logoPath) }}" class="h-32 sm:h-40 md:h-48 w-auto object-contain mx-auto filter drop-shadow-md transition-all duration-300" alt="Logo">
+                            <img src="{{ asset('storage/' . $logoPath) }}" class="h-32 sm:h-40 md:h-48 w-auto object-contain mx-auto filter drop-shadow-md" alt="Logo">
                         @else
-                            <x-application-logo class="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 fill-current text-blue-600 dark:text-blue-500 filter drop-shadow-lg transition-all duration-300" />
+                            <x-application-logo class="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 fill-current text-blue-600 dark:text-blue-500 filter drop-shadow-lg" />
                         @endif
-                    </a>
+                    </div>
                 </div>
 
                 <!-- Main Card Slot Container -->

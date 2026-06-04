@@ -297,7 +297,7 @@
             <livewire:layout.navigation />
 
             <!-- Main Content Area -->
-            <div class="main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 xl:pt-16 transition-all duration-300">
+            <div class="main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 {{ request()->routeIs('pos.cashier') ? 'xl:pt-0' : 'xl:pt-16' }} transition-all duration-300">
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
                         <div class="flex items-center gap-3 text-sm font-bold">

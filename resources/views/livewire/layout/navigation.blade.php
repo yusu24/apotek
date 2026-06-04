@@ -517,6 +517,7 @@ new class extends Component
     </nav>
 
     <!-- Desktop Fixed Top Navbar -->
+    @if(!request()->routeIs('pos.cashier'))
     <div class="fixed top-0 right-0 z-30 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
          x-bind:style="$store.sidebar.collapsed ? 'left: 5rem' : 'left: 16rem'">
         <!-- Left Section: Empty spacer to match user mockup -->
@@ -595,6 +596,7 @@ new class extends Component
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Mobile Header -->
     <div class="xl:hidden bg-blue-950 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">

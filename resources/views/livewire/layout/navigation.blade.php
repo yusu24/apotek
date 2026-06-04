@@ -516,6 +516,86 @@ new class extends Component
         </div>
     </nav>
 
+    <!-- Desktop Fixed Top Navbar -->
+    <div class="fixed top-0 right-0 z-30 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-850 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
+         x-bind:class="$store.sidebar.collapsed ? 'left-20' : 'left-64'">
+        <!-- Left Section: Empty spacer to match user mockup -->
+        <div></div>
+
+        <!-- Right Section: Profile & Actions -->
+        <div class="flex items-center gap-4">
+            @can('view notifications')
+            <div class="text-gray-600 dark:text-gray-300">
+                <livewire:layout.notification-bell :iconOnly="true" direction="down" textColor="text-gray-600 dark:text-gray-300" />
+            </div>
+            @endcan
+            
+            <div class="my-1 border-r border-gray-200 dark:border-gray-800 h-6"></div>
+
+            <!-- Profile Dropdown -->
+            <div class="relative" x-data="{ open: false }">
+                <!-- Trigger Button -->
+                <button @click="open = !open" class="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left focus:outline-none">
+                    <!-- Initials / Avatar Circle -->
+                    @if (auth()->user()->profile_photo_path)
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover ring-1 ring-gray-205 dark:ring-gray-800 shrink-0">
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-blue-950 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                            @php
+                                $words = explode(' ', auth()->user()->name);
+                                $initials = '';
+                                if (count($words) >= 2) {
+                                    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                } else {
+                                    $initials = strtoupper(substr(auth()->user()->name, 0, 2));
+                                }
+                            @endphp
+                            {{ $initials }}
+                        </div>
+                    @endif
+                    
+                    <!-- User Details -->
+                    <div class="hidden sm:block">
+                        <p class="text-xs font-bold text-blue-950 dark:text-white leading-tight">{{ auth()->user()->name }}</p>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">{{ auth()->user()->email }}</p>
+                    </div>
+
+                    <!-- Down Chevron -->
+                    <svg class="w-4 h-4 text-gray-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div x-show="open" 
+                     @click.away="open = false"
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 translate-y-2"
+                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden">
+                    
+                    <div class="p-1">
+                        <a href="{{ route('profile') }}" wire:navigate class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Pengaturan Profil
+                        </a>
+
+                        <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
+
+                        <button wire:click="logout" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors text-left">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                            Keluar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Header -->
     <div class="xl:hidden bg-blue-950 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">
         <div class="flex items-center gap-2">

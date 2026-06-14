@@ -8,6 +8,10 @@ use Livewire\Component;
 
 class OnlineUsers extends Component
 {
+    public bool $iconOnly = false;
+    public string $direction = 'up';
+    public string $textColor = 'text-white';
+
     public function render()
     {
         // Get all users
@@ -19,7 +23,10 @@ class OnlineUsers extends Component
         });
 
         return view('livewire.layout.online-users', [
-            'onlineUsers' => $onlineUsers
+            'onlineUsers' => $onlineUsers,
+            'iconOnly' => $this->iconOnly,
+            'direction' => $this->direction,
+            'textColor' => $this->textColor,
         ]);
     }
 }

@@ -36,6 +36,13 @@
 
                 Alpine.store('sidebar', {
                     collapsed: localStorage.getItem('sidebar_collapsed') === 'true',
+                    init() {
+                        if (this.collapsed) {
+                            document.documentElement.classList.add('sidebar-collapsed');
+                        } else {
+                            document.documentElement.classList.remove('sidebar-collapsed');
+                        }
+                    },
                     toggle() {
                         this.collapsed = !this.collapsed;
                         localStorage.setItem('sidebar_collapsed', this.collapsed);
@@ -188,7 +195,12 @@
                 }));
             }
 
-            document.addEventListener('alpine:init', initAlpineStores);
+            // Register stores immediately if Alpine is already loaded (e.g. after wire:navigate redirect from login)
+            if (window.Alpine) {
+                initAlpineStores();
+            } else {
+                document.addEventListener('alpine:init', initAlpineStores);
+            }
             
             // Re-initialize if navigating with Livewire
             document.addEventListener('livewire:navigated', () => {
@@ -283,6 +295,27 @@
                 html.sidebar-collapsed .sidebar-nav {
                     width: 5rem !important; /* w-20 */
                 }
+                
+                /* Hide submenu items and arrows when sidebar is collapsed on desktop */
+                html.sidebar-collapsed .sidebar-nav div[x-collapse] {
+                    display: none !important;
+                }
+                html.sidebar-collapsed .sidebar-nav button svg[x-show*="collapsed"] {
+                    display: none !important;
+                }
+            }
+            
+            /* Hide page titles in content body on desktop since they are in the navbar */
+            @media (min-width: 1280px) {
+                .main-content-wrapper.has-navbar > main > div > div:first-child h2,
+                .main-content-wrapper.has-navbar > main > div > div:first-child h1 {
+                    display: none !important;
+                }
+                .main-content-wrapper.has-navbar > main > div > .mb-6:first-child:not(:has(a, button, input, select, form)),
+                .main-content-wrapper.has-navbar > main > div > .mb-8:first-child:not(:has(a, button, input, select, form)) {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
             }
         </style>
     <script>
@@ -290,6 +323,30 @@
         if (localStorage.getItem('sidebar_collapsed') === 'true') {
             document.documentElement.classList.add('sidebar-collapsed');
         }
+        // Apply navbar left position before Alpine loads to prevent flash
+        (function() {
+            var collapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+            var style = document.createElement('style');
+            style.id = 'navbar-init-style';
+            style.textContent = '#desktop-navbar { left: ' + (collapsed ? '5rem' : '16rem') + ' !important; }';
+            document.head.appendChild(style);
+            
+            function removeStyle() {
+                var el = document.getElementById('navbar-init-style');
+                if (el) el.remove();
+            }
+
+            // Remove the override once Alpine has taken control
+            if (window.Alpine) {
+                // If Alpine is already running (e.g. wire:navigate redirect), remove style on microtask
+                setTimeout(removeStyle, 50);
+            } else {
+                document.addEventListener('alpine:initialized', removeStyle);
+            }
+            
+            // Clean up style on any Livewire navigation event as well
+            document.addEventListener('livewire:navigated', removeStyle);
+        })();
     </script>
     </head>
     <body class="font-sans antialiased">
@@ -301,6 +358,7 @@
                 'main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 transition-all duration-300',
                 'xl:pt-0' => request()->routeIs('pos.cashier'),
                 'xl:pt-16' => !request()->routeIs('pos.cashier'),
+                'has-navbar' => !request()->routeIs('pos.cashier'),
             ])>
                 @if(session()->has('impersonator_id'))
                     <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">

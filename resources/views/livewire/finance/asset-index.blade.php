@@ -1,14 +1,6 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Manajemen Aset Tetap</h2>
-        <div class="flex space-x-2">
-            <button wire:click="$set('showDepreciationModal', true)" 
-                class="btn btn-depreciation" 
-                title="Proses Penyusutan">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="hidden sm:inline">Proses Penyusutan</span>
-            </button>
-        </div>
     </div>
 
     @if (session()->has('message'))
@@ -39,10 +31,19 @@
                 </div>
             </div>
             
-            <button wire:click="createAsset" class="btn btn-primary shrink-0" title="Tambah Aset">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span class="hidden sm:inline">Tambah Aset</span>
-            </button>
+            <div class="flex items-center gap-2 shrink-0">
+                <button wire:click="$set('showDepreciationModal', true)" 
+                    class="btn btn-depreciation" 
+                    title="Proses Penyusutan">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="hidden sm:inline">Proses Penyusutan</span>
+                </button>
+
+                <button wire:click="createAsset" class="btn btn-primary shrink-0" title="Tambah Aset">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span class="hidden sm:inline">Tambah Aset</span>
+                </button>
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">

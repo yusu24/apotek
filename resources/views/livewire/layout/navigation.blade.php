@@ -16,6 +16,97 @@ new class extends Component
     }
 }; ?>
 
+@php
+    $routeTitles = [
+        'dashboard' => 'Dashboard',
+        'profile' => 'Pengaturan Profil',
+        
+        // Products
+        'products.index' => 'Data Obat / Produk',
+        'products.create' => 'Tambah Obat / Produk',
+        'products.edit' => 'Edit Obat / Produk',
+        
+        // Master
+        'master.categories' => 'Kategori Produk',
+        'master.product-units' => 'Konversi Satuan',
+        'master.units' => 'Master Satuan',
+        'master.suppliers' => 'Supplier',
+        'master.customers' => 'Pelanggan',
+        
+        // Inventory
+        'inventory.index' => 'Stok & Opname',
+        'inventory.history' => 'Riwayat Transaksi Produk',
+        'inventory.adjust' => 'Penyesuaian Stok',
+        'inventory.returns.sales' => 'Retur Penjualan',
+        'inventory.returns.purchase' => 'Retur Pembelian',
+        
+        // Reports
+        'reports.sales' => 'Laporan Penjualan',
+        'reports.sales-chart' => 'Grafik Penjualan',
+        'reports.stock' => 'Laporan Stok',
+        'reports.transaction-history' => 'Riwayat Transaksi Produk',
+        'reports.product-margin' => 'Laporan Margin Produk',
+        
+        // Finance
+        'finance.summary' => 'Ringkasan Keuangan',
+        'finance.aging-report' => 'Hutang & Piutang',
+        'finance.ppn-report' => 'Laporan PPN',
+        'finance.profit-loss' => 'Laporan Laba Rugi',
+        'finance.balance-sheet' => 'Neraca (Standar)',
+        'finance.income-statement' => 'Laporan Arus Kas',
+        'finance.expenses' => 'Pengeluaran',
+        'finance.expense-categories' => 'Kategori Pengeluaran',
+        'finance.opening-balance' => 'Neraca Saldo Awal',
+        'finance.trial-balance' => 'Neraca Saldo Awal',
+        'finance.cash-flow' => 'Laporan Arus Kas',
+        'finance.assets' => 'Manajemen Aset Tetap',
+        
+        // Accounting
+        'accounting.accounts.index' => 'Daftar Akun',
+        'accounting.journals.index' => 'Jurnal Umum',
+        'accounting.journals.create' => 'Tambah Jurnal Umum',
+        'accounting.journals.edit' => 'Edit Jurnal Umum',
+        'accounting.ledger' => 'Buku Besar',
+        
+        // Procurement
+        'procurement.purchase-orders.index' => 'Pesanan Pembelian (PO)',
+        'procurement.purchase-orders.create' => 'Buat PO Baru',
+        'procurement.purchase-orders.view' => 'Lihat PO',
+        'procurement.purchase-orders.edit' => 'Edit PO',
+        'procurement.goods-receipts.index' => 'Penerimaan Pesanan',
+        'procurement.goods-receipts.create' => 'Terima Pesanan Baru',
+        'procurement.goods-receipts.edit' => 'Edit Penerimaan Pesanan',
+        
+        // Admin
+        'admin.users.index' => 'Kelola User',
+        'admin.users.create' => 'Tambah User',
+        'admin.users.edit' => 'Edit User',
+        'admin.roles.index' => 'Kelola Jabatan',
+        'admin.roles.create' => 'Tambah Jabatan',
+        'admin.roles.edit' => 'Edit Jabatan',
+        'admin.backups' => 'Backup Data',
+        'admin.activity-log' => 'Riwayat Aktivitas',
+        
+        // Guide
+        'guide.index' => 'Panduan Aplikasi',
+        'guide.detail' => 'Detail Panduan Aplikasi',
+        'guide.handbook' => 'Buku Panduan',
+    ];
+
+    $currentRouteName = request()->route() ? request()->route()->getName() : '';
+    $pageTitle = $routeTitles[$currentRouteName] ?? '';
+    
+    if (!$pageTitle && $currentRouteName) {
+        $parts = explode('.', $currentRouteName);
+        $lastPart = end($parts);
+        $pageTitle = str_replace('-', ' ', ucwords($lastPart, '-'));
+    }
+    
+    if (!$pageTitle) {
+        $pageTitle = 'Apotek';
+    }
+@endphp
+
 <div class="contents">
     <!-- Sidebar Navigation -->
     <nav id="sidebar" 
@@ -119,7 +210,7 @@ new class extends Component
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Retur Barang</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('manage sales returns')
@@ -147,7 +238,7 @@ new class extends Component
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Data Master</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view products')
@@ -215,7 +306,7 @@ new class extends Component
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Keuangan</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view trial balance')
@@ -281,7 +372,7 @@ new class extends Component
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Operasional</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view stock')
@@ -333,7 +424,7 @@ new class extends Component
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Keuangan & Administrasi</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view accounts')
@@ -382,13 +473,13 @@ new class extends Component
             @endcanany
 
             @canany(['manage settings', 'manage pos settings', 'manage users', 'view activity logs', 'manage backups', 'view online users', 'view notifications'])
-            <div x-data="{ expanded: {{ request()->routeIs('settings.*') || request()->routeIs('admin.users*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.users*') ? 'text-white' : 'text-white' }}">
+            <div x-data="{ expanded: {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'true' : 'false' }} }">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengaturan Sistem</span>
                     </div>
-                    <svg x-show="!\$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    <svg x-show="!$store.sidebar.collapsed" :class="{'rotate-90': expanded}" class="w-4 h-4 transition-transform text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('manage settings')
@@ -421,11 +512,6 @@ new class extends Component
                     </a>
                     @endcan
 
-                    @can('view online users')
-                    <div class="pt-2 mt-2 border-t border-blue-800/50">
-                        <livewire:layout.online-users />
-                    </div>
-                    @endcan
                     @endcan
 
                     @can('view activity logs')
@@ -443,88 +529,27 @@ new class extends Component
                 Panduan Aplikasi
             </x-sidebar-link>
         </div>
-
-        <!-- Fixed Bottom Actions -->
-        <div class="hidden xl:block px-3 py-2 space-y-1">
-            @can('view notifications')
-            <livewire:layout.notification-bell />
-            @endcan
-        </div>
-
-        <!-- User Profile (Bottom) -->
-        <div class="p-4" x-data="{ profileOpen: false }">
-            <div class="relative">
-                <!-- Trigger -->
-                <button @click="profileOpen = !profileOpen" 
-                        class="w-full flex items-center justify-center xl:justify-start gap-3 p-2 rounded-lg hover:bg-blue-800 transition-all cursor-pointer group"
-                        :class="$store.sidebar.collapsed ? 'xl:p-1' : ''">
-                    @if (auth()->user()->profile_photo_path)
-                        <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" 
-                             class="rounded-full object-cover shrink-0 ring-2 ring-gray-800 ring-offset-2 ring-offset-gray-950 group-hover:ring-blue-500 transition-all"
-                             :class="$store.sidebar.collapsed ? 'w-10 h-10' : 'w-8 h-8'">
-                    @else
-                        <div class="rounded-full bg-blue-600 flex items-center justify-center text-white font-bold ring-2 ring-gray-800 ring-offset-2 ring-offset-gray-950 group-hover:ring-blue-500 transition-all shrink-0"
-                             :class="$store.sidebar.collapsed ? 'w-10 h-10 text-sm font-medium' : 'w-8 h-8 text-xs'">
-                            {{ substr(auth()->user()->name, 0, 2) }}
-                        </div>
-                    @endif
-                    
-                    <div class="flex-1 min-w-0 text-left transition-all duration-300" :class="{'xl:hidden': $store.sidebar.collapsed}">
-                        <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px] text-white truncate capitalize">{{ optional(auth()->user()->roles->first())->name ?? 'User' }}</p>
-                    </div>
-
-                    <svg x-show="!$store.sidebar.collapsed" class="w-4 h-4 text-white shrink-0 transition-transform" :class="profileOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                    </svg>
-                </button>
-
-                <!-- Dropdown Menu -->
-                <div x-show="profileOpen" 
-                     @click.away="profileOpen = false"
-                     x-cloak
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 translate-y-2"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 translate-y-2"
-                     class="absolute bottom-full left-0 mb-2 w-full min-w-[200px] bg-blue-950 border border-blue-800/50 rounded-xl shadow-2xl z-50 overflow-hidden"
-                     :class="$store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2 xl:translate-y-0' : ''">
-                    
-                    <!-- Header (Visible in collapsed view dropdown) -->
-                    <div class="p-3 border-b border-blue-800/50 bg-blue-900/50 xl:hidden" :class="$store.sidebar.collapsed ? 'xl:block' : ''">
-                        <p class="text-sm font-medium font-bold text-white truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-white truncate">{{ auth()->user()->email }}</p>
-                    </div>
-
-                    <div class="p-1">
-                        <a href="{{ route('profile') }}" wire:navigate class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white hover:text-white hover:bg-blue-800 rounded-lg transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            Pengaturan Profil
-                        </a>
-
-                        <div class="my-1 border-t border-blue-800/50"></div>
-
-                        <button wire:click="logout" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                            Keluar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </nav>
 
     <!-- Desktop Fixed Top Navbar -->
     @if(!request()->routeIs('pos.cashier'))
-    <div class="fixed top-0 right-0 z-40 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
+    <div id="desktop-navbar"
+         class="fixed top-0 right-0 z-40 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
          x-bind:style="$store.sidebar.collapsed ? 'left: 5rem' : 'left: 16rem'">
-        <!-- Left Section: Empty spacer to match user mockup -->
-        <div></div>
+        <div class="flex items-center">
+            <h1 class="text-xl font-bold text-gray-800 dark:text-white tracking-tight">
+                {{ $pageTitle }}
+            </h1>
+        </div>
 
         <!-- Right Section: Profile & Actions -->
         <div class="flex items-center gap-4">
+            @can('view online users')
+            <div class="text-gray-600 dark:text-gray-300">
+                <livewire:layout.online-users :iconOnly="true" direction="down" textColor="text-gray-600 dark:text-gray-300" />
+            </div>
+            @endcan
+
             @can('view notifications')
             <div class="text-gray-600 dark:text-gray-300">
                 <livewire:layout.notification-bell :iconOnly="true" direction="down" textColor="text-gray-600 dark:text-gray-300" />
@@ -608,6 +633,9 @@ new class extends Component
             @endif
         </div>
         <div class="flex items-center gap-3">
+            @can('view online users')
+            <livewire:layout.online-users :iconOnly="true" direction="down" textColor="text-white" />
+            @endcan
             @can('view notifications')
             <livewire:layout.notification-bell :iconOnly="true" direction="down" />
             @endcan

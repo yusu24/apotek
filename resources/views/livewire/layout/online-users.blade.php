@@ -1,11 +1,23 @@
+@php
+$colorClasses = ($textColor === 'text-white')
+    ? 'text-white hover:bg-gray-800/50 xl:hover:bg-gray-800 hover:text-white'
+    : "$textColor hover:bg-gray-100 dark:hover:bg-gray-800";
+@endphp
+
 <div class="relative" x-data="{ open: false }">
     <!-- Menu-style Item -->
     <button @click="open = !open" 
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-white hover:bg-gray-800 hover:text-white transition-colors group"
+            type="button"
+            @class([
+                'rounded-lg text-sm font-medium transition-colors group relative flex items-center justify-center',
+                'p-1.5' => $iconOnly,
+                'w-full px-3 py-2 gap-3' => !$iconOnly,
+                $colorClasses
+            ])
             wire:poll.keep-alive="30s">
         
         <div class="relative flex items-center justify-center">
-            <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             
@@ -17,7 +29,9 @@
             @endif
         </div>
         
-        <span class="truncate text-white" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengguna Aktif ({{ count($onlineUsers) }})</span>
+        @unless($iconOnly)
+            <span class="truncate text-white" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengguna Aktif ({{ count($onlineUsers) }})</span>
+        @endunless
     </button>
 
     <!-- Dropdown -->
@@ -30,11 +44,11 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-2"
-         class="absolute bottom-full left-0 mb-2 w-72 bg-blue-950 border border-blue-800/50 rounded-xl shadow-2xl z-[100] overflow-hidden"
-         :class="$store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
+         class="absolute w-72 rounded-xl shadow-2xl z-[100] overflow-hidden border right-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+         :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
         
-        <div class="p-3 border-b border-blue-800/50 bg-blue-900/50 flex justify-between items-center">
-            <h3 class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+        <div class="p-3 border-b flex justify-between items-center border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">
+            <h3 class="text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-gray-500 dark:text-gray-400">
                 <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                 Sedang Aktif ({{ count($onlineUsers) }})
             </h3>
@@ -42,22 +56,22 @@
 
         <div class="max-h-80 overflow-y-auto scrollbar-hide py-1">
             @forelse($onlineUsers as $user)
-                <div class="px-4 py-2 hover:bg-blue-800/50 transition-colors flex items-center gap-3">
+                <div class="px-4 py-2 transition-colors flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700">
                     @if ($user->profile_photo_path)
-                        <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover border border-blue-800/50 shrink-0">
+                        <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700 shrink-0">
                     @else
-                        <div class="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
                             {{ substr($user->name, 0, 2) }}
                         </div>
                     @endif
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ $user->name }}</p>
-                        <p class="text-[10px] text-blue-200/70 truncate">{{ $user->email }}</p>
+                        <p class="text-sm font-medium truncate text-gray-900 dark:text-white">{{ $user->name }}</p>
+                        <p class="text-[10px] truncate text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                     </div>
                 </div>
             @empty
                 <div class="p-6 text-center">
-                    <p class="text-xs text-blue-200/70 italic">Tidak ada pengguna yang aktif selain Anda.</p>
+                    <p class="text-xs italic text-gray-400 dark:text-gray-500">Tidak ada pengguna yang aktif selain Anda.</p>
                 </div>
             @endforelse
         </div>

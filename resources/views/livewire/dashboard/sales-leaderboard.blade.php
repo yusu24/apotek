@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div x-data="{ showFullLeaderboard: false }" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column: Summary Cards & Daily Sales Trend Chart -->
     <div class="lg:col-span-2 space-y-6">
         <!-- Monthly Metrics Cards -->
@@ -191,35 +191,35 @@
                     $rank1Avatar = 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=fef3c7&color=b45309&size=128&bold=true';
                 @endphp
                 <div class="px-5 pt-4">
-                    <div style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff;" class="rounded-2xl p-5 text-center shadow-md relative overflow-hidden group">
-                        <!-- Background decoration -->
+                    <div style="background: linear-gradient(135deg, #b45309 0%, #78350f 100%); color: #ffffff; border: 1px solid rgba(251, 191, 36, 0.2);" class="rounded-2xl p-6 text-center shadow-xl relative overflow-hidden group">
+                        <!-- Background glow decoration -->
                         <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
                         <div class="absolute -left-8 -bottom-8 w-24 h-24 bg-black/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
 
-                        <!-- Badge -->
-                        <div style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25);" class="inline-flex items-center gap-1 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3">
+                        <!-- Top Badge -->
+                        <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2);" class="inline-flex items-center gap-1.5 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest mb-4">
                             👑 Peringkat 1 Bulan Ini
                         </div>
 
                         <!-- Profile Photo -->
-                        <div class="relative w-16 h-16 mx-auto mb-2">
-                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fcd34d;" class="w-full h-full rounded-full object-cover border-2 shadow-lg bg-amber-100 flex items-center justify-center font-bold" />
-                            <div class="absolute -bottom-1 -right-1 bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md font-bold text-xs">
-                                🥇
-                            </div>
+                        <div class="relative w-20 h-20 mx-auto mb-3">
+                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);" class="w-full h-full rounded-full object-cover border-2 shadow-lg bg-amber-100 flex items-center justify-center font-bold" />
                         </div>
 
                         <!-- Details -->
-                        <h4 style="color: #ffffff;" class="font-extrabold text-sm tracking-tight truncate">{{ $rank1Name }}</h4>
-                        <p style="color: rgba(255, 255, 255, 0.85);" class="text-[10px] font-normal mt-0.5">{{ $rank1->total_transactions }} Transaksi</p>
+                        <h4 style="color: #ffffff;" class="font-extrabold text-base tracking-tight truncate flex items-center justify-center gap-1.5 px-2">
+                            <span>🥇</span>
+                            <span>{{ $rank1Name }}</span>
+                        </h4>
+                        <p style="color: #fef08a;" class="text-[11px] font-bold mt-1.5">{{ $rank1->total_transactions }} Transaksi</p>
 
                         <!-- Divider -->
-                        <div style="border-color: rgba(255, 255, 255, 0.15);" class="my-3 border-t"></div>
+                        <div style="border-color: rgba(255, 255, 255, 0.15);" class="my-4 border-t mx-4"></div>
 
                         <!-- Stats -->
-                        <div>
-                            <p style="color: rgba(255, 255, 255, 0.75);" class="text-[8px] uppercase tracking-wider">Total Penjualan</p>
-                            <p style="color: #ffffff;" class="font-black text-base">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</p>
+                        <div class="space-y-1">
+                            <p style="color: rgba(255, 255, 255, 0.7);" class="text-[9px] uppercase tracking-wider font-semibold">Total Kontribusi Penjualan</p>
+                            <p style="color: #ffffff;" class="font-black text-lg">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</p>
                         </div>
                     </div>
                 </div>
@@ -284,7 +284,7 @@
             <!-- View More Button -->
             @if($leaderboard->count() > 3)
                 <div class="px-5 pb-5 pt-1 border-t border-gray-100 dark:border-gray-700">
-                    <button wire:click="$set('showFullLeaderboard', true)" class="w-full text-center text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center justify-center gap-1 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
+                    <button @click="showFullLeaderboard = true" class="w-full text-center text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center justify-center gap-1 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
                         Lihat Klasemen Lengkap
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -294,111 +294,125 @@
             @endif
 
             <!-- Full Leaderboard Modal -->
-            @if($showFullLeaderboard)
-                <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <!-- Backdrop -->
-                    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" wire:click="$set('showFullLeaderboard', false)"></div>
+            <div x-show="showFullLeaderboard" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <!-- Backdrop with fade transition -->
+                <div x-show="showFullLeaderboard"
+                     x-transition:enter="ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="ease-in duration-200"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+                     @click="showFullLeaderboard = false"></div>
 
-                    <!-- Modal Wrapper -->
-                    <div class="flex min-h-screen items-center justify-center p-4 text-center">
-                        <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
-                            <!-- Modal Header -->
-                            <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                                        <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-base font-extrabold text-gray-900 dark:text-gray-100">Klasemen Lengkap Staf</h3>
-                                        <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal">Kinerja Penjualan Kasir Bulan Ini</p>
-                                    </div>
-                                </div>
-                                <button wire:click="$set('showFullLeaderboard', false)" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                <!-- Modal Wrapper -->
+                <div class="flex min-h-screen items-center justify-center p-4 text-center">
+                    <!-- Modal Content with scale/fade transition -->
+                    <div x-show="showFullLeaderboard"
+                         x-transition:enter="ease-out duration-300"
+                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave="ease-in duration-200"
+                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                         class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
+                        <!-- Modal Header -->
+                        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                                     </svg>
-                                </button>
+                                </div>
+                                <div>
+                                    <h3 class="text-base font-extrabold text-gray-900 dark:text-gray-100">Klasemen Lengkap Staf</h3>
+                                    <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal">Kinerja Penjualan Kasir Bulan Ini</p>
+                                </div>
                             </div>
+                            <button @click="showFullLeaderboard = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
 
-                            <!-- Modal Body -->
-                            <div class="p-6 max-h-[60vh] overflow-y-auto space-y-4">
-                                @foreach($leaderboard as $index => $row)
-                                    @php
-                                        $rank = $index + 1;
-                                        $isRank1 = $rank === 1;
-                                        $isRank2 = $rank === 2;
-                                        $isRank3 = $rank === 3;
-                                        $userName = $row->user->name ?? 'Kasir';
-                                        
-                                        if ($isRank1) {
-                                            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=fef3c7&color=b45309&size=64&bold=true';
-                                        } else {
-                                            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
-                                        }
-                                    @endphp
+                        <!-- Modal Body -->
+                        <div class="p-6 max-h-[60vh] overflow-y-auto space-y-4">
+                            @foreach($leaderboard as $index => $row)
+                                @php
+                                    $rank = $index + 1;
+                                    $isRank1 = $rank === 1;
+                                    $isRank2 = $rank === 2;
+                                    $isRank3 = $rank === 3;
+                                    $userName = $row->user->name ?? 'Kasir';
+                                    
+                                    if ($isRank1) {
+                                        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=fef3c7&color=b45309&size=64&bold=true';
+                                    } else {
+                                        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
+                                    }
+                                @endphp
 
-                                    <div @class([
-                                        'flex items-center justify-between p-3.5 rounded-xl border transition-all duration-300',
-                                        'bg-gradient-to-r from-amber-50 to-yellow-50/80 border-amber-200/50 dark:from-amber-950/20 dark:to-yellow-900/10 dark:border-amber-900/30' => $isRank1,
-                                        'bg-slate-50/50 border-slate-100/50 dark:bg-slate-900/20 dark:border-slate-800/50' => !$isRank1,
-                                    ])>
-                                        <div class="flex items-center gap-3">
-                                            <div class="flex items-center justify-center w-6 h-6 shrink-0">
-                                                @if($isRank1)
-                                                    <span class="text-base" title="Juara 1">🥇</span>
-                                                @elseif($isRank2)
-                                                    <span class="text-base" title="Juara 2">🥈</span>
-                                                @elseif($isRank3)
-                                                    <span class="text-base" title="Juara 3">🥉</span>
-                                                @else
-                                                    <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
-                                                @endif
-                                            </div>
-
-                                            <img src="{{ $avatarUrl }}" alt="{{ $userName }}" @class([
-                                                'w-9 h-9 rounded-full object-cover border shadow-sm shrink-0',
-                                                'border-amber-300' => $isRank1,
-                                                'border-slate-200 dark:border-slate-700' => !$isRank1,
-                                            ]) />
-
-                                            <div class="min-w-0">
-                                                <h5 @class([
-                                                    'font-bold text-xs truncate max-w-[150px]',
-                                                    'text-amber-950 dark:text-amber-200' => $isRank1,
-                                                    'text-gray-900 dark:text-gray-100' => !$isRank1,
-                                                ])>{{ $userName }}</h5>
-                                                <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
-                                                    {{ $row->total_transactions }} Transaksi
-                                                </p>
-                                            </div>
+                                <div @if($isRank1) style="background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 100%); border-color: #fde68a;" @endif
+                                     @class([
+                                    'flex items-center justify-between p-3.5 rounded-xl border transition-all duration-300',
+                                    'bg-slate-50/50 border-slate-100/50 dark:bg-slate-900/20 dark:border-slate-800/50' => !$isRank1,
+                                ])>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex items-center justify-center w-6 h-6 shrink-0">
+                                            @if($isRank1)
+                                                <span class="text-base" title="Juara 1">🥇</span>
+                                            @elseif($isRank2)
+                                                <span class="text-base" title="Juara 2">🥈</span>
+                                            @elseif($isRank3)
+                                                <span class="text-base" title="Juara 3">🥉</span>
+                                            @else
+                                                <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
+                                            @endif
                                         </div>
 
-                                        <div class="text-right">
-                                            <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
-                                            <p @class([
-                                                'font-black text-xs',
-                                                'text-amber-700 dark:text-amber-400' => $isRank1,
-                                                'text-indigo-600 dark:text-indigo-400' => !$isRank1,
-                                            ])>
-                                                Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                        <img src="{{ $avatarUrl }}" alt="{{ $userName }}" @class([
+                                            'w-9 h-9 rounded-full object-cover border shadow-sm shrink-0',
+                                            'border-amber-300' => $isRank1,
+                                            'border-slate-200 dark:border-slate-700' => !$isRank1,
+                                        ]) />
+
+                                        <div class="min-w-0">
+                                            <h5 @if($isRank1) style="color: #78350f;" @endif
+                                                @class([
+                                                'font-bold text-xs truncate max-w-[150px]',
+                                                'text-gray-900 dark:text-gray-100' => !$isRank1,
+                                            ])>{{ $userName }}</h5>
+                                            <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
+                                                {{ $row->total_transactions }} Transaksi
                                             </p>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
 
-                            <!-- Modal Footer -->
-                            <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
-                                <button wire:click="$set('showFullLeaderboard', false)" class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl transition-all">
-                                    Tutup
-                                </button>
-                            </div>
+                                    <div class="text-right">
+                                        <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
+                                        <p @if($isRank1) style="color: #b45309;" @endif
+                                           @class([
+                                            'font-black text-xs',
+                                            'text-indigo-600 dark:text-indigo-400' => !$isRank1,
+                                        ])>
+                                            Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
+                            <button @click="showFullLeaderboard = false" class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl transition-all">
+                                Tutup
+                            </button>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 </div>

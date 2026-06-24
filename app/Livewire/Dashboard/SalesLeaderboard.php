@@ -42,6 +42,8 @@ class SalesLeaderboard extends Component
         // Tren Omset untuk Grafik (berdasarkan filter)
         $chartResult = $this->buildChartData($now);
 
+        $this->dispatch('chart-updated', labels: $chartResult['labels'], data: $chartResult['data']);
+
         return view('livewire.dashboard.sales-leaderboard', [
             'monthlyTurnover' => $monthlyTurnover,
             'monthlyTransactions' => $monthlyTransactions,

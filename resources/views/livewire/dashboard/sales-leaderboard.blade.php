@@ -71,17 +71,18 @@
 
             <!-- Chart Canvas Container -->
             <div x-data="{
+                chart: null,
                 initChart() {
                     const canvas = document.getElementById('monthlyTurnoverChart');
                     if (!canvas) return;
-                    if (canvas.chart) { canvas.chart.destroy(); }
+                    if (this.chart) { this.chart.destroy(); }
                     
                     const ctx = canvas.getContext('2d');
                     const gradient = ctx.createLinearGradient(0, 0, 0, 200);
                     gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
                     gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
-                    canvas.chart = new Chart(ctx, {
+ 
+                    this.chart = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: @js(json_decode($chartLabels)),
@@ -105,14 +106,7 @@
                             maintainAspectRatio: false,
                             animation: {
                                 duration: 1000,
-                                easing: 'easeOutQuart',
-                                delay: (context) => {
-                                    let delay = 0;
-                                    if (context.type === 'data' && context.mode === 'default') {
-                                        delay = context.dataIndex * 30;
-                                    }
-                                    return delay;
-                                }
+                                easing: 'easeOutQuart'
                             },
                             plugins: {
                                 legend: { display: false },
@@ -151,13 +145,20 @@
                             }
                         }
                     });
+                },
+                updateChart(labels, data) {
+                    if (this.chart) {
+                        this.chart.data.labels = labels;
+                        this.chart.data.datasets[0].data = data;
+                        this.chart.update();
+                    }
                 }
             }"
-            x-init="setTimeout(() => initChart(), 400)"
-            wire:key="chart-{{ $chartPeriod }}"
-            x-effect="initChart()"
+            x-init="setTimeout(() => initChart(), 200)"
+            @chart-updated.window="updateChart($event.detail.labels, $event.detail.data)"
+            wire:key="chart-container"
             class="h-64 mt-4 relative">
-                <canvas id="monthlyTurnoverChart"></canvas>
+                <canvas id="monthlyTurnoverChart" wire:ignore></canvas>
             </div>
         </div>
     </div>
@@ -182,82 +183,100 @@
                 </div>
             </div>
 
+            <!-- Spotlight for Rank 1 -->
+            @if($leaderboard->isNotEmpty())
+                @php
+                    $rank1 = $leaderboard->first();
+                    $rank1Name = $rank1->user->name ?? 'Kasir';
+                    $rank1Avatar = 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=fef3c7&color=b45309&size=128&bold=true';
+                @endphp
+                <div class="px-5 pt-4">
+                    <div class="bg-gradient-to-br from-amber-500 via-amber-600 to-yellow-600 dark:from-amber-600 dark:via-amber-700 dark:to-yellow-700 rounded-2xl p-5 text-white text-center shadow-md relative overflow-hidden group">
+                        <!-- Background decoration -->
+                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+                        <div class="absolute -left-8 -bottom-8 w-24 h-24 bg-black/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+
+                        <!-- Badge -->
+                        <div class="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3 border border-white/20">
+                            👑 Peringkat 1 Bulan Ini
+                        </div>
+
+                        <!-- Profile Photo -->
+                        <div class="relative w-16 h-16 mx-auto mb-2">
+                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" class="w-full h-full rounded-full object-cover border-2 border-yellow-300 shadow-lg bg-amber-100 flex items-center justify-center font-bold" />
+                            <div class="absolute -bottom-1 -right-1 bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md font-bold text-xs">
+                                🥇
+                            </div>
+                        </div>
+
+                        <!-- Details -->
+                        <h4 class="font-extrabold text-sm tracking-tight truncate">{{ $rank1Name }}</h4>
+                        <p class="text-[10px] text-amber-100 opacity-90 mt-0.5">{{ $rank1->total_transactions }} Transaksi</p>
+
+                        <!-- Divider -->
+                        <div class="my-3 border-t border-white/15"></div>
+
+                        <!-- Stats -->
+                        <div>
+                            <p class="text-[8px] text-amber-100 opacity-80 uppercase tracking-wider">Total Penjualan</p>
+                            <p class="font-black text-base">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="p-5">
-                <div class="space-y-4">
-                    @forelse($leaderboard as $index => $row)
+                <div class="space-y-3">
+                    @forelse($leaderboard->skip(1) as $row)
                         @php
-                            $rank = $index + 1;
-                            $isRank1 = $rank === 1;
+                            $rank = $loop->index + 2;
                             $isRank2 = $rank === 2;
                             $isRank3 = $rank === 3;
                             $userName = $row->user->name ?? 'Kasir';
-                            
-                            $initials = collect(explode(' ', $userName))
-                                ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                                ->take(2)
-                                ->join('');
+                            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
                         @endphp
 
-                        <div @class([
-                            'flex items-center justify-between p-4 rounded-xl transition-all duration-300 hover:translate-x-1',
-                            'bg-gradient-to-r from-amber-50 to-yellow-50/80 dark:from-amber-950/20 dark:to-yellow-900/10 shadow-sm' => $isRank1,
-                            'bg-slate-50/30 dark:bg-slate-900/10' => !$isRank1,
-                        ])>
+                        <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/20 border border-slate-100/50 dark:border-slate-800/50 rounded-xl transition-all duration-300 hover:translate-x-1">
                             <div class="flex items-center gap-3">
-                                <div class="flex items-center justify-center w-7 h-7 shrink-0">
-                                    @if($isRank1)
-                                        <span class="text-xl animate-bounce" title="Juara 1">🥇</span>
-                                    @elseif($isRank2)
-                                        <span class="text-xl" title="Juara 2">🥈</span>
+                                <div class="flex items-center justify-center w-6 h-6 shrink-0">
+                                    @if($isRank2)
+                                        <span class="text-base" title="Juara 2">🥈</span>
                                     @elseif($isRank3)
-                                        <span class="text-xl" title="Juara 3">🥉</span>
+                                        <span class="text-base" title="Juara 3">🥉</span>
                                     @else
-                                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
+                                        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
                                     @endif
                                 </div>
 
-                                <div @class([
-                                    'w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shadow-inner shrink-0',
-                                    'bg-gradient-to-br from-yellow-400 to-amber-500 text-white ring-2 ring-yellow-200 dark:ring-yellow-900/30' => $isRank1,
-                                    'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300' => !$isRank1,
-                                ])>
-                                    {{ $initials }}
-                                </div>
+                                <img src="{{ $avatarUrl }}" alt="{{ $userName }}" class="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-sm shrink-0" />
 
-                                <div>
-                                    <div class="flex flex-wrap items-center gap-1">
-                                        <span @class([
-                                            'font-bold text-sm',
-                                            'text-amber-900 dark:text-amber-200' => $isRank1,
-                                            'text-gray-900 dark:text-gray-100' => !$isRank1,
-                                        ])>
-                                            {{ $userName }}
-                                        </span>
-                                        @if($isRank1)
-                                            <span class="text-sm" title="Top Cashier">👑</span>
-                                        @endif
-                                    </div>
-                                    <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
+                                <div class="min-w-0">
+                                    <h5 class="font-bold text-xs text-gray-900 dark:text-gray-100 truncate max-w-[100px]">{{ $userName }}</h5>
+                                    <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
                                         {{ $row->total_transactions }} Transaksi
                                     </p>
                                 </div>
                             </div>
 
                             <div class="text-right">
-                                <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
-                                <p @class([
-                                    'font-black text-sm',
-                                    'text-amber-700 dark:text-amber-400' => $isRank1,
-                                    'text-indigo-600 dark:text-indigo-400' => !$isRank1,
-                                ])>
+                                <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
+                                <p class="font-black text-xs text-indigo-600 dark:text-indigo-400">
                                     Rp {{ number_format($row->total_sales, 0, ',', '.') }}
                                 </p>
                             </div>
                         </div>
                     @empty
-                        <div class="py-12 text-center text-gray-400 dark:text-gray-500 italic text-xs">
-                            Belum ada data transaksi bulan ini.
-                        </div>
+                        @if($leaderboard->count() <= 1)
+                            @if($leaderboard->isEmpty())
+                                <div class="py-6 text-center text-gray-400 dark:text-gray-500 italic text-xs">
+                                    Belum ada data transaksi bulan ini.
+                                </div>
+                            @else
+                                <div class="py-6 text-center text-gray-400 dark:text-gray-500 italic text-xs">
+                                    Tidak ada kasir lain bulan ini.
+                                </div>
+                            @endif
+                        @endif
                     @endforelse
                 </div>
             </div>

@@ -53,6 +53,10 @@ class Cashier extends Component
     public $showPendingModal = false;
     public $pendingOrders = [];
 
+    // Receipt Modal
+    public $showReceiptModal = false;
+    public $completedSaleId = null;
+
     // Customer
     public $selectedCustomerId = null;
 
@@ -1051,7 +1055,7 @@ class Cashier extends Component
 
                     if ($recipientEmail) {
                         // Ensure relations are loaded for the PDF
-                        $sale->load(['saleItems.product', 'user', 'customer']);
+                        $sale->load(['saleItems.product', 'user', 'customer', 'receivables']);
                         
                         \Illuminate\Support\Facades\Mail::to($recipientEmail)
                             ->send(new \App\Mail\ReceiptMail($sale));
@@ -1084,7 +1088,8 @@ class Cashier extends Component
                 return;
             }
 
-            return $this->redirect(route('pos.receipt', ['id' => $sale->id]));
+            $this->completedSaleId = $sale->id;
+            $this->showReceiptModal = true;
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1111,6 +1116,33 @@ class Cashier extends Component
             ->latest()
             ->limit(!empty($this->search) ? 10 : 24)
             ->get();
+    }
+
+    public function selectCashSuggestion($amount)
+    {
+        $this->cash_amount = $amount;
+        $this->calculateChange();
+    }
+
+    public function getCashSuggestionsProperty()
+    {
+        $total = (float)$this->grand_total;
+        if ($total <= 0) {
+            return [];
+        }
+
+        $suggestions = [];
+        $suggestions[] = $total;
+        $suggestions[] = ceil($total / 50000) * 50000;
+        $suggestions[] = ceil($total / 100000) * 100000;
+
+        return array_values(array_unique($suggestions));
+    }
+
+    public function closeReceiptModal()
+    {
+        $this->showReceiptModal = false;
+        $this->completedSaleId = null;
     }
 
     public function render()

@@ -167,7 +167,28 @@ class ProfitLoss extends Component
             ->orderBy('sales.date', 'desc')
             ->get();
 
-        $cogs = (float) $cogsDetails->sum(function($item) {
+        // Also fetch sales with direct cogs (historical/imported)
+        $historicalSales = Sale::whereDate('date', '>=', $this->startDate)
+            ->whereDate('date', '<=', $this->endDate)
+            ->whereNotNull('cogs')
+            ->where('cogs', '>', 0)
+            ->get();
+
+        $historicalCogsItems = $historicalSales->map(function ($sale) {
+            return (object) [
+                'id' => null,
+                'sale_id' => $sale->id,
+                'sale_date' => $sale->date,
+                'product_name' => 'HPP Omset Historis (' . $sale->invoice_no . ')',
+                'quantity' => 1,
+                'cost_price' => (float) $sale->cogs,
+                'subtotal' => (float) $sale->cogs
+            ];
+        });
+
+        $mergedCogsDetails = $cogsDetails->concat($historicalCogsItems)->sortByDesc('sale_date');
+
+        $cogs = (float) $mergedCogsDetails->sum(function($item) {
             return (float) $item->quantity * (float) $item->cost_price;
         });
 
@@ -210,7 +231,7 @@ class ProfitLoss extends Component
             'netProfit' => $netProfit,
             'salesDetails' => $sales,
             'salesReturns' => $salesReturns,
-            'cogsDetails' => $cogsDetails,
+            'cogsDetails' => $mergedCogsDetails,
             'expenseDetails' => $operatingExpenseDetails,
             'taxDetails' => $taxExpenseDetails,
         ];

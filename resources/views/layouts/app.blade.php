@@ -151,28 +151,60 @@
                                 this.value = number;
                                 this.timeout = null;
                             }, 500);
+
+                            // Dispatch price-changed for real-time Margin & Total display
+                            const row = input?.dataset?.row;
+                            if (row !== undefined && row !== '') {
+                                window.dispatchEvent(new CustomEvent('price-changed', { detail: { row } }));
+                            }
                         },
                         ['@keydown.down.prevent']($event) {
                             const input = $event.target;
                             const col = input.dataset.col;
-                            const row = parseInt(input.dataset.row, 10);
-                            if (col && !isNaN(row)) {
-                                const nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
-                                if (nextInput) {
-                                    nextInput.focus();
-                                    nextInput.select();
+                            if (col) {
+                                // Try relative DOM traversal (table row siblings)
+                                const nextRow = input.closest('tr')?.nextElementSibling;
+                                if (nextRow) {
+                                    const nextInput = nextRow.querySelector(`input[data-col="${col}"]`);
+                                    if (nextInput) {
+                                        nextInput.focus();
+                                        nextInput.select();
+                                        return;
+                                    }
+                                }
+                                // Fallback to legacy numeric row index
+                                const row = parseInt(input.dataset.row, 10);
+                                if (!isNaN(row)) {
+                                    const nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
+                                    if (nextInput) {
+                                        nextInput.focus();
+                                        nextInput.select();
+                                    }
                                 }
                             }
                         },
                         ['@keydown.up.prevent']($event) {
                             const input = $event.target;
                             const col = input.dataset.col;
-                            const row = parseInt(input.dataset.row, 10);
-                            if (col && !isNaN(row) && row > 0) {
-                                const prevInput = document.querySelector(`input[data-col="${col}"][data-row="${row - 1}"]`);
-                                if (prevInput) {
-                                    prevInput.focus();
-                                    prevInput.select();
+                            if (col) {
+                                // Try relative DOM traversal (table row siblings)
+                                const prevRow = input.closest('tr')?.previousElementSibling;
+                                if (prevRow) {
+                                    const prevInput = prevRow.querySelector(`input[data-col="${col}"]`);
+                                    if (prevInput) {
+                                        prevInput.focus();
+                                        prevInput.select();
+                                        return;
+                                    }
+                                }
+                                // Fallback to legacy numeric row index
+                                const row = parseInt(input.dataset.row, 10);
+                                if (!isNaN(row) && row > 0) {
+                                    const prevInput = document.querySelector(`input[data-col="${col}"][data-row="${row - 1}"]`);
+                                    if (prevInput) {
+                                        prevInput.focus();
+                                        prevInput.select();
+                                    }
                                 }
                             }
                         },
@@ -183,12 +215,17 @@
                                 this.timeout = null;
                                 this.value = currentUnformatted;
                             } else if (this.value !== currentUnformatted) {
-                                // If the timeout already fired but a stale Livewire response reverted the value,
-                                // we force Livewire's entangle to sync back to the actual typed value.
                                 this.value = currentUnformatted;
                             }
                             this.formatDisplay();
+                            // Dispatch event so Margin & Total cells update client-side
+                            const input = this.$el.tagName === 'INPUT' ? this.$el : this.$el.querySelector('input');
+                            const row = input?.dataset?.row;
+                            if (row !== undefined && row !== '') {
+                                window.dispatchEvent(new CustomEvent('price-changed', { detail: { row } }));
+                            }
                         },
+
                         ['inputmode']: 'numeric',
                         ['placeholder']: '0',
                     }
@@ -239,7 +276,8 @@
                 if (typeof Livewire !== 'undefined') {
                     Livewire.hook('request', ({ succeed }) => {
                         succeed(() => {
-                            if (window.location.pathname.includes('/cashier')) {
+                            const path = window.location.pathname;
+                            if (path.includes('/cashier') || path.includes('/goods-receipts/create') || /\/goods-receipts\/\d+\/edit/.test(path)) {
                                 isSubmitting = false;
                                 return;
                             }

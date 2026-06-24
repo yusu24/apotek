@@ -2,34 +2,51 @@
     'placeholder' => 'Select date...',
 ])
 
-<div wire:ignore class="w-full relative">
+<div class="w-full relative">
     <input 
         x-data="{
             value: @entangle($attributes->wire('model')),
             instance: undefined,
+            _destroyed: false,
             init() {
+                let self = this;
                 this.instance = flatpickr(this.$refs.input, {
                     dateFormat: 'Y-m-d',
                     defaultDate: this.value,
                     onChange: (selectedDates, dateStr, instance) => {
-                        this.value = dateStr;
+                        if (self._destroyed || self._isProgrammatic) return;
+                        self.value = dateStr;
                     }
                 });
 
+                this._isProgrammatic = false;
+
                 this.$watch('value', value => {
-                    if (this.instance.selectedDates[0] !== undefined) {
-                        let currentSelecteDate = this.instance.formatDate(this.instance.selectedDates[0], 'Y-m-d');
+                    if (self._destroyed || value === undefined || !self.instance) return;
+                    
+                    self._isProgrammatic = true;
+                    if (self.instance.selectedDates[0] !== undefined) {
+                        let currentSelecteDate = self.instance.formatDate(self.instance.selectedDates[0], 'Y-m-d');
                         if (currentSelecteDate !== value) {
-                            this.instance.setDate(value);
+                            self.instance.setDate(value);
                         }
                     } else if(value) {
-                         this.instance.setDate(value);
+                         self.instance.setDate(value);
                     } else {
-                         this.instance.clear();
+                         self.instance.clear();
                     }
+                    self._isProgrammatic = false;
                 });
+            },
+            destroy() {
+                this._destroyed = true;
+                if (this.instance) {
+                    this.instance.destroy();
+                    this.instance = undefined;
+                }
             }
         }"
+        wire:ignore
         x-ref="input"
         type="text"
         placeholder="{{ $placeholder }}"

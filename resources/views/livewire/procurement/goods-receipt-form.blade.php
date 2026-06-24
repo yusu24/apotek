@@ -180,20 +180,20 @@
                 </div>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full table-fixed divide-y divide-gray-200 border-collapse" style="table-layout: fixed !important; min-width: 1100px;">
+            <div class="overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+                <table class="w-full divide-y divide-gray-200" style="table-layout: fixed; min-width: 1100px;">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                         <tr>
-                            <th class="px-4 py-3 text-left tracking-wider border-r border-gray-100 w-auto min-w-[200px]">Produk</th>
-                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100 w-28">Batch No</th>
-                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100 w-32">Exp Date</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100 w-20">Qty</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100 w-24">Satuan</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100 w-40">Harga Beli</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100 w-40">Harga Jual</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100 w-24">Margin</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100 w-44">Total</th>
-                            <th class="px-3 py-3 text-center tracking-wider w-16">Aksi</th>
+                            <th class="px-4 py-3 text-left tracking-wider border-r border-gray-100" style="width:200px;">Produk</th>
+                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100" style="width:112px;">Batch No</th>
+                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100" style="width:128px;">Exp Date</th>
+                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:80px;">Qty</th>
+                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:96px;">Satuan</th>
+                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Harga Beli</th>
+                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Harga Jual</th>
+                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:96px;">Margin</th>
+                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Total</th>
+                            <th class="px-3 py-3 text-center tracking-wider" style="width:64px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -230,13 +230,13 @@
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
                                     <input type="number" wire:model.live.debounce.300ms="items.{{ $index }}.qty_received" wire:key="qty-{{ $index }}" data-col="qty" data-row="{{ $index }}"
-                                        @keydown.down.prevent="let next = document.querySelector(`input[data-col='qty'][data-row='{{ $index + 1 }}']`); if(next) { next.focus(); next.select(); }"
-                                        @keydown.up.prevent="let prev = document.querySelector(`input[data-col='qty'][data-row='{{ $index - 1 }}']`); if(prev) { prev.focus(); prev.select(); }"
+                                        @keydown.down.prevent="let nextRow = $event.target.closest('tr').nextElementSibling; if(nextRow) { let next = nextRow.querySelector(`input[data-col='qty']`); if(next) { next.focus(); next.select(); } }"
+                                        @keydown.up.prevent="let prevRow = $event.target.closest('tr').previousElementSibling; if(prevRow) { let prev = prevRow.querySelector(`input[data-col='qty']`); if(prev) { prev.focus(); prev.select(); } }"
                                         class="w-full text-sm rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-center py-1.5 px-2 font-normal text-gray-900" placeholder="0" min="0">
                                     @error("items.{$index}.qty_received") <span class="text-red-500 text-[10px] mt-1 block text-center leading-tight">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-3 py-3 align-top border-r border-gray-100">
-                                     @php $selectedProduct = $products->firstWhere('id', $item['product_id']); @endphp
+                                     @php $selectedProduct = $products->firstWhere('id', $item['product_id'] ?? null); @endphp
                                      @if($selectedProduct)
                                         <select wire:model.live="items.{{ $index }}.unit_id" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 py-1.5 px-2 font-normal text-gray-700">
                                             @if($selectedProduct->unit_id) <option value="{{ $selectedProduct->unit_id }}">{{ $selectedProduct->unit?->name ?? 'N/A' }}</option> @endif
@@ -251,35 +251,61 @@
                                      @endif
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
-                                    <div class="relative" wire:key="wrap-buy-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.buy_price').live)">
+                                    <div class="relative" wire:key="wrap-buy-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.buy_price'))">
                                         <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
                                         <input type="text" x-bind="input" wire:key="input-buy-{{ $item['row_id'] ?? $index }}" data-col="buy_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.buy_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
-                                    <div class="relative" wire:key="wrap-sell-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.sell_price').live)">
+                                    <div class="relative" wire:key="wrap-sell-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.sell_price'))">
                                         <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
                                         <input type="text" x-bind="input" wire:key="input-sell-{{ $item['row_id'] ?? $index }}" data-col="sell_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.sell_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
-                                <td class="px-3 py-3 align-top border-r border-gray-100">
+                                <td class="px-3 py-3 align-top border-r border-gray-100"
+                                    x-data="{
+                                        margin: {{ (float)($item['margin'] ?? 0) }},
+                                        updateMargin() {
+                                            const row = '{{ $index }}';
+                                            const buyEl = document.querySelector(`input[data-col='buy_price'][data-row='${row}']`);
+                                            const sellEl = document.querySelector(`input[data-col='sell_price'][data-row='${row}']`);
+                                            const buy = parseInt((buyEl?.value || '0').replace(/[^0-9]/g, '')) || 0;
+                                            const sell = parseInt((sellEl?.value || '0').replace(/[^0-9]/g, '')) || 0;
+                                            this.margin = buy > 0 ? ((sell - buy) / buy) * 100 : 0;
+                                        }
+                                    }"
+                                    @price-changed.window="if($event.detail.row == '{{ $index }}') updateMargin()"
+                                    x-init="$nextTick(() => updateMargin())">
                                     <div class="flex items-center justify-center h-8">
-                                        <div class="flex flex-col items-center">
-                                            @php $marginVal = (float)($item['margin'] ?? 0); @endphp
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border {{ $marginVal < 0 ? 'bg-red-100 text-red-700 border-red-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200' }}">
-                                                {{ number_format($marginVal, 2, ',', '.') }}%
-                                            </span>
-                                        </div>
+                                        <span
+                                            :class="margin < 0 ? 'bg-red-100 text-red-700 border-red-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'"
+                                            class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border"
+                                            x-text="margin.toFixed(2).replace('.', ',') + '%'"
+                                        ></span>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 align-top border-r border-gray-100 text-right font-normal text-sm text-gray-800">
-                                    Rp {{ number_format(((float)($item['qty_received'] ?? 0)) * ((float)($item['buy_price'] ?? 0)), 0, ',', '.') }}
+                                <td class="px-4 py-3 align-top border-r border-gray-100 text-right font-normal text-sm text-gray-800"
+                                    x-data="{
+                                        total: {{ ((float)($item['qty_received'] ?? 0)) * ((float)($item['buy_price'] ?? 0)) }},
+                                        updateTotal() {
+                                            const row = '{{ $index }}';
+                                            const buyEl = document.querySelector(`input[data-col='buy_price'][data-row='${row}']`);
+                                            const qtyEl = document.querySelector(`input[data-col='qty'][data-row='${row}']`);
+                                            const buy = parseInt((buyEl?.value || '0').replace(/[^0-9]/g, '')) || 0;
+                                            const qty = parseFloat(qtyEl?.value || '0') || 0;
+                                            this.total = qty * buy;
+                                        }
+                                    }"
+                                    @price-changed.window="if($event.detail.row == '{{ $index }}') updateTotal()"
+                                    @input.window="if($event.target.dataset.col === 'qty' && $event.target.dataset.row === '{{ $index }}') updateTotal()"
+                                    x-init="$nextTick(() => updateTotal())">
+                                    <span x-text="'Rp ' + total.toLocaleString('id-ID')"></span>
                                 </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">
-                                        <button type="button" wire:click="removeItem({{ $index }})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
+                                        <button type="button" wire:click="removeItem('{{ $index }}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </div>

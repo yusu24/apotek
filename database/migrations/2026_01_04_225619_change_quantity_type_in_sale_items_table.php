@@ -11,6 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        try {
+            if (class_exists(\Doctrine\DBAL\Connection::class)) {
+                Schema::getConnection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+            }
+        } catch (\Throwable $e) {}
+
         Schema::table('sale_items', function (Blueprint $table) {
             $table->decimal('quantity', 15, 3)->change();
         });
@@ -21,6 +27,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        try {
+            if (class_exists(\Doctrine\DBAL\Connection::class)) {
+                Schema::getConnection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+            }
+        } catch (\Throwable $e) {}
+
         Schema::table('sale_items', function (Blueprint $table) {
             $table->integer('quantity')->change();
         });

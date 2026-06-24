@@ -14,15 +14,21 @@
             <!-- Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($guides as $guide)
-                    <div class="bg-white border border-gray-200 rounded-2xl p-8 flex flex-col h-full shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="bg-white border {{ $guide['slug'] === 'initial-setup' ? 'border-emerald-300 ring-2 ring-emerald-200' : 'border-gray-200' }} rounded-2xl p-8 flex flex-col h-full shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                         <!-- Content -->
                         <div class="flex-1 mb-8">
                             <div class="flex items-center justify-between mb-4">
-                                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-100">
+                                <span class="px-3 py-1 rounded-full {{ $guide['slug'] === 'initial-setup' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-blue-50 text-blue-700 border-blue-100' }} text-xs font-bold uppercase tracking-wider border">
                                     {{ $guide['category'] }}
                                 </span>
+                                @if($guide['slug'] === 'initial-setup')
+                                <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider animate-pulse">
+                                    Mulai dari Sini!
+                                </span>
+                                @endif
                             </div>
-                            <h3 class="text-gray-900 font-bold text-2xl leading-snug mb-3 group-hover:text-blue-700 transition-colors">{{ $guide['title'] }}</h3>
+                            <h3 class="text-gray-900 font-bold text-2xl leading-snug mb-3 {{ $guide['slug'] === 'initial-setup' ? 'group-hover:text-emerald-700' : 'group-hover:text-blue-700' }} transition-colors">{{ $guide['title'] }}</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed">{{ $guide['description'] }}</p>
                             
                             <div class="flex items-center text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100 uppercase tracking-wide font-medium">
                                 <span>Updated {{ $guide['updated_at'] }}</span>
@@ -33,7 +39,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <!-- View Button -->
                             <a href="{{ route('guide.detail', $guide['slug']) }}" 
-                               class="h-12 flex items-center justify-center px-6 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 gap-2">
+                               class="h-12 flex items-center justify-center px-6 {{ $guide['slug'] === 'initial-setup' ? 'bg-emerald-600 shadow-emerald-200 hover:bg-emerald-700' : 'bg-blue-600 shadow-blue-200 hover:bg-blue-700' }} text-white text-sm font-bold rounded-xl transition-colors shadow-md gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 View
                             </a>

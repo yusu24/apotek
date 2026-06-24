@@ -26,6 +26,12 @@ return new class extends Migration
         ");
 
         // Make it non-nullable after populating
+        try {
+            if (class_exists(\Doctrine\DBAL\Connection::class)) {
+                Schema::getConnection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+            }
+        } catch (\Throwable $e) {}
+
         Schema::table('accounts', function (Blueprint $table) {
             $table->enum('normal_balance', ['debit', 'credit'])->change();
         });

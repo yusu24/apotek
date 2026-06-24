@@ -308,8 +308,42 @@
             </div>
 
             <!-- Payment Info -->
+            @if($sale->payment_method === 'tempo')
+            <div class="payment-section" style="background: #fffbeb; border: 1px solid #f59e0b;">
+                <div class="payment-row">
+                    <span style="font-weight: 600; color: #b45309;">Metode Pembayaran</span>
+                    <span style="font-weight: 600; color: #b45309; text-transform: uppercase;">TEMPO</span>
+                </div>
+                <div class="payment-row">
+                    <span style="font-weight: 600; color: #b45309;">Status Pembayaran</span>
+                    <span style="font-weight: 600; color: #d97706; text-transform: uppercase;">TEMPO</span>
+                </div>
+                <div class="payment-row" style="border-top: 1px dashed #f59e0b; padding-top: 8px; margin-top: 5px;">
+                    <span style="font-weight: 600;">Uang Muka / DP</span>
+                    <span style="font-weight: 600;">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</span>
+                </div>
+                @if($sale->receivables)
+                <div class="payment-row">
+                    <span style="font-weight: 600; color: #ef4444;">Sisa Tagihan</span>
+                    <span style="font-weight: 600; color: #ef4444;">Rp {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</span>
+                </div>
+                <div class="payment-row">
+                    <span style="font-weight: 600;">Jatuh Tempo</span>
+                    <span style="font-weight: 600;">{{ $sale->receivables->due_date ? $sale->receivables->due_date->format('d/m/Y') : '-' }}</span>
+                </div>
+                @endif
+            </div>
+            @else
             <div class="payment-section">
                 <div class="payment-row">
+                    <span style="font-weight: 600; color: #065f46;">Metode Pembayaran</span>
+                    <span style="font-weight: 600; color: #065f46; text-transform: uppercase;">{{ $sale->payment_method }}</span>
+                </div>
+                <div class="payment-row">
+                    <span style="font-weight: 600; color: #065f46;">Status Pembayaran</span>
+                    <span style="font-weight: 600; color: #10b981; text-transform: uppercase;">LUNAS</span>
+                </div>
+                <div class="payment-row" style="border-top: 1px dashed #10b981; padding-top: 8px; margin-top: 5px;">
                     <span style="font-weight: 600;">Bayar</span>
                     <span style="font-weight: 600;">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</span>
                 </div>
@@ -318,6 +352,8 @@
                     <span style="font-weight: 600; color: #10b981;">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</span>
                 </div>
             </div>
+            @endif
+
 
             <!-- Attachment Note -->
             <div class="attachment-note">

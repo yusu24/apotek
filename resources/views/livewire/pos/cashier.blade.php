@@ -791,6 +791,23 @@
                                     placeholder="0" autofocus>
                             </div>
                             @error('cash_amount') <span class="text-red-500 text-[10px] font-bold mt-0.5 block">{{ $message }}</span> @enderror
+
+                            <!-- Quick Cash Suggestions -->
+                            @if(count($this->cashSuggestions) > 0)
+                            <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-gray-200">
+                                @foreach($this->cashSuggestions as $suggestion)
+                                    <button type="button" 
+                                            wire:click="selectCashSuggestion({{ $suggestion }})"
+                                            class="py-1.5 px-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg text-xs font-bold text-gray-700 hover:text-blue-600 transition-all text-center shadow-sm {{ count($this->cashSuggestions) === 1 || ($suggestion == $grand_total && count($this->cashSuggestions) === 3) ? 'col-span-2 bg-blue-50/50 border-blue-200 text-blue-700 hover:bg-blue-100' : '' }}">
+                                        @if($suggestion == $grand_total)
+                                            💵 Uang Pas (Rp {{ number_format($suggestion, 0, ',', '.') }})
+                                        @else
+                                            Rp {{ number_format($suggestion, 0, ',', '.') }}
+                                        @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                            @endif
                         </div>
                         <div class="flex justify-between items-center p-3 bg-green-50 rounded-xl">
                             <span class="text-xs font-semibold text-gray-700">Kembalian</span>
@@ -1172,6 +1189,65 @@
                     </div>
                     @endif
                 </div>
+              </div>
+         </div>
+    </div>
+    @endif
+
+    <!-- RECEIPT MODAL -->
+    @if($showReceiptModal && $completedSaleId)
+    @php
+        $posPaperSize = \App\Models\Setting::get('pos_paper_size', '58mm');
+        // Use inline styles so Tailwind JIT does not purge them
+        if ($posPaperSize === 'A4') {
+            $modalWidth  = 'max-width: 850px;';
+            $modalHeight = 'height: 85vh;';
+        } elseif ($posPaperSize === '80mm') {
+            $modalWidth  = 'max-width: 380px;';
+            $modalHeight = 'height: 70vh;';
+        } else {
+            // 58mm default
+            $modalWidth  = 'max-width: 310px;';
+            $modalHeight = 'height: 70vh;';
+        }
+    @endphp
+    <div class="fixed inset-0 z-[100] overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[99]" wire:click="closeReceiptModal"></div>
+
+             <div class="relative bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all my-8 w-full z-[101] flex flex-col"
+                  style="{{ $modalWidth }} {{ $modalHeight }}">
+                <!-- Modal Header -->
+                <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900">Struk Pembelian</h3>
+                        <p class="text-[10px] text-green-600 font-semibold mt-0.5">✓ Transaksi Berhasil</p>
+                    </div>
+                    <button type="button" wire:click="closeReceiptModal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <!-- Modal Body (Iframe) -->
+                <div class="flex-1 overflow-hidden bg-gray-50">
+                    <iframe id="receipt-iframe" 
+                            src="{{ route('pos.receipt', ['id' => $completedSaleId]) }}?autoprint=false" 
+                            style="width: 100%; height: 100%; border: 0; display: block;">
+                    </iframe>
+                </div>
+                
+                <!-- Modal Footer: 2 buttons only -->
+                <div class="px-4 py-3 border-t border-gray-100 flex gap-2 bg-gray-50 shrink-0">
+                    <button type="button" onclick="printReceiptIframe()" 
+                        class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4a2 2 0 002 2z"></path></svg>
+                        Cetak
+                    </button>
+                    <button type="button" wire:click="closeReceiptModal" 
+                        class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all text-sm">
+                        Kembali
+                    </button>
+                </div>
              </div>
         </div>
     </div>
@@ -1179,6 +1255,14 @@
 
     <!-- Keyboard Shortcuts -->
     <script>
+        function printReceiptIframe() {
+            const iframe = document.getElementById('receipt-iframe');
+            if (iframe) {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }
+        }
+
         function getColumnCount() {
             const grid = document.getElementById('product-grid');
             if (!grid || !grid.children || grid.children.length === 0) return 1;
@@ -1212,6 +1296,10 @@
             if (event.key === 'Enter' && @this.showPaymentModal) {
                 event.preventDefault();
                 @this.processPayment();
+            }
+            if (event.key === 'Escape' && @this.showReceiptModal) {
+                event.preventDefault();
+                @this.closeReceiptModal();
             }
         });
 

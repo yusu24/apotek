@@ -19,6 +19,9 @@
                     <a href="#login" class="group flex items-center px-4 py-3 text-sm font-bold text-slate-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all">
                         Login & Access
                     </a>
+                    <a href="#initial-setup" class="group flex items-center px-4 py-3 text-sm font-bold text-emerald-700 bg-emerald-50 rounded-xl hover:bg-emerald-100 hover:text-emerald-800 transition-all">
+                        ⚙️ Setup Awal Aplikasi
+                    </a>
 
                     <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">System Modules</p>
                     <a href="#dashboard" class="group flex items-center px-4 py-3 text-sm font-bold text-slate-600 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all">
@@ -96,6 +99,20 @@
                 <!-- Modular Sections Renderer -->
                 @php
                     $sections = [
+                        [
+                            'id' => 'initial-setup',
+                            'title' => 'Setup Awal Aplikasi',
+                            'desc' => 'Sebelum mulai bertransaksi, lakukan konfigurasi sistem ini secara berurutan agar akun keuangan (Kas, Bank, Persediaan) tidak bernilai minus dan laporan akuntansi akurat sejak hari pertama.',
+                            'steps' => [
+                                '1. Buka Pengaturan Toko — Isi Nama Apotek, Alamat, Telepon, PPN, dan Logo.',
+                                '2. Buka Manajemen User — Daftarkan akun Kasir, Apoteker & Staf Gudang dengan role yang sesuai.',
+                                '3. Buka Daftar Akun (COA) — Tambahkan Rekening Bank jika lebih dari satu.',
+                                '4. [WAJIB] Buka Saldo Awal — Masukkan nilai Kas, Bank, dan Persediaan Obat awal Anda.',
+                                '5. Import Data Master — Kategori → Supplier → Produk (urutan ini penting!).',
+                                '6. Import Omset Historis — Opsional, untuk melihat tren laporan tahun-tahun sebelumnya.'
+                            ],
+                            'tip' => 'Jangan lewati Langkah 4 (Saldo Awal). Tanpa saldo awal, akun Persediaan Obat akan bernilai minus setiap kali terjadi penjualan karena tidak ada catatan stok masuk sebelumnya.'
+                        ],
                         [
                             'id' => 'login',
                             'title' => 'Login & Akses Sistem',

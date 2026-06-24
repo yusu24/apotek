@@ -22,6 +22,9 @@
                 </div>
             </div>
 
+            <!-- Turnover and Cashier Leaderboard -->
+            <livewire:dashboard.sales-leaderboard />
+
             <!-- Performance Components -->
             <livewire:dashboard.product-performance />
 

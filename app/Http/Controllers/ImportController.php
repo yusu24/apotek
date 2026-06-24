@@ -16,6 +16,8 @@ use App\Exports\StockTemplateExport;
 use App\Exports\CustomerTemplateExport;
 use App\Exports\AccountTemplateExport;
 use App\Exports\CategoryTemplateExport;
+use App\Exports\OmsetTemplateExport;
+use App\Imports\OmsetImport;
 
 class ImportController extends Controller
 {
@@ -270,6 +272,66 @@ class ImportController extends Controller
             return redirect()->back()->with('message', 'Kategori berhasil diimport!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal import: ' . $e->getMessage());
+        }
+    }
+
+    public function downloadOmsetTemplate()
+    {
+        abort_if(!auth()->user()->can('view sales reports'), 403);
+        return Excel::download(new OmsetTemplateExport, 'template_omset.xlsx');
+    }
+
+    public function importOmset(Request $request)
+    {
+        abort_if(!auth()->user()->can('view sales reports'), 403);
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        try {
+            $import = new OmsetImport;
+            Excel::import($import, $request->file('file'));
+            
+            $successCount = $import->getSuccessCount();
+            $failures = $import->failures();
+            
+            if ($failures->isNotEmpty()) {
+                $errorMessages = [];
+                foreach ($failures as $failure) {
+                    $row = $failure->row();
+                    $attribute = $failure->attribute();
+                    $errorMsg = implode(', ', $failure->errors());
+                    $errorMessages[] = "Baris {$row}.{$attribute}: {$errorMsg}";
+                }
+                
+                $displayErrors = array_slice($errorMessages, 0, 10);
+                $remainingCount = count($errorMessages) - 10;
+                
+                $message = "Import selesai. Berhasil: {$successCount}, Gagal: " . count($errorMessages) . ". Error: " . implode(' | ', $displayErrors);
+                if ($remainingCount > 0) {
+                    $message .= " (dan {$remainingCount} error lainnya)";
+                }
+                
+                return redirect()->back()->with('error', $message);
+            }
+            
+            return redirect()->back()->with('message', "Data Omset berhasil diimport! {$successCount} data transaksi baru ditambahkan.");
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+            foreach ($failures as $failure) {
+                $row = $failure->row();
+                $attribute = $failure->attribute();
+                $errorMsg = implode(', ', $failure->errors());
+                $errorMessages[] = "Baris {$row}.{$attribute}: {$errorMsg}";
+            }
+            
+            $displayErrors = array_slice($errorMessages, 0, 10);
+            $message = 'Gagal import: ' . implode(' | ', $displayErrors);
+            return redirect()->back()->with('error', $message);
+        } catch (\Exception $e) {
+            \Log::error('Omset Import Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal import (Sistem Error): ' . $e->getMessage());
         }
     }
 }

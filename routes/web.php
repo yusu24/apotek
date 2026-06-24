@@ -49,12 +49,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/import/download-stock-template', 'downloadStockTemplate')->name('import.download-stock-template');
         Route::get('/import/download-customer-template', 'downloadCustomerTemplate')->name('import.download-customer-template');
         Route::get('/import/download-account-template', 'downloadAccountTemplate')->name('import.download-account-template');
+        Route::get('/import/download-omset-template', 'downloadOmsetTemplate')->name('import.download-omset-template');
         
         Route::post('/import/products', 'importProducts')->name('import.products');
         Route::post('/import/suppliers', 'importSuppliers')->name('import.suppliers');
         Route::post('/import/stock', 'importStock')->name('import.stock');
         Route::post('/import/customers', 'importCustomers')->name('import.customers');
         Route::post('/import/accounts', 'importAccounts')->name('import.accounts');
+        Route::post('/import/omset', 'importOmset')->name('import.omset');
         
         Route::get('/import/download-expense-category-template', 'downloadExpenseCategoryTemplate')->name('import.download-expense-category-template');
         Route::post('/import/expense-categories', 'importExpenseCategories')->name('import.expense-categories');
@@ -137,6 +139,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/sales-report', [App\Http\Controllers\PdfController::class, 'exportSalesReport'])->name('pdf.sales-report');
     Route::get('/pdf/product-margin', [App\Http\Controllers\PdfController::class, 'exportProductMarginReport'])->name('pdf.product-margin');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');
+    Route::get('/pdf/expenses', [App\Http\Controllers\PdfController::class, 'exportExpenses'])->name('pdf.expenses');
     Route::get('/pdf/trial-balance', [App\Http\Controllers\PdfController::class, 'exportTrialBalance'])->name('pdf.trial-balance');
     Route::get('/pdf/purchase-order/{id}', [App\Http\Controllers\PdfController::class, 'exportPurchaseOrder'])->name('pdf.purchase-order');
     Route::get('/pdf/purchase-order-a4/{id}', [App\Http\Controllers\PdfController::class, 'exportPurchaseOrderA4'])->name('pdf.purchase-order-a4');

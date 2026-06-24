@@ -12,6 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        try {
+            if (class_exists(\Doctrine\DBAL\Connection::class)) {
+                Schema::getConnection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+            }
+        } catch (\Throwable $e) {}
+
         // Change category column to string to allow more flexibility
         Schema::table('accounts', function (Blueprint $table) {
             $table->string('category')->change();

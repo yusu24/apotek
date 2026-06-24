@@ -97,6 +97,10 @@ class AccountingService
                 }
             }
 
+            if ($cogsTotal == 0 && (float)$sale->cogs > 0) {
+                $cogsTotal = (float)$sale->cogs;
+            }
+
             // Create journal entry
             $entry = JournalEntry::create([
                 'entry_number' => JournalEntry::generateEntryNumber(),

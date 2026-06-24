@@ -19,6 +19,15 @@ class UserGuide extends Component
     {
         $allGuides = [
             [
+                'title' => 'Setup Awal Aplikasi',
+                'slug' => 'initial-setup',
+                'description' => 'Panduan langkah demi langkah konfigurasi apotek Anda dari nol (Identitas, Pengguna, Saldo Awal, & Import Data).',
+                'updated_at' => '24 Jun 2026',
+                'icon' => 'key',
+                'color' => 'emerald',
+                'category' => 'Panduan'
+            ],
+            [
                 'title' => 'Dashboard & Statistik',
                 'slug' => 'dashboard',
                 'description' => 'Memahami ringkasan performa penjualan, stok kritis, dan grafik pendapatan harian.',

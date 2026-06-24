@@ -93,7 +93,8 @@ class GoodsReceiptForm extends Component
                     ->first();
             }
 
-            $this->items[] = [
+            $rowId = uniqid('row_');
+            $this->items[$rowId] = [
                 'id' => $item->id,
                 'product_id' => $item->product_id,
                 'product_name' => $item->product->name,
@@ -107,7 +108,7 @@ class GoodsReceiptForm extends Component
                 'conversion_factor' => (float)($item->conversion_factor ?? 1),
                 'po_item_id' => $poItem ? $poItem->id : null,
                 'po_info' => $poItem ? 'Item PO (' . ($poItem->qty_ordered) . ' ' . ($poItem->unit->name ?? 'Unit') . ')' : null,
-                'row_id' => uniqid('row_'),
+                'row_id' => $rowId,
             ];
         }
     }
@@ -143,7 +144,8 @@ class GoodsReceiptForm extends Component
                         
                         $infoLabel = ($totalReceivedBase > 0) ? 'Sisa Order: ' : 'Total Order: ';
 
-                            $this->items[] = [
+                            $rowId = uniqid('row_');
+                            $this->items[$rowId] = [
                                 'product_id' => $poItem->product_id,
                                 'product_name' => $poItem->product->name ?? '-',
                                 'batch_no' => $this->generateNextBatchNo(),
@@ -158,7 +160,7 @@ class GoodsReceiptForm extends Component
                                 'conversion_factor' => $poItem->conversion_factor,
                                 'po_info' => $infoLabel . (float)$remainingQty . ' ' . ($poItem->unit->name ?? 'Unit'),
                                 'max_qty_allowed' => (float)$remainingQty, // Store for validation
-                                'row_id' => uniqid('row_'),
+                                'row_id' => $rowId,
                             ];
                         $hasItems = true;
                     }
@@ -173,7 +175,8 @@ class GoodsReceiptForm extends Component
 
     public function addItem()
     {
-        $this->items[] = [
+        $rowId = uniqid('row_');
+        $this->items[$rowId] = [
             'product_id' => '',
             'product_name' => '',
             'batch_no' => $this->generateNextBatchNo(),
@@ -184,7 +187,7 @@ class GoodsReceiptForm extends Component
             'margin' => 0,
             'unit_id' => null,
             'conversion_factor' => 1,
-            'row_id' => uniqid('row_'),
+            'row_id' => $rowId,
         ];
     }
 
@@ -226,7 +229,8 @@ class GoodsReceiptForm extends Component
         $product = \App\Models\Product::with(['unit', 'unitConversions'])->find($productId);
         
         if ($product) {
-            $this->items[] = [
+            $rowId = uniqid('row_');
+            $this->items[$rowId] = [
                 'product_id' => $product->id,
                 'product_name' => $product->name,
                 'batch_no' => $this->generateNextBatchNo(),
@@ -237,7 +241,7 @@ class GoodsReceiptForm extends Component
                 'margin' => 0,
                 'unit_id' => $product->unit_id,
                 'conversion_factor' => 1,
-                'row_id' => uniqid('row_'),
+                'row_id' => $rowId,
             ];
         }
 
@@ -248,11 +252,21 @@ class GoodsReceiptForm extends Component
     public function removeItem($index)
     {
         unset($this->items[$index]);
-        $this->items = array_values($this->items);
     }
 
     public function updated($name, $value)
     {
+        // Guard against ghost entries: if Livewire tries to update an items path
+        // for a key that doesn't exist (e.g. stale entangle from deleted rows),
+        // ignore it and remove the auto-vivified ghost entry.
+        if (str_starts_with($name, 'items.')) {
+            $parts = explode('.', $name);
+            $key = $parts[1] ?? null;
+            if ($key && isset($this->items[$key]) && empty($this->items[$key]['product_id'])) {
+                unset($this->items[$key]);
+                return;
+            }
+        }
         // Livewire 3 nested property update
         if (str_starts_with($name, 'items.')) {
             $parts = explode('.', $name);
@@ -638,6 +652,12 @@ class GoodsReceiptForm extends Component
 
     public function render()
     {
+        // Safety net: filter out ghost entries (items without product_id)
+        // These can be created by stale @entangle write-backs from deleted rows
+        $this->items = array_filter($this->items, function($item) {
+            return !empty($item['product_id']);
+        });
+
         return view('livewire.procurement.goods-receipt-form', [
             'searchResults' => $this->searchResults
         ]);

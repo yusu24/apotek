@@ -2,18 +2,19 @@
     <div class="flex justify-between items-center mb-6">
          <h2 class="text-2xl font-bold text-gray-800">
             Kelola Pengeluaran
-        </h2>
+         </h2>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div class="flex items-center gap-4 flex-wrap">
-                <button wire:click="create" class="btn btn-primary">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <!-- Left side: Actions & PerPage -->
+            <div class="flex items-center gap-3 flex-wrap w-full md:w-auto">
+                <button wire:click="create" class="btn btn-primary flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline">Tambah Pengeluaran</span>
+                    <span>Tambah Pengeluaran</span>
                 </button>
                 <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
+                    <span>Tampilkan</span>
                     <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
                         <option value="5">5</option>
                         <option value="10">10</option>
@@ -23,6 +24,126 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Right side: Search & Exports -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto flex-1 justify-end">
+                <!-- Search Box -->
+                <div class="relative w-full sm:max-w-[200px]">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input wire:model.live.debounce.300ms="search" 
+                        type="text" placeholder="Cari deskripsi atau kategori..." 
+                        class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                </div>
+
+                <!-- Export Buttons -->
+                <div class="flex items-center gap-2 shrink-0 justify-end">
+                    <button wire:click="exportExcel" 
+                       class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
+                       title="Export Excel">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span>Excel</span>
+                    </button>
+                    <button wire:click="exportPdf" 
+                       class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
+                       title="Export PDF">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>PDF</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Period Filter Row -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="flex items-center gap-2 shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-sm font-semibold text-gray-600">Periode:</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                @php
+                    $periods = [
+                        'all' => 'Semua',
+                        'today' => 'Hari Ini',
+                        'this_week' => 'Minggu Ini',
+                        'this_month' => 'Bulan Ini',
+                        'custom' => 'Custom',
+                    ];
+                @endphp
+                @foreach($periods as $key => $label)
+                    <button wire:click="$set('filterPeriod', '{{ $key }}')"
+                        class="px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200
+                            {{ $filterPeriod === $key 
+                                ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-300' 
+                                : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100 hover:border-gray-400' }}">
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+
+            {{-- Custom date range inputs --}}
+            @if($filterPeriod === 'custom')
+                <div class="flex items-center gap-2 ml-0 sm:ml-2" x-data>
+                    <div wire:ignore>
+                        <input 
+                            x-data="{
+                                value: @entangle('filterDateFrom'),
+                                instance: undefined,
+                                init() {
+                                    this.instance = flatpickr(this.$refs.filterFromInput, {
+                                        dateFormat: 'Y-m-d',
+                                        defaultDate: this.value || null,
+                                        onChange: (selectedDates, dateStr) => {
+                                            this.value = dateStr;
+                                        }
+                                    });
+                                    this.$watch('value', val => {
+                                        if (val && this.instance) this.instance.setDate(val);
+                                        else if (this.instance) this.instance.clear();
+                                    });
+                                }
+                            }"
+                            x-ref="filterFromInput"
+                            type="text"
+                            placeholder="Dari tanggal"
+                            class="w-32 rounded-lg border-gray-300 text-xs py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                        />
+                    </div>
+                    <span class="text-gray-400 text-xs">—</span>
+                    <div wire:ignore>
+                        <input 
+                            x-data="{
+                                value: @entangle('filterDateTo'),
+                                instance: undefined,
+                                init() {
+                                    this.instance = flatpickr(this.$refs.filterToInput, {
+                                        dateFormat: 'Y-m-d',
+                                        defaultDate: this.value || null,
+                                        onChange: (selectedDates, dateStr) => {
+                                            this.value = dateStr;
+                                        }
+                                    });
+                                    this.$watch('value', val => {
+                                        if (val && this.instance) this.instance.setDate(val);
+                                        else if (this.instance) this.instance.clear();
+                                    });
+                                }
+                            }"
+                            x-ref="filterToInput"
+                            type="text"
+                            placeholder="Sampai tanggal"
+                            class="w-32 rounded-lg border-gray-300 text-xs py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                        />
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="overflow-x-auto rounded-lg">
@@ -106,7 +227,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada data pengeluaran.</td>
+                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pengeluaran.</td>
                         </tr>
                     @endforelse
                 </tbody>

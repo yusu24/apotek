@@ -12,6 +12,7 @@ class Receipt extends Component
     public $sale;
     public $saleId;
     public $paperSize;
+    public $autoprint = true;
 
     public function mount($id)
     {
@@ -22,6 +23,7 @@ class Receipt extends Component
         }
 
         $this->paperSize = \App\Models\Setting::get('pos_paper_size', '58mm');
+        $this->autoprint = request()->query('autoprint', 'true') === 'true';
     }
 
     public function render()

@@ -13,12 +13,12 @@ use Carbon\Carbon;
 class SalesChart extends Component
 {
 
-    public $period = 'daily'; // daily, weekly, monthly, yearly, custom
+    public $period = 'active_month'; // active_month, daily, weekly, monthly, yearly, custom
     public $startDate;
     public $endDate;
 
     protected $queryString = [
-        'period' => ['except' => 'daily'],
+        'period' => ['except' => 'active_month'],
         'startDate' => ['except' => ''],
         'endDate' => ['except' => ''],
     ];
@@ -29,19 +29,31 @@ class SalesChart extends Component
             abort(403, 'Unauthorized action.');
         }
         
-        // Defaults to daily (last 30 days) if not specified in query string
-        if (!$this->startDate) {
-            $this->startDate = Carbon::now()->subDays(30)->format('Y-m-d');
-        }
-        if (!$this->endDate) {
-            $this->endDate = Carbon::now()->format('Y-m-d');
+        // Defaults based on period if not specified in query string
+        if ($this->period === 'active_month') {
+            if (!$this->startDate) {
+                $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            }
+            if (!$this->endDate) {
+                $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+            }
+        } else {
+            if (!$this->startDate) {
+                $this->startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+            }
+            if (!$this->endDate) {
+                $this->endDate = Carbon::now()->format('Y-m-d');
+            }
         }
     }
 
     public function updatedPeriod()
     {
         // Auto-adjust dates when period changes
-        if ($this->period === 'daily') {
+        if ($this->period === 'active_month') {
+            $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $this->endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+        } elseif ($this->period === 'daily') {
             $this->startDate = Carbon::now()->subDays(30)->format('Y-m-d');
             $this->endDate = Carbon::now()->format('Y-m-d');
         } elseif ($this->period === 'weekly') {
@@ -64,7 +76,7 @@ class SalesChart extends Component
             ->whereDate('date', '<=', $this->endDate);
         
         // Select & Grouping based on period
-        if ($this->period === 'daily' || $this->period === 'custom') {
+        if ($this->period === 'active_month' || $this->period === 'daily' || $this->period === 'custom') {
             $data = (clone $query)->select(
                     DB::raw('DATE(date) as label'),
                     DB::raw('SUM(grand_total) as total'),

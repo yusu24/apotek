@@ -10,132 +10,134 @@
 
         // Top Selling Chart
         const topCanvas = document.getElementById('topSellingChart');
-        if (!topCanvas) return;
-        const topCtx = topCanvas.getContext('2d');
-        const topGradient = topCtx.createLinearGradient(0, 0, 0, 300);
-        topGradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
-        topGradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
+        if (topCanvas) {
+            const topCtx = topCanvas.getContext('2d');
+            const topGradient = topCtx.createLinearGradient(0, 0, 0, 300);
+            topGradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+            topGradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
 
-        if (this.topChart) this.topChart.destroy();
-        this.topChart = new Chart(topCtx, {
-            type: 'bar',
-            data: {
-                labels: topLabels,
-                datasets: [{
-                    label: 'Unit Terjual',
-                    data: topData,
-                    backgroundColor: topGradient,
-                    borderColor: '#3b82f6',
-                    borderWidth: 2,
-                    borderRadius: 6,
-                    hoverBackgroundColor: '#2563eb',
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart',
-                    delay: (context) => {
-                        let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default') {
-                            delay = context.dataIndex * 100;
+            if (topCanvas.chart) topCanvas.chart.destroy();
+            topCanvas.chart = new Chart(topCtx, {
+                type: 'bar',
+                data: {
+                    labels: topLabels,
+                    datasets: [{
+                        label: 'Unit Terjual',
+                        data: topData,
+                        backgroundColor: topGradient,
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#2563eb',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart',
+                        delay: (context) => {
+                            let delay = 0;
+                            if (context.type === 'data' && context.mode === 'default') {
+                                delay = context.dataIndex * 100;
+                            }
+                            return delay;
                         }
-                        return delay;
-                    }
-                },
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                        padding: 12,
-                        titleFont: { size: 14, weight: 'bold' },
-                        bodyFont: { size: 13 },
-                        cornerRadius: 8,
-                        displayColors: false
-                    }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
-                        ticks: { color: '#64748b' }
                     },
-                    x: { 
-                        grid: { display: false },
-                        ticks: { color: '#64748b', font: { weight: '600' } }
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#64748b' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { weight: '600' } }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Slow Moving Chart
         const slowCanvas = document.getElementById('slowMovingChart');
-        if (!slowCanvas) return;
-        const slowCtx = slowCanvas.getContext('2d');
-        const slowGradient = slowCtx.createLinearGradient(0, 0, 0, 300);
-        slowGradient.addColorStop(0, 'rgba(244, 63, 94, 0.8)');
-        slowGradient.addColorStop(1, 'rgba(244, 63, 94, 0.05)');
+        if (slowCanvas) {
+            const slowCtx = slowCanvas.getContext('2d');
+            const slowGradient = slowCtx.createLinearGradient(0, 0, 0, 300);
+            slowGradient.addColorStop(0, 'rgba(244, 63, 94, 0.8)');
+            slowGradient.addColorStop(1, 'rgba(244, 63, 94, 0.05)');
 
-        if (this.slowChart) this.slowChart.destroy();
-        this.slowChart = new Chart(slowCtx, {
-            type: 'bar',
-            data: {
-                labels: slowLabels,
-                datasets: [{
-                    label: 'Unit Terjual',
-                    data: slowData,
-                    backgroundColor: slowGradient,
-                    borderColor: '#f43f5e',
-                    borderWidth: 2,
-                    borderRadius: 6,
-                    hoverBackgroundColor: '#e11d48',
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart',
-                    delay: (context) => {
-                        let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default') {
-                            delay = context.dataIndex * 100;
+            if (slowCanvas.chart) slowCanvas.chart.destroy();
+            slowCanvas.chart = new Chart(slowCtx, {
+                type: 'bar',
+                data: {
+                    labels: slowLabels,
+                    datasets: [{
+                        label: 'Unit Terjual',
+                        data: slowData,
+                        backgroundColor: slowGradient,
+                        borderColor: '#f43f5e',
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#e11d48',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart',
+                        delay: (context) => {
+                            let delay = 0;
+                            if (context.type === 'data' && context.mode === 'default') {
+                                delay = context.dataIndex * 100;
+                            }
+                            return delay;
                         }
-                        return delay;
-                    }
-                },
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                        padding: 12,
-                        titleFont: { size: 14, weight: 'bold' },
-                        bodyFont: { size: 13 },
-                        cornerRadius: 8,
-                        displayColors: false
-                    }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
-                        ticks: { color: '#64748b' }
                     },
-                    x: { 
-                        grid: { display: false },
-                        ticks: { color: '#64748b', font: { weight: '600' } }
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#64748b' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { weight: '600' } }
+                        }
                     }
                 }
-            }
-        });
-    },
-    topChart: null,
-    slowChart: null
+            });
+        }
+    }
 }"
- x-init="setTimeout(() => initCharts(), 400); Livewire.on('chart-update', () => { setTimeout(() => initCharts(), 100) })">
+ x-init="setTimeout(() => initCharts(), 400); Livewire.on('chart-update', () => { setTimeout(() => initCharts(), 100) })"
+ x-effect="initCharts()"
+ wire:key="product-performance-{{ $period }}">
     <!-- Top Selling Products -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-slate-100 dark:border-gray-700 overflow-hidden">
         <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">

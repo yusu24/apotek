@@ -241,16 +241,14 @@ class PdfController extends Controller
      */
     public function exportUserManual()
     {
-        // Load markdown content
-        $markdownPath = storage_path('app/user-manual.md');
+        // Load markdown content from resources
+        $markdownPath = resource_path('user-manual.md');
         
-        // If file doesn't exist, create it from the tutorial
         if (!file_exists($markdownPath)) {
-            $tutorialContent = $this->getUserManualContent();
-            Storage::put('user-manual.md', $tutorialContent);
+            $markdown = "# BUKU PANDUAN PENGGUNAAN APLIKASI APOTEK\n\nPanduan penggunaan belum tersedia.";
+        } else {
+            $markdown = file_get_contents($markdownPath);
         }
-        
-        $markdown = Storage::get('user-manual.md');
         
         // Convert markdown to HTML (basic conversion)
         $html = $this->convertMarkdownToHtml($markdown);
@@ -282,7 +280,11 @@ class PdfController extends Controller
      */
     private function getUserManualContent()
     {
-        return file_get_contents(base_path('.gemini/antigravity/brain/110ac294-5a7c-4419-9cd3-8f873ee68cf2/TUTORIAL_PENGGUNAAN_APOTEK.md'));
+        $markdownPath = resource_path('user-manual.md');
+        if (file_exists($markdownPath)) {
+            return file_get_contents($markdownPath);
+        }
+        return '';
     }
     
     /**
@@ -1019,5 +1021,69 @@ class PdfController extends Controller
         
         // Simplified version - just return formatted text
         return ucfirst(number_format($number, 0, ',', '.')) . ' rupiah';
+    }
+
+    /**
+     * Export Expenses Report to PDF
+     */
+    public function exportExpenses(Request $request)
+    {
+        $search = $request->get('search');
+        $dateFrom = $request->get('from');
+        $dateTo = $request->get('to');
+        
+        $query = \App\Models\Expense::with(['user', 'account']);
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('description', 'like', '%' . $search . '%')
+                  ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($dateFrom && $dateTo) {
+            $query->whereBetween('date', [$dateFrom, $dateTo]);
+        } elseif ($dateFrom) {
+            $query->where('date', '>=', $dateFrom);
+        } elseif ($dateTo) {
+            $query->where('date', '<=', $dateTo);
+        }
+        
+        $expenses = $query->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        // Build period label for PDF header
+        $periodLabel = 'Semua Periode';
+        if ($dateFrom && $dateTo) {
+            $periodLabel = Carbon::parse($dateFrom)->format('d/m/Y') . ' - ' . Carbon::parse($dateTo)->format('d/m/Y');
+        } elseif ($dateFrom) {
+            $periodLabel = 'Dari ' . Carbon::parse($dateFrom)->format('d/m/Y');
+        } elseif ($dateTo) {
+            $periodLabel = 'Sampai ' . Carbon::parse($dateTo)->format('d/m/Y');
+        }
+
+        $pdf = Pdf::loadView('pdf.expenses', [
+            'expenses' => $expenses,
+            'store' => $store,
+            'search' => $search,
+            'periodLabel' => $periodLabel,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+
+        $filename = 'Laporan-Pengeluaran-' . date('Ymd') . '.pdf';
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
 }

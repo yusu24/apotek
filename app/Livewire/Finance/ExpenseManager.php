@@ -27,7 +27,12 @@ class ExpenseManager extends Component
     public $isEditing = false;
     public $editId;
 
-    public $search = ''; // Added search for consistency if used in view
+    public $search = '';
+
+    // Period filter
+    public $filterPeriod = 'this_month';
+    public $filterDateFrom = '';
+    public $filterDateTo = '';
 
     public $sortBy = 'date';
     public $sortDirection = 'desc';
@@ -55,6 +60,63 @@ class ExpenseManager extends Component
     public function updatedPerPage()
     {
         $this->resetPage();
+    }
+
+    public function updatedFilterPeriod()
+    {
+        if ($this->filterPeriod !== 'custom') {
+            $this->filterDateFrom = '';
+            $this->filterDateTo = '';
+        }
+        $this->resetPage();
+    }
+
+    public function updatedFilterDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilterDateTo()
+    {
+        $this->resetPage();
+    }
+
+    private function getDateRange()
+    {
+        return match ($this->filterPeriod) {
+            'today' => [
+                Carbon::today()->format('Y-m-d'),
+                Carbon::today()->format('Y-m-d'),
+            ],
+            'this_week' => [
+                Carbon::now()->startOfWeek()->format('Y-m-d'),
+                Carbon::now()->endOfWeek()->format('Y-m-d'),
+            ],
+            'this_month' => [
+                Carbon::now()->startOfMonth()->format('Y-m-d'),
+                Carbon::now()->endOfMonth()->format('Y-m-d'),
+            ],
+            'custom' => [
+                $this->filterDateFrom ?: null,
+                $this->filterDateTo ?: null,
+            ],
+            default => [null, null], // 'all'
+        };
+    }
+
+    private function applyDateFilter($query)
+    {
+        [$from, $to] = $this->getDateRange();
+
+        if ($from && $to) {
+            $query->whereBetween('date', [$from, $to]);
+        } elseif ($from) {
+            $query->where('date', '>=', $from);
+        } elseif ($to) {
+            $query->where('date', '<=', $to);
+        }
+
+        return $query;
     }
 
     public function create()
@@ -163,10 +225,43 @@ class ExpenseManager extends Component
         session()->flash('message', 'Data pengeluaran dihapus.');
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function exportExcel()
+    {
+        [$from, $to] = $this->getDateRange();
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\ExpensesExport($this->search, $from, $to), 
+            'Laporan-Pengeluaran-' . date('d-m-Y') . '.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        [$from, $to] = $this->getDateRange();
+        return redirect()->route('pdf.expenses', [
+            'search' => $this->search,
+            'from' => $from,
+            'to' => $to,
+        ]);
+    }
+
     public function render()
     {
-        $expenses = Expense::with(['user', 'account'])
-            ->orderBy($this->sortBy, $this->sortDirection)
+        $query = Expense::with(['user', 'account'])
+            ->when($this->search, function($q) {
+                $q->where(function($sub) {
+                    $sub->where('description', 'like', '%' . $this->search . '%')
+                         ->orWhere('category', 'like', '%' . $this->search . '%');
+                });
+            });
+
+        $this->applyDateFilter($query);
+
+        $expenses = $query->orderBy($this->sortBy, $this->sortDirection)
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
         $expenses->onEachSide(1);

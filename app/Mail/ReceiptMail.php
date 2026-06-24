@@ -17,12 +17,9 @@ class ReceiptMail extends Mailable
 
     public $sale;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(Sale $sale)
     {
-        $this->sale = $sale;
+        $this->sale = $sale->relationLoaded('receivables') ? $sale : $sale->loadMissing('receivables');
     }
 
     /**

@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         // Add 'opening_balance' and 'expense' to the enum
-        DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual', 'opening_balance', 'expense') DEFAULT 'manual'");
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual', 'opening_balance', 'expense') DEFAULT 'manual'");
+        }
     }
 
     /**
@@ -21,6 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         // Revert to original enum list (WARNING: data with new enum values will be truncated or invalid depending on strict mode)
-        DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual') DEFAULT 'manual'");
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE journal_entries MODIFY COLUMN source ENUM('sale', 'purchase', 'stock_adjustment', 'manual') DEFAULT 'manual'");
+        }
     }
 };

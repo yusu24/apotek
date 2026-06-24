@@ -16,6 +16,7 @@ class Sale extends Model
         'service_charge_amount', 'service_charge_percentage', 'tax', 
         'dpp', 'ppn_mode', 'order_mode', 'rounding', 'grand_total', 
         'payment_method', 'cash_amount', 'change_amount', 'notes', 'status',
+        'cogs', 'profit',
         // Patient Information
         'patient_name', 'patient_doctor_name', 'patient_birth_date', 
         'patient_address', 'patient_phone', 'patient_email'
@@ -30,6 +31,8 @@ class Sale extends Model
         'change_amount' => 'float',
         'date' => 'datetime',
         'patient_birth_date' => 'date',
+        'cogs' => 'float',
+        'profit' => 'float',
     ];
 
 

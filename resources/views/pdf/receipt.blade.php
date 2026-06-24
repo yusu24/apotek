@@ -158,6 +158,30 @@
                 <td class="font-bold">TOTAL:</td>
                 <td class="text-right font-bold" style="font-size: 14px;">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
             </tr>
+            @if($sale->payment_method === 'tempo')
+            <tr>
+                <td>Status:</td>
+                <td class="text-right font-bold" style="text-transform: uppercase;">TEMPO</td>
+            </tr>
+            <tr>
+                <td>Uang Muka / DP:</td>
+                <td class="text-right">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+            </tr>
+            @if($sale->receivables)
+            <tr>
+                <td class="font-bold">Sisa Tagihan:</td>
+                <td class="text-right font-bold">Rp {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td>Jatuh Tempo:</td>
+                <td class="text-right">{{ $sale->receivables->due_date ? $sale->receivables->due_date->format('d/m/Y') : '-' }}</td>
+            </tr>
+            @endif
+            @else
+            <tr>
+                <td>Status:</td>
+                <td class="text-right font-bold">LUNAS ({{ strtoupper($sale->payment_method) }})</td>
+            </tr>
             <tr>
                 <td>Bayar:</td>
                 <td class="text-right">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
@@ -166,6 +190,7 @@
                 <td>Kembali:</td>
                 <td class="text-right">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</td>
             </tr>
+            @endif
         </table>
     </div>
 

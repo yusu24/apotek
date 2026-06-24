@@ -1,4 +1,4 @@
-<div x-data x-init="setTimeout(() => window.print(), 1000)">
+<div x-data x-init="@if($autoprint) setTimeout(() => window.print(), 1000) @endif">
     @php
         $ppnRate = \App\Models\Setting::get('pos_ppn_rate', 11);
         $isA4 = $paperSize === 'A4';
@@ -15,21 +15,17 @@
         }
         body {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
+            font-size: 15px;
+            padding: 15px;
             @if($paperSize === 'A4')
                 font-family: sans-serif;
-                width: 210mm;
-                padding: 20mm;
-            @elseif($paperSize === '80mm')
-                width: 80mm;
-                padding: 5mm;
-            @else
-                width: 58mm;
-                padding: 3mm;
+                padding: 25px;
             @endif
         }
         .receipt-container {
             margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
         }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
@@ -37,15 +33,50 @@
         .border-t { border-top: 1px dashed #000; margin: 5px 0; }
         .border-b { border-bottom: 1px dashed #000; margin: 5px 0; }
         table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: top; padding: 2px 0; }
+        td { vertical-align: top; padding: 3px 0; }
         .header { margin-bottom: 15px; }
-        .shop-name { font-size: {{ $isA4 ? '24px' : '18px' }}; font-weight: bold; text-transform: uppercase; }
-        .meta { font-size: {{ $isA4 ? '16px' : '14px' }}; margin-bottom: 10px; }
+        .shop-name { font-size: {{ $isA4 ? '26px' : '20px' }}; font-weight: bold; text-transform: uppercase; }
+        .store-address { font-size: {{ $isA4 ? '14px' : '13px' }}; line-height: 1.4; }
+        .meta-table { font-size: {{ $isA4 ? '14px' : '13px' }}; }
+        .section-title { font-size: {{ $isA4 ? '14px' : '13px' }}; font-weight: bold; margin-bottom: 3px; }
         .items td { font-size: {{ $isA4 ? '15px' : '14px' }}; }
+        .item-note, .item-discount-note { font-size: 11px; }
         .totals td { font-size: {{ $isA4 ? '15px' : '14px' }}; }
+        .bank-details { margin-top: 10px; font-size: 13px; }
+        .footer-note { margin-top: 15px; font-size: {{ $isA4 ? '14px' : '13px' }}; white-space: pre-line; line-height: 1.4; }
+        
         @media print { 
             .no-print { display: none !important; } 
-            body { padding: {{ $isA4 ? '10mm' : '0' }}; }
+            body { 
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 11px !important;
+                @if($paperSize === 'A4')
+                    font-family: sans-serif !important;
+                    width: 210mm !important;
+                    padding: 10mm !important;
+                    font-size: 13px !important;
+                @elseif($paperSize === '80mm')
+                    width: 80mm !important;
+                    padding: 3mm !important;
+                @else
+                    width: 58mm !important;
+                    padding: 2mm !important;
+                @endif
+            }
+            .receipt-container {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .shop-name { font-size: {{ $isA4 ? '22px' : '15px' }} !important; }
+            .store-address { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
+            .meta-table { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
+            .section-title { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
+            .items td { font-size: {{ $isA4 ? '12px' : '10px' }} !important; }
+            .item-note, .item-discount-note { font-size: 8px !important; }
+            .totals td { font-size: {{ $isA4 ? '12px' : '10px' }} !important; }
+            .bank-details { font-size: 9px !important; }
+            .footer-note { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
         }
     </style>
 
@@ -55,7 +86,7 @@
                 <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: {{ $isA4 ? '60mm' : '40mm' }}; max-height: 25mm; margin-bottom: 10px; margin-left: auto; margin-right: auto; display: block;" alt="Logo">
             @endif
             <div class="shop-name">{{ \App\Models\Setting::get('store_name', config('app.name', 'Apotek')) }}</div>
-            <div style="font-size: {{ $isA4 ? '12px' : '10px' }};">
+            <div class="store-address">
                 {{ \App\Models\Setting::get('store_address', 'Jl. Raya Apotek No. 123') }}
                 <br>Telp: {{ \App\Models\Setting::get('store_phone', '0812-3456-7890') }}
             </div>
@@ -66,7 +97,7 @@
 
 
         <div class="meta border-b pb-2">
-            <table style="font-size: {{ $isA4 ? '11px' : '9px' }};">
+            <table class="meta-table">
                 <tr>
                     <td style="width: {{ $isA4 ? '30%' : '35%' }};">No</td>
                     <td>: {{ $sale->invoice_no }}</td>
@@ -94,8 +125,8 @@
 
         @if($sale->patient_name)
         <div class="meta border-b pb-2 mt-2">
-            <div style="font-size: {{ $isA4 ? '12px' : '10px' }}; font-weight: bold; margin-bottom: 3px;">DATA PASIEN</div>
-            <table style="font-size: {{ $isA4 ? '11px' : '9px' }};">
+            <div class="section-title">DATA PASIEN</div>
+            <table class="meta-table">
                 <tr>
                     <td style="width: {{ $isA4 ? '30%' : '35%' }};">Nama</td>
                     <td>: {{ $sale->patient_name }}</td>
@@ -163,7 +194,7 @@
                             <td class="py-2">
                                 {{ $item->product->name }}
                                 @if($item->notes)
-                                    <div style="font-size: 9px; color: #666;">(Note: {{ $item->notes }})</div>
+                                    <div class="item-note" style="color: #666;">(Note: {{ $item->notes }})</div>
                                 @endif
                             </td>
                             <td class="text-center py-2">{{ number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.') }} {{ $item->unit->name ?? '' }}</td>
@@ -174,13 +205,13 @@
 
                         @if(!$isA4 && $item->notes)
                         <tr>
-                            <td colspan="2" style="font-size: 9px; font-style: italic;">(Note: {{ $item->notes }})</td>
+                            <td colspan="2" class="item-note" style="font-style: italic;">(Note: {{ $item->notes }})</td>
                         </tr>
                         @endif
 
                         @if($item->discount_amount > 0)
                         <tr>
-                            <td style="font-size: 9px; color: #444;" colspan="{{ $isA4 ? 4 : 2 }}">
+                            <td class="item-discount-note" style="color: #444;" colspan="{{ $isA4 ? 4 : 2 }}">
                                 (Diskon Item: -{{ number_format($item->discount_amount * $item->quantity, 0, ',', '.') }})
                             </td>
                         </tr>
@@ -234,20 +265,15 @@
         </div>
 
         @if($bankAccount = \App\Models\Setting::get('store_bank_account'))
-            <div class="border-t text-center" style="margin-top: 10px; font-size: 10px;">
+            <div class="border-t text-center bank-details">
                 <div class="font-bold">Penerimaan via Bank</div>
                 <div>{{ \App\Models\Setting::get('store_bank_name', '-') }} - {{ $bankAccount }}</div>
                 <div>A/n: {{ \App\Models\Setting::get('store_bank_holder', '-') }}</div>
             </div>
         @endif
 
-        <div class="border-t text-center" style="margin-top: 15px; font-size: {{ $isA4 ? '11px' : '9px' }}; white-space: pre-line; line-height: 1.4;">
+        <div class="border-t text-center footer-note">
             {{ \App\Models\Setting::get('store_footer_note', "Terima Kasih atas Kunjungan Anda\nSemoga Lekas Sembuh") }}
         </div>
-    </div>
-
-    <div class="no-print" style="margin-top: 40px; text-align: center; max-width: 58mm; margin-left: auto; margin-right: auto;">
-        <button @click="window.print()" style="width: 100%; padding: 12px; margin-bottom: 10px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">CETAK ULANG</button>
-        <button onclick="window.location.href='{{ route('pos.cashier') }}'" style="width: 100%; padding: 12px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-weight: bold; cursor: pointer;">KEMBALI KE KASIR</button>
     </div>
 </div>

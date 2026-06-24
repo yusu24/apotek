@@ -21,19 +21,17 @@
                     </select>
                 </div>
             </div>
-            <div class="w-full md:w-48">
-                <div class="relative">
-                    <select wire:model.live="category_id" class="w-full appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition">
-                        <option value="">Semua Kategori</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
+            <div class="relative w-full md:w-32">
+                <select wire:model.live="category_id" class="w-full appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
                 </div>
             </div>
             <div class="relative w-full md:w-64">
@@ -64,8 +62,28 @@
                             <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
                             <div class="text-xs text-gray-500">{{ $product->barcode }}</div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                            {{ $product->category->name ?? '-' }}
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                $categoryName = $product->category->name ?? '-';
+                                // Generate consistent color based on category name
+                                $colors = [
+                                    ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'],
+                                    ['bg' => 'bg-green-100', 'text' => 'text-green-800'],
+                                    ['bg' => 'bg-purple-100', 'text' => 'text-purple-800'],
+                                    ['bg' => 'bg-pink-100', 'text' => 'text-pink-800'],
+                                    ['bg' => 'bg-indigo-100', 'text' => 'text-indigo-800'],
+                                    ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800'],
+                                    ['bg' => 'bg-red-100', 'text' => 'text-red-800'],
+                                    ['bg' => 'bg-orange-100', 'text' => 'text-orange-800'],
+                                    ['bg' => 'bg-teal-100', 'text' => 'text-teal-800'],
+                                    ['bg' => 'bg-cyan-100', 'text' => 'text-cyan-800'],
+                                ];
+                                $colorIndex = crc32($categoryName) % count($colors);
+                                $color = $colors[$colorIndex];
+                            @endphp
+                            <span class="px-2 py-1 text-xs font-medium leading-5 rounded-full {{ $color['bg'] }} {{ $color['text'] }}">
+                                {{ $categoryName }}
+                            </span>
                         </td>
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">

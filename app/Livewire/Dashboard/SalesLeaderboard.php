@@ -10,6 +10,7 @@ use Livewire\Component;
 class SalesLeaderboard extends Component
 {
     public string $chartPeriod = 'current_month';
+    public bool $showFullLeaderboard = false;
 
     public function render()
     {

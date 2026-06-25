@@ -44,20 +44,20 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <span class="hidden sm:inline text-sm">Excel</span>
+                    <span class="hidden sm:inline text-sm">Export Excel</span>
                 </button>
                 @can('manage suppliers')
                 <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span class="hidden sm:inline text-sm">Import</span>
+                    <span class="hidden sm:inline text-sm">Import Excel</span>
                 </button>
                 @endcan
 
-                <button wire:click="openModal" class="btn btn-primary" title="Tambah Supplier">
+                <button wire:click="openModal" class="btn btn-primary" title="Supplier">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
-                    <span class="hidden sm:inline">Tambah Supplier</span>
+                    <span class="hidden sm:inline">Supplier</span>
                 </button>
             </div>
         </div>

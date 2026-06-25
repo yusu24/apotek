@@ -54,16 +54,16 @@
                     </div>
 
                     <!-- Category Filter -->
-                    <div class="relative w-full md:w-32">
-                        <select wire:model.live="category_id" class="w-full appearance-none block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
+                    <div class="relative w-full md:w-48">
+                        <select wire:model.live="category_id" class="w-full block py-1.5 pl-3 pr-10 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
                             <option value="">Semua Kategori</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-500">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </div>
                     </div>
@@ -87,11 +87,11 @@
                     @endcan
 
                     @can('create products')
-                    <a href="{{ route('products.create') }}" wire:navigate class="btn btn-primary" title="Tambah Produk">
+                    <a href="{{ route('products.create') }}" wire:navigate class="btn btn-primary" title="Produk">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        <span class="hidden xl:inline">Tambah Produk</span>
+                        <span class="hidden xl:inline">Produk</span>
                     </a>
                     @endcan
                 </div>

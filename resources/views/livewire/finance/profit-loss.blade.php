@@ -41,15 +41,15 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white p-6 rounded-xl shadow-sm mb-8 border border-gray-100">
-        <div class="flex flex-wrap gap-6 items-end">
-            <div class="w-full md:w-64">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Periode Laporan</label>
+    <div class="bg-white rounded-xl shadow-sm mb-8 border border-gray-100">
+        <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row flex-wrap gap-4 items-end">
+            <div class="flex flex-col shrink-0">
+                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Periode Laporan</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
-                    <select wire:model.live="period" class="block w-full pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm font-medium">
+                    <select wire:model.live="period" class="block w-full pl-9 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm text-sm py-2">
                         <option value="this_month">Bulan Ini</option>
                         <option value="last_month">Bulan Lalu</option>
                         <option value="this_year">Tahun Ini</option>
@@ -58,9 +58,9 @@
                 </div>
             </div>
 
-            <div class="w-full md:w-32">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Tampilkan</label>
-                <select wire:model.live="perPage" class="block w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm font-medium">
+            <div class="flex flex-col shrink-0">
+                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
+                <select wire:model.live="perPage" class="block border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm text-sm py-2 pl-3 pr-8">
                     <option value="5">5 Data</option>
                     <option value="10">10 Data</option>
                     <option value="25">25 Data</option>
@@ -70,19 +70,23 @@
             </div>
             
             @if($period === 'custom')
-                <div class="flex gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Mulai</label>
-                        <x-date-picker wire:model.live="startDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
+                <div class="flex items-center gap-2">
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
+                        <x-date-picker wire:model.live="startDate" class="w-36 border-gray-300 rounded-lg shadow-sm text-sm py-2 px-3 focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Sampai</label>
-                        <x-date-picker wire:model.live="endDate" class="border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
+                    <span class="text-gray-400 font-bold self-end mb-2">-</span>
+                    <div class="flex flex-col">
+                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                        <x-date-picker wire:model.live="endDate" class="w-36 border-gray-300 rounded-lg shadow-sm text-sm py-2 px-3 focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
                     </div>
                 </div>
             @else
-                <div class="h-10 flex items-center px-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 font-bold">
-                    {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                <div class="flex flex-col">
+                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Rentang</label>
+                    <div class="h-9 flex items-center px-3 bg-white border border-gray-300 rounded-lg text-sm text-gray-600 font-medium shadow-sm">
+                        {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                    </div>
                 </div>
             @endif
 

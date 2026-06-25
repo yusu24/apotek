@@ -15,11 +15,11 @@
             </div>
             <div class="overflow-x-auto flex-1">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-100">
+                    <thead class="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100 uppercase text-xs tracking-wider">
                         <tr>
-                            <th class="px-5 py-3">Pelanggan</th>
-                            <th class="px-5 py-3">Due Date</th>
-                            <th class="px-5 py-3 text-right">Sisa Tagihan</th>
+                            <th class="px-5 py-3">PELANGGAN</th>
+                            <th class="px-5 py-3">DUE DATE</th>
+                            <th class="px-5 py-3 text-right">SISA TAGIHAN</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -43,7 +43,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic">
+                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic text-[9px]">
                                     Tidak ada tagihan yang mendekati jatuh tempo.
                                 </td>
                             </tr>
@@ -71,11 +71,11 @@
             </div>
             <div class="overflow-x-auto flex-1">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-gray-50 text-gray-500 font-medium border-b border-gray-100">
+                    <thead class="bg-gray-50 text-gray-500 font-semibold border-b border-gray-100 uppercase text-xs tracking-wider">
                         <tr>
-                            <th class="px-5 py-3">Supplier</th>
-                            <th class="px-5 py-3">Due Date</th>
-                            <th class="px-5 py-3 text-right">Sisa Hutang</th>
+                            <th class="px-5 py-3">SUPPLIER</th>
+                            <th class="px-5 py-3">DUE DATE</th>
+                            <th class="px-5 py-3 text-right">SISA HUTANG</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -99,7 +99,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic">
+                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic text-[9px]">
                                     Tidak ada hutang yang mendekati jatuh tempo.
                                 </td>
                             </tr>

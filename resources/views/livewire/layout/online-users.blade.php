@@ -14,7 +14,7 @@ $colorClasses = ($textColor === 'text-white')
                 'w-full px-3 py-2 gap-3' => !$iconOnly,
                 $colorClasses
             ])
-            wire:poll.keep-alive="30s">
+            wire:poll.30s.keep-alive="$refresh">
         
         <div class="relative flex items-center justify-center">
             <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -850,8 +850,34 @@
                                             <li>Verifikasi notifikasi pembayaran masuk</li>
                                             <li>Klik "Konfirmasi Pembayaran" di bawah</li>
                                         </ol>
+                            </div>
+                            
+                            <!-- QRIS Proof Upload -->
+                            <div class="border-t border-gray-200 pt-4">
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Unggah Bukti Pembayaran QRIS (Opsional)</label>
+                                @if($qris_proof)
+                                    <div class="relative w-full h-48 bg-gray-100 rounded-xl overflow-hidden border border-gray-300 flex items-center justify-center">
+                                        <img src="{{ $qris_proof->temporaryUrl() }}" class="w-full h-full object-cover">
+                                        <button type="button" wire:click="$set('qris_proof', null)" class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-2 shadow-md transition-all">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="relative border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-4 text-center cursor-pointer transition-all bg-gray-50/50 hover:bg-blue-50/10">
+                                        <input type="file" wire:model="qris_proof" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <div class="flex flex-col items-center justify-center gap-1.5">
+                                            <span class="text-2xl">📸</span>
+                                            <p class="text-xs font-bold text-gray-700">Ambil Foto / Upload Bukti</p>
+                                            <p class="text-[10px] text-gray-500">Format: JPG, PNG, WEBP (Maks. 4MB)</p>
+                                        </div>
+                                    </div>
+                                    <div wire:loading wire:target="qris_proof" class="text-xs text-blue-600 mt-1 font-bold flex items-center gap-1">
+                                        <span class="animate-spin">⏳</span> Mengunggah berkas...
+                                    </div>
+                                @endif
+                                @error('qris_proof')
+                                    <span class="text-red-500 text-xs block font-bold mt-1">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     @else

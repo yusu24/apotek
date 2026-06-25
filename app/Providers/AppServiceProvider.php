@@ -36,5 +36,40 @@ class AppServiceProvider extends ServiceProvider
                 // Ignore database connection failures during early boot/CLI tasks
             }
         }
+
+        // Prevent modification when impersonating
+        if (!app()->runningInConsole()) {
+            \Illuminate\Database\Eloquent\Model::saving(function ($model) {
+                if ($model instanceof \App\Models\ActivityLog) {
+                    return;
+                }
+                
+                try {
+                    if (request()->hasSession() && session()->has('impersonator_id')) {
+                        throw new \Exception("Mode Lihat Saja: Anda tidak diperbolehkan melakukan perubahan data saat dalam mode Impersonate.");
+                    }
+                } catch (\Throwable $e) {
+                    if ($e instanceof \Exception) {
+                        throw $e;
+                    }
+                }
+            });
+
+            \Illuminate\Database\Eloquent\Model::deleting(function ($model) {
+                if ($model instanceof \App\Models\ActivityLog) {
+                    return;
+                }
+                
+                try {
+                    if (request()->hasSession() && session()->has('impersonator_id')) {
+                        throw new \Exception("Mode Lihat Saja: Anda tidak diperbolehkan melakukan perubahan data saat dalam mode Impersonate.");
+                    }
+                } catch (\Throwable $e) {
+                    if ($e instanceof \Exception) {
+                        throw $e;
+                    }
+                }
+            });
+        }
     }
 }

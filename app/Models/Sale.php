@@ -15,7 +15,7 @@ class Sale extends Model
         'user_id', 'customer_id', 'invoice_no', 'date', 'total_amount', 'discount', 
         'service_charge_amount', 'service_charge_percentage', 'tax', 
         'dpp', 'ppn_mode', 'order_mode', 'rounding', 'grand_total', 
-        'payment_method', 'cash_amount', 'change_amount', 'notes', 'status',
+        'payment_method', 'payment_proof', 'cash_amount', 'change_amount', 'notes', 'status',
         'cogs', 'profit',
         // Patient Information
         'patient_name', 'patient_doctor_name', 'patient_birth_date', 

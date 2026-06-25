@@ -12,6 +12,9 @@ trait HasPermissionStructure
                 'color' => 'blue',
                 'items' => [
                     'view dashboard' => ['label' => 'Halaman Dashboard (Utama)', 'type' => 'view'],
+                    'view dashboard today sales' => ['label' => 'Omset Hari Ini & Transaksi', 'type' => 'view'],
+                    'view dashboard sales trend' => ['label' => 'Tren Omset Harian (Grafik)', 'type' => 'view'],
+                    'view dashboard staff leaderboard' => ['label' => 'Papan Peringkat Kinerja Staf', 'type' => 'view'],
                     'view dashboard receivables' => ['label' => 'Ringkasan Piutang di Dashboard', 'type' => 'view'],
                     'view dashboard payables' => ['label' => 'Ringkasan Hutang di Dashboard', 'type' => 'view'],
                 ]

@@ -3,6 +3,7 @@
 namespace App\Livewire\Pos;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
@@ -21,6 +22,8 @@ use App\Models\Receivable;
 #[Layout('layouts.app')]
 class Cashier extends Component
 {
+    use WithFileUploads;
+
     public $search = '';
     public $highlightIndex = 0;
     public $cart = []; 
@@ -45,6 +48,7 @@ class Cashier extends Component
     
     // Payment
     public $payment_method = 'cash';
+    public $qris_proof;
     public $cash_amount = null;
     public $change_amount = 0;
     public $success_message = '';
@@ -782,6 +786,7 @@ class Cashier extends Component
         $this->service_charge = 0;
         $this->ppn_mode = 'off';
         $this->cash_amount = 0;
+        $this->qris_proof = null;
         $this->calculateTotal();
         $this->generateInvoiceNo();
     }
@@ -862,10 +867,16 @@ class Cashier extends Component
 
     public function processPayment($status = 'completed')
     {
-        $this->validate([
+        $validationRules = [
             'transaction_date' => 'required|date|before_or_equal:' . date('Y-m-d'),
-        ], [
+        ];
+        if ($this->payment_method === 'qris' && $this->qris_proof) {
+            $validationRules['qris_proof'] = 'nullable|image|max:4096';
+        }
+        $this->validate($validationRules, [
             'transaction_date.before_or_equal' => 'Tanggal transaksi tidak boleh melebihi hari ini.',
+            'qris_proof.image' => 'File bukti pembayaran harus berupa gambar.',
+            'qris_proof.max' => 'Ukuran file bukti pembayaran tidak boleh lebih dari 4MB.',
         ]);
 
         Log::info('ProcessPayment Start State:', [
@@ -904,6 +915,11 @@ class Cashier extends Component
             return;
         }
 
+        $paymentProofPath = null;
+        if ($this->payment_method === 'qris' && $this->qris_proof) {
+            $paymentProofPath = $this->qris_proof->store('payment_proofs', 'public');
+        }
+
         DB::beginTransaction();
         try {
             $sale = Sale::create([
@@ -922,6 +938,7 @@ class Cashier extends Component
                 'rounding' => $this->rounding,
                 'grand_total' => $this->grand_total,
                 'payment_method' => $this->payment_method,
+                'payment_proof' => $paymentProofPath,
                 'cash_amount' => (float)$this->cash_amount,
                 'change_amount' => $this->change_amount,
                 'notes' => $this->global_notes,
@@ -1073,6 +1090,7 @@ class Cashier extends Component
             $this->showPaymentModal = false;
             $this->cart = [];
             $this->transaction_date = date('Y-m-d');
+            $this->qris_proof = null;
             $this->resetCustomer();
             $this->resetPatientInfo();
             $this->calculateTotal();

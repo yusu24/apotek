@@ -5,7 +5,7 @@
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Tambah Jabatan
+            Jabatan
         </a>
     </div>
 
@@ -35,7 +35,7 @@
                 @foreach($roles as $role)
                 <tr class="hover:bg-gray-50/50 transition-colors">
                     <td class="px-6 py-4">
-                        <div class="font-bold text-gray-800">{{ $role->name }}</div>
+                        <div class="font-bold text-gray-800">{{ ucwords(str_replace(['-', '_'], ' ', $role->name)) }}</div>
                     </td>
                     <td class="px-6 py-4 font-medium text-gray-600">
                         {{ $role->users_count }} User

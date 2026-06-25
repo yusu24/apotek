@@ -277,16 +277,33 @@
                     Livewire.hook('request', ({ succeed }) => {
                         succeed(() => {
                             const path = window.location.pathname;
-                            if (path.includes('/cashier') || path.includes('/goods-receipts/create') || /\/goods-receipts\/\d+\/edit/.test(path)) {
+
+                            // Halaman yang sepenuhnya dikecualikan dari auto-scroll
+                            // (chart filter changes, pagination, dll tidak boleh scroll ke atas)
+                            const isExcludedPage =
+                                path === '/' ||
+                                path === '/dashboard' ||
+                                path.includes('/cashier') ||
+                                path.includes('/goods-receipts/create') ||
+                                /\/goods-receipts\/\d+\/edit/.test(path);
+
+                            if (isExcludedPage) {
                                 isSubmitting = false;
                                 return;
                             }
 
                             // Use a short setTimeout to allow the DOM to fully settle and paint
                             setTimeout(() => {
-                                // Check if an alert, success message, or validation error is present in the DOM
+                                // Hanya cocokkan elemen notifikasi/alert yang sesungguhnya.
+                                // JANGAN gunakan .text-red-500/.text-red-600 karena kelas ini
+                                // ada di chart, badge, dan ikon — bukan hanya di alert.
                                 const hasAlert = document.querySelector(
-                                    '.bg-green-50, .bg-green-100, .bg-red-50, .bg-red-100, .bg-emerald-50, .bg-rose-50, [role="alert"], .border-green-400, .border-red-400, .border-green-500, .border-red-500, .text-red-500, .text-red-600'
+                                    '[role="alert"], ' +
+                                    '[data-alert], ' +
+                                    '.livewire-error-message, ' +
+                                    '.border-l-4.border-green-500, ' +
+                                    '.border-l-4.border-red-500, ' +
+                                    '.border-l-4.border-yellow-500'
                                 );
 
                                 if (isSubmitting || hasAlert) {
@@ -398,18 +415,7 @@
                 'xl:pt-16' => !request()->routeIs('pos.cashier'),
                 'has-navbar' => !request()->routeIs('pos.cashier'),
             ])>
-                @if(session()->has('impersonator_id'))
-                    <div class="bg-amber-500 text-white px-6 py-2 flex justify-between items-center shadow-md relative z-[100] animate-pulse">
-                        <div class="flex items-center gap-3 text-sm font-bold">
-                            <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            <span>Mode Impersonate: Sedang masuk sebagai <u>{{ auth()->user()->name }}</u></span>
-                        </div>
-                        <a href="{{ route('admin.leave-impersonation') }}" class="bg-white text-amber-600 px-4 py-1 rounded-full text-xs font-bold uppercase hover:bg-amber-50 shadow-sm transition active:scale-95">
-                            Kembali ke Akun Saya
-                        </a>
-                    </div>
-                @endif
-                
+
                 <!-- Page Heading -->
                 @if (isset($header))
                     <header>

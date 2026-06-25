@@ -155,7 +155,7 @@
                                     ];
                                     $label = $labels[$item->type] ?? ucfirst($item->type);
                                 @endphp
-                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase border {{ $typeColor }}">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold border {{ $typeColor }}">
                                     {{ $label }}
                                 </span>
                             </td>

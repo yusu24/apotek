@@ -20,6 +20,11 @@ class RoleSeeder extends Seeder
         $permissions = [
             // Dashboard & Reports
             'view dashboard',
+            'view dashboard today sales',
+            'view dashboard sales trend',
+            'view dashboard staff leaderboard',
+            'view dashboard receivables',
+            'view dashboard payables',
             'view sales reports',
             'view profit loss',
             'view balance sheet',

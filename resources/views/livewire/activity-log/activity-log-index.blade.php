@@ -6,7 +6,6 @@
                 <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 Riwayat Aktivitas User
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Tracking semua aktivitas user di sistem</p>
         </div>
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-semibold border border-green-200">
@@ -53,8 +52,8 @@
         <div class="p-4 border-b bg-gray-50 flex flex-col gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full items-end">
                 <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0 mb-0.5">
-                    <span class="hidden sm:inline text-xs font-bold uppercase tracking-wider text-gray-500">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                    <span class="hidden sm:inline text-[10px] font-bold uppercase tracking-wider text-gray-500">Tampilkan</span>
+                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="25">25</option>
@@ -112,16 +111,15 @@
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row gap-4 w-full md:items-center pt-3 border-t border-gray-100">
                 <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
-                    <div class="flex items-center gap-2">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider">Periode Dari:</label>
-                        <x-date-picker wire:model.live="filterDateFrom" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-1.5 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    <div class="flex items-center gap-1">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Periode Dari:</label>
+                        <x-date-picker wire:model.live="filterDateFrom" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
                     </div>
                     <span class="text-gray-400 font-bold">-</span>
-                    <div class="flex items-center gap-2">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider">Sampai:</label>
-                        <x-date-picker wire:model.live="filterDateTo" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-1.5 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    <div class="flex items-center gap-1">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Sampai:</label>
+                        <x-date-picker wire:model.live="filterDateTo" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
                     </div>
                 </div>
             </div>

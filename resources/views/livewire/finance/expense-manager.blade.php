@@ -11,7 +11,7 @@
             <div class="flex items-center gap-3 flex-wrap w-full md:w-auto">
                 <button wire:click="create" class="btn btn-primary flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span>Tambah Pengeluaran</span>
+                    <span>Pengeluaran</span>
                 </button>
                 <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
                     <span>Tampilkan</span>

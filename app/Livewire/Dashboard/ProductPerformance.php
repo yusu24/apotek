@@ -12,9 +12,20 @@ class ProductPerformance extends Component
 {
     public $period = 'monthly'; // daily, weekly, monthly, yearly
 
-    public function updatedPeriod()
+    public function updatedPeriod(): void
     {
-        $this->dispatch('chart-update');
+        $data = $this->getPerformanceData();
+
+        // Kirim data baru sebagai payload event agar Alpine dapat data terbaru
+        // tanpa perlu Livewire meng-update DOM (wire:ignore)
+        $this->dispatch('product-chart-updated',
+            topLabels:         $data['topSellingChart']['labels'],
+            topAbbreviations:  $data['topSellingChart']['abbreviations'],
+            topData:           $data['topSellingChart']['data'],
+            slowLabels:        $data['slowMovingChart']['labels'],
+            slowAbbreviations: $data['slowMovingChart']['abbreviations'],
+            slowData:          $data['slowMovingChart']['data'],
+        );
     }
 
     public function getPerformanceData()

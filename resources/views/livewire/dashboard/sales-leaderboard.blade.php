@@ -1,51 +1,73 @@
-<div x-data="{ showFullLeaderboard: false }" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div x-data="{ showFullLeaderboard: false }">
+@php
+    $canTodaySales   = auth()->user()->can('view dashboard today sales');
+    $canSalesTrend   = auth()->user()->can('view dashboard sales trend');
+    $canLeaderboard  = auth()->user()->can('view dashboard staff leaderboard');
+    $hasLeftContent  = $canTodaySales || $canSalesTrend;
+    $hasRightContent = $canLeaderboard;
+    // Grid span logic
+    $gridClass       = ($hasLeftContent && $hasRightContent) ? 'grid grid-cols-1 lg:grid-cols-3 gap-6' : 'grid grid-cols-1 gap-6';
+    $leftSpan        = ($hasLeftContent && $hasRightContent) ? 'lg:col-span-2 space-y-6' : 'space-y-6';
+@endphp
+    @if($hasLeftContent || $hasRightContent)
+    <div class="{{ $gridClass }}">
     <!-- Left Column: Summary Cards & Daily Sales Trend Chart -->
-    <div class="lg:col-span-2 space-y-6">
+    @if($hasLeftContent)
+    <div class="{{ $leftSpan }}">
         <!-- Monthly Metrics Cards -->
+        @can('view dashboard today sales')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Monthly Turnover Card -->
-            <div class="bg-emerald-50/70 border border-emerald-100/80 dark:bg-emerald-950/20 dark:border-emerald-900/30 rounded-2xl p-6 flex justify-between items-center relative overflow-hidden group shadow-sm">
-                <div class="absolute -right-8 -bottom-8 opacity-5 group-hover:scale-110 transition duration-500 text-emerald-800 dark:text-emerald-400">
-                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
-                    </svg>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-gray-900 dark:text-gray-100 font-semibold text-xs tracking-wide">Omset Bulan Ini</p>
-                    <h3 class="text-3xl font-black tracking-tight text-gray-900 dark:text-emerald-200">Rp {{ number_format($monthlyTurnover, 0, ',', '.') }}</h3>
-                    <p class="text-[10px] text-gray-500 dark:text-gray-400 font-normal mt-1">Berdasarkan transaksi selesai di bulan {{ now()->translatedFormat('F Y') }}</p>
-                </div>
-                <div class="bg-emerald-200/50 dark:bg-emerald-900/40 p-3 rounded-2xl shrink-0 text-emerald-700 dark:text-emerald-400 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+            <!-- Daily Turnover Card -->
+            <div class="bg-emerald-50/70 border border-emerald-100/80 dark:bg-emerald-950/20 dark:border-emerald-900/30 rounded-2xl p-5 shadow-sm">
+
+                <p class="text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wide mb-2">Omset Hari Ini</p>
+                <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-emerald-200 leading-none">
+                    Rp {{ number_format($dailyTurnover, 0, ',', '.') }}
+                </h3>
+                <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
+
+                <div class="mt-3">
+                    @if($dailyTurnover > 0)
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Aktif
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            Belum Ada Transaksi
+                        </span>
+                    @endif
                 </div>
             </div>
 
-            <!-- Monthly Transactions Card -->
-            <div class="bg-indigo-50/70 border border-indigo-100/80 dark:bg-indigo-950/20 dark:border-indigo-900/30 rounded-2xl p-6 flex justify-between items-center relative overflow-hidden group shadow-sm">
-                <div class="absolute -right-8 -bottom-8 opacity-5 group-hover:scale-110 transition duration-500 text-indigo-800 dark:text-indigo-400">
-                    <svg class="w-36 h-36" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                    </svg>
-                </div>
-                <div class="space-y-1">
-                    <p class="text-gray-900 dark:text-gray-100 font-semibold text-xs tracking-wide">Total Transaksi Bulan Ini</p>
-                    <h3 class="text-3xl font-black tracking-tight text-gray-900 dark:text-indigo-200">
-                        {{ number_format($monthlyTransactions, 0, ',', '.') }}
-                        <span class="text-lg font-bold text-gray-700 dark:text-indigo-400">Transaksi</span>
-                    </h3>
-                    <p class="text-[10px] text-gray-500 dark:text-gray-400 font-normal mt-1">Volume penjualan kasir terdaftar</p>
-                </div>
-                <div class="bg-indigo-200/50 dark:bg-indigo-900/40 p-3 rounded-2xl shrink-0 text-indigo-700 dark:text-indigo-400 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
+            <!-- Daily Transactions Card -->
+            <div class="bg-indigo-50/70 border border-indigo-100/80 dark:bg-indigo-950/20 dark:border-indigo-900/30 rounded-2xl p-5 shadow-sm">
+
+                <p class="text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wide mb-2">Transaksi Hari Ini</p>
+                <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-indigo-200 leading-none">
+                    {{ number_format($dailyTransactions, 0, ',', '.') }}
+                    <span class="text-sm font-bold text-gray-500 dark:text-indigo-400">Transaksi</span>
+                </h3>
+                <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
+
+                <div class="mt-3">
+                    @if($dailyTransactions > 0)
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-indigo-700 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 border border-indigo-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                            Aktif
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            Belum Ada Transaksi
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>
+        @endcan
 
         <!-- Daily Turnover Trend Chart Card -->
+        @can('view dashboard sales trend')
         <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-lg p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -61,109 +83,143 @@
                 </div>
 
                 <!-- Period Filter -->
-                <select wire:model.live="chartPeriod" class="text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 py-1.5 px-2 transition-all cursor-pointer">
-                    <option value="current_month">Bulan Ini</option>
-                    <option value="last_month">Bulan Lalu</option>
-                    <option value="7_days">7 Hari Terakhir</option>
-                    <option value="30_days">30 Hari Terakhir</option>
+                <select wire:model.live="chartPeriod" class="text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 py-1.5 pl-3 pr-8 min-w-[140px] transition-all cursor-pointer">
+                    <option value="daily">Harian</option>
+                    <option value="weekly">Mingguan</option>
+                    <option value="monthly">Bulanan</option>
                 </select>
             </div>
 
             <!-- Chart Canvas Container -->
-            <div x-data="{
-                chart: null,
-                initChart() {
-                    const canvas = document.getElementById('monthlyTurnoverChart');
-                    if (!canvas) return;
-                    if (this.chart) { this.chart.destroy(); }
-                    
-                    const ctx = canvas.getContext('2d');
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-                    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
-                    gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
- 
-                    this.chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: @js(json_decode($chartLabels)),
-                            datasets: [{
-                                label: 'Omset Harian (Rp)',
-                                data: @js(json_decode($chartData)),
-                                borderColor: '#10b981',
-                                borderWidth: 3,
-                                backgroundColor: gradient,
-                                fill: true,
-                                tension: 0.4,
-                                pointBackgroundColor: '#10b981',
-                                pointBorderColor: '#ffffff',
-                                pointBorderWidth: 2,
-                                pointRadius: 3,
-                                pointHoverRadius: 5
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            animation: {
-                                duration: 1000,
-                                easing: 'easeOutQuart'
-                            },
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            let value = context.raw;
-                                            return 'Omset: Rp ' + new Intl.NumberFormat('id-ID').format(value);
-                                        }
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    grid: {
-                                        color: 'rgba(148, 163, 184, 0.1)',
-                                        borderDash: [5, 5]
-                                    },
-                                    ticks: {
-                                        color: '#64748b',
-                                        font: { size: 10 },
-                                        callback: function(value) {
-                                            if (value >= 1000000) return (value / 1000000) + 'jt';
-                                            if (value >= 1000) return (value / 1000) + 'rb';
-                                            return value;
-                                        }
-                                    }
-                                },
-                                x: {
-                                    grid: { display: false },
-                                    ticks: {
-                                        color: '#64748b',
-                                        font: { size: 10, weight: '600' }
-                                    }
-                                }
-                            }
+            <div wire:ignore
+                 x-data="{
+                    chart: null,
+                    labels: [],
+                    data: [],
+                    initChart() {
+                        if (this.chart) {
+                            this.chart.destroy();
+                            this.chart = null;
                         }
-                    });
-                },
-                updateChart(labels, data) {
-                    if (this.chart) {
-                        this.chart.data.labels = labels;
-                        this.chart.data.datasets[0].data = data;
-                        this.chart.update();
+                        this.$nextTick(() => {
+                            if (!this.labels || !this.data || this.labels.length === 0) return;
+                            const canvas = this.$refs.turnoverChart;
+                            if (!canvas) return;
+                            const ctx = canvas.getContext('2d');
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 256);
+                            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+                            gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+                            const numericData = this.data.map(Number);
+
+                            this.chart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: this.labels,
+                                    datasets: [{
+                                        label: 'Omset Harian (Rp)',
+                                        data: numericData,
+                                        backgroundColor: gradient,
+                                        borderColor: '#10b981',
+                                        borderWidth: 3,
+                                        tension: 0.4,
+                                        fill: true,
+                                        pointBackgroundColor: '#fff',
+                                        pointBorderColor: '#10b981',
+                                        pointBorderWidth: 2,
+                                        pointRadius: 4,
+                                        pointHoverRadius: 6,
+                                        pointHoverBackgroundColor: '#10b981',
+                                        pointHoverBorderColor: '#fff',
+                                        pointHoverBorderWidth: 2,
+                                        pointHitRadius: 10
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    // animations (plural) = kontrol per-properti di Chart.js v3+
+                                    // y.from: 0  → setiap titik data mulai dari baseline (y=0)
+                                    //             dan naik ke nilai aslinya (efek grow-from-zero)
+                                    animations: {
+                                        y: {
+                                            from: 0,
+                                            duration: 1200,
+                                            easing: 'easeOutQuart',
+                                            delay: (context) => {
+                                                if (context.type === 'data' && context.mode === 'default') {
+                                                    return context.dataIndex * 40;
+                                                }
+                                                return 0;
+                                            }
+                                        }
+                                    },
+                                    interaction: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: {
+                                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                            padding: 12,
+                                            titleFont: { size: 14, weight: 'bold' },
+                                            bodyFont: { size: 13 },
+                                            cornerRadius: 8,
+                                            callbacks: {
+                                                label: function(context) {
+                                                    let label = context.dataset.label || '';
+                                                    if (label) label += ': ';
+                                                    if (context.parsed.y !== null) {
+                                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                                    }
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
+                                            ticks: {
+                                                color: '#64748b',
+                                                font: { size: 10 },
+                                                callback: function(value) {
+                                                    return 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact', compactDisplay: 'short' }).format(value);
+                                                }
+                                            }
+                                        },
+                                        x: {
+                                            grid: { display: false },
+                                            ticks: {
+                                                color: '#64748b',
+                                                font: { size: 10, weight: '600' }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    },
+                    updateChart(newLabels, newData) {
+                        this.labels = newLabels !== undefined ? newLabels : @js($chartLabels);
+                        this.data   = newData   !== undefined ? newData   : @js($chartData);
+                        this.initChart();
                     }
-                }
-            }"
-            x-init="setTimeout(() => initChart(), 200)"
-            @chart-updated.window="updateChart($event.detail.labels, $event.detail.data)"
-            wire:key="chart-container"
-            class="h-64 mt-4 relative">
-                <canvas id="monthlyTurnoverChart" wire:ignore></canvas>
+                 }"
+                 x-init="setTimeout(() => updateChart(), 400)"
+                 @chart-data-updated.window="updateChart($event.detail.labels, $event.detail.data)"
+                 class="h-64 mt-4 relative">
+                <canvas x-ref="turnoverChart"></canvas>
             </div>
         </div>
+        @endcan
     </div>
+    @endif
 
     <!-- Right Column: Cashier Leaderboard -->
+    @can('view dashboard staff leaderboard')
     <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-lg overflow-hidden flex flex-col">
         <div>
             <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
@@ -188,38 +244,119 @@
                 @php
                     $rank1 = $leaderboard->first();
                     $rank1Name = $rank1->user->name ?? 'Kasir';
-                    $rank1Avatar = 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=fef3c7&color=b45309&size=128&bold=true';
+                    $rank1Avatar = $rank1->user->profile_photo_path
+                        ? asset('storage/' . $rank1->user->profile_photo_path)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=f1f5f9&color=1e293b&size=128&bold=true';
                 @endphp
                 <div class="px-5 pt-4">
-                    <div style="background: linear-gradient(135deg, #b45309 0%, #78350f 100%); color: #ffffff; border: 1px solid rgba(251, 191, 36, 0.2);" class="rounded-2xl p-6 text-center shadow-xl relative overflow-hidden group">
-                        <!-- Background glow decoration -->
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-                        <div class="absolute -left-8 -bottom-8 w-24 h-24 bg-black/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+                    <div style="background: #ffffff; color: #111827; border: 1px solid #e5e7eb;" class="rounded-2xl p-4 shadow-md relative overflow-hidden group flex items-center gap-4 text-left"
+                         x-data="{
+                            confettiCanvas: null,
+                            particles: [],
+                            animationId: null,
+                            intervalId: null,
+                            colors: ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899', '#f97316'],
+                            init() {
+                                this.$nextTick(() => {
+                                    this.confettiCanvas = this.$refs.confettiCanvas;
+                                    if (!this.confettiCanvas) return;
+                                    this.resizeCanvas();
+                                    this.launchConfetti();
+                                    this.intervalId = setInterval(() => this.launchConfetti(), 8000);
+                                });
+                            },
+                            destroy() {
+                                if (this.intervalId) clearInterval(this.intervalId);
+                                if (this.animationId) cancelAnimationFrame(this.animationId);
+                            },
+                            resizeCanvas() {
+                                if (!this.confettiCanvas || !this.$el) return;
+                                this.confettiCanvas.width = this.$el.offsetWidth;
+                                this.confettiCanvas.height = this.$el.offsetHeight;
+                            },
+                            launchConfetti() {
+                                if (!this.confettiCanvas) return;
+                                this.resizeCanvas();
+                                const w = this.confettiCanvas.width;
+                                const h = this.confettiCanvas.height;
+                                for (let i = 0; i < 60; i++) {
+                                    this.particles.push({
+                                        x: Math.random() * w,
+                                        y: -10 - Math.random() * 50,
+                                        w: 4 + Math.random() * 5,
+                                        h: 6 + Math.random() * 8,
+                                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                                        vx: (Math.random() - 0.5) * 4,
+                                        vy: 1.2 + Math.random() * 2,
+                                        rotation: Math.random() * 360,
+                                        rotationSpeed: (Math.random() - 0.5) * 10,
+                                        opacity: 1,
+                                        decay: 0.002 + Math.random() * 0.003
+                                    });
+                                }
+                                if (!this.animationId) this.animate();
+                            },
+                            animate() {
+                                if (!this.confettiCanvas) { this.animationId = null; return; }
+                                const ctx = this.confettiCanvas.getContext('2d');
+                                ctx.clearRect(0, 0, this.confettiCanvas.width, this.confettiCanvas.height);
+                                this.particles = this.particles.filter(p => p.opacity > 0.01 && p.y < this.confettiCanvas.height + 20);
+                                this.particles.forEach(p => {
+                                    p.x += p.vx;
+                                    p.y += p.vy;
+                                    p.vy += 0.04;
+                                    p.vx *= 0.99;
+                                    p.rotation += p.rotationSpeed;
+                                    p.opacity -= p.decay;
+                                    ctx.save();
+                                    ctx.globalAlpha = Math.max(0, p.opacity);
+                                    ctx.translate(p.x, p.y);
+                                    ctx.rotate(p.rotation * Math.PI / 180);
+                                    ctx.fillStyle = p.color;
+                                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                                    ctx.restore();
+                                });
+                                if (this.particles.length > 0) {
+                                    this.animationId = requestAnimationFrame(() => this.animate());
+                                } else {
+                                    this.animationId = null;
+                                }
+                            }
+                         }">
+                        <!-- Confetti Canvas -->
+                        <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
-                        <!-- Top Badge -->
-                        <div style="background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2);" class="inline-flex items-center gap-1.5 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest mb-4">
-                            👑 Peringkat 1 Bulan Ini
+                        <!-- Profile Photo (Square with rounded corners) -->
+                        <div class="relative w-24 h-24 shrink-0" style="z-index: 2;">
+                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.15);" class="w-full h-full rounded-xl object-cover border-2 bg-gray-50" />
                         </div>
 
-                        <!-- Profile Photo -->
-                        <div class="relative w-20 h-20 mx-auto mb-3">
-                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);" class="w-full h-full rounded-full object-cover border-2 shadow-lg bg-amber-100 flex items-center justify-center font-bold" />
-                        </div>
+                        <!-- Details (Right Column) -->
+                        <div class="flex-1 min-w-0" style="z-index: 2;">
+                            <div class="font-bold text-gray-900 dark:text-white flex items-center gap-1 mb-2 text-xs">
+                                <span>👑</span>
+                                <span>Peringkat 1 Bulan Ini</span>
+                            </div>
 
-                        <!-- Details -->
-                        <h4 style="color: #ffffff;" class="font-extrabold text-base tracking-tight truncate flex items-center justify-center gap-1.5 px-2">
-                            <span>🥇</span>
-                            <span>{{ $rank1Name }}</span>
-                        </h4>
-                        <p style="color: #fef08a;" class="text-[11px] font-bold mt-1.5">{{ $rank1->total_transactions }} Transaksi</p>
-
-                        <!-- Divider -->
-                        <div style="border-color: rgba(255, 255, 255, 0.15);" class="my-4 border-t mx-4"></div>
-
-                        <!-- Stats -->
-                        <div class="space-y-1">
-                            <p style="color: rgba(255, 255, 255, 0.7);" class="text-[9px] uppercase tracking-wider font-semibold">Total Kontribusi Penjualan</p>
-                            <p style="color: #ffffff;" class="font-black text-lg">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</p>
+                            <table class="w-full text-xs text-gray-700 dark:text-gray-300 border-collapse">
+                                <tbody>
+                                    <tr class="align-top">
+                                        <td class="text-gray-500 py-0.5 w-[100px] whitespace-nowrap">Nama</td>
+                                        <td class="text-gray-400 px-1 py-0.5">:</td>
+                                        <td class="font-bold text-gray-900 dark:text-white py-0.5 truncate max-w-[130px]" title="{{ $rank1Name }}">{{ $rank1Name }}</td>
+                                    </tr>
+                                    <tr class="align-top">
+                                        <td class="text-gray-500 py-0.5 whitespace-nowrap">Jumlah Transaksi</td>
+                                        <td class="text-gray-400 px-1 py-0.5">:</td>
+                                        <td class="font-bold text-gray-900 dark:text-white py-0.5">{{ $rank1->total_transactions }}</td>
+                                    </tr>
+                                    <tr class="align-top">
+                                        <td class="text-gray-500 py-0.5 whitespace-nowrap">Total kontribusi</td>
+                                        <td class="text-gray-400 px-1 py-0.5">:</td>
+                                        <td class="font-bold text-gray-900 dark:text-white py-0.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -227,13 +364,15 @@
 
             <div class="p-5">
                 <div class="space-y-3">
-                    @forelse($leaderboard->skip(1)->take(2) as $row)
+                    @forelse($leaderboard->skip(1)->take(3) as $row)
                         @php
                             $rank = $loop->index + 2;
                             $isRank2 = $rank === 2;
                             $isRank3 = $rank === 3;
                             $userName = $row->user->name ?? 'Kasir';
-                            $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
+                            $avatarUrl = $row->user->profile_photo_path
+                                ? asset('storage/' . $row->user->profile_photo_path)
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
                         @endphp
 
                         <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/20 border border-slate-100/50 dark:border-slate-800/50 rounded-xl transition-all duration-300 hover:translate-x-1">
@@ -282,9 +421,9 @@
             </div>
 
             <!-- View More Button -->
-            @if($leaderboard->count() > 3)
+            @if($leaderboard->count() > 4)
                 <div class="px-5 pb-5 pt-1 border-t border-gray-100 dark:border-gray-700">
-                    <button @click="showFullLeaderboard = true" class="w-full text-center text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center justify-center gap-1 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
+                    <button @click="$dispatch('open-leaderboard-modal')" class="w-full text-center text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center justify-center gap-1 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
                         Lihat Klasemen Lengkap
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -293,126 +432,132 @@
                 </div>
             @endif
 
-            <!-- Full Leaderboard Modal -->
-            <div x-show="showFullLeaderboard" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                <!-- Backdrop with fade transition -->
-                <div x-show="showFullLeaderboard"
-                     x-transition:enter="ease-out duration-300"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="ease-in duration-200"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0"
-                     class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
-                     @click="showFullLeaderboard = false"></div>
+        </div>
+    </div>
+</div>
 
-                <!-- Modal Wrapper -->
-                <div class="flex min-h-screen items-center justify-center p-4 text-center">
-                    <!-- Modal Content with scale/fade transition -->
-                    <div x-show="showFullLeaderboard"
-                         x-transition:enter="ease-out duration-300"
-                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                         x-transition:leave="ease-in duration-200"
-                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                         class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
-                        <!-- Modal Header -->
-                        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                                    <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="text-base font-extrabold text-gray-900 dark:text-gray-100">Klasemen Lengkap Staf</h3>
-                                    <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal">Kinerja Penjualan Kasir Bulan Ini</p>
-                                </div>
-                            </div>
-                            <button @click="showFullLeaderboard = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
+<!-- Full Leaderboard Modal -->
+<div x-data="{ open: false }"
+     @open-leaderboard-modal.window="open = true"
+     @close-leaderboard-modal.window="open = false"
+     class="relative z-[150]" x-cloak>
+    <!-- Backdrop with fade transition -->
+    <div x-show="open"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity z-[150]" 
+         @click="open = false" style="display: none;"></div>
 
-                        <!-- Modal Body -->
-                        <div class="p-6 max-h-[60vh] overflow-y-auto space-y-4">
-                            @foreach($leaderboard as $index => $row)
-                                @php
-                                    $rank = $index + 1;
-                                    $isRank1 = $rank === 1;
-                                    $isRank2 = $rank === 2;
-                                    $isRank3 = $rank === 3;
-                                    $userName = $row->user->name ?? 'Kasir';
-                                    
-                                    if ($isRank1) {
-                                        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=fef3c7&color=b45309&size=64&bold=true';
-                                    } else {
-                                        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
-                                    }
-                                @endphp
+    <!-- Modal Wrapper -->
+    <div x-show="open" style="display: none;" class="fixed inset-0 z-[160] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex min-h-screen items-center justify-center p-4 text-center">
+            <!-- Modal Content with scale/fade transition -->
+            <div x-show="open"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
+                 <!-- Modal Header -->
+                 <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
+                     <div class="flex items-center gap-3">
+                         <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                             <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                             </svg>
+                         </div>
+                         <div>
+                             <h3 class="text-sm font-bold text-gray-900 dark:text-white" id="modal-title">Klasemen Lengkap Staf</h3>
+                             <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal">Kinerja Penjualan Kasir Bulan Ini</p>
+                         </div>
+                     </div>
+                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                         </svg>
+                     </button>
+                 </div>
 
-                                <div @if($isRank1) style="background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 100%); border-color: #fde68a;" @endif
-                                     @class([
-                                    'flex items-center justify-between p-3.5 rounded-xl border transition-all duration-300',
-                                    'bg-slate-50/50 border-slate-100/50 dark:bg-slate-900/20 dark:border-slate-800/50' => !$isRank1,
-                                ])>
-                                    <div class="flex items-center gap-3">
-                                        <div class="flex items-center justify-center w-6 h-6 shrink-0">
-                                            @if($isRank1)
-                                                <span class="text-base" title="Juara 1">🥇</span>
-                                            @elseif($isRank2)
-                                                <span class="text-base" title="Juara 2">🥈</span>
-                                            @elseif($isRank3)
-                                                <span class="text-base" title="Juara 3">🥉</span>
-                                            @else
-                                                <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
-                                            @endif
-                                        </div>
+                 <!-- Modal Body (Scrollable List) -->
+                 <div class="p-6 max-h-[60vh] overflow-y-auto space-y-3">
+                     @foreach($leaderboard as $index => $row)
+                         @php
+                             $rank = $index + 1;
+                             $isRank1 = $rank === 1;
+                             $isRank2 = $rank === 2;
+                             $isRank3 = $rank === 3;
+                         @endphp
+                         <div @class([
+                             'flex items-center justify-between py-2.5 px-4 rounded-xl border transition-all duration-300',
+                             'bg-amber-50/60 border-amber-100/70 dark:bg-amber-950/10 dark:border-amber-900/30' => $isRank1,
+                             'bg-slate-50/50 border-slate-100/70 dark:bg-slate-900/20 dark:border-slate-800/50' => !$isRank1,
+                         ])>
+                             <div class="flex items-center gap-3.5">
+                                 <!-- Rank Badge -->
+                                 <div class="w-7 h-7 flex items-center justify-center shrink-0">
+                                     @if($isRank1)
+                                         <span class="text-lg">🥇</span>
+                                     @elseif($isRank2)
+                                         <span class="text-lg">🥈</span>
+                                     @elseif($isRank3)
+                                         <span class="text-lg">🥉</span>
+                                     @else
+                                         <span class="text-xs font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
+                                     @endif
+                                 </div>
 
-                                        <img src="{{ $avatarUrl }}" alt="{{ $userName }}" @class([
-                                            'w-9 h-9 rounded-full object-cover border shadow-sm shrink-0',
-                                            'border-amber-300' => $isRank1,
-                                            'border-slate-200 dark:border-slate-700' => !$isRank1,
-                                        ]) />
+                                 <!-- Avatar -->
+                                 <div class="relative shrink-0">
+                                     @if($row->user->profile_photo_path ?? null)
+                                         <img src="{{ asset('storage/' . $row->user->profile_photo_path) }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800">
+                                     @else
+                                         <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center text-xs font-extrabold text-indigo-600 dark:text-indigo-400 ring-2 ring-white dark:ring-gray-800">
+                                             {{ strtoupper(substr($row->user->name ?? 'K', 0, 2)) }}
+                                         </div>
+                                     @endif
+                                 </div>
 
-                                        <div class="min-w-0">
-                                            <h5 @if($isRank1) style="color: #78350f;" @endif
-                                                @class([
-                                                'font-bold text-xs truncate max-w-[150px]',
-                                                'text-gray-900 dark:text-gray-100' => !$isRank1,
-                                            ])>{{ $userName }}</h5>
-                                            <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
-                                                {{ $row->total_transactions }} Transaksi
-                                            </p>
-                                        </div>
-                                    </div>
+                                 <!-- Cashier Info -->
+                                 <div>
+                                     <h4 @class([
+                                         'text-xs font-bold text-gray-900 dark:text-white',
+                                         'text-amber-900 dark:text-amber-300' => $isRank1,
+                                     ])>{{ $row->user->name ?? 'Kasir' }}</h4>
+                                     <p class="text-[9px] text-gray-400 dark:text-gray-500 font-medium">{{ $row->total_transactions }} Transaksi</p>
+                                 </div>
+                             </div>
 
-                                    <div class="text-right">
-                                        <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
-                                        <p @if($isRank1) style="color: #b45309;" @endif
-                                           @class([
-                                            'font-black text-xs',
-                                            'text-indigo-600 dark:text-indigo-400' => !$isRank1,
-                                        ])>
-                                            Rp {{ number_format($row->total_sales, 0, ',', '.') }}
-                                        </p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                             <!-- Turnover Contribution -->
+                             <div class="text-right">
+                                 <p class="text-[8px] text-gray-400 dark:text-gray-500 font-semibold tracking-wider uppercase">Kontribusi</p>
+                                 <p @if($isRank1) style="color: #b45309;" @endif
+                                    @class([
+                                     'font-black text-xs',
+                                     'text-indigo-600 dark:text-indigo-400' => !$isRank1,
+                                 ])>
+                                     Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                 </p>
+                             </div>
+                         </div>
+                     @endforeach
+                 </div>
 
-                        <!-- Modal Footer -->
-                        <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
-                            <button @click="showFullLeaderboard = false" class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl transition-all">
-                                Tutup
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                 <!-- Modal Footer -->
+                 <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
+                     <button @click="open = false" class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl transition-all">
+                         Tutup
+                     </button>
+                 </div>
             </div>
         </div>
     </div>
+    @endcan
+    </div>
+    @endif
 </div>

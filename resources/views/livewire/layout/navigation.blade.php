@@ -563,22 +563,32 @@ new class extends Component
                 <!-- Trigger Button -->
                 <button @click="open = !open" class="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left focus:outline-none">
                     <!-- Initials / Avatar Circle -->
-                    @if (auth()->user()->profile_photo_path)
-                        <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover ring-1 ring-gray-205 dark:ring-gray-800 shrink-0">
-                    @else
-                        <div class="w-10 h-10 rounded-full bg-blue-950 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                            @php
-                                $words = explode(' ', auth()->user()->name);
-                                $initials = '';
-                                if (count($words) >= 2) {
-                                    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
-                                } else {
-                                    $initials = strtoupper(substr(auth()->user()->name, 0, 2));
-                                }
-                            @endphp
-                            {{ $initials }}
-                        </div>
-                    @endif
+                    <div class="relative shrink-0">
+                        @if (auth()->user()->profile_photo_path)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover ring-1 ring-gray-205 dark:ring-gray-800 shrink-0">
+                        @else
+                            <div class="w-10 h-10 rounded-full bg-blue-950 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                                @php
+                                    $words = explode(' ', auth()->user()->name);
+                                    $initials = '';
+                                    if (count($words) >= 2) {
+                                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                    } else {
+                                        $initials = strtoupper(substr(auth()->user()->name, 0, 2));
+                                    }
+                                @endphp
+                                {{ $initials }}
+                            </div>
+                        @endif
+
+                        @if(session()->has('impersonator_id'))
+                            <!-- Pulsing amber dot for active impersonation -->
+                            <span class="absolute bottom-0 right-0 flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-600 ring-2 ring-white dark:ring-gray-900"></span>
+                            </span>
+                        @endif
+                    </div>
                     
                     <!-- User Details -->
                     <div class="hidden sm:block">
@@ -612,10 +622,17 @@ new class extends Component
 
                         <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
 
-                        <button wire:click="logout" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors text-left">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                            Keluar
-                        </button>
+                        @if(session()->has('impersonator_id'))
+                            <a href="{{ route('admin.leave-impersonation') }}" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-lg transition-colors text-left">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                Keluar Impersonate
+                            </a>
+                        @else
+                            <button wire:click="logout" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors text-left">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                Keluar
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>

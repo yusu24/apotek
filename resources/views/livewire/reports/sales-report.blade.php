@@ -29,18 +29,18 @@
             </h2>
         </div>
         <div class="flex gap-2">
-            <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                </svg>
-                <span>Import Omset</span>
-            </button>
             <a href="{{ route('reports.sales-chart') }}" wire:navigate class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
                 <span>Lihat Grafik</span>
             </a>
+            <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                <span>Import Omset</span>
+            </button>
             <a href="{{ route('excel.sales-report', ['startDate' => $startDate, 'endDate' => $endDate, 'paymentMethod' => $paymentMethod, 'search' => $search]) }}" target="_blank" class="btn btn-export-excel">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -134,7 +134,7 @@
                         </span>
                         <input wire:model.live.debounce.300ms="search" 
                             type="text" placeholder="No Invois/Kasir..." 
-                            class="w-full pl-10 pr-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                            class="w-full pl-10 pr-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 font-medium focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                     </div>
                 </div>
 
@@ -373,43 +373,61 @@
 
                 <!-- Payment Summary -->
                 <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-700">
-                    <div class="flex flex-col gap-1.5 max-w-xs ml-auto text-sm">
-                        <div class="flex justify-between text-gray-600 dark:text-gray-400">
-                            <span>Subtotal</span>
-                            <span>Rp {{ number_format($selectedSale['total_amount'], 0, ',', '.') }}</span>
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+                        <!-- Left Side: QRIS Proof of Payment -->
+                        <div class="w-full md:w-auto">
+                            @if(!empty($selectedSale['payment_proof']))
+                                <div class="space-y-1.5">
+                                    <span class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Bukti Pembayaran QRIS</span>
+                                    <a href="{{ asset('storage/' . $selectedSale['payment_proof']) }}" target="_blank" class="block group relative w-36 h-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                        <img src="{{ asset('storage/' . $selectedSale['payment_proof']) }}" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
+                                            <span class="text-white text-[10px] font-bold">🔍 Lihat Detail</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
-                        @if(($selectedSale['discount'] ?? 0) > 0)
-                        <div class="flex justify-between text-rose-500">
-                            <span>Diskon</span>
-                            <span>-Rp {{ number_format($selectedSale['discount'], 0, ',', '.') }}</span>
+
+                        <!-- Right Side: Totals -->
+                        <div class="flex flex-col gap-1.5 w-full md:max-w-xs text-sm ml-auto">
+                            <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                                <span>Subtotal</span>
+                                <span>Rp {{ number_format($selectedSale['total_amount'], 0, ',', '.') }}</span>
+                            </div>
+                            @if(($selectedSale['discount'] ?? 0) > 0)
+                            <div class="flex justify-between text-rose-500">
+                                <span>Diskon</span>
+                                <span>-Rp {{ number_format($selectedSale['discount'], 0, ',', '.') }}</span>
+                            </div>
+                            @endif
+                            @if(($selectedSale['tax'] ?? 0) > 0)
+                            <div class="flex justify-between text-gray-500">
+                                <span>PPN</span>
+                                <span>Rp {{ number_format($selectedSale['tax'], 0, ',', '.') }}</span>
+                            </div>
+                            @endif
+                            @if(($selectedSale['service_charge_amount'] ?? 0) > 0)
+                            <div class="flex justify-between text-gray-500">
+                                <span>Service Charge</span>
+                                <span>Rp {{ number_format($selectedSale['service_charge_amount'], 0, ',', '.') }}</span>
+                            </div>
+                            @endif
+                            <div class="flex justify-between font-bold text-base text-gray-900 dark:text-white pt-2 border-t border-gray-200 dark:border-gray-600">
+                                <span>Grand Total</span>
+                                <span>Rp {{ number_format($selectedSale['grand_total'], 0, ',', '.') }}</span>
+                            </div>
+                            @if($selectedSale['payment_method'] === 'cash' && ($selectedSale['cash_amount'] ?? 0) > 0)
+                            <div class="flex justify-between text-gray-500 text-xs">
+                                <span>Bayar Tunai</span>
+                                <span>Rp {{ number_format($selectedSale['cash_amount'], 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between text-emerald-600 text-xs font-medium">
+                                <span>Kembalian</span>
+                                <span>Rp {{ number_format($selectedSale['change_amount'], 0, ',', '.') }}</span>
+                            </div>
+                            @endif
                         </div>
-                        @endif
-                        @if(($selectedSale['tax'] ?? 0) > 0)
-                        <div class="flex justify-between text-gray-500">
-                            <span>PPN</span>
-                            <span>Rp {{ number_format($selectedSale['tax'], 0, ',', '.') }}</span>
-                        </div>
-                        @endif
-                        @if(($selectedSale['service_charge_amount'] ?? 0) > 0)
-                        <div class="flex justify-between text-gray-500">
-                            <span>Service Charge</span>
-                            <span>Rp {{ number_format($selectedSale['service_charge_amount'], 0, ',', '.') }}</span>
-                        </div>
-                        @endif
-                        <div class="flex justify-between font-bold text-base text-gray-900 dark:text-white pt-2 border-t border-gray-200 dark:border-gray-600">
-                            <span>Grand Total</span>
-                            <span>Rp {{ number_format($selectedSale['grand_total'], 0, ',', '.') }}</span>
-                        </div>
-                        @if($selectedSale['payment_method'] === 'cash' && ($selectedSale['cash_amount'] ?? 0) > 0)
-                        <div class="flex justify-between text-gray-500 text-xs">
-                            <span>Bayar Tunai</span>
-                            <span>Rp {{ number_format($selectedSale['cash_amount'], 0, ',', '.') }}</span>
-                        </div>
-                        <div class="flex justify-between text-emerald-600 text-xs font-medium">
-                            <span>Kembalian</span>
-                            <span>Rp {{ number_format($selectedSale['change_amount'], 0, ',', '.') }}</span>
-                        </div>
-                        @endif
                     </div>
                 </div>
 

@@ -10,7 +10,16 @@ use Spatie\Permission\Models\Role;
 uses(RefreshDatabase::class);
 
 test('sales leaderboard component can be mounted', function () {
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard today sales']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard sales trend']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard staff leaderboard']);
+
     $user = User::factory()->create();
+    $user->givePermissionTo([
+        'view dashboard today sales',
+        'view dashboard sales trend',
+        'view dashboard staff leaderboard',
+    ]);
     $this->actingAs($user);
 
     Livewire::test(SalesLeaderboard::class)
@@ -18,11 +27,21 @@ test('sales leaderboard component can be mounted', function () {
 });
 
 test('sales leaderboard displays turnover, transactions and ranks cashiers correctly', function () {
+    // Create permissions
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard today sales']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard sales trend']);
+    \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'view dashboard staff leaderboard']);
+
     // Create roles
     $cashierRole = Role::create(['name' => 'Kasir']);
 
     $cashier1 = User::factory()->create(['name' => 'Cashier A']);
     $cashier1->assignRole($cashierRole);
+    $cashier1->givePermissionTo([
+        'view dashboard today sales',
+        'view dashboard sales trend',
+        'view dashboard staff leaderboard',
+    ]);
 
     $cashier2 = User::factory()->create(['name' => 'Cashier B']);
     $cashier2->assignRole($cashierRole);
@@ -79,8 +98,8 @@ test('sales leaderboard displays turnover, transactions and ranks cashiers corre
     $this->actingAs($cashier1);
 
     Livewire::test(SalesLeaderboard::class)
-        ->assertViewHas('monthlyTurnover', 225000)
-        ->assertViewHas('monthlyTransactions', 3)
+        ->assertViewHas('dailyTurnover', 225000)
+        ->assertViewHas('dailyTransactions', 3)
         ->assertSee('Cashier A')
         ->assertSee('Cashier B')
         ->assertSee('Rp 150.000')

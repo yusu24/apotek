@@ -30,9 +30,9 @@
 
             <div class="flex gap-2 w-full md:w-auto justify-end">
                 <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
-                    class="btn btn-primary" title="Buat Penerimaan">
+                    class="btn btn-primary" title="Penerimaan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline">Buat Penerimaan</span>
+                    <span class="hidden sm:inline">Penerimaan</span>
                 </a>
             </div>
         </div>
@@ -152,7 +152,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center text-gray-400 text-xs italic">Belum ada data penerimaan barang.</td>
+                            <td colspan="7" class="px-6 py-8 text-center text-gray-400 text-xs italic">Belum ada data penerimaan barang.</td>
                         </tr>
                     @endforelse
                 </tbody>

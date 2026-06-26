@@ -249,7 +249,7 @@
                         : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=f1f5f9&color=1e293b&size=128&bold=true';
                 @endphp
                 <div class="px-5 pt-4">
-                    <div style="background: #ffffff; color: #111827; border: 1px solid #e5e7eb;" class="rounded-2xl p-4 shadow-md relative overflow-hidden group flex items-center gap-4 text-left"
+                    <div style="background: #ffffff; color: #111827; border: 1px solid #e5e7eb;" class="rounded-2xl p-4 shadow-md relative overflow-hidden group flex flex-col md:flex-row items-center md:items-center gap-3 md:gap-4 text-left"
                          x-data="{
                             confettiCanvas: null,
                             particles: [],
@@ -327,13 +327,13 @@
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
                         <!-- Profile Photo (Square with rounded corners) -->
-                        <div class="relative w-24 h-24 shrink-0" style="z-index: 2;">
+                        <div class="relative w-28 h-28 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0" style="z-index: 2;">
                             <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.15);" class="w-full h-full rounded-xl object-cover border-2 bg-gray-50" />
                         </div>
 
                         <!-- Details (Right Column) -->
-                        <div class="flex-1 min-w-0" style="z-index: 2;">
-                            <div class="font-bold text-gray-900 dark:text-white flex items-center gap-1 mb-2 text-xs">
+                        <div class="flex-1 min-w-0 w-full" style="z-index: 2;">
+                            <div class="font-bold text-gray-900 dark:text-white flex items-center justify-center md:justify-start gap-1 mb-2 text-xs">
                                 <span>👑</span>
                                 <span>Peringkat 1 Bulan Ini</span>
                             </div>

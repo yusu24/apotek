@@ -104,11 +104,81 @@ class OmsetImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             'notes' => 'Imported historical turnover/omset',
         ]);
 
-        // Post to journal
-        $accountingService = new \App\Services\AccountingService();
-        $accountingService->postSaleJournal($sale->id);
+        // Post historical omset journal (TIDAK menyentuh akun Persediaan)
+        // Karena data historis adalah ringkasan omset, bukan deduct dari stok real
+        $this->postHistoricalOmsetJournal($sale, $omset, $hpp);
 
         $this->successCount++;
+    }
+
+    /**
+     * Jurnal khusus untuk omset historis.
+     * Struktur:
+     *   Dr. Kas                    [omset]
+     *      Cr. Penjualan Obat          [omset]
+     *   Dr. HPP/COGS               [hpp]  (jika ada)
+     *      Cr. Modal / Saldo Awal      [hpp]  ← BUKAN Persediaan, supaya akun 1-1400 tidak terpengaruh
+     */
+    private function postHistoricalOmsetJournal(\App\Models\Sale $sale, float $omset, float $hpp): void
+    {
+        if ($omset <= 0) return;
+
+        $kasAccount       = \App\Models\Account::where('code', '1-1100')->first(); // Kas
+        $penjualanAccount = \App\Models\Account::where('code', '4-1000')->first(); // Penjualan
+        $hppAccount       = \App\Models\Account::where('code', '5-1000')->first(); // HPP/COGS
+        $modalAccount     = \App\Models\Account::where('code', '3-1000')->first(); // Modal / Ekuitas
+
+        if (!$kasAccount || !$penjualanAccount) {
+            return; // Tidak bisa posting tanpa akun dasar
+        }
+
+        $entry = \App\Models\JournalEntry::create([
+            'entry_number' => \App\Models\JournalEntry::generateEntryNumber(),
+            'date'         => $sale->date,
+            'description'  => 'Penjualan - ' . $sale->invoice_no,
+            'source'       => 'sale',
+            'source_id'    => $sale->id,
+            'user_id'      => $sale->user_id,
+        ]);
+
+        // Dr. Kas
+        \App\Models\JournalEntryLine::create([
+            'journal_entry_id' => $entry->id,
+            'account_id'       => $kasAccount->id,
+            'debit'            => $omset,
+            'credit'           => 0,
+            'notes'            => 'Omset Historis - ' . $sale->invoice_no,
+        ]);
+
+        // Cr. Penjualan
+        \App\Models\JournalEntryLine::create([
+            'journal_entry_id' => $entry->id,
+            'account_id'       => $penjualanAccount->id,
+            'debit'            => 0,
+            'credit'           => $omset,
+            'notes'            => 'Omset Historis - ' . $sale->invoice_no,
+        ]);
+
+        // Jika ada HPP: Dr. HPP → Cr. Modal (BUKAN Persediaan)
+        if ($hpp > 0 && $hppAccount && $modalAccount) {
+            \App\Models\JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id'       => $hppAccount->id,
+                'debit'            => $hpp,
+                'credit'           => 0,
+                'notes'            => 'HPP Historis - ' . $sale->invoice_no,
+            ]);
+
+            \App\Models\JournalEntryLine::create([
+                'journal_entry_id' => $entry->id,
+                'account_id'       => $modalAccount->id,
+                'debit'            => 0,
+                'credit'           => $hpp,
+                'notes'            => 'Penyesuaian Modal (HPP Historis) - ' . $sale->invoice_no,
+            ]);
+        }
+
+        $entry->post();
     }
 
     public function rules(): array

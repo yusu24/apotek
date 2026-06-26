@@ -27,7 +27,11 @@ class ReceiptMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $senderEmail = \App\Models\Setting::get('store_email');
+        $senderName = \App\Models\Setting::get('store_name', config('mail.from.name'));
+
         return new Envelope(
+            from: new \Illuminate\Mail\Mailables\Address($senderEmail ?? config('mail.from.address'), $senderName),
             subject: 'Struk Pembelian - ' . $this->sale->invoice_no,
         );
     }

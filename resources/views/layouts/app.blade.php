@@ -372,6 +372,11 @@
                     padding-bottom: 0 !important;
                 }
             }
+
+            /* Explicit padding top for content wrapper to match h-12 navbar height and avoid cutoff */
+            .main-content-wrapper.has-navbar {
+                padding-top: 3rem !important;
+            }
         </style>
     <script>
         // Apply sidebar state immediately to prevent layout bounce

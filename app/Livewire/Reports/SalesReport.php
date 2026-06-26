@@ -23,6 +23,8 @@ class SalesReport extends Component
     // Modal state
     public $showDetailModal = false;
     public $selectedSale = null;
+    public $showReceiptModal = false;
+    public $completedSaleId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -83,6 +85,19 @@ class SalesReport extends Component
         $this->showDetailModal = false;
         $this->selectedSale = null;
     }
+
+    public function openReceiptModal($saleId)
+    {
+        $this->completedSaleId = $saleId;
+        $this->showReceiptModal = true;
+    }
+
+    public function closeReceiptModal()
+    {
+        $this->showReceiptModal = false;
+        $this->completedSaleId = null;
+    }
+
 
     public function render()
     {

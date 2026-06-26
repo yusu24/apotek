@@ -79,6 +79,34 @@
             </div>
         </div>
 
+        <!-- Filters Bar -->
+        <div class="p-4 border-b bg-gray-50 flex flex-row items-center gap-4">
+            <!-- Per Page Select -->
+            <div class="flex flex-col shrink-0">
+                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
+                <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 content-center pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+
+            <!-- Search Input -->
+            <div class="flex-1 max-w-xs">
+                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input wire:model.live.debounce.300ms="search" 
+                        type="text" placeholder="Cari {{ $type === 'ap' ? 'Supplier / No. Surat Jalan' : 'Customer / No. Invoice' }}..." 
+                        class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2 font-medium focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                </div>
+            </div>
+        </div>
+
         {{-- Table --}}
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -102,22 +130,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @php
-                        $displayData = [];
-                        if ($activeTab === 'all') {
-                            $displayData = array_merge(
-                                $reportData['45+'] ?? [], 
-                                $reportData['31-45'] ?? [], 
-                                $reportData['16-30'] ?? [], 
-                                $reportData['8-15'] ?? [],
-                                $reportData['0-7'] ?? []
-                            );
-                        } else {
-                            $displayData = $reportData[$activeTab] ?? [];
-                        }
-                    @endphp
-
-                    @forelse($displayData as $item)
+                    @forelse($paginatedItems as $item)
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
                             {{ $type === 'ap' ? ($item['supplier'] ?? '-') : ($item['customer'] ?? '-') }}
@@ -190,7 +203,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="{{ $type === 'ar' ? 8 : 7 }}" class="px-6 py-10 text-center text-gray-500 italic">
+                        <td colspan="{{ $type === 'ar' ? 9 : 8 }}" class="px-6 py-10 text-center text-gray-500 italic">
                             <span class="text-xs italic text-gray-400">Tidak ada data {{ $type === 'ap' ? 'hutang' : 'piutang' }} pada kategori ini.</span>
 
                         </td>
@@ -199,6 +212,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if($paginatedItems->hasPages())
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            @include('components.custom-pagination', ['items' => $paginatedItems])
+        </div>
+        @endif
     </div>
     @endif
 

@@ -13,6 +13,8 @@
                 this.instance = flatpickr(this.$refs.input, {
                     dateFormat: 'Y-m-d',
                     defaultDate: this.value,
+                    disableMobile: true,
+                    allowInput: false,
                     onChange: (selectedDates, dateStr, instance) => {
                         if (self._destroyed || self._isProgrammatic) return;
                         self.value = dateStr;

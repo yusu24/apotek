@@ -170,7 +170,7 @@ new class extends Component
                 $isStockActive = (request()->routeIs('inventory.*') || request()->routeIs('procurement.*')) && !request()->routeIs('inventory.returns.*');
             @endphp
             <div x-data="{ expanded: {{ $isStockActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" x-bind:class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                         <span class="truncate" x-bind:class="{'xl:hidden': $store.sidebar.collapsed}">Stok & Pengadaan</span>
@@ -179,21 +179,21 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view stock')
-                    <a href="{{ route('inventory.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('inventory.index') || (request()->routeIs('inventory.*') && !request()->routeIs('inventory.returns.*')) ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('inventory.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('inventory.index') || (request()->routeIs('inventory.*') && !request()->routeIs('inventory.returns.*')) ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Stok & Opname</span>
                     </a>
                     @endcan
 
                     @can('view purchase orders')
-                    <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('procurement.purchase-orders.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('procurement.purchase-orders.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pesanan Pembelian (PO)</span>
                     </a>
                     @endcan
 
                     @can('view goods receipts')
-                    <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('procurement.goods-receipts.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('procurement.goods-receipts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('procurement.goods-receipts.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Penerimaan Pesanan</span>
                     </a>
@@ -205,7 +205,7 @@ new class extends Component
             <!-- Returns Group -->
             @canany(['manage sales returns', 'manage purchase returns'])
             <div x-data="{ expanded: {{ request()->routeIs('inventory.returns.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('inventory.returns.*') ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('inventory.returns.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Retur Barang</span>
@@ -214,14 +214,14 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('manage sales returns')
-                    <a href="{{ route('inventory.returns.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('inventory.returns.sales') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('inventory.returns.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('inventory.returns.sales') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Retur Penjualan</span>
                     </a>
                     @endcan
 
                     @can('manage purchase returns')
-                    <a href="{{ route('inventory.returns.purchase') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('inventory.returns.purchase') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('inventory.returns.purchase') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('inventory.returns.purchase') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7l4 4m0 0l4-4m-4 4v8"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Retur Pembelian</span>
                     </a>
@@ -233,7 +233,7 @@ new class extends Component
             <!-- Products Group (Master Data) -->
             @canany(['view products', 'manage categories', 'manage units', 'manage product units', 'manage suppliers', 'manage customers'])
             <div x-data="{ expanded: {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Data Master</span>
@@ -242,42 +242,42 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view products')
-                    <a href="{{ route('products.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('products.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('products.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('products.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Obat / Produk</span>
                     </a>
                     @endcan
                     
                     @can('manage categories')
-                    <a href="{{ route('master.categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('master.categories') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('master.categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('master.categories') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kategori Produk</span>
                     </a>
                     @endcan
 
                     @can('manage units')
-                    <a href="{{ route('master.units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('master.units') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('master.units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('master.units') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Master Satuan</span>
                     </a>
                     @endcan
 
                     @can('manage product units')
-                    <a href="{{ route('master.product-units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('master.product-units') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('master.product-units') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('master.product-units') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Konversi Satuan</span>
                     </a>
                     @endcan
 
                     @can('manage suppliers')
-                    <a href="{{ route('master.suppliers') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('master.suppliers') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('master.suppliers') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('master.suppliers') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Supplier</span>
                     </a>
                     @endcan
 
                     @can('manage customers')
-                    <a href="{{ route('master.customers') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('master.customers') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('master.customers') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('master.customers') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pelanggan</span>
                     </a>
@@ -301,7 +301,7 @@ new class extends Component
                                  ]);
             @endphp
             <div x-data="{ expanded: {{ $isFinanceReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceReportActive ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceReportActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Keuangan</span>
@@ -310,49 +310,49 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view trial balance')
-                    <a href="{{ route('finance.trial-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.trial-balance') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.trial-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.trial-balance') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Neraca Saldo Awal</span>
                     </a>
                     @endcan
 
                     @can('view balance sheet')
-                    <a href="{{ route('finance.balance-sheet') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.balance-sheet') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.balance-sheet') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.balance-sheet') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Neraca (Standar)</span>
                     </a>
                     @endcan
 
                     @can('view profit loss')
-                    <a href="{{ route('finance.profit-loss') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.profit-loss') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.profit-loss') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.profit-loss') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Laba Rugi</span>
                     </a>
                     @endcan
 
                     @can('view income statement')
-                    <a href="{{ route('finance.cash-flow') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.cash-flow') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.cash-flow') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.cash-flow') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Arus Kas</span>
                     </a>
                     @endcan
 
                     @can('view general ledger')
-                    <a href="{{ route('accounting.ledger') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.ledger') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('accounting.ledger') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('accounting.ledger') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Buku Besar</span>
                     </a>
                     @endcan
 
                     @can('view ppn report')
-                    <a href="{{ route('finance.ppn-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.ppn-report') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.ppn-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.ppn-report') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1-0 .5.5 0 011 0zm5 5a.5.5 0 11-1-0 .5.5 0 011 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan PPN</span>
                     </a>
                     @endcan
 
                     @can('view ap aging report')
-                    <a href="{{ route('finance.aging-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.aging-report') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.aging-report') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.aging-report') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Hutang & Piutang</span>
                     </a>
@@ -367,7 +367,7 @@ new class extends Component
                 $isOperationalReportActive = request()->routeIs('reports.*') && !request()->routeIs(['finance.*', 'accounting.*']);
             @endphp
             <div x-data="{ expanded: {{ $isOperationalReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ $isOperationalReportActive ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isOperationalReportActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Operasional</span>
@@ -376,28 +376,28 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view stock')
-                    <a href="{{ route('reports.stock') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('reports.stock') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('reports.stock') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.stock') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Stok</span>
                     </a>
                     @endcan
 
                     @can('view sales reports')
-                    <a href="{{ route('reports.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('reports.sales') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('reports.sales') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.sales') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Penjualan</span>
                     </a>
                     @endcan
 
                     @can('view stock movements')
-                    <a href="{{ route('reports.transaction-history') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('reports.transaction-history') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('reports.transaction-history') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.transaction-history') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Riwayat Transaksi Produk</span>
                     </a>
                     @endcan
 
                     @can('view product margin report')
-                    <a href="{{ route('reports.product-margin') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('reports.product-margin') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('reports.product-margin') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.product-margin') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Margin Produk</span>
                     </a>
@@ -419,7 +419,7 @@ new class extends Component
                                    ]);
             @endphp
             <div x-data="{ expanded: {{ $isFinanceActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Keuangan & Administrasi</span>
@@ -428,42 +428,42 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('view accounts')
-                    <a href="{{ route('accounting.accounts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.accounts.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('accounting.accounts.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('accounting.accounts.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Daftar Akun</span>
                     </a>
                     @endcan
 
                     @canany(['edit opening balances', 'view opening balances', 'lock opening balances', 'unlock opening balances'])
-                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.opening-balance') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.opening-balance') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Neraca Saldo Awal</span>
                     </a>
                     @endcanany
 
                     @can('view journals')
-                    <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('accounting.journals.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('accounting.journals.*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2-2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Jurnal Umum</span>
                     </a>
                     @endcan
 
                     @can('view expenses')
-                    <a href="{{ route('finance.expenses') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.expenses') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.expenses') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.expenses') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengeluaran</span>
                     </a>
                     @endcan
 
                     @can('manage expense categories')
-                    <a href="{{ route('finance.expense-categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.expense-categories') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.expense-categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.expense-categories') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kategori Pengeluaran</span>
                     </a>
                     @endcan
 
                     @can('manage finance')
-                    <a href="{{ route('finance.assets') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('finance.assets') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('finance.assets') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.assets') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Manajemen Aset Tetap</span>
                     </a>
@@ -474,7 +474,7 @@ new class extends Component
 
             @canany(['manage settings', 'manage pos settings', 'manage users', 'view activity logs', 'manage backups', 'view online users', 'view notifications'])
             <div x-data="{ expanded: {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'text-white' : 'text-white' }}">
+                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengaturan Sistem</span>
@@ -483,30 +483,30 @@ new class extends Component
                 </button>
                 <div x-show="expanded" class="mt-1 space-y-1 pl-3" x-collapse>
                     @can('manage settings')
-                    <a href="{{ route('settings.store') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('settings.store') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('settings.store') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('settings.store') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Identitas Toko</span>
                     </a>
                     @endcan
 
                     @can('manage pos settings')
-                    <a href="{{ route('settings.pos') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('settings.pos') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('settings.pos') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('settings.pos') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengaturan Kasir</span>
                     </a>
                     @endcan
                     
                     @can('manage users')
-                    <a href="{{ route('admin.users.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('admin.users*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('admin.users.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('admin.users*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kelola User</span>
                     </a>
-                    <a href="{{ route('admin.roles.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('admin.roles*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('admin.roles.index') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('admin.roles*') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kelola Jabatan</span>
                     </a>
                     @can('manage backups')
-                    <a href="{{ route('admin.backups') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('admin.backups') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('admin.backups') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('admin.backups') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Backup Data</span>
                     </a>
@@ -515,7 +515,7 @@ new class extends Component
                     @endcan
 
                     @can('view activity logs')
-                    <a href="{{ route('admin.activity-log') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('admin.activity-log') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                    <a href="{{ route('admin.activity-log') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('admin.activity-log') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Riwayat Aktivitas</span>
                     </a>

@@ -262,7 +262,9 @@ class GoodsReceiptForm extends Component
         if (str_starts_with($name, 'items.')) {
             $parts = explode('.', $name);
             $key = $parts[1] ?? null;
-            if ($key && isset($this->items[$key]) && empty($this->items[$key]['product_id'])) {
+            // Only remove if the key exists AND it has no 'product_id' key at all
+            // (truly ghost/auto-vivified entry), not if product_id is just empty
+            if ($key && isset($this->items[$key]) && !array_key_exists('product_id', $this->items[$key])) {
                 unset($this->items[$key]);
                 return;
             }
@@ -652,10 +654,11 @@ class GoodsReceiptForm extends Component
 
     public function render()
     {
-        // Safety net: filter out ghost entries (items without product_id)
-        // These can be created by stale @entangle write-backs from deleted rows
+        // Safety net: filter out ghost entries (items without the 'product_id' key at all)
+        // These can be created by stale @entangle write-backs from deleted rows.
+        // We do NOT filter items with empty product_id, as users may be in the process of selecting.
         $this->items = array_filter($this->items, function($item) {
-            return !empty($item['product_id']);
+            return array_key_exists('product_id', $item);
         });
 
         return view('livewire.procurement.goods-receipt-form', [

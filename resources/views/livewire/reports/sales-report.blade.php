@@ -209,9 +209,9 @@
                                             <button wire:click="viewSale({{ $sale->id }})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Lihat Detail">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                             </button>
-                                            <a href="{{ route('pos.receipt', $sale->id) }}" target="_blank" class="text-gray-500 hover:text-gray-700 transition-colors" title="Print Struk">
+                                            <button type="button" wire:click="openReceiptModal({{ $sale->id }})" class="text-gray-500 hover:text-gray-700 transition-colors" title="Print Struk">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -433,10 +433,10 @@
 
                 <!-- Modal Footer -->
                 <div class="px-6 py-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                    <a href="{{ route('pos.receipt', $selectedSale['id']) }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1.5 transition-colors">
+                    <button type="button" wire:click="openReceiptModal({{ $selectedSale['id'] }})" class="text-sm text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1.5 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         Print Struk
-                    </a>
+                    </button>
                     <button wire:click="closeDetail" class="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                         Tutup
                     </button>
@@ -499,4 +499,81 @@
             </div>
         </div>
     </div>
+
+    <!-- RECEIPT MODAL -->
+    @if($showReceiptModal && $completedSaleId)
+    @php
+        $posPaperSize = \App\Models\Setting::get('pos_paper_size', '58mm');
+        // Use inline styles so Tailwind JIT does not purge them
+        if ($posPaperSize === 'A4') {
+            $modalWidth  = 'max-width: 850px;';
+            $modalHeight = 'height: 85vh;';
+        } elseif ($posPaperSize === '80mm') {
+            $modalWidth  = 'max-width: 380px;';
+            $modalHeight = 'height: 70vh;';
+        } else {
+            // 58mm default
+            $modalWidth  = 'max-width: 310px;';
+            $modalHeight = 'height: 70vh;';
+        }
+    @endphp
+    <div class="fixed inset-0 z-[110] overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen p-4 text-center sm:p-0">
+             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[109]" wire:click="closeReceiptModal"></div>
+
+             <div class="relative bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all my-8 w-full z-[111] flex flex-col"
+                  style="{{ $modalWidth }} {{ $modalHeight }}">
+                <!-- Modal Header -->
+                <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900">Struk Pembelian</h3>
+                        <p class="text-[10px] text-green-600 font-semibold mt-0.5">✓ Salinan Struk</p>
+                    </div>
+                    <button type="button" wire:click="closeReceiptModal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <!-- Modal Body (Iframe) -->
+                <div class="flex-1 overflow-hidden bg-gray-50">
+                    <iframe id="receipt-iframe" 
+                            src="{{ route('pos.receipt', ['id' => $completedSaleId]) }}?autoprint=false" 
+                            style="width: 100%; height: 100%; border: 0; display: block;">
+                    </iframe>
+                </div>
+                
+                <!-- Modal Footer: 2 buttons only -->
+                <div class="px-4 py-3 border-t border-gray-100 flex gap-2 bg-gray-50 shrink-0">
+                    <button type="button" onclick="printReceiptIframe()" 
+                        class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        Cetak
+                    </button>
+                    <button type="button" wire:click="closeReceiptModal" 
+                        class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all text-sm">
+                        Kembali
+                    </button>
+                </div>
+             </div>
+        </div>
+    </div>
+    @endif
+
+    <script>
+        function printReceiptIframe() {
+            const iframe = document.getElementById('receipt-iframe');
+            if (iframe) {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && @this.showReceiptModal) {
+                event.preventDefault();
+                @this.closeReceiptModal();
+            }
+        });
+    </script>
 </div>
+

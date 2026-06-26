@@ -3,72 +3,82 @@
 namespace App\Livewire\Reports;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Services\AccountingService;
 
 class AgingReport extends Component
 {
-    public $reportData = null;
+    use WithPagination;
+
     public $activeTab = 'all'; // all, 0-7, 8-15, 16-30, 31-45, 45+
     public $type = 'ap'; // ap (Hutang), ar (Piutang)
     public $showPaid = false; // Toggle to show paid records
+    public $search = '';
+    public $perPage = 10;
 
     // Payment Modal Properties
     public $showPaymentModal = false;
     public $selectedItemId = null; // Mixed use for Receivable or GoodsReceipt
     public $paymentAmount = 0;
     public $paymentMethod = 'cash';
-    public $bankAccountId = null; // New Property
-    public $paymentDate = ''; // New Property
+    public $bankAccountId = null;
+    public $paymentDate = '';
     public $paymentNotes = '';
     public $maxPaymentAmount = 0;
     public $selectedEntityName = '';
 
-    public $accounts = []; // New Property
+    public $accounts = [];
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'activeTab' => ['except' => 'all'],
+        'type' => ['except' => 'ap'],
+        'showPaid' => ['except' => false],
+    ];
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingActiveTab()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingType()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingShowPaid()
+    {
+        $this->resetPage();
+    }
 
     public function mount()
     {
-        if (!auth()->user()->can('view ap aging report')) { // Use same permission for now
+        if (!auth()->user()->can('view ap aging report')) {
             abort(403, 'Unauthorized');
         }
 
         $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get();
-        $this->generateReport();
     }
 
     public function setType($type)
     {
         $this->type = $type;
-        $this->generateReport();
-    }
-
-    public function updatedShowPaid()
-    {
-        $this->generateReport();
-    }
-
-    public function generateReport()
-    {
-        $accountingService = new AccountingService();
-        if ($this->type === 'ar') {
-            $this->reportData = $accountingService->getArAgingReport($this->showPaid);
-        } else {
-            // For now only AR supports includedPaid fully in our recent edits,
-            // but we should support AP too if requested. 
-            // Let's stick to AR update first as per user request context (Piutang).
-            // But user asked "utuk hutang dan piutan" (for debt and receivables).
-            // So we need to update getApAgingReport too.
-            $this->reportData = $accountingService->getApAgingReport($this->showPaid); 
-        }
+        $this->resetPage();
     }
 
     public function openPaymentModal($id, $amount, $entityName)
     {
         $this->selectedItemId = $id;
-        $this->maxPaymentAmount = $amount; // Remaining balance
-        $this->paymentAmount = $amount; // Default to full payment
+        $this->maxPaymentAmount = $amount;
+        $this->paymentAmount = $amount;
         $this->selectedEntityName = $entityName;
         $this->paymentMethod = 'cash';
-        $this->paymentDate = date('Y-m-d'); // Default to today
+        $this->paymentDate = date('Y-m-d');
         $this->paymentNotes = '';
         $this->showPaymentModal = true;
     }
@@ -109,7 +119,6 @@ class AgingReport extends Component
 
             $this->js("alert('Pembayaran berhasil disimpan!')");
             $this->closePaymentModal();
-            $this->generateReport(); // Refresh data
 
         } catch (\Exception $e) {
             $this->addError('paymentAmount', $e->getMessage());
@@ -119,6 +128,7 @@ class AgingReport extends Component
     public function setActiveTab($tab)
     {
         $this->activeTab = $tab;
+        $this->resetPage();
     }
 
     public function exportPdf()
@@ -131,6 +141,70 @@ class AgingReport extends Component
 
     public function render()
     {
-        return view('livewire.reports.aging-report')->layout('layouts.app');
+        $accountingService = new AccountingService();
+        if ($this->type === 'ar') {
+            $rawReport = $accountingService->getArAgingReport($this->showPaid);
+        } else {
+            $rawReport = $accountingService->getApAgingReport($this->showPaid); 
+        }
+
+        // Apply search filter if present
+        if ($this->search) {
+            $search = strtolower($this->search);
+            foreach (['0-7', '8-15', '16-30', '31-45', '45+'] as $bucket) {
+                $rawReport[$bucket] = array_filter($rawReport[$bucket], function($item) use ($search) {
+                    $entity = strtolower($item['supplier'] ?? $item['customer'] ?? '');
+                    $inv = strtolower($item['invoice_number'] ?? '');
+                    return str_contains($entity, $search) || str_contains($inv, $search);
+                });
+            }
+            
+            // Recalculate summary based on filtered buckets
+            $rawReport['summary'] = [
+                '0-7' => 0,
+                '8-15' => 0,
+                '16-30' => 0,
+                '31-45' => 0,
+                '45+' => 0,
+                'total' => 0
+            ];
+            foreach (['0-7', '8-15', '16-30', '31-45', '45+'] as $bucket) {
+                foreach ($rawReport[$bucket] as $item) {
+                    $rawReport['summary'][$bucket] += $item['outstanding'];
+                }
+                $rawReport['summary']['total'] += $rawReport['summary'][$bucket];
+            }
+        }
+
+        // Get the active tab's items
+        $displayData = [];
+        if ($this->activeTab === 'all') {
+            $displayData = array_merge(
+                $rawReport['45+'] ?? [], 
+                $rawReport['31-45'] ?? [], 
+                $rawReport['16-30'] ?? [], 
+                $rawReport['8-15'] ?? [],
+                $rawReport['0-7'] ?? []
+            );
+        } else {
+            $displayData = $rawReport[$this->activeTab] ?? [];
+        }
+
+        // Paginate the displayData
+        $page = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $items = collect($displayData);
+        $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
+            $items->forPage($page, $this->perPage)->values(),
+            $items->count(),
+            $this->perPage,
+            $page,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
+
+        return view('livewire.reports.aging-report', [
+            'reportData' => $rawReport,
+            'paginatedItems' => $paginatedItems
+        ])->layout('layouts.app');
     }
 }
+

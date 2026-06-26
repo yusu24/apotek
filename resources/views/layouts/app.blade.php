@@ -410,9 +410,9 @@
 
             <!-- Main Content Area -->
             <div @class([
-                'main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-16 transition-all duration-300',
+                'main-content-wrapper flex-1 flex flex-col overflow-y-auto scrollbar-hide relative pt-12 transition-all duration-300',
                 'xl:pt-0' => request()->routeIs('pos.cashier'),
-                'xl:pt-16' => !request()->routeIs('pos.cashier'),
+                'xl:pt-12' => !request()->routeIs('pos.cashier'),
                 'has-navbar' => !request()->routeIs('pos.cashier'),
             ])>
 

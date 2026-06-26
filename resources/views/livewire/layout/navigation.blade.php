@@ -534,7 +534,7 @@ new class extends Component
     <!-- Desktop Fixed Top Navbar -->
     @if(!request()->routeIs('pos.cashier'))
     <div id="desktop-navbar"
-         class="fixed top-0 right-0 z-40 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
+         class="fixed top-0 right-0 z-40 h-12 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 hidden xl:flex items-center justify-between px-6 transition-all duration-300"
          x-bind:style="$store.sidebar.collapsed ? 'left: 5rem' : 'left: 16rem'">
         <div class="flex items-center">
             <h1 class="text-xl font-bold text-gray-800 dark:text-white tracking-tight">
@@ -561,13 +561,13 @@ new class extends Component
             <!-- Profile Dropdown -->
             <div class="relative" x-data="{ open: false }">
                 <!-- Trigger Button -->
-                <button @click="open = !open" class="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left focus:outline-none">
+                <button @click="open = !open" class="flex items-center gap-2.5 px-2 py-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left focus:outline-none">
                     <!-- Initials / Avatar Circle -->
                     <div class="relative shrink-0">
                         @if (auth()->user()->profile_photo_path)
-                            <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover ring-1 ring-gray-205 dark:ring-gray-800 shrink-0">
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover ring-1 ring-gray-205 dark:ring-gray-800 shrink-0">
                         @else
-                            <div class="w-10 h-10 rounded-full bg-blue-950 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-blue-950 flex items-center justify-center text-white font-bold text-xs shrink-0">
                                 @php
                                     $words = explode(' ', auth()->user()->name);
                                     $initials = '';
@@ -583,17 +583,17 @@ new class extends Component
 
                         @if(session()->has('impersonator_id'))
                             <!-- Pulsing amber dot for active impersonation -->
-                            <span class="absolute bottom-0 right-0 flex h-3 w-3">
+                            <span class="absolute bottom-0 right-0 flex h-2 w-2">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-600 ring-2 ring-white dark:ring-gray-900"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-600 ring-2 ring-white dark:ring-gray-900"></span>
                             </span>
                         @endif
                     </div>
                     
                     <!-- User Details -->
                     <div class="hidden sm:block">
-                        <p class="text-xs font-bold text-blue-950 dark:text-white leading-tight">{{ auth()->user()->name }}</p>
-                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">{{ auth()->user()->email }}</p>
+                        <p class="text-xs font-medium text-blue-950 dark:text-white leading-tight">{{ auth()->user()->name }}</p>
+                        <p class="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">{{ auth()->user()->email }}</p>
                     </div>
 
                     <!-- Down Chevron -->
@@ -641,7 +641,7 @@ new class extends Component
     @endif
 
     <!-- Mobile Header -->
-    <div class="xl:hidden bg-blue-950 text-white p-4 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg">
+    <div class="xl:hidden bg-blue-950 text-white h-12 flex justify-between items-center w-full z-50 fixed top-0 left-0 right-0 shadow-lg px-4">
         <div class="flex items-center gap-2">
             @if($logoPath = \App\Models\Setting::get('store_sidebar_logo_path'))
                 <img src="{{ asset('storage/' . $logoPath) }}" class="h-8 w-auto object-contain" alt="Logo">

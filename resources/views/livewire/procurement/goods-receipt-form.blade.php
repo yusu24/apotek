@@ -323,14 +323,32 @@
                                     </p>
                                 </div>
                             </td>
-                            <td colspan="3" class="px-6 py-4 text-right">
+                            <td colspan="3" class="px-6 py-4 text-right"
+                                x-data="{
+                                    grandTotal: {{ collect($items)->sum(fn($i) => (float)($i['qty_received'] ?? 0) * (float)($i['buy_price'] ?? 0)) }},
+                                    recalculate() {
+                                        let total = 0;
+                                        const rows = document.querySelectorAll('tbody tr');
+                                        rows.forEach((row, index) => {
+                                            const buyEl = row.querySelector(`input[data-col='buy_price']`);
+                                            const qtyEl = row.querySelector(`input[data-col='qty']`);
+                                            const buy = parseInt((buyEl?.value || '0').replace(/[^0-9]/g, '')) || 0;
+                                            const qty = parseFloat(qtyEl?.value || '0') || 0;
+                                            total += qty * buy;
+                                        });
+                                        this.grandTotal = total;
+                                    }
+                                }"
+                                @price-changed.window="recalculate()"
+                                @input.window="if($event.target.dataset.col === 'qty' || $event.target.dataset.col === 'buy_price') recalculate()"
+                                x-init="$nextTick(() => recalculate())">
                                 <div class="flex flex-col items-end gap-1">
                                     <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Total Nilai Penerimaan</span>
                                     <span class="text-xl font-bold text-blue-700 bg-blue-50 px-6 py-2 rounded-xl border-2 border-blue-100 shadow-sm flex items-center gap-3">
                                         <div class="p-1.5 bg-blue-600 rounded-lg text-white">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         </div>
-                                        Rp {{ number_format(collect($items)->sum(fn($i) => (float)($i['qty_received'] ?? 0) * (float)($i['buy_price'] ?? 0)), 0, ',', '.') }}
+                                        <span x-text="'Rp ' + grandTotal.toLocaleString('id-ID')"></span>
                                     </span>
                                 </div>
                             </td>

@@ -32,6 +32,7 @@ class ReceiptMail extends Mailable
 
         return new Envelope(
             from: new \Illuminate\Mail\Mailables\Address($senderEmail ?? config('mail.from.address'), $senderName),
+            replyTo: $senderEmail ? [new \Illuminate\Mail\Mailables\Address($senderEmail, $senderName)] : [],
             subject: 'Struk Pembelian - ' . $this->sale->invoice_no,
         );
     }

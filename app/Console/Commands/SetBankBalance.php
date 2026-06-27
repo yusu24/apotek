@@ -32,7 +32,9 @@ class SetBankBalance extends Command
         $this->info('Starting Bank Opening Balance Setup...');
 
         // 1. Select Bank Account
-        $accounts = Account::where('category', 'cash_bank')->get();
+        $accounts = Account::where('category', 'cash_bank')
+            ->orWhere('sub_category', 'cash')
+            ->get();
         
         if ($accounts->isEmpty()) {
             $this->error('No bank accounts found!');

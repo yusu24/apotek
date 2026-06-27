@@ -773,7 +773,7 @@ class AccountingService
         $equity = $accounts->where('type', 'equity');
         
         // Group assets
-        $currentAssets = $assets->where('category', 'current_asset');
+        $currentAssets = $assets->whereIn('category', ['current_asset', 'cash_bank']);
         $fixedAssets = $assets->where('category', 'fixed_asset');
         
         // Group liabilities
@@ -828,8 +828,12 @@ class AccountingService
                 'cash' => [
                     'label' => 'Kas & Bank',
                     'description' => 'Saldo tunai & bank dari omset usaha',
-                    'accounts' => $currentAssets->where('sub_category', 'cash'),
-                    'total' => $currentAssets->where('sub_category', 'cash')->sum('balance'),
+                    'accounts' => $currentAssets->filter(function($acc) {
+                        return $acc->category === 'cash_bank' || $acc->sub_category === 'cash';
+                    }),
+                    'total' => $currentAssets->filter(function($acc) {
+                        return $acc->category === 'cash_bank' || $acc->sub_category === 'cash';
+                    })->sum('balance'),
                 ],
                 'receivable' => [
                     'label' => 'Piutang Usaha',
@@ -846,8 +850,12 @@ class AccountingService
                 'other' => [
                     'label' => 'Aset Lancar Lainnya',
                     'description' => 'Aset lancar pendukung lainnya',
-                    'accounts' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory']),
-                    'total' => $currentAssets->whereNotIn('sub_category', ['cash', 'receivable', 'inventory'])->sum('balance'),
+                    'accounts' => $currentAssets->filter(function($acc) {
+                        return $acc->category !== 'cash_bank' && !in_array($acc->sub_category, ['cash', 'receivable', 'inventory']);
+                    }),
+                    'total' => $currentAssets->filter(function($acc) {
+                        return $acc->category !== 'cash_bank' && !in_array($acc->sub_category, ['cash', 'receivable', 'inventory']);
+                    })->sum('balance'),
                 ],
             ],
             

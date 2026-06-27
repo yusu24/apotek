@@ -146,7 +146,9 @@ class AccountIndex extends Component
 
     public function getTotalCashBankProperty()
     {
-        return Account::where('category', 'cash_bank')->sum('balance');
+        return Account::where('category', 'cash_bank')
+            ->orWhere('sub_category', 'cash')
+            ->sum('balance');
     }
 
     public function getTotalReceivableProperty()

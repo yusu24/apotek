@@ -27,9 +27,10 @@ class FinancialSummary extends Component
     {
         // Get Cash & Bank Accounts
         $cashAndBank = Account::active()
-            ->where('category', 'current_asset')
             ->where(function($q) {
-                $q->where('name', 'like', '%Kas%')
+                $q->where('category', 'cash_bank')
+                  ->orWhere('sub_category', 'cash')
+                  ->orWhere('name', 'like', '%Kas%')
                   ->orWhere('name', 'like', '%Bank%');
             })
             ->orderBy('code')

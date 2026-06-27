@@ -65,7 +65,10 @@ class GoodsReceiptIndex extends Component
             abort(403, 'Unauthorized');
         }
         
-        $this->accounts = \App\Models\Account::where('category', 'cash_bank')->active()->get();
+        $this->accounts = \App\Models\Account::where('category', 'cash_bank')
+            ->orWhere('sub_category', 'cash')
+            ->active()
+            ->get();
     }
 
     public function showDetail($id)

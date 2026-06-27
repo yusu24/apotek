@@ -30,6 +30,9 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation, Skips
                 $this->currentRow++;
                 $this->processRow($row);
             }
+
+            // Auto sync opening balance if not locked
+            $this->syncOpeningBalance();
         });
     }
 
@@ -189,5 +192,49 @@ class StockImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             'qty' => 'nullable|numeric|min:0',
             'quantity' => 'nullable|numeric|min:0',
         ];
+    }
+
+    /**
+     * Auto sync database physical stock valuation with opening balance ledger
+     */
+    private function syncOpeningBalance()
+    {
+        $ob = \App\Models\OpeningBalance::first();
+        if ($ob && $ob->locked_at !== null) {
+            return; // Skip if locked
+        }
+
+        $totalValue = \App\Models\Batch::where('stock_current', '>', 0)
+            ->get()
+            ->sum(function ($batch) {
+                return $batch->stock_current * $batch->buy_price;
+            });
+
+        if (!$ob) {
+            $ob = new \App\Models\OpeningBalance();
+            $ob->cash_amount = 0;
+            $ob->bank_amount = 0;
+            $ob->balance_date = now()->subDay();
+            $ob->is_confirmed = true;
+        }
+
+        $ob->inventory_amount = $totalValue;
+
+        // Balance Capital: Assets = Liabilities + Equity
+        $totalAssets = (float)$ob->cash_amount + (float)$ob->bank_amount + (float)$ob->inventory_amount;
+        foreach ($ob->assets as $asset) {
+            $totalAssets += (float)$asset->amount;
+        }
+
+        $totalLiabilities = 0;
+        foreach ($ob->debts as $debt) {
+            $totalLiabilities += (float)$debt->amount;
+        }
+
+        $ob->capital_amount = $totalAssets - $totalLiabilities;
+        $ob->save();
+
+        // Posting Jurnal
+        $ob->syncJournal();
     }
 }

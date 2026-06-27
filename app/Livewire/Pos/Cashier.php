@@ -917,7 +917,7 @@ class Cashier extends Component
 
         $paymentProofPath = null;
         if ($this->payment_method === 'qris' && $this->qris_proof) {
-            $paymentProofPath = $this->qris_proof->store('payment_proofs', 'public');
+            $paymentProofPath = resizeAndStoreImage($this->qris_proof, 'payment_proofs', 'public', 1000, 75);
         }
 
         DB::beginTransaction();

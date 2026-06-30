@@ -92,7 +92,17 @@ class UserManagement extends Component
         return $this->redirect(route('dashboard'), navigate: true);
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $users = User::with('roles')
             ->where('is_developer', false)

@@ -13,24 +13,13 @@
     @endif
 
     {{-- Header --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">
-                Laporan Laba Rugi
-            </h2>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Laba Rugi</h2>
         </div>
-        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
-            <button wire:click="setThisMonth" class="btn btn-secondary">
-                Bulan Ini
-            </button>
-            <button wire:click="setLastMonth" class="btn btn-secondary">
-                Bulan Lalu
-            </button>
-            <button wire:click="setThisYear" class="btn btn-secondary">
-                Tahun Ini
-            </button>
-        </div>
-    </div>    {{-- Period Filter --}}
+    </div>
+
+    {{-- Period Filter --}}
     <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden no-print mb-6 relative">
         <div wire:loading wire:target="generateReport, setThisMonth, setLastMonth, setThisYear, startDate, endDate" class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-20">
             <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm border">
@@ -42,37 +31,56 @@
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
                 <div class="w-full md:w-40">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
                     <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                 </div>
                 <div class="w-full md:w-40">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
                     <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                 </div>
             </div>
 
             <div class="flex gap-2 w-full md:w-auto justify-end shrink-0 mt-4 md:mt-0">
-                <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">
+                 <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                     </svg>
-                    <span>Import Omset</span>
+                    <span class="hidden sm:inline">Import Omset</span>
                 </button>
-                <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-export-pdf" title="Export PDF">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                    <span class="hidden sm:inline text-sm">PDF</span>
-                </a>
-                <a href="{{ route('excel.income-statement', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-export-excel" title="Export Excel">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="hidden sm:inline text-sm">Excel</span>
-                </a>
+                <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="hidden sm:inline ml-1">Export</span>
+                        <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                        <a href="{{ route('excel.income-statement', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                                <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Excel (.xlsx)
+                        </a>
+                        <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                            </svg>
+                            PDF (.pdf)
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>v>
+
+        <div class="px-4 py-3 bg-white flex flex-wrap gap-2">
+            <button wire:click="setThisMonth" class="btn btn-xs btn-secondary">Bulan Ini</button>
+            <button wire:click="setLastMonth" class="btn btn-xs btn-secondary">Bulan Lalu</button>
+            <button wire:click="setThisYear" class="btn btn-xs btn-secondary">Tahun Ini</button>
+        </div>
+    </div>
 
     @if(!empty($reportData))
     {{-- Summary Cards --}}

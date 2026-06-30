@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">
                 Neraca Saldo Awal
             </h2>
         </div>

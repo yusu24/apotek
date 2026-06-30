@@ -2,23 +2,36 @@
     <!-- Page Title (Web View Only) -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 no-print">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">
                 {{ __('Laporan Stok & Nilai') }}
             </h2>
         </div>
-        <div class="flex gap-2">
-            <button wire:click="exportExcel" class="btn btn-export-excel">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <span class="hidden sm:inline">Export Excel</span>
-            </button>
-            <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" class="btn btn-export-pdf">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
-                <span class="hidden sm:inline">Export PDF</span>
-            </a>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
+            <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Export</span>
+                    <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                    <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Excel (.xlsx)
+                    </button>
+                    <a href="{{ route('pdf.stock-report', ['search' => $search, 'category' => $categoryFilter, 'stockStatus' => $stockStatus]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF (.pdf)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -38,19 +51,8 @@
     <div class="bg-white rounded-xl shadow border overflow-hidden no-print">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-end gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-end">
-                <div class="flex flex-col shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 content-center pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
                 <div class="flex-1 min-w-[200px] w-full">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari Produk</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Cari Produk</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -62,7 +64,7 @@
                 </div>
 
                 <div class="w-full md:w-32 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kategori</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
                     <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="">Semua</option>
                         @foreach($categories as $category)
@@ -72,7 +74,7 @@
                 </div>
 
                 <div class="w-full md:w-32 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Status</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Status</label>
                     <button wire:click="toggleStockStatus" 
                         class="w-full px-3 py-2 rounded-lg border text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 shadow-sm
                         {{ $stockStatus === 'low' 
@@ -85,13 +87,13 @@
 
                 <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kadaluarsa Dari</label>
-                        <x-date-picker wire:model.live="startExpiry" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Kadaluarsa Dari</label>
+                        <x-date-picker wire:model.live="startExpiry" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                     </div>
                     <span class="text-gray-400 font-bold self-end mb-2">-</span>
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
-                        <x-date-picker wire:model.live="endExpiry" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
+                        <x-date-picker wire:model.live="endExpiry" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                     </div>
                 </div>
             </div>
@@ -147,11 +149,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="px-8 py-12 text-center text-gray-400 italic text-sm">
-                                        Data tidak ditemukan untuk kriteria filter ini.
-                                    </td>
-                                </tr>
+                                <x-empty-table colspan="7" message="Data tidak ditemukan untuk kriteria filter ini." />
                             @endforelse
                         </tbody>
                         @if($batches->count() > 0)
@@ -172,7 +170,7 @@
                 </div>
 
                 <!-- Footer Pagination [no-print] -->
-                <div class="px-6 py-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end no-print">
+                <div class="px-6 py-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 no-print">
                     @include('components.custom-pagination', ['items' => $batches])
                 </div>
             </div>

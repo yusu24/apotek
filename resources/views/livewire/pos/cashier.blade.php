@@ -2,6 +2,7 @@
      x-data="{ 
         showAlert: false, 
         mobileCartOpen: false,
+        showPayment: @entangle('showPaymentModal'),
         alertMsg: '',
         alertType: 'error',
         showAlertFn(msg, type = 'error') {
@@ -9,6 +10,13 @@
             this.alertType = type;
             this.showAlert = true;
             setTimeout(() => this.showAlert = false, 3000);
+        },
+        init() {
+            this.$watch('showPayment', value => {
+                if (value) {
+                    this.mobileCartOpen = false;
+                }
+            });
         }
      }" 
      @cart-error.window="showAlertFn($event.detail.message, 'error')"
@@ -233,17 +241,7 @@
 
                             </tr>
                             @empty
-                            <tr>
-                                <td colspan="4" class="py-20 text-center text-gray-400">
-                                    <div class="flex flex-col items-center">
-                                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
-                                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                            </div>
-                                        <p class="text-sm font-medium">Keranjang Kosong</p>
-                                        <p class="text-xs text-gray-400 mt-1">Pilih produk di sebelah kanan</p>
-                                    </div>
-                                </td>
-                            </tr>
+                                <x-empty-table colspan="4" message="Keranjang Kosong" subheader="Pilih produk di sebelah kanan" icon="box" />
                             @endforelse
                         </tbody>
                     </table>
@@ -431,13 +429,7 @@
                         @endforeach
                     </div>
                     
-                    <!-- Stock Legend -->
-                    <div class="flex flex-wrap items-center gap-x-8 gap-y-2 mt-3 px-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">
-                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></span> Tersedia</span>
-                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]"></span> Terbatas (&le; 20)</span>
-                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]"></span> Menipis (&le; 5)</span>
-                        <span class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.4)]"></span> Habis</span>
-                    </div>
+                    
                 </div>
 
                 <!-- Product Grid (Scrollable) -->
@@ -534,7 +526,7 @@
 
                     <!-- Transaction Date Input -->
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tanggal Transaksi</label>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Transaksi</label>
                         <div wire:ignore class="w-full relative">
                             <input 
                                 x-data="{
@@ -919,7 +911,7 @@
 
     <!-- MOBILE: Sticky Bottom Bar -->
     <div class="md:hidden fixed bottom-0 inset-x-0 bg-gray-900 text-white p-4 pb-6 z-40 shadow-2xl flex justify-between items-center rounded-t-2xl"
-         x-show="!mobileCartOpen">
+         x-show="!mobileCartOpen && !showPayment">
         <div>
             <p class="text-xs text-gray-400 font-medium">{{ count($cart) }} Items di Keranjang</p>
             <p class="text-lg font-bold">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
@@ -1084,6 +1076,12 @@
                  <span class="font-bold text-blue-600 text-xl">Rp {{ number_format($grand_total, 0, ',', '.') }}</span>
              </div>
              
+             @error('checkout')
+             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2.5 rounded-lg text-xs font-bold" role="alert">
+                 {{ $message }}
+             </div>
+             @enderror
+
              <div class="grid grid-cols-2 gap-3 pt-2">
                  <button wire:click="saveOrder" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-900">Simpan</button>
                  <button wire:click="openPayment" class="btn btn-lg btn-primary {{ count($cart) == 0 ? 'opacity-50' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>

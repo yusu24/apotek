@@ -2,7 +2,7 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Laporan PPN</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan PPN</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             <button wire:click="setThisMonth" class="btn btn-secondary">
@@ -29,7 +29,7 @@
         <h3 class="text-lg font-bold text-gray-900 mb-4">Filter Periode</h3>
         <div class="flex flex-col md:flex-row items-end gap-4">
             <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Bulan</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Bulan</label>
                 <select wire:model.live="month" class="w-full md:w-32 border-gray-300 rounded-lg shadow-sm text-sm py-2">
                     @foreach($months as $key => $name)
                         <option value="{{ $key }}">{{ $name }}</option>
@@ -37,7 +37,7 @@
                 </select>
             </div>
             <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-2">Tahun</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tahun</label>
                 <select wire:model.live="year" class="w-full md:w-24 border-gray-300 rounded-lg shadow-sm text-sm py-2">
                     @foreach($years as $y)
                         <option value="{{ $y }}">{{ $y }}</option>
@@ -132,9 +132,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
-                    </tr>
+                        <x-empty-table colspan="5" />
                     @endforelse
                 </tbody>
                 @if($reportData['ppn_keluaran_details']->count() > 0)
@@ -180,9 +178,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900">Rp {{ number_format($purchase->dpp + $purchase->ppn_amount, 0, ',', '.') }}</td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
-                    </tr>
+                        <x-empty-table colspan="5" />
                     @endforelse
                 </tbody>
                 @if($reportData['ppn_masukan_details']->count() > 0)

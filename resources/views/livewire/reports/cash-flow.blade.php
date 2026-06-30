@@ -1,21 +1,29 @@
-<div class="p-6 space-y-6">
+<div class="p-6">
     {{-- Header --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">
-                Laporan Arus Kas
-            </h2>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Arus Kas (Cash Flow)</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
-            <button wire:click="setThisMonth" class="btn btn-secondary">
-                Bulan Ini
-            </button>
-            <button wire:click="setLastMonth" class="btn btn-secondary">
-                Bulan Lalu
-            </button>
-            <button wire:click="setThisYear" class="btn btn-secondary">
-                Tahun Ini
-            </button>
+            <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Export</span>
+                    <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                    <a href="{{ route('pdf.cash-flow', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF (.pdf)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -31,11 +39,11 @@
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
                 <div class="w-full md:w-40">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
                     <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                 </div>
                 <div class="w-full md:w-40">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
                     <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                 </div>
             </div>
@@ -45,12 +53,6 @@
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span class="hidden sm:inline text-sm">Generate</span>
                 </button>
-                <a href="{{ route('pdf.cash-flow', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-export-pdf" title="Export PDF">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                    <span class="hidden sm:inline text-sm">PDF</span>
-                </a>
             </div>
         </div>
 

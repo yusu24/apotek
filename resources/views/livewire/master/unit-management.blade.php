@@ -6,17 +6,7 @@
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
+                <!-- Search Box -->
                 <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -26,11 +16,9 @@
             </div>
 
             <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
-                <button wire:click="openModal" class="btn btn-primary" title="Tambah Unit">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="hidden sm:inline text-sm">Tambah</span>
+                <button wire:click="openModal" class="btn btn-primary" title="Tambah Satuan">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1">Tambah</span>
                 </button>
             </div>
         </div>
@@ -51,7 +39,7 @@
                             {{ ($units->currentpage()-1) * $units->perpage() + $index + 1 }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-900">{{ $unit->name }}</span>
+                            <span class="text-sm font-normal text-gray-900">{{ $unit->name }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center gap-2">
@@ -65,27 +53,15 @@
                         </td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="3" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-3 border border-gray-100">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
-                                </div>
-                                <div class="text-sm font-bold text-gray-900">Belum ada data satuan</div>
-                                <div class="text-xs text-gray-400 mt-1">Silakan tambah satuan baru untuk digunakan pada produk</div>
-                            </div>
-                        </td>
-                    </tr>
+                        <x-empty-table colspan="3" message="Belum ada data satuan" subheader="Silakan tambah satuan baru untuk digunakan pada produk" icon="box" />
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        @if($units->hasPages())
-        <div class="p-4 border-t border-gray-100 bg-gray-50/30">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $units])
         </div>
-        @endif
     </div>
 
     <!-- Modal -->

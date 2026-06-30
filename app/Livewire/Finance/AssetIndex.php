@@ -50,7 +50,12 @@ class AssetIndex extends Component
         $this->resetPage();
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $assets */
         $assets = FixedAsset::with(['assetAccount', 'accumulatedAccount'])

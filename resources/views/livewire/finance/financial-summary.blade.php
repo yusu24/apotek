@@ -2,7 +2,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Ringkasan Keuangan</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">Ringkasan Keuangan</h2>
         </div>
         <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
             <x-date-picker wire:model.live="startDate" class="bg-transparent border-none text-xs focus:ring-0 dark:text-gray-300"></x-date-picker>
@@ -185,16 +185,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-20 text-center">
-                                    <div class="flex flex-col items-center gap-3">
-                                        <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-full">
-                                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        </div>
-                                        <p class="text-gray-400 dark:text-gray-500 italic">Belum ada transaksi pada periode ini.</p>
-                                    </div>
-                                </td>
-                            </tr>
+                            <x-empty-table colspan="6" message="Belum ada transaksi pada periode ini." />
                         @endforelse
                     </tbody>
                 </table>

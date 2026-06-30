@@ -51,19 +51,8 @@
     <div class="bg-white rounded-xl shadow border overflow-hidden no-print mb-6">
         <div class="p-4 border-b bg-gray-50 flex flex-col gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full items-end">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0 mb-0.5">
-                    <span class="hidden sm:inline text-[10px] font-bold uppercase tracking-wider text-gray-500">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-2 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
                 <div class="flex-1 min-w-[200px] w-full">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari Aktivitas</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Cari Aktivitas</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -75,7 +64,7 @@
                 </div>
 
                 <div class="w-full md:w-36 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">User</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">User</label>
                     <select wire:model.live="filterUser" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="">Semua</option>
                         @foreach($users as $user)
@@ -85,7 +74,7 @@
                 </div>
 
                 <div class="w-full md:w-36 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Modul</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Modul</label>
                     <select wire:model.live="filterModule" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="">Semua</option>
                         @foreach($modules as $module)
@@ -95,7 +84,7 @@
                 </div>
 
                 <div class="w-full md:w-32 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Aksi</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Aksi</label>
                     <select wire:model.live="filterAction" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 pl-3 pr-8 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="">Semua</option>
                         @foreach($actions as $action)
@@ -104,27 +93,23 @@
                     </select>
                 </div>
 
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-0">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Periode</label>
+                    <div class="flex items-center gap-2">
+                        <x-date-picker wire:model.live="filterDateFrom" class="w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                        <span class="text-gray-400 font-bold text-sm">-</span>
+                        <x-date-picker wire:model.live="filterDateTo" class="w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
+                    </div>
+                </div>
+
+                <div class="shrink-0 flex items-end">
                     <button wire:click="clearFilters" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     </button>
                 </div>
             </div>
-
-                <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
-                    <div class="flex items-center gap-1">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Periode Dari:</label>
-                        <x-date-picker wire:model.live="filterDateFrom" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
-                    </div>
-                    <span class="text-gray-400 font-bold">-</span>
-                    <div class="flex items-center gap-1">
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Sampai:</label>
-                        <x-date-picker wire:model.live="filterDateTo" class="w-full md:w-36 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-sm py-2 px-3 uppercase focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm"></x-date-picker>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
+
 
     <!-- Activity Timeline -->
     <div class="bg-white rounded-xl shadow-md p-6">
@@ -223,8 +208,8 @@
         </div>
 
         <!-- Pagination -->
-        <div class="mt-6">
-            {{ $logs->links('components.custom-pagination', ['items' => $logs]) }}
+        <div class="px-6 py-4 border-t border-gray-100">
+            @include('components.custom-pagination', ['items' => $logs])
         </div>
     </div>
 </div>

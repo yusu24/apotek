@@ -99,7 +99,17 @@ class SalesReport extends Component
     }
 
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $salesQuery = Sale::query()
             ->with(['user'])

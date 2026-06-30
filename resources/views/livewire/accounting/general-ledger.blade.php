@@ -7,23 +7,40 @@
         </div>
         <div class="flex gap-2">
             @can('export general ledger')
-            <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" 
-               target="_blank"
-               class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
-               title="Export Excel">
+            <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Export</span>
+                    <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                    <a href="{{ route('excel.general-ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Excel (.xlsx)
+                    </a>
+                    <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF (.pdf)
+                    </a>
+                </div>
+            </div>
+            @else
+            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" target="_blank"
+               class="btn btn-export-pdf" title="Export PDF">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
-                <span class="hidden sm:inline">Export Excel</span>
+                <span class="hidden sm:inline">Export PDF</span>
             </a>
             @endcan
-            <a href="{{ route('pdf.ledger', ['accountId' => $accountId, 'startDate' => $startDate, 'endDate' => $endDate, 'search' => $search]) }}" target="_blank" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
-   title="Export PDF">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-    </svg>
-    <span class="hidden sm:inline">Export PDF</span>
-</a>
         </div>
     </div>
 
@@ -31,7 +48,7 @@
         <!-- Filter Bar -->
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center">
             <div class="w-full md:w-1/3">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Pilih Akun</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Pilih Akun</label>
                 <select wire:model.live="accountId" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <option value="">-- Pilih Akun --</option>
                     @foreach($accounts as $account)
@@ -41,17 +58,17 @@
             </div>
             
             <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Dari Tanggal</label>
-                <x-date-picker wire:model.live="startDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
+                <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
             </div>
 
             <div class="w-full md:w-auto">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Sampai Tanggal</label>
-                <x-date-picker wire:model.live="endDate" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></x-date-picker>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
+                <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
             </div>
 
             <div class="w-full md:w-64">
-                <label class="block text-sm font-bold text-gray-700 mb-1">Cari Transaksi</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Cari Transaksi</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,8 +142,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
-                            </tr>
+            <x-empty-table colspan="6" />            </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="bg-gray-100 border-t-2 border-gray-300">

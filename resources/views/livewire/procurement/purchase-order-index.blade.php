@@ -37,17 +37,6 @@
     <div class="bg-white rounded-xl shadow overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
                 <!-- Status Dropdown -->
                 <div class="w-full sm:w-auto">
                     <select wire:model.live="status" class="w-full sm:w-40 border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
@@ -66,16 +55,27 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
                     <input type="text" wire:model.live="search" placeholder="Cari No PO / Supplier..." 
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm bg-white">
+                </div>
+
+                <!-- Date Range Filters -->
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateFrom" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Dari Tanggal"></x-date-picker>
+                    </div>
+                    <span class="text-gray-400 text-xs font-semibold uppercase">s/d</span>
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateTo" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Sampai Tanggal"></x-date-picker>
+                    </div>
                 </div>
             </div>
 
             <!-- Action Button -->
             <div class="flex gap-2 w-full md:w-auto justify-end">
                 <a href="{{ route('procurement.purchase-orders.create') }}" wire:navigate
-                    class="btn btn-primary" title="Pesanan">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline">Pesanan</span>
+                    class="btn btn-primary" title="Tambah Pesanan">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1">Tambah</span>
                 </a>
             </div>
         </div>
@@ -166,16 +166,13 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-gray-400 text-xs italic">Belum ada pesanan pembelian.</td>
-                        </tr>
+                        <x-empty-table colspan="7" message="Belum ada pesanan pembelian." icon="document" />
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="p-4 border-t">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $orders])
         </div>
-    </div>
     </div>
 </div>

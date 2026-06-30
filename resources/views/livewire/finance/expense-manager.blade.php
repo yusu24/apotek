@@ -7,54 +7,48 @@
 
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <!-- Left side: Actions & PerPage -->
-            <div class="flex items-center gap-3 flex-wrap w-full md:w-auto">
+            <!-- Left side: Search Box -->
+            <div class="relative w-full sm:max-w-[200px]">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input wire:model.live.debounce.300ms="search" 
+                    type="text" placeholder="Cari deskripsi atau kategori..." 
+                    class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+            </div>
+
+            <!-- Right side: Actions & Exports -->
+            <div class="flex items-center gap-3 flex-wrap w-full md:w-auto justify-end">
                 <button wire:click="create" class="btn btn-primary flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span>Pengeluaran</span>
                 </button>
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span>Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Right side: Search & Exports -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto flex-1 justify-end">
-                <!-- Search Box -->
-                <div class="relative w-full sm:max-w-[200px]">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </span>
-                    <input wire:model.live.debounce.300ms="search" 
-                        type="text" placeholder="Cari deskripsi atau kategori..." 
-                        class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
-                </div>
 
                 <!-- Export Buttons -->
-                <div class="flex items-center gap-2 shrink-0 justify-end">
-                    <button wire:click="exportExcel" 
-                       class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
-                       title="Export Excel">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span>Excel</span>
-                    </button>
-                    <button wire:click="exportPdf" 
-                       class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200"
-                       title="Export PDF">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        <span class="hidden sm:inline ml-1">Export</span>
+                        <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
                         </svg>
-                        <span>PDF</span>
                     </button>
+                    <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                        <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                                <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Excel (.xlsx)
+                        </button>
+                        <button wire:click="exportPdf" @click="open = false" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                            </svg>
+                            PDF (.pdf)
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,14 +220,12 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">Belum ada data pengeluaran.</td>
-                        </tr>
+                        <x-empty-table colspan="7" />
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="mt-4 border-t pt-4">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $expenses])
         </div>
     </div>

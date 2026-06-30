@@ -1,5 +1,5 @@
-{{-- Custom Pagination Component (Modern Style) --}}
-{{-- Usage: @include('components.custom-pagination', ['items' => $paginatedData]) --}}
+{{-- Modern Pagination Component --}}
+{{-- Usage: @include('components.modern-pagination', ['items' => $paginatedData]) --}}
 
 @php
     $showPerPage = $showPerPage ?? isset($perPage);

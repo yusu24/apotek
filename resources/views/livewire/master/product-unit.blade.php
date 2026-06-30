@@ -9,18 +9,6 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row items-center gap-4">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-            </div>
             <div class="relative w-full md:w-48">
                 <select wire:model.live="category_id" class="w-full block py-1.5 pl-3 pr-8 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition" title="Filter Kategori">
                     <option value="">Semua Kategori</option>
@@ -102,11 +90,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
-                            Tidak ada data produk ditemukan.
-                        </td>
-                    </tr>
+                        <x-empty-table colspan="5" message="Tidak ada data produk ditemukan." />
                     @endforelse
                 </tbody>
             </table>

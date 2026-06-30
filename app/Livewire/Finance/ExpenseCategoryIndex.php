@@ -38,7 +38,12 @@ class ExpenseCategoryIndex extends Component
         $this->resetPage();
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = ExpenseCategory::when($this->search, function($q) {

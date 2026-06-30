@@ -23,7 +23,36 @@ class PurchaseReturnList extends Component
 
     public $search = '';
     public $perPage = 10;
+    public $dateFrom = '';
+    public $dateTo = '';
     public $showModal = false;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'perPage' => ['except' => 10],
+        'dateFrom' => ['except' => ''],
+        'dateTo' => ['except' => ''],
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
+    {
+        $this->resetPage();
+    }
 
     // Form
     public $selectedSupplierId = '';
@@ -186,13 +215,26 @@ class PurchaseReturnList extends Component
         }
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $returns */
         $returns = PurchaseReturn::with('supplier', 'user')
-            ->where('return_no', 'like', '%' . $this->search . '%')
-            ->orWhereHas('supplier', function($q) {
-                $q->where('name', 'like', '%' . $this->search . '%');
+            ->where(function($query) {
+                $query->where('return_no', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('supplier', function($q) {
+                        $q->where('name', 'like', '%' . $this->search . '%');
+                    });
+            })
+            ->when($this->dateFrom, function ($q) {
+                $q->whereDate('created_at', '>=', $this->dateFrom);
+            })
+            ->when($this->dateTo, function ($q) {
+                $q->whereDate('created_at', '<=', $this->dateTo);
             })
             ->latest()
             ->paginate($this->perPage);

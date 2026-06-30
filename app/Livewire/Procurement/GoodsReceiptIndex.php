@@ -13,12 +13,16 @@ class GoodsReceiptIndex extends Component
 
     public $search = '';
     public $perPage = 10;
+    public $dateFrom = '';
+    public $dateTo = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
         'perPage' => ['except' => 10],
         'sortBy' => ['except' => 'received_date'],
         'sortDirection' => ['except' => 'desc'],
+        'dateFrom' => ['except' => ''],
+        'dateTo' => ['except' => ''],
     ];
 
     public $sortBy = 'received_date';
@@ -40,6 +44,16 @@ class GoodsReceiptIndex extends Component
     }
 
     public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
     {
         $this->resetPage();
     }
@@ -135,7 +149,12 @@ class GoodsReceiptIndex extends Component
         session()->flash('message', 'Pembayaran berhasil dicatat.');
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $sortableColumns = [
             'received_date' => 'received_date',
@@ -152,6 +171,12 @@ class GoodsReceiptIndex extends Component
                   ->orWhereHas('purchaseOrder.supplier', function ($q2) {
                       $q2->where('name', 'like', '%' . $this->search . '%');
                   });
+            })
+            ->when($this->dateFrom, function ($q) {
+                $q->whereDate('received_date', '>=', $this->dateFrom);
+            })
+            ->when($this->dateTo, function ($q) {
+                $q->whereDate('received_date', '<=', $this->dateTo);
             })
             ->orderBy($orderColumn, $this->sortDirection)
             ->paginate($this->perPage);

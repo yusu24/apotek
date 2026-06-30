@@ -299,7 +299,12 @@ class ProductMarginReport extends Component
         );
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $categories = \App\Models\Category::orderBy('name')->get();
         

@@ -8,17 +8,7 @@
     <div class="bg-white rounded-lg shadow border overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
+                <!-- Search Box -->
                 <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -28,17 +18,15 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
-                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                    </svg>
-                    <span class="hidden sm:inline text-sm">Import</span>
+            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0 items-center">
+                <button wire:click="openModal" class="btn btn-primary" title="Tambah Kategori">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1 text-sm">Tambah</span>
                 </button>
 
-                <button wire:click="openModal" class="btn btn-primary" title="Tambah Kategori">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline text-sm">Tambah</span>
+                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <span class="hidden sm:inline ml-1 text-sm">Import</span>
                 </button>
             </div>
         </div>
@@ -59,7 +47,7 @@
                             {{ ($categories->currentpage()-1) * $categories->perpage() + $index + 1 }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-900">{{ $category->name }}</span>
+                            <span class="text-sm font-normal text-gray-900">{{ $category->name }}</span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex items-center justify-center gap-2">
@@ -73,27 +61,15 @@
                         </td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="3" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-3 border border-gray-100">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                                </div>
-                                <div class="text-sm font-bold text-gray-900">Belum ada data kategori</div>
-                                <div class="text-xs text-gray-400 mt-1">Silakan tambah kategori baru untuk produk Anda</div>
-                            </div>
-                        </td>
-                    </tr>
+                        <x-empty-table colspan="3" message="Belum ada data kategori" subheader="Silakan tambah kategori baru untuk produk Anda" icon="document" />
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        @if($categories->hasPages())
-        <div class="p-4 border-t border-gray-100 bg-gray-50/30">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $categories])
         </div>
-        @endif
     </div>
 
     <!-- Category Modal -->

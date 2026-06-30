@@ -181,7 +181,12 @@ class AccountIndex extends Component
         $this->showModal = true;
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $query = Account::query();
 

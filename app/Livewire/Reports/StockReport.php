@@ -22,6 +22,36 @@ class StockReport extends Component
 
     protected $queryString = ['search', 'categoryFilter', 'stockStatus', 'startExpiry', 'endExpiry'];
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategoryFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStockStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStartExpiry()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingEndExpiry()
+    {
+        $this->resetPage();
+    }
+
     public function mount()
     {
         if (!auth()->user()->can('view stock')) {

@@ -16,11 +16,11 @@
                 'start_date' => $startDate,
                 'end_date' => $endDate
             ]) }}" target="_blank"
-                class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                class="btn btn-export-pdf" title="Export PDF">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
-                <span>Export PDF</span>
+                <span class="hidden sm:inline">Export PDF</span>
             </a>
         </div>
     </div>
@@ -59,9 +59,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr>
-                    <td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada batch aktif.</td>
-                </tr>
+                    <x-empty-table colspan="4" message="Tidak ada batch aktif." />
                 @endforelse
             </tbody>
         </table>
@@ -186,9 +184,7 @@
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->user->name ?? 'System' }}</td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">Belum ada riwayat transaksi.</td>
-                    </tr>
+                        <x-empty-table colspan="9" message="Belum ada riwayat transaksi." icon="document" />
                     @endforelse
                 </tbody>
             </table>

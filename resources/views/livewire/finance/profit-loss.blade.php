@@ -12,31 +12,42 @@
         </div>
     @endif
 
-    <div class="flex justify-between items-start mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-                <h2 class="text-2xl font-bold text-gray-800">
-                Laporan Laba Rugi
-            </h2>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Laba Rugi</h2>
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                 </svg>
-                <span>Import Omset</span>
+                <span class="hidden sm:inline">Import Omset</span>
             </button>
-            <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <span class="hidden sm:inline">Export Excel</span>
-            </button>
-            <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-export-pdf">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
-                <span>Export PDF</span>
-            </a>
+            <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Export</span>
+                    <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                    <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Excel (.xlsx)
+                    </button>
+                    <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF (.pdf)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -44,12 +55,9 @@
     <div class="bg-white rounded-xl shadow-sm mb-8 border border-gray-100">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row flex-wrap gap-4 items-end">
             <div class="flex flex-col shrink-0">
-                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Periode Laporan</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Periode Laporan</label>
                 <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <select wire:model.live="period" class="block w-full pl-9 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm text-sm py-2">
+                    <select wire:model.live="period" class="block w-full pl-3 pr-8 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm text-sm py-2">
                         <option value="this_month">Bulan Ini</option>
                         <option value="last_month">Bulan Lalu</option>
                         <option value="this_year">Tahun Ini</option>
@@ -58,32 +66,21 @@
                 </div>
             </div>
 
-            <div class="flex flex-col shrink-0">
-                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Tampilkan</label>
-                <select wire:model.live="perPage" class="block border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm text-sm py-2 pl-3 pr-8">
-                    <option value="5">5 Data</option>
-                    <option value="10">10 Data</option>
-                    <option value="25">25 Data</option>
-                    <option value="50">50 Data</option>
-                    <option value="100">100 Data</option>
-                </select>
-            </div>
-            
             @if($period === 'custom')
                 <div class="flex items-center gap-2">
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
-                        <x-date-picker wire:model.live="startDate" class="w-36 border-gray-300 rounded-lg shadow-sm text-sm py-2 px-3 focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
+                        <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                     </div>
                     <span class="text-gray-400 font-bold self-end mb-2">-</span>
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Sampai</label>
-                        <x-date-picker wire:model.live="endDate" class="w-36 border-gray-300 rounded-lg shadow-sm text-sm py-2 px-3 focus:border-blue-500 focus:ring-blue-500"></x-date-picker>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
+                        <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
                     </div>
                 </div>
             @else
                 <div class="flex flex-col">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Rentang</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Rentang</label>
                     <div class="h-9 flex items-center px-3 bg-white border border-gray-300 rounded-lg text-sm text-gray-600 font-medium shadow-sm">
                         {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
                     </div>

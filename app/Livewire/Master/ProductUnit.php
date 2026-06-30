@@ -55,7 +55,12 @@ class ProductUnit extends Component
         }
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $products = Product::query()
             ->with(['unit', 'category'])

@@ -131,7 +131,17 @@ class CategoryManagement extends Component
         $this->dispatch('notify', 'Kategori berhasil dihapus.');
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = Category::where('name', 'like', '%' . $this->search . '%')

@@ -18,7 +18,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Cari Jurnal</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Cari Jurnal</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Sumber</label>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Sumber</label>
                 <select wire:model.live="sourceFilter" class="w-full border-gray-300 rounded-lg text-sm">
                     <option value="">Semua Sumber</option>
                     <option value="manual">Manual</option>
@@ -38,25 +38,15 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Dari Tanggal</label>
-                <x-date-picker wire:model.live="startDate" class="w-full border-gray-300 rounded-lg text-sm"></x-date-picker>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
+                <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Sampai Tanggal</label>
-                <x-date-picker wire:model.live="endDate" class="w-full border-gray-300 rounded-lg text-sm"></x-date-picker>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Sampai</label>
+                <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white"></x-date-picker>
             </div>
         </div>
-        <div class="mt-4 flex justify-between items-center">
-            <div class="flex items-center gap-2 text-sm text-gray-600">
-                <span>Tampilkan</span>
-                <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-            </div>
+        <div class="mt-4 flex justify-end items-center">
             <button wire:click="resetFilters" class="text-sm text-blue-600 font-bold hover:underline">Reset Filter</button>
         </div>
     </div>
@@ -145,7 +135,7 @@
                         @endforeach
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Data Tidak Ditemukan</td>
+                            <x-empty-table colspan="7" />
                         </tr>
                     @endforelse
                 </tbody>

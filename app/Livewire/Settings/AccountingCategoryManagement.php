@@ -124,7 +124,17 @@ class AccountingCategoryManagement extends Component
         session()->flash('message', 'Status kategori berhasil diubah.');
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $categories */
         $categories = AccountingCategory::query()

@@ -110,7 +110,17 @@ class CustomerManagement extends Component
         session()->flash('success', 'Pelanggan berhasil dihapus.');
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $customers */
         $customers = Customer::where('name', 'like', '%' . $this->search . '%')

@@ -69,11 +69,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-gray-500">
-                                <p class="italic">Belum ada pencadangan data.</p>
-                            </td>
-                        </tr>
+                        <x-empty-table colspan="4" message="Belum ada pencadangan data." />
                     @endforelse
                 </tbody>
             </table>

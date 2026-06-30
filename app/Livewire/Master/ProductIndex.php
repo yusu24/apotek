@@ -135,7 +135,17 @@ class ProductIndex extends Component
         }
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $products */
         $products = Product::with(['category', 'unit'])

@@ -12,29 +12,30 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
+                <!-- Search Box -->
                 <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </span>
-                    <input type="text" wire:model.live="search" placeholder="Cari No. Retur atau Nama Supplier..." class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm">
+                    <input type="text" wire:model.live="search" placeholder="Cari No. Retur atau Nama Supplier..." class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white">
+                </div>
+
+                <!-- Date Range Filters -->
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateFrom" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Dari Tanggal"></x-date-picker>
+                    </div>
+                    <span class="text-gray-400 text-xs font-semibold uppercase">s/d</span>
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateTo" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Sampai Tanggal"></x-date-picker>
+                    </div>
                 </div>
             </div>
 
             <div class="shrink-0">
-                <button wire:click="openModal" class="bg-blue-600 text-white p-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap" title="Retur">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline">Retur</span>
+                <button wire:click="openModal" class="btn btn-primary" title="Tambah Retur">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1">Tambah</span>
                 </button>
             </div>
         </div>
@@ -72,7 +73,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Data retur tidak ditemukan.</td>
+                            <x-empty-table colspan="7" />
                         </tr>
                     @endforelse
                 </tbody>
@@ -188,7 +189,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-2">Catatan / Alasan Retur</label>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Catatan / Alasan Retur</label>
                             <textarea wire:model="notes" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Tuliskan alasan pengembalian barang..."></textarea>
                         </div>
                         

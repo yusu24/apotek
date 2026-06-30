@@ -1,12 +1,6 @@
 <div class="p-6">
-    <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Daftar Jabatan (Roles)</h2>
-        <a href="{{ route('admin.roles.create') }}" wire:navigate class="btn btn-primary">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Jabatan
-        </a>
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Jabatan (Roles)</h2>
     </div>
 
     @if (session()->has('message'))
@@ -22,6 +16,14 @@
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4 border-b bg-gray-50 flex items-center gap-4 justify-end">
+            <a href="{{ route('admin.roles.create') }}" wire:navigate class="btn btn-primary shrink-0">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span class="hidden sm:inline">Jabatan</span>
+            </a>
+        </div>
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100">

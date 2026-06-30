@@ -8,17 +8,7 @@
     <div class="bg-white rounded-xl shadow overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
+                <!-- Search Box -->
                 <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -26,13 +16,24 @@
                     <input type="text" wire:model.live="search" placeholder="Cari No Surat Jalan / Supplier..." 
                         class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all focus:bg-white bg-white">
                 </div>
+
+                <!-- Date Range Filters -->
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateFrom" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Dari Tanggal"></x-date-picker>
+                    </div>
+                    <span class="text-gray-400 text-xs font-semibold uppercase">s/d</span>
+                    <div class="w-full md:w-40">
+                        <x-date-picker wire:model.live="dateTo" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Sampai Tanggal"></x-date-picker>
+                    </div>
+                </div>
             </div>
 
             <div class="flex gap-2 w-full md:w-auto justify-end">
                 <a href="{{ route('procurement.goods-receipts.create') }}" wire:navigate
-                    class="btn btn-primary" title="Penerimaan">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span class="hidden sm:inline">Penerimaan</span>
+                    class="btn btn-primary" title="Tambah Penerimaan">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1">Tambah</span>
                 </a>
             </div>
         </div>
@@ -113,7 +114,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-right text-normal text-gray-900">
+                            <td class="px-4 py-3 text-right text-sm font-medium text-gray-900">
                                 <div>Rp {{ number_format($gr->total_amount, 0, ',', '.') }}</div>
                                 @if($gr->payment_status !== 'paid')
                                     <div class="text-[10px] text-orange-600 font-bold mt-1">Sisa: Rp {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }}</div>
@@ -151,14 +152,12 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-gray-400 text-xs italic">Belum ada data penerimaan barang.</td>
-                        </tr>
+                        <x-empty-table colspan="7" message="Belum ada data penerimaan barang." icon="box" />
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="p-4 border-t">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $receipts])
         </div>
     </div>
@@ -262,7 +261,7 @@
                     </div>
                     <div class="flex gap-3">
                         <a href="{{ route('pdf.goods-receipt', $selectedReceipt->id) }}" target="_blank"
-                            class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 shadow-md font-bold text-sm flex items-center justify-center gap-2 transition duration-200">
+                            class="btn btn-export-pdf" title="Export PDF">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                             </svg>

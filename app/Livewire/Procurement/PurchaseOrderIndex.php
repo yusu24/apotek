@@ -14,6 +14,8 @@ class PurchaseOrderIndex extends Component
     public $search = '';
     public $perPage = 10;
     public $status = '';
+    public $dateFrom = '';
+    public $dateTo = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -21,6 +23,8 @@ class PurchaseOrderIndex extends Component
         'perPage' => ['except' => 10],
         'sortBy' => ['except' => 'date'],
         'sortDirection' => ['except' => 'desc'],
+        'dateFrom' => ['except' => ''],
+        'dateTo' => ['except' => ''],
     ];
 
     public $sortBy = 'date';
@@ -51,6 +55,16 @@ class PurchaseOrderIndex extends Component
         $this->resetPage();
     }
 
+    public function updatedDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
+    {
+        $this->resetPage();
+    }
+
     public function mount()
     {
         if (!auth()->user()->can('view purchase orders')) {
@@ -58,7 +72,12 @@ class PurchaseOrderIndex extends Component
         }
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         // Map sortable columns to actual DB columns
         $sortableColumns = [
@@ -78,6 +97,12 @@ class PurchaseOrderIndex extends Component
                     ->orWhereHas('supplier', function ($q) {
                         $q->where('name', 'like', '%' . $this->search . '%');
                     });
+            })
+            ->when($this->dateFrom, function ($query) {
+                $query->whereDate('date', '>=', $this->dateFrom);
+            })
+            ->when($this->dateTo, function ($query) {
+                $query->whereDate('date', '<=', $this->dateTo);
             })
             ->orderBy($orderColumn, $this->sortDirection)
             ->paginate($this->perPage);

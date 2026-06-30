@@ -287,9 +287,9 @@
                 @if($purchaseOrder)
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" type="button"
-                        class="px-5 py-2.5 bg-blue-900 text-white rounded-lg hover:bg-blue-800 font-bold shadow-md transition text-sm flex items-center gap-2">
+                        class="btn btn-export-pdf">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        Cetak PO
+                        <span>Cetak PO</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     

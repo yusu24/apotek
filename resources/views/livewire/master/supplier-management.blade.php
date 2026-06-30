@@ -19,17 +19,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
+                <!-- Search Box -->
                 <div class="relative w-full md:w-64">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -39,26 +29,38 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
-                <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="hidden sm:inline text-sm">Export Excel</span>
+            <div class="flex gap-2 w-full md:w-auto justify-end shrink-0 items-center">
+                <button wire:click="openModal" class="btn btn-primary" title="Tambah Supplier">
+                    <span class="font-bold">+</span>
+                    <span class="hidden sm:inline ml-1">Tambah</span>
                 </button>
+
                 @can('manage suppliers')
                 <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import" title="Import Excel">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span class="hidden sm:inline text-sm">Import Excel</span>
+                    <span class="hidden sm:inline ml-1">Import</span>
                 </button>
                 @endcan
 
-                <button wire:click="openModal" class="btn btn-primary" title="Supplier">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="hidden sm:inline">Supplier</span>
-                </button>
+                <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="hidden sm:inline ml-1">Export</span>
+                        <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                        <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                                    <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Excel (.xlsx)
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -100,17 +102,13 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic">
-                                Data supplier tidak ditemukan.
-                            </td>
-                        </tr>
+                        <x-empty-table colspan="5" />
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <div class="p-4 border-t dark:border-gray-700">
+        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700">
             @include('components.custom-pagination', ['items' => $suppliers])
         </div>
     </div>

@@ -249,7 +249,12 @@ class ExpenseManager extends Component
         ]);
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $query = Expense::with(['user', 'account'])
             ->when($this->search, function($q) {

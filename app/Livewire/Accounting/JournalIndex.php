@@ -141,7 +141,12 @@ class JournalIndex extends Component
         $this->journalToDelete = null;
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $journals */
         $journals = JournalEntry::with(['lines.account', 'user'])

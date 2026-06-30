@@ -2,7 +2,7 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Laporan Margin Produk</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Margin Produk</h2>
         </div>
         <div class="flex flex-wrap gap-2">
             <div class="flex p-1 bg-gray-100 rounded-lg mr-2">
@@ -16,18 +16,31 @@
                 </button>
             </div>
 
-            <button wire:click="exportExcel" class="btn btn-export-excel" title="Export Excel">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <span class="hidden sm:inline">Export Excel</span>
-            </button>
-            <a href="{{ route('pdf.product-margin', ['search' => $search, 'categoryFilter' => $categoryFilter, 'marginFilter' => $marginFilter, 'reportMode' => $reportMode, 'startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" class="btn btn-export-pdf" title="Export PDF">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
-                <span class="hidden sm:inline">Export PDF</span>
-            </a>
+            <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
+                <button @click="open = !open" class="btn btn-export-excel" title="Export">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Export</span>
+                    <svg class="w-3 h-3 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
+                    <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Excel (.xlsx)
+                    </button>
+                    <a href="{{ route('pdf.product-margin', ['search' => $search, 'categoryFilter' => $categoryFilter, 'marginFilter' => $marginFilter, 'reportMode' => $reportMode, 'startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF (.pdf)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -59,29 +72,18 @@
                 @if($reportMode === 'realized')
                 <div class="flex gap-2 shrink-0">
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Mulai</label>
-                        <input type="date" wire:model.live="startDate" class="rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Mulai</label>
+                        <x-date-picker wire:model.live="startDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Mulai"></x-date-picker>
                     </div>
                     <div class="flex flex-col">
-                        <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Selesai</label>
-                        <input type="date" wire:model.live="endDate" class="rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Selesai</label>
+                        <x-date-picker wire:model.live="endDate" class="block w-full py-1.5 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm bg-white" placeholder="Selesai"></x-date-picker>
                     </div>
                 </div>
                 @endif
 
-                <div class="flex flex-col shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Maks</label>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-
                 <div class="flex-1 min-w-[150px] w-full">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Cari</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Cari</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -90,7 +92,7 @@
                     </div>
                 </div>
                 <div class="w-full md:w-36 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Kategori</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
                     <select wire:model.live="categoryFilter" class="w-full rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="">Semua</option>
                         @foreach($categories as $cat)
@@ -99,7 +101,7 @@
                     </select>
                 </div>
                 <div class="w-full md:w-36 shrink-0">
-                    <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Akurasi</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Akurasi</label>
                     <select wire:model.live="marginFilter" class="w-full rounded-lg border-gray-300 text-sm py-1.5 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
                         <option value="all">Semua</option>
                         <option value="positive">Profit</option>
@@ -189,9 +191,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-400 italic">Tidak ada data untuk periode ini</td>
-                        </tr>
+                        <x-empty-table colspan="7" message="Tidak ada data untuk periode ini." />
                     @endforelse
                 </tbody>
             </table>

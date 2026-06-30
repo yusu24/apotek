@@ -75,13 +75,15 @@ class AccountingService
         try {
             // Get accounts
             $cashAccount = Account::where('code', '1-1100')->first(); // Kas
+            $bankAccount = Account::where('code', '1-1200')->first(); // Bank
             $salesAccount = Account::where('code', '4-1000')->first(); // Penjualan
             $cogsAccount = Account::where('code', '5-1000')->first(); // COGS
             $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
 
-            if (!$cashAccount || !$salesAccount || !$cogsAccount || !$inventoryAccount) {
+            if (!$cashAccount || !$salesAccount || !$cogsAccount || !$inventoryAccount || !$bankAccount) {
                 $missing = [];
                 if (!$cashAccount) $missing[] = "Kas (1-1100)";
+                if (!$bankAccount) $missing[] = "Bank (1-1200)";
                 if (!$salesAccount) $missing[] = "Penjualan (4-1000)";
                 if (!$cogsAccount) $missing[] = "COGS (5-1000)";
                 if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
@@ -139,13 +141,15 @@ class AccountingService
                     ]);
                 }
             } else {
-                // Regular Cash Sale
+                // Regular Cash / QRIS / Transfer Sale
+                $paymentAcc = in_array($sale->payment_method, ['qris', 'transfer']) ? $bankAccount : $cashAccount;
+                
                 JournalEntryLine::create([
                     'journal_entry_id' => $entry->id,
-                    'account_id' => $cashAccount->id,
+                    'account_id' => $paymentAcc->id,
                     'debit' => $sale->grand_total,
                     'credit' => 0,
-                    'notes' => 'Penjualan ' . $sale->invoice_no,
+                    'notes' => 'Penjualan (' . strtoupper($sale->payment_method) . ') ' . $sale->invoice_no,
                 ]);
             }
 
@@ -1512,7 +1516,7 @@ public function processReceivablePayment($receivableId, $data)
         if (!$paymentAccount) {
             $paymentAccount = match($data['payment_method'] ?? 'cash') {
                 'cash' => Account::where('code', '1-1100')->first(), // Kas
-                'transfer' => Account::where('code', '1-1200')->first(), // Bank (Fallback)
+                'qris', 'transfer' => Account::where('code', '1-1200')->first(), // Bank (Fallback)
                 default => Account::where('code', '1-1100')->first(),
             };
         }

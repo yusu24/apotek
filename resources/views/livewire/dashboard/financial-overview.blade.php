@@ -42,11 +42,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic text-[9px]">
-                                    Tidak ada tagihan yang mendekati jatuh tempo.
-                                </td>
-                            </tr>
+                            <x-empty-table colspan="3" message="Tidak ada tagihan yang mendekati jatuh tempo." />
                         @endforelse
                     </tbody>
                 </table>
@@ -98,11 +94,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="3" class="px-5 py-8 text-center text-gray-400 italic text-[9px]">
-                                    Tidak ada hutang yang mendekati jatuh tempo.
-                                </td>
-                            </tr>
+                            <x-empty-table colspan="3" message="Tidak ada hutang yang mendekati jatuh tempo." />
                         @endforelse
                     </tbody>
                 </table>

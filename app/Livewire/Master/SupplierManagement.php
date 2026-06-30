@@ -34,7 +34,17 @@ class SupplierManagement extends Component
         }
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $suppliers */
         $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')

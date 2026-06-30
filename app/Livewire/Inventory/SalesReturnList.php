@@ -22,7 +22,36 @@ class SalesReturnList extends Component
 
     public $search = '';
     public $perPage = 10;
+    public $dateFrom = '';
+    public $dateTo = '';
     public $showModal = false;
+
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'perPage' => ['except' => 10],
+        'dateFrom' => ['except' => ''],
+        'dateTo' => ['except' => ''],
+    ];
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
+    {
+        $this->resetPage();
+    }
     
     // New Return Form
     public $invoiceSearch = '';
@@ -225,13 +254,26 @@ class SalesReturnList extends Component
         }
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         /** @var \Illuminate\Pagination\LengthAwarePaginator $returns */
         $returns = SalesReturn::with('sale', 'user')
-            ->where('return_no', 'like', '%' . $this->search . '%')
-            ->orWhereHas('sale', function($q) {
-                $q->where('invoice_no', 'like', '%' . $this->search . '%');
+            ->where(function($query) {
+                $query->where('return_no', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('sale', function($q) {
+                        $q->where('invoice_no', 'like', '%' . $this->search . '%');
+                    });
+            })
+            ->when($this->dateFrom, function ($q) {
+                $q->whereDate('created_at', '>=', $this->dateFrom);
+            })
+            ->when($this->dateTo, function ($q) {
+                $q->whereDate('created_at', '<=', $this->dateTo);
             })
             ->latest()
             ->paginate($this->perPage);

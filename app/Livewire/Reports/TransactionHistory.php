@@ -145,7 +145,12 @@ class TransactionHistory extends Component
         ]);
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         return view('livewire.reports.transaction-history', [
             'transactions' => $this->transactions,

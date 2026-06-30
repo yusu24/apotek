@@ -237,7 +237,12 @@ class ProfitLoss extends Component
         ];
     }
 
-    public function render()
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $data = $this->calculateMetrics();
 

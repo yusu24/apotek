@@ -19,16 +19,6 @@
                     <input wire:model.live="search" type="text" placeholder="Cari aset..." 
                         class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm">
                 </div>
-                <div class="flex items-center gap-2 text-sm text-gray-600 shrink-0">
-                    <span class="hidden sm:inline">Tampilkan</span>
-                    <select wire:model.live="perPage" class="border-gray-300 rounded-lg py-1.5 pl-3 pr-8 focus:ring-blue-500 focus:border-blue-500 text-sm shadow-sm transition-all bg-white">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
             </div>
             
             <div class="flex items-center gap-2 shrink-0">
@@ -82,14 +72,12 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">Belum ada data aset tetap.</td>
-                        </tr>
+                        <x-empty-table colspan="6" />
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="p-4 border-t">
+        <div class="px-6 py-4 border-t border-gray-100">
             @include('components.custom-pagination', ['items' => $assets])
         </div>
     </div>

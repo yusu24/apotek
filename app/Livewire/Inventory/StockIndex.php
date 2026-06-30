@@ -91,7 +91,17 @@ class StockIndex extends Component
         }
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $allowedSortColumns = ['name', 'total_stock', 'min_stock'];
         $sortColumn = in_array($this->sortBy, $allowedSortColumns) ? $this->sortBy : 'name';

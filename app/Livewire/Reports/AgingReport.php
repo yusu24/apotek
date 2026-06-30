@@ -142,7 +142,17 @@ class AgingReport extends Component
         ]); 
     }
 
-    public function render()
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
+    
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+public function render()
     {
         $accountingService = new AccountingService();
         if ($this->type === 'ar') {

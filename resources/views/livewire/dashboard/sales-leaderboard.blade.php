@@ -243,12 +243,17 @@
                 @php
                     $rank1 = $leaderboard->first();
                     $rank1Name = $rank1->user->name ?? 'Kasir';
-                    $rank1Avatar = $rank1->user->profile_photo_path
-                        ? asset('storage/' . $rank1->user->profile_photo_path)
-                        : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=f1f5f9&color=1e293b&size=128&bold=true';
+                    
+                    // Ambil inisial 2 huruf dari nama
+                    $words = explode(' ', trim($rank1Name));
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($rank1Name, 0, 2));
+                    }
                 @endphp
                 <div class="px-5 pt-4">
-                    <div style="background: #ffffff; color: #111827; border: 1px solid #e5e7eb;" class="rounded-2xl p-4 shadow-md relative overflow-hidden group flex flex-col md:flex-row items-center md:items-center gap-3 md:gap-4 text-left"
+                    <div class="bg-[#FFFDF4] dark:bg-amber-950/10 border border-[#FEF2C7] dark:border-amber-900/30 rounded-3xl p-6 shadow-sm relative overflow-hidden flex flex-col sm:flex-row items-center gap-6 text-left"
                          x-data="{
                             confettiCanvas: null,
                             particles: [],
@@ -325,37 +330,97 @@
                         <!-- Confetti Canvas -->
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
-                        <!-- Profile Photo (Square with rounded corners) -->
-                        <div class="relative w-28 h-28 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0" style="z-index: 2;">
-                            <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" style="border-color: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.15);" class="w-full h-full rounded-xl object-cover border-2 bg-gray-50" />
+                        <!-- Profile Photo (Square with rounded corners - Initials SI) -->
+                        <div class="relative w-28 h-28 shrink-0 flex items-center justify-center bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl shadow-md text-white text-4xl font-extrabold tracking-wider select-none" style="z-index: 2; box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);">
+                            @if($rank1->user->profile_photo_path)
+                                <img src="{{ asset('storage/' . $rank1->user->profile_photo_path) }}" alt="{{ $rank1Name }}" class="w-full h-full rounded-2xl object-cover" />
+                            @else
+                                {{ $initials }}
+                            @endif
+                            <!-- Crown on top-left of the avatar -->
+                            <span class="absolute -top-3 -left-3 text-3xl select-none filter drop-shadow transform -rotate-12">👑</span>
                         </div>
 
                         <!-- Details (Right Column) -->
                         <div class="flex-1 min-w-0 w-full" style="z-index: 2;">
-                            <div class="font-bold text-gray-900 dark:text-white flex items-center justify-center md:justify-start gap-1 mb-2 text-xs">
-                                <span>👑</span>
+                            <div class="font-extrabold text-slate-800 dark:text-white flex items-center justify-start gap-1.5 mb-3 text-base">
+                                <span class="text-xl">👑</span>
                                 <span>Peringkat 1 Bulan Ini</span>
                             </div>
 
-                            <table class="w-full text-xs text-gray-700 dark:text-gray-300 border-collapse">
+                            <table class="text-sm text-slate-600 dark:text-slate-300 border-separate border-spacing-y-2.5">
                                 <tbody>
-                                    <tr class="align-top">
-                                        <td class="text-gray-500 py-0.5 w-[100px] whitespace-nowrap">Nama</td>
-                                        <td class="text-gray-400 px-1 py-0.5">:</td>
-                                        <td class="font-bold text-gray-900 dark:text-white py-0.5 truncate max-w-[130px]" title="{{ $rank1Name }}">{{ $rank1Name }}</td>
+                                    <tr class="align-middle">
+                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
+                                            <div class="flex items-center gap-2">
+                                                <div class="p-1 bg-blue-50 dark:bg-blue-900/30 rounded-md">
+                                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 1114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Nama</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-slate-400 px-3 py-0.5">:</td>
+                                        <td class="font-bold text-slate-800 dark:text-white py-0.5 capitalize">{{ $rank1Name }}</td>
                                     </tr>
-                                    <tr class="align-top">
-                                        <td class="text-gray-500 py-0.5 whitespace-nowrap">Jumlah Transaksi</td>
-                                        <td class="text-gray-400 px-1 py-0.5">:</td>
-                                        <td class="font-bold text-gray-900 dark:text-white py-0.5">{{ $rank1->total_transactions }}</td>
+                                    <tr class="align-middle">
+                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
+                                            <div class="flex items-center gap-2">
+                                                <div class="p-1 bg-emerald-50 dark:bg-emerald-900/30 rounded-md">
+                                                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.2 0 .75.75 0 011.2 0zm12.75 0a.75.75 0 11-1.2 0 .75.75 0 011.2 0z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Jumlah Transaksi</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-slate-400 px-3 py-0.5">:</td>
+                                        <td class="font-bold text-slate-800 dark:text-white py-0.5">{{ $rank1->total_transactions }}</td>
                                     </tr>
-                                    <tr class="align-top">
-                                        <td class="text-gray-500 py-0.5 whitespace-nowrap">Total kontribusi</td>
-                                        <td class="text-gray-400 px-1 py-0.5">:</td>
-                                        <td class="font-bold text-gray-900 dark:text-white py-0.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
+                                    <tr class="align-middle">
+                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
+                                            <div class="flex items-center gap-2">
+                                                <div class="p-1 bg-violet-50 dark:bg-violet-900/30 rounded-md">
+                                                    <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-5.625-12h17.25c.621 0 1.125.504 1.125 1.125v13.5c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V3.375c0-.621.504-1.125 1.125-1.125z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Total kontribusi</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-slate-400 px-3 py-0.5">:</td>
+                                        <td class="font-bold text-slate-800 dark:text-white py-0.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Trophy Graphic (Right Side) -->
+                        <div class="relative shrink-0 hidden sm:block select-none" style="z-index: 2;">
+                            <svg class="w-28 h-28 drop-shadow-lg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Trophy Cup -->
+                                <path d="M25 25H75V45C75 58.8 63.8 70 50 70C36.2 70 25 58.8 25 45V25Z" fill="url(#trophy_grad)" />
+                                <!-- Trophy Handles -->
+                                <path d="M25 30H15C10 30 10 42 15 45L25 47M75 30H85C90 30 90 42 85 45L75 47" stroke="url(#trophy_grad)" stroke-width="6" stroke-linecap="round" fill="none" />
+                                <!-- Base/Stem -->
+                                <path d="M44 70H56V82H44V70Z" fill="url(#trophy_grad)" />
+                                <path d="M30 82H70V88C70 90.2 68.2 92 66 92H34C31.8 92 30 90.2 30 88V82Z" fill="url(#trophy_base_grad)" />
+                                <!-- Star on Cup -->
+                                <path d="M50 35L53.5 42.5L61.5 43.5L55.5 49L57.5 57L50 52.8L42.5 57L44.5 49L38.5 43.5L46.5 42.5L50 35Z" fill="#FFF" opacity="0.9" />
+                                <!-- Gradients -->
+                                <defs>
+                                    <linearGradient id="trophy_grad" x1="25" y1="25" x2="75" y2="70" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#FCD34D" />
+                                        <stop offset="50%" stop-color="#F59E0B" />
+                                        <stop offset="100%" stop-color="#D97706" />
+                                    </linearGradient>
+                                    <linearGradient id="trophy_base_grad" x1="30" y1="82" x2="70" y2="92" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#E5E7EB" />
+                                        <stop offset="100%" stop-color="#9CA3AF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                     </div>
                 </div>

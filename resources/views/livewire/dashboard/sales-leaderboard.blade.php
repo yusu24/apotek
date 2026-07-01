@@ -326,8 +326,8 @@
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
                         <!-- Trophy Background Illustration -->
-                        <div class="absolute right-4 bottom-1/2 translate-y-1/2 pointer-events-none select-none z-0 opacity-90">
-                            <svg class="w-28 h-28 md:w-32 md:h-32 text-amber-300/40 dark:text-amber-500/10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="absolute right-3 md:right-5 bottom-1/2 translate-y-1/2 pointer-events-none select-none z-0 opacity-[0.18]">
+                            <svg class="w-20 h-20 md:w-24 md:h-24 text-amber-300/40 dark:text-amber-500/10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 4h12v8c0 3.314-2.686 6-6 6s-6-2.686-6-6V4z" fill="#fcd34d" />
                                 <path d="M8 4h8v8c0 2.209-1.791 4-4 4s-4-1.791-4-4V4z" fill="#fbbf24" />
                                 <path d="M6 6H3v4c0 1.5 1 2.5 2.5 3M18 6h3v4c0 1.5-1 2.5-2.5 3" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" fill="none" />

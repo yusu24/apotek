@@ -349,7 +349,7 @@
                         @endphp
                         <div class="relative w-24 h-24 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0 rounded-2xl flex items-center justify-center shadow-md overflow-visible" style="background: linear-gradient(135deg, #ffca28 0%, #ff8f00 100%); z-index: 2;">
                             <!-- Crown on top-left of the initials box -->
-                            <div class="absolute -top-3.5 -left-3.5 rotate-[-15deg] drop-shadow-md z-10">
+                            <div class="absolute z-10 drop-shadow-md" style="top: -14px; left: -14px; transform: rotate(-15deg);">
                                 <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 17h16a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1a1 1 0 011-1z" fill="#d97706" />
                                     <path d="M3 16l2.5-8 3.5 4.5 3-8 3 8 3.5-4.5 2.5 8H3z" fill="#fbbf24" />

@@ -92,6 +92,7 @@
 
             <!-- Chart Canvas Container -->
             <div wire:ignore
+                 wire:key="sales-trend-chart-{{ $chartPeriod }}"
                  x-data="{
                     chart: null,
                     labels: [],
@@ -101,105 +102,103 @@
                             this.chart.destroy();
                             this.chart = null;
                         }
-                        this.$nextTick(() => {
-                            if (!this.labels || !this.data || this.labels.length === 0) return;
-                            const canvas = this.$refs.turnoverChart;
-                            if (!canvas) return;
-                            const ctx = canvas.getContext('2d');
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 256);
-                            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
-                            gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                        if (!this.labels || !this.data || this.labels.length === 0) return;
+                        const canvas = this.$refs.turnoverChart;
+                        if (!canvas) return;
+                        const ctx = canvas.getContext('2d');
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 256);
+                        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+                        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
 
-                            const numericData = this.data.map(Number);
+                        const numericData = this.data.map(Number);
 
-                            this.chart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: this.labels,
-                                    datasets: [{
-                                        label: 'Omset Harian (Rp)',
-                                        data: numericData,
-                                        backgroundColor: gradient,
-                                        borderColor: '#10b981',
-                                        borderWidth: 3,
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointBackgroundColor: '#fff',
-                                        pointBorderColor: '#10b981',
-                                        pointBorderWidth: 2,
-                                        pointRadius: 4,
-                                        pointHoverRadius: 6,
-                                        pointHoverBackgroundColor: '#10b981',
-                                        pointHoverBorderColor: '#fff',
-                                        pointHoverBorderWidth: 2,
-                                        pointHitRadius: 10
-                                    }]
+                        this.chart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: this.labels,
+                                datasets: [{
+                                    label: 'Omset Harian (Rp)',
+                                    data: numericData,
+                                    backgroundColor: gradient,
+                                    borderColor: '#10b981',
+                                    borderWidth: 3,
+                                    tension: 0.4,
+                                    fill: true,
+                                    pointBackgroundColor: '#fff',
+                                    pointBorderColor: '#10b981',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    pointHoverBackgroundColor: '#10b981',
+                                    pointHoverBorderColor: '#fff',
+                                    pointHoverBorderWidth: 2,
+                                    pointHitRadius: 10
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                // animations (plural) = kontrol per-properti di Chart.js v3+
+                                // y.from: 0  → setiap titik data mulai dari baseline (y=0)
+                                //             dan naik ke nilai aslinya (efek grow-from-zero)
+                                animations: {
+                                    y: {
+                                        from: 0,
+                                        duration: 1200,
+                                        easing: 'easeOutQuart',
+                                        delay: (context) => {
+                                            if (context.type === 'data' && context.mode === 'default') {
+                                                return context.dataIndex * 40;
+                                            }
+                                            return 0;
+                                        }
+                                    }
                                 },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    // animations (plural) = kontrol per-properti di Chart.js v3+
-                                    // y.from: 0  → setiap titik data mulai dari baseline (y=0)
-                                    //             dan naik ke nilai aslinya (efek grow-from-zero)
-                                    animations: {
-                                        y: {
-                                            from: 0,
-                                            duration: 1200,
-                                            easing: 'easeOutQuart',
-                                            delay: (context) => {
-                                                if (context.type === 'data' && context.mode === 'default') {
-                                                    return context.dataIndex * 40;
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false,
+                                },
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                        padding: 12,
+                                        titleFont: { size: 14, weight: 'bold' },
+                                        bodyFont: { size: 13 },
+                                        cornerRadius: 8,
+                                        callbacks: {
+                                            label: function(context) {
+                                                let label = context.dataset.label || '';
+                                                if (label) label += ': ';
+                                                if (context.parsed.y !== null) {
+                                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(context.parsed.y);
                                                 }
-                                                return 0;
-                                            }
-                                        }
-                                    },
-                                    interaction: {
-                                        mode: 'index',
-                                        intersect: false,
-                                    },
-                                    plugins: {
-                                        legend: { display: false },
-                                        tooltip: {
-                                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                                            padding: 12,
-                                            titleFont: { size: 14, weight: 'bold' },
-                                            bodyFont: { size: 13 },
-                                            cornerRadius: 8,
-                                            callbacks: {
-                                                label: function(context) {
-                                                    let label = context.dataset.label || '';
-                                                    if (label) label += ': ';
-                                                    if (context.parsed.y !== null) {
-                                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(context.parsed.y);
-                                                    }
-                                                    return label;
-                                                }
-                                            }
-                                        }
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
-                                            ticks: {
-                                                color: '#64748b',
-                                                font: { size: 10 },
-                                                callback: function(value) {
-                                                    return 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact', compactDisplay: 'short' }).format(value);
-                                                }
-                                            }
-                                        },
-                                        x: {
-                                            grid: { display: false },
-                                            ticks: {
-                                                color: '#64748b',
-                                                font: { size: 10, weight: '600' }
+                                                return label;
                                             }
                                         }
                                     }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.05)' },
+                                        ticks: {
+                                            color: '#64748b',
+                                            font: { size: 10 },
+                                            callback: function(value) {
+                                                return 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact', compactDisplay: 'short' }).format(value);
+                                            }
+                                        }
+                                    },
+                                    x: {
+                                        grid: { display: false },
+                                        ticks: {
+                                            color: '#64748b',
+                                            font: { size: 10, weight: '600' }
+                                        }
+                                    }
                                 }
-                            });
+                            }
                         });
                     },
                     updateChart(newLabels, newData) {

@@ -105,7 +105,7 @@ class SalesLeaderboard extends Component
     private function buildDailyRange(Carbon $start, Carbon $end, string $title): array
     {
         $salesTrend = Sale::where('status', 'completed')
-            ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+            ->whereBetween('date', [$start->copy()->startOfDay()->toDateTimeString(), $end->copy()->endOfDay()->toDateTimeString()])
             ->select(DB::raw('DATE(date) as sale_date'), DB::raw('SUM(grand_total) as daily_total'))
             ->groupBy('sale_date')
             ->orderBy('sale_date')
@@ -141,7 +141,7 @@ class SalesLeaderboard extends Component
             if ($end->gt($now)) $end = $now->copy();
 
             $total = Sale::where('status', 'completed')
-                ->whereBetween('date', [$start->format('Y-m-d'), $end->format('Y-m-d')])
+                ->whereBetween('date', [$start->copy()->startOfDay()->toDateTimeString(), $end->copy()->endOfDay()->toDateTimeString()])
                 ->sum('grand_total');
 
             $labels[] = $start->format('d/m');

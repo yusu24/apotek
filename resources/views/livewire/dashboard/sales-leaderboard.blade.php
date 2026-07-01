@@ -243,17 +243,12 @@
                 @php
                     $rank1 = $leaderboard->first();
                     $rank1Name = $rank1->user->name ?? 'Kasir';
-                    
-                    // Ambil inisial 2 huruf dari nama
-                    $words = explode(' ', trim($rank1Name));
-                    if (count($words) >= 2) {
-                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
-                    } else {
-                        $initials = strtoupper(substr($rank1Name, 0, 2));
-                    }
+                    $rank1Avatar = $rank1->user->profile_photo_path
+                        ? asset('storage/' . $rank1->user->profile_photo_path)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=f1f5f9&color=1e293b&size=128&bold=true';
                 @endphp
                 <div class="px-5 pt-4">
-                    <div class="bg-[#FFFDF4] dark:bg-amber-950/10 border border-[#FEF2C7] dark:border-amber-900/30 rounded-3xl p-6 shadow-sm relative overflow-hidden flex flex-col sm:flex-row items-center gap-6 text-left"
+                    <div style="background: linear-gradient(135deg, #fffdf5 0%, #fffbeb 100%); border: 1px solid #fde68a; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.05);" class="rounded-3xl p-5 relative overflow-hidden group flex flex-col md:flex-row items-center md:items-center gap-5 md:gap-6 text-left"
                          x-data="{
                             confettiCanvas: null,
                             particles: [],
@@ -330,97 +325,93 @@
                         <!-- Confetti Canvas -->
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
-                        <!-- Profile Photo (Square with rounded corners - Initials SI) -->
-                        <div class="relative w-28 h-28 shrink-0 flex items-center justify-center bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl shadow-md text-white text-4xl font-extrabold tracking-wider select-none" style="z-index: 2; box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);">
-                            @if($rank1->user->profile_photo_path)
-                                <img src="{{ asset('storage/' . $rank1->user->profile_photo_path) }}" alt="{{ $rank1Name }}" class="w-full h-full rounded-2xl object-cover" />
+                        <!-- Trophy Background Illustration -->
+                        <div class="absolute right-4 bottom-1/2 translate-y-1/2 pointer-events-none select-none z-0 opacity-90">
+                            <svg class="w-28 h-28 md:w-32 md:h-32 text-amber-300/40 dark:text-amber-500/10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 4h12v8c0 3.314-2.686 6-6 6s-6-2.686-6-6V4z" fill="#fcd34d" />
+                                <path d="M8 4h8v8c0 2.209-1.791 4-4 4s-4-1.791-4-4V4z" fill="#fbbf24" />
+                                <path d="M6 6H3v4c0 1.5 1 2.5 2.5 3M18 6h3v4c0 1.5-1 2.5-2.5 3" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" fill="none" />
+                                <path d="M12 7.5l0.8 1.6 1.8 0.3-1.3 1.3 0.3 1.8-1.6-0.8-1.6 0.8 0.3-1.8-1.3-1.3 1.8-0.3L12 7.5z" fill="#fff" />
+                                <path d="M11 18h2v2h-2v-2z" fill="#f59e0b" />
+                                <rect x="9" y="20" width="6" height="2" rx="0.5" fill="#d97706" />
+                                <rect x="8" y="21" width="8" height="2" rx="0.5" fill="#b45309" />
+                            </svg>
+                        </div>
+
+                        <!-- Initials Box with Crown (Left Column) -->
+                        @php
+                            $words = explode(' ', trim($rank1Name));
+                            if (count($words) >= 2) {
+                                $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                            } else {
+                                $initials = strtoupper(substr($rank1Name, 0, 2));
+                            }
+                        @endphp
+                        <div class="relative w-24 h-24 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0 rounded-2xl flex items-center justify-center shadow-md overflow-visible" style="background: linear-gradient(135deg, #ffca28 0%, #ff8f00 100%); z-index: 2;">
+                            <!-- Crown on top-left of the initials box -->
+                            <div class="absolute -top-3.5 -left-3.5 rotate-[-15deg] drop-shadow-md z-10">
+                                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 17h16a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1a1 1 0 011-1z" fill="#d97706" />
+                                    <path d="M3 16l2.5-8 3.5 4.5 3-8 3 8 3.5-4.5 2.5 8H3z" fill="#fbbf24" />
+                                    <path d="M12 4.5l-2.5 5.8 2.5 1.7 2.5-1.7L12 4.5z" fill="#f59e0b" opacity="0.6" />
+                                    <circle cx="3" cy="8" r="1" fill="#ef4444" />
+                                    <circle cx="9" cy="12.5" r="0.8" fill="#3b82f6" />
+                                    <circle cx="12" cy="4" r="1" fill="#ef4444" />
+                                    <circle cx="15" cy="12.5" r="0.8" fill="#3b82f6" />
+                                    <circle cx="21" cy="8" r="1" fill="#ef4444" />
+                                    <circle cx="6" cy="18.5" r="0.6" fill="#fff" />
+                                    <circle cx="12" cy="18.5" r="0.6" fill="#fff" />
+                                    <circle cx="18" cy="18.5" r="0.6" fill="#fff" />
+                                </svg>
+                            </div>
+
+                            @if($rank1->user?->profile_photo_path)
+                                <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" class="w-full h-full rounded-2xl object-cover" />
                             @else
-                                {{ $initials }}
+                                <span class="text-white text-4xl font-extrabold tracking-wider select-none">{{ $initials }}</span>
                             @endif
-                            <!-- Crown on top-left of the avatar -->
-                            <span class="absolute -top-3 -left-3 text-3xl select-none filter drop-shadow transform -rotate-12">👑</span>
                         </div>
 
                         <!-- Details (Right Column) -->
                         <div class="flex-1 min-w-0 w-full" style="z-index: 2;">
-                            <div class="font-extrabold text-slate-800 dark:text-white flex items-center justify-start gap-1.5 mb-3 text-base">
-                                <span class="text-xl">👑</span>
-                                <span>Peringkat 1 Bulan Ini</span>
+                            <div class="font-extrabold text-[#1e3a8a] dark:text-emerald-200 flex items-center justify-center md:justify-start gap-1.5 mb-2.5 text-sm">
+                                <span>👑 Peringkat 1 Bulan Ini</span>
                             </div>
 
-                            <table class="text-sm text-slate-600 dark:text-slate-300 border-separate border-spacing-y-2.5">
+                            <table class="w-full text-xs text-slate-600 dark:text-slate-300 border-collapse">
                                 <tbody>
                                     <tr class="align-middle">
-                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
-                                            <div class="flex items-center gap-2">
-                                                <div class="p-1 bg-blue-50 dark:bg-blue-900/30 rounded-md">
-                                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 1114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
-                                                    </svg>
-                                                </div>
-                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Nama</span>
-                                            </div>
+                                        <td class="py-1.5 w-5 shrink-0">
+                                            <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                            </svg>
                                         </td>
-                                        <td class="text-slate-400 px-3 py-0.5">:</td>
-                                        <td class="font-bold text-slate-800 dark:text-white py-0.5 capitalize">{{ $rank1Name }}</td>
+                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 w-[110px] font-medium pl-1">Nama</td>
+                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
+                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5 truncate max-w-[150px]" title="{{ $rank1Name }}">{{ $rank1Name }}</td>
                                     </tr>
                                     <tr class="align-middle">
-                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
-                                            <div class="flex items-center gap-2">
-                                                <div class="p-1 bg-emerald-50 dark:bg-emerald-900/30 rounded-md">
-                                                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.116 60.116 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.2 0 .75.75 0 011.2 0zm12.75 0a.75.75 0 11-1.2 0 .75.75 0 011.2 0z"></path>
-                                                    </svg>
-                                                </div>
-                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Jumlah Transaksi</span>
-                                            </div>
+                                        <td class="py-1.5 w-5 shrink-0">
+                                            <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 100-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+                                            </svg>
                                         </td>
-                                        <td class="text-slate-400 px-3 py-0.5">:</td>
-                                        <td class="font-bold text-slate-800 dark:text-white py-0.5">{{ $rank1->total_transactions }}</td>
+                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 font-medium pl-1">Jumlah Transaksi</td>
+                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
+                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">{{ $rank1->total_transactions }}</td>
                                     </tr>
                                     <tr class="align-middle">
-                                        <td class="py-0.5 whitespace-nowrap text-slate-500 dark:text-slate-400">
-                                            <div class="flex items-center gap-2">
-                                                <div class="p-1 bg-violet-50 dark:bg-violet-900/30 rounded-md">
-                                                    <svg class="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-5.625-12h17.25c.621 0 1.125.504 1.125 1.125v13.5c0 .621-.504 1.125-1.125 1.125H3.375c-.621 0-1.125-.504-1.125-1.125V3.375c0-.621.504-1.125 1.125-1.125z"></path>
-                                                    </svg>
-                                                </div>
-                                                <span class="font-semibold text-slate-500 dark:text-slate-400">Total kontribusi</span>
-                                            </div>
+                                        <td class="py-1.5 w-5 shrink-0">
+                                            <svg class="w-4 h-4 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                            </svg>
                                         </td>
-                                        <td class="text-slate-400 px-3 py-0.5">:</td>
-                                        <td class="font-bold text-slate-800 dark:text-white py-0.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
+                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 font-medium pl-1">Total kontribusi</td>
+                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
+                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-
-                        <!-- Trophy Graphic (Right Side) -->
-                        <div class="relative shrink-0 hidden sm:block select-none" style="z-index: 2;">
-                            <svg class="w-28 h-28 drop-shadow-lg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Trophy Cup -->
-                                <path d="M25 25H75V45C75 58.8 63.8 70 50 70C36.2 70 25 58.8 25 45V25Z" fill="url(#trophy_grad)" />
-                                <!-- Trophy Handles -->
-                                <path d="M25 30H15C10 30 10 42 15 45L25 47M75 30H85C90 30 90 42 85 45L75 47" stroke="url(#trophy_grad)" stroke-width="6" stroke-linecap="round" fill="none" />
-                                <!-- Base/Stem -->
-                                <path d="M44 70H56V82H44V70Z" fill="url(#trophy_grad)" />
-                                <path d="M30 82H70V88C70 90.2 68.2 92 66 92H34C31.8 92 30 90.2 30 88V82Z" fill="url(#trophy_base_grad)" />
-                                <!-- Star on Cup -->
-                                <path d="M50 35L53.5 42.5L61.5 43.5L55.5 49L57.5 57L50 52.8L42.5 57L44.5 49L38.5 43.5L46.5 42.5L50 35Z" fill="#FFF" opacity="0.9" />
-                                <!-- Gradients -->
-                                <defs>
-                                    <linearGradient id="trophy_grad" x1="25" y1="25" x2="75" y2="70" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#FCD34D" />
-                                        <stop offset="50%" stop-color="#F59E0B" />
-                                        <stop offset="100%" stop-color="#D97706" />
-                                    </linearGradient>
-                                    <linearGradient id="trophy_base_grad" x1="30" y1="82" x2="70" y2="92" gradientUnits="userSpaceOnUse">
-                                        <stop offset="0%" stop-color="#E5E7EB" />
-                                        <stop offset="100%" stop-color="#9CA3AF" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
                         </div>
                     </div>
                 </div>

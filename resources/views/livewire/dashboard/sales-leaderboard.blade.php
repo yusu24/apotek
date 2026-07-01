@@ -326,22 +326,24 @@
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
                         <!-- Trophy Background Illustration -->
-                        <div class="absolute right-3 md:right-5 bottom-1/2 translate-y-1/2 pointer-events-none select-none z-0" style="opacity: 0.45;">
-                            <svg class="w-20 h-20 md:w-24 md:h-24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="absolute pointer-events-none select-none z-0" style="right: 12px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
+                            <svg width="80" height="90" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Left handle (outer arc) -->
+                                <path d="M22 18 C10 18 4 27 4 34 C4 41 10 48 22 48" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
+                                <!-- Right handle (outer arc) -->
+                                <path d="M58 18 C70 18 76 27 76 34 C76 41 70 48 58 48" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
                                 <!-- Cup body -->
-                                <path d="M16 8h32v24c0 8.837-7.163 16-16 16S16 40.837 16 32V8z" fill="rgba(252,211,77,0.75)" />
-                                <path d="M20 8h24v24c0 6.627-5.373 12-12 12S20 38.627 20 32V8z" fill="rgba(251,191,36,0.85)" />
-                                <!-- Left handle -->
-                                <path d="M16 12H8a6 6 0 000 12h8" stroke="rgba(253,230,138,0.9)" stroke-width="3" stroke-linecap="round" fill="none"/>
-                                <!-- Right handle -->
-                                <path d="M48 12h8a6 6 0 010 12h-8" stroke="rgba(253,230,138,0.9)" stroke-width="3" stroke-linecap="round" fill="none"/>
-                                <!-- Star inside cup -->
-                                <path d="M32 18l2.4 4.9 5.4 0.8-3.9 3.8 0.9 5.4-4.8-2.5-4.8 2.5 0.9-5.4-3.9-3.8 5.4-0.8L32 18z" fill="rgba(255,255,255,0.7)" />
-                                <!-- Stem -->
-                                <rect x="28" y="48" width="8" height="6" rx="1" fill="rgba(245,158,11,0.7)" />
-                                <!-- Base plate -->
-                                <rect x="22" y="54" width="20" height="4" rx="1.5" fill="rgba(217,119,6,0.7)" />
-                                <rect x="20" y="57" width="24" height="4" rx="1.5" fill="rgba(180,83,9,0.7)" />
+                                <path d="M20 8 H60 L56 52 C54 60 46 65 40 65 C34 65 26 60 24 52 Z" fill="#FBBF24"/>
+                                <!-- Cup shine highlight -->
+                                <path d="M26 12 H52 L49 48 C48 56 44 60 40 60 C38 59 33 56 32 48 Z" fill="#FCD34D"/>
+                                <!-- Star -->
+                                <path d="M40 22 L42.9 30.6 L52 30.6 L44.6 35.9 L47.5 44.5 L40 39.2 L32.5 44.5 L35.4 35.9 L28 30.6 L37.1 30.6 Z" fill="white"/>
+                                <!-- Neck/stem -->
+                                <rect x="34" y="65" width="12" height="10" rx="2" fill="#F59E0B"/>
+                                <!-- Base top -->
+                                <rect x="24" y="75" width="32" height="6" rx="3" fill="#D97706"/>
+                                <!-- Base bottom -->
+                                <rect x="20" y="80" width="40" height="7" rx="3" fill="#B45309"/>
                             </svg>
                         </div>
 

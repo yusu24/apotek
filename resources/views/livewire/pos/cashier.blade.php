@@ -138,14 +138,12 @@
                                     <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs md:text-sm">{{ $item['name'] }}</div>
                                     
                                     <!-- Price & Unit Display/Selector -->
-                                    <div class="flex flex-wrap items-center gap-2 mt-1">
-                                        <div class="flex items-center gap-1">
-                                            <span class="text-[10px] font-normal text-gray-400">@</span>
-                                            <span class="text-xs font-normal text-blue-700">{{ number_format($item['price'], 0, ',', '.') }}</span>
-                                        </div>
+                                    <div class="flex items-center gap-1.5 mt-1 flex-nowrap overflow-hidden">
+                                        <span class="text-[10px] font-normal text-gray-400 shrink-0">@</span>
+                                        <span class="text-xs font-normal text-blue-700 shrink-0">{{ number_format($item['price'], 0, ',', '.') }}</span>
 
                                         @if(($item['discount_percent'] ?? 0) > 0)
-                                            <span class="text-[10px] text-amber-600 font-normal bg-amber-50 px-1 rounded uppercase">
+                                            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded shrink-0">
                                                 -{{ $item['discount_percent'] }}%
                                             </span>
                                         @endif
@@ -158,7 +156,7 @@
                                             }
                                         @endphp
                                         @if($isWholesale)
-                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-normal uppercase tracking-tighter">Grosir</span>
+                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-normal uppercase tracking-tighter shrink-0">Grosir</span>
                                         @endif
                                     </div>
 

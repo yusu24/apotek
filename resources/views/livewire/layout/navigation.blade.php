@@ -170,7 +170,7 @@ new class extends Component
                 $isStockActive = (request()->routeIs('inventory.*') || request()->routeIs('procurement.*')) && !request()->routeIs('inventory.returns.*');
             @endphp
             <div x-data="{ expanded: {{ $isStockActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isStockActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" x-bind:class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                         <span class="truncate" x-bind:class="{'xl:hidden': $store.sidebar.collapsed}">Stok & Pengadaan</span>
@@ -205,7 +205,7 @@ new class extends Component
             <!-- Returns Group -->
             @canany(['manage sales returns', 'manage purchase returns'])
             <div x-data="{ expanded: {{ request()->routeIs('inventory.returns.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('inventory.returns.*') ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('inventory.returns.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Retur Barang</span>
@@ -233,7 +233,7 @@ new class extends Component
             <!-- Products Group (Master Data) -->
             @canany(['view products', 'manage categories', 'manage units', 'manage product units', 'manage suppliers', 'manage customers'])
             <div x-data="{ expanded: {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('products.*') || request()->routeIs('master.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Data Master</span>
@@ -301,7 +301,7 @@ new class extends Component
                                  ]);
             @endphp
             <div x-data="{ expanded: {{ $isFinanceReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceReportActive ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceReportActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Keuangan</span>
@@ -367,7 +367,7 @@ new class extends Component
                 $isOperationalReportActive = request()->routeIs('reports.*') && !request()->routeIs(['finance.*', 'accounting.*']);
             @endphp
             <div x-data="{ expanded: {{ $isOperationalReportActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isOperationalReportActive ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isOperationalReportActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Operasional</span>
@@ -419,7 +419,7 @@ new class extends Component
                                    ]);
             @endphp
             <div x-data="{ expanded: {{ $isFinanceActive ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ $isFinanceActive ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Keuangan & Administrasi</span>
@@ -474,7 +474,7 @@ new class extends Component
 
             @canany(['manage settings', 'manage pos settings', 'manage users', 'view activity logs', 'manage backups', 'view online users', 'view notifications'])
             <div x-data="{ expanded: {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'true' : 'false' }} }">
-                <button @click="expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'text-white' : 'text-white' }}">
+                <button @click="if($store.sidebar.collapsed) $store.sidebar.toggle(); expanded = !expanded" class="w-full flex justify-between items-center px-3 py-2 text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors {{ request()->routeIs('settings.*') || request()->routeIs('admin.*') ? 'text-white' : 'text-white' }}">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengaturan Sistem</span>

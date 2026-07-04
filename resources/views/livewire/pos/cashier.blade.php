@@ -3,6 +3,7 @@
         showAlert: false, 
         mobileCartOpen: false,
         showPayment: @entangle('showPaymentModal'),
+        hIdx: @entangle('highlightIndex'),
         alertMsg: '',
         alertType: 'error',
         showAlertFn(msg, type = 'error') {
@@ -132,7 +133,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($cart as $id => $item)
-                            <tr class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
+                            <tr wire:key="cart-row-{{ $id }}" class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
                                 <td class="px-2 md:px-4 py-2 md:py-3 align-top">
                                     <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs md:text-sm">{{ $item['name'] }}</div>
                                     
@@ -161,36 +162,8 @@
                                         @endif
                                     </div>
 
-                                    <!-- Inline Edit Forms (Toggled) -->
-                                    <div class="space-y-2 mt-1">
-                                        <!-- Discount Input (Percent) -->
-                                        <div x-show="openDisc" x-transition class="flex items-center gap-2">
-                                            <span class="text-[10px] font-bold text-gray-400 uppercase w-8">Disc%</span>
-                                            <input type="number" 
-                                                wire:model.live.debounce.500ms="cart.{{ $id }}.discount_percent"
-                                                class="w-16 px-2 py-1 text-xs text-right border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                                                placeholder="0%"
-                                                max="100"
-                                                min="0"
-                                                x-ref="discInput_{{ $id }}"
-                                                @keydown.enter="openDisc = false"
-                                                @blur="openDisc = false">
-                                        </div>
-
-                                        <!-- Note Input -->
-                                        <div x-show="openNote" x-transition>
-                                            <input type="text" 
-                                                wire:model.blur="cart.{{ $id }}.notes"
-                                                class="w-full px-2 py-1 text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
-                                                placeholder="Tulis catatan..."
-                                                x-ref="noteInput_{{ $id }}"
-                                                @keydown.enter="openNote = false"
-                                                @blur="openNote = false">
-                                        </div>
-                                    </div>
-
                                     <!-- Badges (Active State Indicators) -->
-                                    <div class="flex flex-wrap gap-1 mt-1" x-show="!openDisc && !openNote">
+                                    <div class="flex flex-wrap gap-1 mt-1">
                                         @if(!empty($item['notes']))
                                             <div class="mt-1 max-w-[180px] md:max-w-[220px]">
                                                 <div class="text-[10px] text-gray-500 italic truncate flex items-center gap-1 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100" title="{{ $item['notes'] }}">
@@ -214,23 +187,58 @@
                                 </td>
                                 <td class="px-2 py-3 text-center align-top">
                                     <div class="flex items-center justify-center gap-1">
-                                        <!-- Discount Toggle -->
-                                         <button @click="openDisc = !openDisc; $nextTick(() => $refs.discInput_{{ $id }}.focus())" 
-                                                 class="p-1.5 rounded-lg transition"
-                                                 :class="openDisc || {{ ($item['discount_percent'] ?? 0) > 0 ? 'true' : 'false' }} ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
-                                                 title="Diskon (%)">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
-                                        </button>
+                                        <!-- Discount Toggle & Popover -->
+                                        <div class="relative">
+                                            <button @click="openDisc = !openDisc; openNote = false; if(openDisc) { $nextTick(() => $refs.discInput_{{ $id }}.focus()) }" 
+                                                    class="p-1.5 rounded-lg transition"
+                                                    :class="openDisc || {{ ($item['discount_percent'] ?? 0) > 0 ? 'true' : 'false' }} ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                    title="Diskon (%)">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
+                                            </button>
 
-                                        <!-- Note Toggle -->
-                                         <button @click="openNote = !openNote; $nextTick(() => $refs.noteInput_{{ $id }}.focus())" 
-                                                 class="p-1.5 rounded-lg transition"
-                                                 :class="openNote || '{{ addslashes($item['notes']) }}'.length > 0 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
-                                                 title="Catatan">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                        </button>
+                                            <!-- Floating Popover for Discount -->
+                                            <div x-show="openDisc" 
+                                                 @click.outside="openDisc = false"
+                                                 x-transition
+                                                 class="absolute bottom-full right-0 mb-2 w-48 bg-white p-3 rounded-xl shadow-xl border border-gray-200 z-50 text-left">
+                                                <label class="text-xs font-bold mb-1.5 block text-gray-700">Diskon Item (%):</label>
+                                                <div class="flex items-center gap-2">
+                                                    <input type="number" 
+                                                        wire:model.blur="cart.{{ $id }}.discount_percent"
+                                                        class="w-full px-2 py-1.5 text-xs text-center border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500 font-bold"
+                                                        placeholder="0"
+                                                        max="100"
+                                                        min="0"
+                                                        x-ref="discInput_{{ $id }}"
+                                                        @keydown.enter="openDisc = false">
+                                                    <span class="text-xs font-bold text-gray-500">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                        <!-- Note Toggle & Popover -->
+                                        <div class="relative">
+                                            <button @click="openNote = !openNote; openDisc = false; if(openNote) { $nextTick(() => $refs.noteInput_{{ $id }}.focus()) }" 
+                                                    class="p-1.5 rounded-lg transition"
+                                                    :class="openNote || '{{ addslashes($item['notes']) }}'.length > 0 ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+                                                    title="Catatan">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            </button>
 
+                                            <!-- Floating Popover for Note -->
+                                            <div x-show="openNote" 
+                                                 @click.outside="openNote = false"
+                                                 x-transition
+                                                 class="absolute bottom-full right-0 mb-2 w-64 bg-white p-3 rounded-xl shadow-xl border border-gray-200 z-50 text-left">
+                                                <label class="text-xs font-bold mb-1.5 block text-gray-700">Catatan Item:</label>
+                                                <input type="text" 
+                                                    wire:model.blur="cart.{{ $id }}.notes"
+                                                    class="w-full px-2 py-1.5 text-xs border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                                                    placeholder="Tulis catatan..."
+                                                    x-ref="noteInput_{{ $id }}"
+                                                    @keydown.enter="openNote = false">
+                                            </div>
+                                        </div>
 
                                         <!-- Delete -->
                                         <button wire:click="removeFromCart({{ $id }})" class="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
@@ -331,12 +339,29 @@
                         
                         <input type="text" 
                             x-data="{ 
-                                isThrottled: false, 
                                 handleKey(dir, cols = 1) {
-                                    if (this.isThrottled) return;
-                                    this.isThrottled = true;
-                                    setTimeout(() => this.isThrottled = false, 100);
-                                    $wire.moveHighlight(dir, cols);
+                                    let count = {{ count($products) }};
+                                    if (count === 0) return;
+                                    
+                                    if (dir === 'up') {
+                                        hIdx -= cols;
+                                        if (hIdx < 0) {
+                                            hIdx = (cols > 1) ? hIdx + count : count - 1;
+                                        }
+                                    } else if (dir === 'down') {
+                                        hIdx += cols;
+                                        if (hIdx >= count) {
+                                            hIdx = (cols > 1) ? hIdx - count : 0;
+                                        }
+                                    } else if (dir === 'right') {
+                                        hIdx++;
+                                        if (hIdx >= count) hIdx = 0;
+                                    } else if (dir === 'left') {
+                                        hIdx--;
+                                        if (hIdx < 0) hIdx = count - 1;
+                                    }
+                                    
+                                    hIdx = Math.max(0, Math.min(count - 1, hIdx));
                                 } 
                             }"
                             wire:model.live.debounce.300ms="search"
@@ -364,7 +389,8 @@
                         <div class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-96 overflow-y-auto">
                             @foreach($products->take(10) as $index => $product)
                                 <div wire:click="addToCart({{ $product->id }})"
-                                        class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 {{ $highlightIndex === $index ? 'bg-blue-100' : 'hover:bg-blue-50' }} transition-colors">
+                                        class="p-3 cursor-pointer flex justify-between items-center border-b border-gray-50 last:border-0 transition-colors"
+                                        :class="hIdx === {{ $index }} ? 'bg-blue-100' : 'hover:bg-blue-50'">
                                     <div class="flex-1 min-w-0 mr-3">
                                         <div class="font-bold text-gray-900 truncate">{{ $product->name }}</div>
                                         <div class="text-xs text-gray-500">Stok: {{ $product->total_stock }}</div>
@@ -433,7 +459,7 @@
                 </div>
 
                 <!-- Product Grid (Scrollable) -->
-                <div class="flex-1 p-3 md:p-6 overflow-y-auto" x-data="{ hIdx: @entangle('highlightIndex') }" x-init="$watch('hIdx', value => {
+                <div class="flex-1 p-3 md:p-6 overflow-y-auto" x-init="$watch('hIdx', value => {
                     const el = document.getElementById('grid-product-' + value);
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 })">
@@ -441,7 +467,8 @@
                         @forelse($products as $index => $product)
                         <div id="grid-product-{{ $index }}" 
                              wire:key="product-grid-{{ $product->id }}"
-                             class="bg-white border-2 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg transition-all group relative {{ (int)$highlightIndex === (int)$index ? 'border-blue-500 ring-4 ring-blue-50 shadow-md' : 'border-gray-100' }}">
+                             class="bg-white border-2 rounded-xl p-4 hover:border-blue-500 hover:shadow-lg transition-all group relative"
+                             :class="hIdx === {{ $index }} ? 'border-blue-500 ring-4 ring-blue-50 shadow-md' : 'border-gray-100'">
                             
                             <!-- Stock Badge (Top Right Corner) -->
                             <div class="absolute top-2 right-2 z-10 pointer-events-none">
@@ -469,15 +496,15 @@
                             </div>
                             
                             <!-- Product Info - Click to Add -->
-                            <div class="cursor-pointer" wire:click="addToCart({{ $product->id }})">
-                                <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis hover:text-blue-600">{{ $product->name }}</h4>
-                                <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
-                            </div>
-                            
-                            <!-- Add Button - Click to Add -->
-                            <button wire:click="addToCart({{ $product->id }})" class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
-                                + Tambah
-                            </button>
+                             <div class="cursor-pointer" @click="hIdx = {{ $index }}; document.getElementById('pos-search-input').focus()" wire:click="addToCart({{ $product->id }})">
+                                 <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis hover:text-blue-600">{{ $product->name }}</h4>
+                                 <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
+                             </div>
+                             
+                             <!-- Add Button - Click to Add -->
+                             <button @click="hIdx = {{ $index }}; document.getElementById('pos-search-input').focus()" wire:click="addToCart({{ $product->id }})" class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
+                                 + Tambah
+                             </button>
                         </div>
                         @empty
                         <div class="col-span-full py-20 flex flex-col items-center text-gray-400">
@@ -948,7 +975,7 @@
         <!-- Mobile Cart Items (Scrollable) -->
         <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-3">
              @forelse($cart as $id => $item)
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative">
+                <div wire:key="cart-mobile-{{ $id }}" class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative">
                      <div class="flex justify-between items-start mb-2">
                         <div>
                              <h4 class="font-bold text-gray-800 line-clamp-1">{{ $item['name'] }}</h4>
@@ -976,9 +1003,9 @@
                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                              </button>
                              <input type="number" 
-                                    value="{{ $item['qty'] }}"
-                                    class="w-8 text-center bg-transparent border-none text-sm font-bold p-0 focus:ring-0" 
-                                    readonly>
+                                     wire:model.blur="cart.{{ $id }}.qty"
+                                     class="w-12 text-center bg-transparent border-none text-sm font-bold p-0 focus:ring-0 focus:outline-none"
+                                     min="1">
                              <button wire:click="updateQty({{ $id }}, {{ (float)$item['qty'] + 1 }})" class="p-1.5 hover:bg-white rounded-md transition shadow-sm text-gray-600">
                                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                              </button>

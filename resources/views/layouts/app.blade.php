@@ -35,9 +35,10 @@
                 });
 
                 Alpine.store('sidebar', {
-                    collapsed: localStorage.getItem('sidebar_collapsed') === 'true',
+                    collapsed: window.location.pathname.replace(/\/$/, '').endsWith('/cashier') ? true : (localStorage.getItem('sidebar_collapsed') === 'true'),
                     init() {
-                        if (this.collapsed) {
+                        const isCashier = window.location.pathname.replace(/\/$/, '').endsWith('/cashier');
+                        if (isCashier || this.collapsed) {
                             document.documentElement.classList.add('sidebar-collapsed');
                         } else {
                             document.documentElement.classList.remove('sidebar-collapsed');
@@ -380,12 +381,14 @@
         </style>
     <script>
         // Apply sidebar state immediately to prevent layout bounce
-        if (localStorage.getItem('sidebar_collapsed') === 'true') {
+        var isCashierInit = window.location.pathname.replace(/\/$/, '').endsWith('/cashier');
+        if (isCashierInit || localStorage.getItem('sidebar_collapsed') === 'true') {
             document.documentElement.classList.add('sidebar-collapsed');
         }
         // Apply navbar left position before Alpine loads to prevent flash
         (function() {
-            var collapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+            var isCashierInit = window.location.pathname.replace(/\/$/, '').endsWith('/cashier');
+            var collapsed = isCashierInit || localStorage.getItem('sidebar_collapsed') === 'true';
             var style = document.createElement('style');
             style.id = 'navbar-init-style';
             style.textContent = '#desktop-navbar { left: ' + (collapsed ? '5rem' : '16rem') + ' !important; }';

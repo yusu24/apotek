@@ -10,6 +10,7 @@ use App\Models\SaleItem;
 use App\Models\StockMovement;
 use App\Models\Batch;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityLog;
@@ -1000,6 +1001,7 @@ class Cashier extends Component
                         'sell_price' => $item['price'],
                         'discount_amount' => $itemDiscount,
                         'subtotal' => ($item['price'] - $itemDiscount) * ($take / $factor),
+                        'notes' => $itemNotes,
                     ]);
 
                     StockMovement::create([
@@ -1024,6 +1026,7 @@ class Cashier extends Component
                         'sell_price' => $item['price'],
                         'discount_amount' => $itemDiscount,
                         'subtotal' => ($item['price'] - $itemDiscount) * ($qtyRemaining / $factor),
+                        'notes' => $itemNotes,
                     ]);
                     
                     StockMovement::create([
@@ -1121,6 +1124,7 @@ class Cashier extends Component
 
 
 
+    #[Computed]
     public function getProductsProperty()
     {
         return Product::query()

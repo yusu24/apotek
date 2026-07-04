@@ -998,6 +998,7 @@ class Cashier extends Component
                         'batch_id' => $batch->id,
                         'quantity' => $take / $factor,
                         'sell_price' => $item['price'],
+                        'discount_amount' => $itemDiscount,
                         'subtotal' => ($item['price'] - $itemDiscount) * ($take / $factor),
                     ]);
 
@@ -1021,6 +1022,7 @@ class Cashier extends Component
                         'batch_id' => null,
                         'quantity' => $qtyRemaining / $factor,
                         'sell_price' => $item['price'],
+                        'discount_amount' => $itemDiscount,
                         'subtotal' => ($item['price'] - $itemDiscount) * ($qtyRemaining / $factor),
                     ]);
                     

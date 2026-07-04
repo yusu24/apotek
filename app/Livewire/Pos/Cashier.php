@@ -498,6 +498,15 @@ class Cashier extends Component
                          $this->cart[$productId]['qty'] = $maxAllowedRaw;
                      } 
                 }
+
+                if ($field === 'discount_percent') {
+                    if ($value === '' || $value === null) {
+                        $this->cart[$productId]['discount_percent'] = 0;
+                    } else {
+                        $percent = max(0, min(100, (float)$value));
+                        $this->cart[$productId]['discount_percent'] = $percent;
+                    }
+                }
             }
             
             $this->calculateTotal();

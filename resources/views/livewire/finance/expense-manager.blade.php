@@ -164,6 +164,7 @@
                                 @endif
                             </div>
                         </th>
+                        <th class="px-6 py-4 text-left">Tipe</th>
                         <th wire:click="sortByColumn('category')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Kategori
@@ -194,6 +195,13 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $expense->description }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                @if($expense->type === 'income')
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase tracking-tighter">Pemasukan</span>
+                                @else
+                                    <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[10px] font-bold uppercase tracking-tighter">Pengeluaran</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($expense->account)
@@ -220,7 +228,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="7" />
+                        <x-empty-table colspan="8" />
                     @endforelse
                 </tbody>
             </table>
@@ -283,6 +291,20 @@
                                         @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>
+                                        <label class="block text-sm font-medium text-gray-700">Tipe Transaksi</label>
+                                        <div class="mt-1 grid grid-cols-2 gap-2">
+                                            <label class="flex items-center justify-center gap-2 border rounded-md py-2 cursor-pointer text-sm {{ $type === 'expense' ? 'border-red-500 bg-red-50 text-red-700 font-semibold' : 'border-gray-300 text-gray-600' }}">
+                                                <input type="radio" wire:model="type" value="expense" class="hidden">
+                                                Pengeluaran
+                                            </label>
+                                            <label class="flex items-center justify-center gap-2 border rounded-md py-2 cursor-pointer text-sm {{ $type === 'income' ? 'border-green-500 bg-green-50 text-green-700 font-semibold' : 'border-gray-300 text-gray-600' }}">
+                                                <input type="radio" wire:model="type" value="income" class="hidden">
+                                                Pemasukan Lain-lain
+                                            </label>
+                                        </div>
+                                        @error('type') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div>
                                         <label class="block text-sm font-medium text-gray-700">Keterangan</label>
                                         <input type="text" wire:model="description" placeholder="Contoh: Bayar Listrik" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                         @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
@@ -333,4 +355,12 @@
     @endif
 
     <!-- Category Management Modal -->
+
+    @script
+    <script>
+        $wire.on('open-pdf', (event) => {
+            window.open(event.url, '_blank');
+        });
+    </script>
+    @endscript
 </div>

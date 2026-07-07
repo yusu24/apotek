@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Laporan Stok & Opname</title>
     <style>
-        @page { 
-            size: A4; 
-            margin: 15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
-            color: #333; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.3;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,72 +22,61 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 20px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 12pt; 
-            font-weight: bold; 
-            color: #34495e;
-            margin: 0;
-        }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #7f8c8d;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
         }
 
         .meta-info {
-            margin-bottom: 15px;
-            font-size: 9pt;
-            color: #555;
+            margin-bottom: 12px;
+            font-size: 10pt;
+            color: #333;
+            text-align: center;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
-            margin-top: 10px;
-        }
-        
-        /* Table Header Style */
-        thead th {
-            padding: 8px 5px;
-            background-color: #f8f9fa;
-            border-top: 1.5pt solid #2c3e50;
-            border-bottom: 1.5pt solid #2c3e50;
-            font-weight: bold;
-            color: #2c3e50;
-            text-align: left;
-            text-transform: uppercase;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
             font-size: 8pt;
         }
 
-        tbody td { 
-            padding: 6px 5px; 
-            vertical-align: middle; 
-            border-bottom: 0.5pt solid #ecf0f1;
-            font-size: 8.5pt;
+        /* Table Header Style */
+        thead th {
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        tbody td {
+            padding: 4px 6px;
+            vertical-align: middle;
+            border-bottom: 0.5pt solid #eee;
         }
 
         .status-badge {
             padding: 2px 6px;
             border-radius: 4px;
-            font-size: 7.5pt;
+            font-size: 7pt;
             font-weight: bold;
             display: inline-block;
         }
-        
+
         .status-aman { background-color: #e8f5e9; color: #2e7d32; }
         .status-menipis { background-color: #fff8e1; color: #f57f17; }
         .status-habis { background-color: #ffebee; color: #c62828; }
@@ -98,13 +84,9 @@
     </style>
 </head>
 <body>
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }} | Oleh: {{ $printedBy }}
-    </div>
-
     <div class="report-header">
-        <div class="store-name uppercase">{{ $storeName }}</div>
-        <div class="report-title">Laporan Stok & Opname</div>
+        <div class="store-name">{{ $storeName }}</div>
+        <div class="report-title">LAPORAN STOK & OPNAME</div>
     </div>
 
     <div class="meta-info">

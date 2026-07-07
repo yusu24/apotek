@@ -380,7 +380,46 @@ class PdfController extends Controller
         ]);
         
         $filename = 'Laporan-Laba-Rugi-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
-        
+
+        return $pdf->setPaper('a4', 'portrait')->stream($filename);
+    }
+
+    /**
+     * Export Laporan Laba Rugi (Finance/ProfitLoss, cash-basis) to PDF, dgn perbandingan periode sebelumnya.
+     */
+    public function exportProfitLoss(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+        $showComparison = $request->boolean('compare', true);
+
+        $service = new \App\Services\ProfitLossService();
+        $current = $service->calculateMetrics($startDate, $endDate);
+
+        $previous = null;
+        $prevStart = null;
+        $prevEnd = null;
+        if ($showComparison) {
+            [$prevStart, $prevEnd] = $service->getPreviousPeriod($startDate, $endDate);
+            $previous = $service->calculateMetrics($prevStart, $prevEnd);
+        }
+
+        $pdf = Pdf::loadView('reports.pdf.profit-loss', [
+            'current' => $current,
+            'previous' => $previous,
+            'showComparison' => $showComparison,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'prevStartDate' => $prevStart,
+            'prevEndDate' => $prevEnd,
+            'storeName' => \App\Models\Setting::get('store_name', 'Apotek'),
+            'storeAddress' => \App\Models\Setting::get('store_address', ''),
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+
+        $filename = 'Laporan-Laba-Rugi-' . Carbon::parse($startDate)->format('Ymd') . '-' . Carbon::parse($endDate)->format('Ymd') . '.pdf';
+
         return $pdf->setPaper('a4', 'portrait')->stream($filename);
     }
 

@@ -21,6 +21,7 @@ class ExpenseManager extends Component
     public $description;
     public $amount;
     public $category;
+    public $type = 'expense';
     public $accountId;
     
     public $showModal = false;
@@ -123,11 +124,12 @@ class ExpenseManager extends Component
     {
         $this->reset(['description', 'amount', 'category', 'accountId', 'isEditing', 'editId']);
         $this->date = Carbon::now()->format('Y-m-d');
-        
+        $this->type = 'expense';
+
         // Set default category dynamically
         $defaultCat = ExpenseCategory::active()->orderBy('name')->first();
         $this->category = $defaultCat ? $defaultCat->name : null;
-        
+
         $this->showModal = true;
     }
 
@@ -139,8 +141,9 @@ class ExpenseManager extends Component
         $this->description = $expense->description;
         $this->amount = $expense->amount;
         $this->category = $expense->category;
+        $this->type = $expense->type;
         $this->accountId = $expense->account_id;
-        
+
         $this->isEditing = true;
         $this->showModal = true;
     }
@@ -152,6 +155,7 @@ class ExpenseManager extends Component
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'category' => 'required|string|max:255',
+            'type' => 'required|in:expense,income',
             'accountId' => 'nullable|exists:accounts,id',
         ]);
 
@@ -165,6 +169,7 @@ class ExpenseManager extends Component
                     'description' => $this->description,
                     'amount' => $this->amount,
                     'category' => $this->category,
+                    'type' => $this->type,
                     'account_id' => $this->accountId,
                 ]);
 
@@ -181,6 +186,7 @@ class ExpenseManager extends Component
                     'description' => $this->description,
                     'amount' => $this->amount,
                     'category' => $this->category,
+                    'type' => $this->type,
                     'account_id' => $this->accountId,
                     'user_id' => auth()->id(),
                 ]);
@@ -201,7 +207,8 @@ class ExpenseManager extends Component
 
             DB::commit();
             $this->showModal = false;
-            $this->reset(['description', 'amount', 'category', 'accountId', 'isEditing', 'editId']);
+            $this->reset(['description', 'amount', 'category', 'type', 'accountId', 'isEditing', 'editId']);
+            $this->type = 'expense';
             session()->flash('message', 'Data pengeluaran berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -242,11 +249,11 @@ class ExpenseManager extends Component
     public function exportPdf()
     {
         [$from, $to] = $this->getDateRange();
-        return redirect()->route('pdf.expenses', [
+        $this->dispatch('open-pdf', url: route('pdf.expenses', [
             'search' => $this->search,
             'from' => $from,
             'to' => $to,
-        ]);
+        ]));
     }
 
     

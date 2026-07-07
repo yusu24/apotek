@@ -36,6 +36,10 @@ class StoreSettings extends Component
     // Footer
     public $store_footer_note;
 
+    // Tax
+    public $tax_scheme;
+    public $tax_rate_umkm;
+
     // QRIS Payment
     public $store_qris_image;
     public $qris_image_url;
@@ -54,7 +58,7 @@ class StoreSettings extends Component
             'store_name', 'store_address', 'store_phone', 'store_email', 'store_tax_id',
             'store_logo_path', 'store_login_logo_path', 'store_sidebar_logo_path',
             'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note',
-            'store_qris_path'
+            'store_qris_path', 'tax_scheme', 'tax_rate_umkm',
         ]);
 
         $this->store_name = $settings['store_name'] ?? '';
@@ -74,6 +78,9 @@ class StoreSettings extends Component
         $this->qris_image_url = $settings['store_qris_path'] ? asset('storage/' . $settings['store_qris_path']) : null;
         
         $this->store_footer_note = $settings['store_footer_note'] ?? '';
+
+        $this->tax_scheme = $settings['tax_scheme'] ?? 'manual';
+        $this->tax_rate_umkm = $settings['tax_rate_umkm'] ?? '0.5';
     }
 
     public function save()
@@ -92,6 +99,8 @@ class StoreSettings extends Component
             'store_bank_holder' => 'nullable|string|max:100',
             'store_footer_note' => 'nullable|string|max:500',
             'store_qris_image' => 'nullable|image|max:2048',
+            'tax_scheme' => 'required|in:manual,umkm_final',
+            'tax_rate_umkm' => 'required_if:tax_scheme,umkm_final|nullable|numeric|min:0|max:100',
         ]);
 
         if ($this->store_logo) {
@@ -145,6 +154,9 @@ class StoreSettings extends Component
         }
         
         Setting::set('store_footer_note', $this->store_footer_note);
+
+        Setting::set('tax_scheme', $this->tax_scheme);
+        Setting::set('tax_rate_umkm', $this->tax_rate_umkm);
 
         ActivityLog::log([
             'action' => 'updated',

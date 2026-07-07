@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Laporan Margin Produk (Standar)</title>
     <style>
-        @page { 
-            size: A4; 
-            margin:  15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.2;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,76 +22,69 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 0;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #1e40af;
+            margin-top: 4px;
         }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
-            margin-top: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 10pt;
         }
-        
-        /* Table Header Style - Unified Border */
+
         .column-headers th {
-            padding: 5px 0;
-            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
             font-weight: bold;
-            color: #4a7ebb;
             text-align: left;
         }
 
-        td { 
-            padding: 5px 0; 
-            vertical-align: top; 
+        td {
+            padding: 4px 6px;
+            vertical-align: top;
             border-bottom: 0.5pt solid #eee;
         }
 
         .summary-box {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             width: 100%;
         }
-        .summary-box table { border: none; margin-top: 0; }
-        .summary-box td { border: none; padding: 2px 0; }
+        .summary-box table { border: none; margin-top: 0; font-size: 10pt; }
+        .summary-box td { border: none; padding: 2px 6px; }
         .summary-label { width: 40%; font-weight: bold; }
-        
+
         .margin-positive { color: #065f46; font-weight: bold; }
         .margin-negative { color: #991b1b; font-weight: bold; }
 
     </style>
 </head>
 <body>
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }}
-    </div>
-
     <div class="report-header">
-        <div class="store-name uppercase">{{ trim($storeName) }}</div>
-        <div class="report-title">Laporan {{ $reportMode === 'realized' ? 'Realisasi' : '' }} Margin Produk</div>
+        <div class="store-name">{{ trim($storeName) }}</div>
+        <div class="report-title">LAPORAN {{ $reportMode === 'realized' ? 'REALISASI ' : '' }}MARGIN PRODUK</div>
         @if($reportMode === 'realized')
-            <div style="font-size: 10pt; margin-top: 5px;">Periode: {{ \Carbon\Carbon::create()->month($month)->translatedFormat('F') }} {{ $year }}</div>
+            <div class="period-info">Untuk Periode {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</div>
         @endif
     </div>
 

@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Laporan Aging {{ $type === 'ar' ? 'Piutang' : 'Hutang' }} (Standar)</title>
     <style>
-        @page { 
-            size: A4 landscape; 
-            margin:  15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.2;
+        @page { size: A4 landscape; margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,100 +22,92 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 0;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
         }
-        .period-info { 
-            font-size: 10pt; 
-            margin-top: 5px; 
-        }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
-            margin-top: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 12pt;
         }
-        
-        /* Table Header Style - Unified Border */
+
         .column-headers th {
-            padding: 5px 0;
-            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
             font-weight: bold;
-            color: #4a7ebb;
             text-align: left;
         }
 
-        td { 
-            padding: 4px 0; 
-            vertical-align: top; 
+        td {
+            padding: 4px 6px;
+            vertical-align: top;
         }
-        
-        .entity-row td { 
-            font-weight: bold; 
-            padding-top: 10px;
-            padding-bottom: 5px;
-            color: #000;
+
+        .entity-row td {
+            font-weight: bold;
+            background-color: #eef2f9;
+            color: #1e40af;
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
-        
+
         .transaction-row td {
             border-bottom: 0.5pt solid #eee;
-            padding: 4px 0;
+            padding: 4px 6px;
         }
 
-        .total-row td { 
-            font-weight: bold; 
-            border-top: 1pt solid #000;
-            padding-top: 8px;
-            padding-bottom: 8px;
+        .total-row td {
+            font-weight: bold;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
-        .grand-total-label { 
-            font-weight: bold; 
+        .grand-total-label {
+            font-weight: bold;
             text-transform: uppercase;
-            padding-top: 10px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
-        .grand-total-value { 
-            font-weight: bold; 
-            border-top: 0.5pt solid #000; 
-            border-bottom: 3pt double #000;
+        .grand-total-value {
+            font-weight: bold;
             text-align: right;
-            padding-top: 2px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
     </style>
 </head>
 <body>
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }}
-    </div>
-
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
-        <div class="report-title">Laporan Aging {{ $type === 'ar' ? 'Piutang' : 'Hutang' }}</div>
+        <div class="report-title">LAPORAN AGING {{ $type === 'ar' ? 'PIUTANG' : 'HUTANG' }}</div>
         <div class="period-info">Per Tanggal: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
-        <div class="currency-info">(dalam Mata Uang Rupiah IDR)</div>
+        <div class="period-info">(dalam Mata Uang Rupiah IDR)</div>
     </div>
 
     <table>

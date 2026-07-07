@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Laporan Penjualan (Standar)</title>
     <style>
-        @page { 
-            size: A4; 
-            margin:  15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 8pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.2;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,88 +22,89 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 0;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #1e40af;
+            margin-top: 4px;
         }
-        .period-info { 
-            font-size: 10pt; 
-            margin-top: 5px; 
-        }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
-            margin-top: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 8pt;
         }
-        
-        /* Table Header Style - Unified Border */
+
         .column-headers th {
-            padding: 5px 0;
-            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
             font-weight: bold;
-            color: #4a7ebb;
             text-align: left;
         }
 
-        td { 
-            padding: 5px 0; 
-            vertical-align: top; 
+        td {
+            padding: 4px 6px;
+            vertical-align: top;
             border-bottom: 0.5pt solid #eee;
         }
 
-        .total-row td { 
-            font-weight: bold; 
-            border-top: 1pt solid #000;
-            padding-top: 8px;
-            padding-bottom: 8px;
+        .total-row td {
+            font-weight: bold;
+            background-color: #f3f4f6;
+            border-top: 1pt solid #999;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+        .subtotal-row td {
+            font-weight: bold;
+            background-color: #dbeafe;
+            border-top: 1pt solid #999;
+            border-bottom: 1pt solid #999;
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
 
-        .grand-total-label { 
-            font-weight: bold; 
+        .grand-total-label {
+            font-weight: bold;
             text-transform: uppercase;
-            padding-top: 10px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
-        .grand-total-value { 
-            font-weight: bold; 
-            border-top: 1pt solid #000; 
+        .grand-total-value {
+            font-weight: bold;
             text-align: right;
-            padding-top: 2px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
     </style>
 </head>
 <body>
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }}
-    </div>
-
     <div class="report-header">
-        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">Laporan Penjualan</div>
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">LAPORAN PENJUALAN</div>
         <div class="period-info">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+            Untuk Periode {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
         </div>
         @if($paymentMethod !== 'all')
             <div class="period-info font-bold">Metode Pembayaran: {{ strtoupper($paymentMethod) }}</div>
@@ -139,29 +137,29 @@
             @endforelse
             
             @if($sales->count() > 0)
-            <tr>
-                <td colspan="4" class="grand-total-label text-right" style="border-top: 1pt solid #000;">TOTAL PENJUALAN KOTOR</td>
-                <td class="grand-total-value" style="border-top: 1pt solid #000;">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</td>
+            <tr class="total-row">
+                <td colspan="4" class="text-right uppercase">Total Penjualan Kotor</td>
+                <td class="text-right">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td colspan="4" class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">(-) TOTAL PPN (PAJAK)</td>
-                <td class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</td>
+                <td colspan="4" class="text-right italic" style="color: #666;">(-) Total PPN (Pajak)</td>
+                <td class="text-right italic" style="color: #666;">Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td colspan="4" class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">(-) TOTAL PEMBULATAN</td>
-                <td class="text-right italic" style="font-size: 7pt; color: #666; border-top: none; padding-top: 0;">Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</td>
+                <td colspan="4" class="text-right italic" style="color: #666;">(-) Total Pembulatan</td>
+                <td class="text-right italic" style="color: #666;">Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</td>
+            </tr>
+            <tr class="subtotal-row">
+                <td colspan="4" class="text-right uppercase">Subtotal Bersih (DPP)</td>
+                <td class="text-right">Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td colspan="4" class="grand-total-label text-right" style="border-top: none; color: #4a7ebb; padding-top: 2px;">SUBTOTAL BERSIH (DPP)</td>
-                <td class="text-right font-bold" style="color: #4a7ebb; padding-top: 2px;">Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}</td>
+                <td colspan="4" class="text-right font-bold" style="color: #b91c1c;">(-) Total Retur</td>
+                <td class="text-right font-bold" style="color: #b91c1c;">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td colspan="4" class="grand-total-label text-right" style="color: red; border-top: none; padding-top: 2px;">(-) TOTAL RETUR</td>
-                <td class="text-right font-bold" style="color: red; padding-top: 2px;">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</td>
-            </tr>
-            <tr style="background-color: #f0f0f0;">
-                <td colspan="4" class="grand-total-label text-right" style="border-top: 1.5pt solid #000; padding-top: 5px;">TOTAL PENJUALAN BERSIH</td>
-                <td class="grand-total-value" style="background-color: #e2efda; border-top: 1.5pt solid #000; padding-top: 5px;">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</td>
+                <td colspan="4" class="grand-total-label text-right">TOTAL PENJUALAN BERSIH</td>
+                <td class="grand-total-value">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</td>
             </tr>
             @endif
         </tbody>

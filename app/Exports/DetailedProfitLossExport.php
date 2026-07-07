@@ -5,36 +5,41 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class DetailedProfitLossExport implements FromView, ShouldAutoSize, WithStyles
+class DetailedProfitLossExport implements FromView, ShouldAutoSize
 {
-    protected $data;
+    protected $current;
+    protected $previous;
     protected $startDate;
     protected $endDate;
+    protected $prevStartDate;
+    protected $prevEndDate;
+    protected $storeName;
+    protected $showComparison;
 
-    public function __construct($data, $startDate, $endDate)
+    public function __construct($current, $previous, $startDate, $endDate, $prevStartDate, $prevEndDate, $storeName = null, $showComparison = true)
     {
-        $this->data = $data;
+        $this->current = $current;
+        $this->previous = $previous;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->prevStartDate = $prevStartDate;
+        $this->prevEndDate = $prevEndDate;
+        $this->storeName = $storeName ?? \App\Models\Setting::get('store_name', 'Apotek');
+        $this->showComparison = $showComparison;
     }
 
     public function view(): View
     {
         return view('exports.detailed-profit-loss', [
-            'data' => $this->data,
+            'current' => $this->current,
+            'previous' => $this->previous,
             'startDate' => $this->startDate,
             'endDate' => $this->endDate,
+            'prevStartDate' => $this->prevStartDate,
+            'prevEndDate' => $this->prevEndDate,
+            'storeName' => $this->storeName,
+            'showComparison' => $this->showComparison,
         ]);
-    }
-
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            1 => ['font' => ['bold' => true, 'size' => 14]],
-            2 => ['font' => ['bold' => true]],
-        ];
     }
 }

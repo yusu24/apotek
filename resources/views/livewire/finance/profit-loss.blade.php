@@ -34,17 +34,29 @@
                     </svg>
                 </button>
                 <div class="dropdown-menu" x-show="open" x-cloak style="display:none">
-                    <button wire:click="exportExcel" @click="open = false" class="dropdown-item">
+                    <button wire:click="exportExcel(true)" @click="open = false" class="dropdown-item">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
                             <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
                         </svg>
-                        Excel (.xlsx)
+                        Excel - Perbandingan Periode
                     </button>
-                    <a href="{{ route('pdf.profit-loss', ['startDate' => $startDate, 'endDate' => $endDate]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                    <button wire:click="exportExcel(false)" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-green-600">
+                            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Excel - Periode Ini Saja
+                    </button>
+                    <a href="{{ route('pdf.laba-rugi', ['startDate' => $startDate, 'endDate' => $endDate, 'compare' => 1]) }}" target="_blank" @click="open = false" class="dropdown-item">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
                         </svg>
-                        PDF (.pdf)
+                        PDF - Perbandingan Periode
+                    </a>
+                    <a href="{{ route('pdf.laba-rugi', ['startDate' => $startDate, 'endDate' => $endDate, 'compare' => 0]) }}" target="_blank" @click="open = false" class="dropdown-item">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" class="text-red-600">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                        </svg>
+                        PDF - Periode Ini Saja
                     </a>
                 </div>
             </div>

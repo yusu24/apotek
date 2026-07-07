@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Neraca</title>
     <style>
-        @page { 
-            size: A4; 
-            margin:  15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 10pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.2;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .full-width { width: 100%; }
@@ -25,92 +22,86 @@
         .font-bold { font-weight: bold; }
         .uppercase { text-transform: uppercase; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 0;
-        }
-        .period-info { 
-            font-size: 10pt; 
-            margin-top: 5px; 
-        }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
-        }
-        
-        /* Table Header Style */
-        .column-headers td {
-            padding: 5px 0;
-            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+        .report-title {
+            font-size: 14pt;
             font-weight: bold;
-            color: #4a7ebb;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
+        }
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
 
-        td { 
-            padding: 3px 0; 
-            vertical-align: bottom; 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 12pt;
         }
-        
+
+        /* Table Header Style */
+        .column-headers td {
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 4px 6px;
+            vertical-align: bottom;
+        }
+
         /* Hierarchy Levels */
         .level-0 { font-weight: bold; padding-top: 10px; }
         .level-1 { font-weight: bold; padding-left: 15px; padding-top: 5px; }
         .level-2 { font-weight: normal; padding-left: 30px; }
         .level-3 { font-weight: regular; padding-left: 45px; }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
-        }
-        
+
         /* Summary Lines */
-        .summary-label { font-weight: bold; }
-        .summary-value { 
-            font-weight: bold; 
-            border-top: 0.5pt solid #000; 
+        .summary-label { font-weight: bold; background-color: #dbeafe; }
+        .summary-value {
+            font-weight: bold;
+            background-color: #dbeafe;
             text-align: right;
             width: 30%;
         }
 
-        .grand-total-label { 
-            font-weight: bold; 
+        .grand-total-label {
+            font-weight: bold;
             text-transform: uppercase;
-            padding-top: 15px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
-        .grand-total-value { 
-            font-weight: bold; 
-            border-top: 0.5pt solid #000; 
-            border-bottom: 3pt double #000;
+        .grand-total-value {
+            font-weight: bold;
             text-align: right;
-            padding-top: 2px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
         </style>
 </head>
 <body>
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }}
-    </div>
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
-        <div class="report-title">Neraca (Standar)</div>
-        <div class="period-info">Per Tgl. {{ \Carbon\Carbon::parse($asOfDate)->format('d/m/Y') }}</div>
+        <div class="report-title">NERACA (STANDAR)</div>
+        <div class="period-info">Per Tanggal {{ \Carbon\Carbon::parse($asOfDate)->format('d/m/Y') }}</div>
     </div>
 
     @if(!$reportData['balance_check'])

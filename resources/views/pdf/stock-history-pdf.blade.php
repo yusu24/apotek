@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Stok - {{ $product->name }}</title>
     <style>
-        @page { margin:    10mm 1cm 10mm 1cm; }
+        @page { margin: 1cm 1.2cm; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; font-size: 10pt; line-height: 1.3; color: #333; margin: 0; padding: 0; }
-        .header-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; border-bottom: 3px solid #2563eb; padding-bottom: 12px; }
-        .header-table td { padding: 0; vertical-align: top; }
-        
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 8pt; table-layout: fixed; word-wrap: break-word; }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12pt; line-height: 1.4; color: #1a1a1a; margin: 0; padding: 0; }
+
+        .text-center { text-align: center; }
+        .report-header { margin-bottom: 16px; text-align: center; }
+        .report-title { font-size: 14pt; font-weight: bold; letter-spacing: 1px; color: #000000; margin-top: 4px; }
+        .period-info { font-size: 10pt; margin-top: 3px; color: #333; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12pt; table-layout: fixed; word-wrap: break-word; }
         th, td { padding: 5px 4px; vertical-align: top; }
 
         .container {
@@ -119,7 +122,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 8pt;
+            font-size: 12pt;
         }
 
         thead {
@@ -131,7 +134,6 @@
             padding: 6px 4px;
             text-align: left;
             font-weight: bold;
-            font-size: 8pt;
         }
 
         th.center, td.center {
@@ -152,7 +154,6 @@
 
         td {
             padding: 5px 4px;
-            font-size: 8pt;
         }
 
         .batch-number {

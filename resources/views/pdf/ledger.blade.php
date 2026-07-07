@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Buku Besar (Standar)</title>
     <style>
-        @page { 
-            size: A4; 
-            margin:  15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.2;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,80 +22,78 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 0;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
         }
-        .period-info { 
-            font-size: 10pt; 
-            margin-top: 5px; 
-        }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            table-layout: fixed; 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 12pt;
         }
-        
-        /* Table Header Style - Unified Border */
+
         .column-headers th {
-            padding: 5px 0;
-            border-bottom: 1.5pt solid #4a7ebb; /* Blue-ish line */
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
             font-weight: bold;
-            color: #4a7ebb;
             text-align: left;
         }
 
-        td { 
-            padding: 3px 0; 
-            vertical-align: top; 
+        td {
+            padding: 4px 6px;
+            vertical-align: top;
+            border-bottom: 0.5pt solid #eee;
         }
-        
+
         /* Hierarchy Levels / Rows */
-        .account-header-row td { 
-            font-weight: bold; 
-            padding-top: 12px;
-            padding-bottom: 5px;
-            color: #000;
+        .account-header-row td {
+            font-weight: bold;
+            background-color: #eef2f9;
+            color: #1e40af;
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
-        
+
         .transaction-row td {
-            padding: 4px 0;
+            padding: 4px 6px;
         }
 
         .summary-label { font-weight: bold; }
-        
-        .grand-total-label { 
-            font-weight: bold; 
+
+        .grand-total-label {
+            font-weight: bold;
             text-transform: uppercase;
-            padding-top: 10px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
-        .grand-total-value { 
-            font-weight: bold; 
-            border-top: 0.5pt solid #000; 
-            border-bottom: 3pt double #000;
+        .grand-total-value {
+            font-weight: bold;
             text-align: right;
-            padding-top: 2px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
     </style>
@@ -109,15 +104,11 @@
         $hasSearch = !empty($search);
     @endphp
 
-    <div class="timestamp">
-        Waktu Cetak: {{ $printedAt }}
-    </div>
-
     <div class="report-header">
         <div class="store-name">{{ trim($store['name']) }}</div>
-        <div class="report-title">Buku Besar{{ $isSummaryView ? ' (Standar)' : '' }}</div>
+        <div class="report-title">BUKU BESAR{{ $isSummaryView ? ' (STANDAR)' : '' }}</div>
         <div class="period-info">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+            Untuk Periode {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
         </div>
         @if($hasSearch)
             <div class="period-info font-bold">Pencarian: "{{ $search }}"</div>
@@ -168,7 +159,7 @@
                     <td class="grand-total-value">{{ format_accounting_standard($totalOpening) }}</td>
                     <td class="grand-total-value">{{ format_accounting_standard($totalDebit) }}</td>
                     <td class="grand-total-value">{{ format_accounting_standard($totalCredit) }}</td>
-                    <td class="grand-total-value" style="color: #800000">{{ format_accounting_standard($totalEnding) }}</td>
+                    <td class="grand-total-value">{{ format_accounting_standard($totalEnding) }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -224,7 +215,7 @@
                             <td colspan="4" class="text-right">SALDO AKHIR</td>
                             <td class="grand-total-value">{{ format_accounting_standard($sumDebit) }}</td>
                             <td class="grand-total-value">{{ format_accounting_standard($sumCredit) }}</td>
-                            <td class="grand-total-value" style="color: #800000">{{ format_accounting_standard($accountData['ending_balance']) }}</td>
+                            <td class="grand-total-value">{{ format_accounting_standard($accountData['ending_balance']) }}</td>
                         </tr>
                         
                         <tr><td colspan="7" style="height: 10px; border: none;"></td></tr>

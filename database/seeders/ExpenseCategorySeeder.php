@@ -44,6 +44,10 @@ class ExpenseCategorySeeder extends Seeder
             
             // Beban Lain-lain
             ['name' => 'Beban Lain-lain', 'is_active' => true],
+            ['name' => 'Beban Bunga', 'is_active' => true],
+
+            // Pendapatan Lain-lain (income)
+            ['name' => 'Pendapatan Bunga', 'is_active' => true],
         ];
 
         foreach ($categories as $category) {

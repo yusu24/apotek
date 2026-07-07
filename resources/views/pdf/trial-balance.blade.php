@@ -3,18 +3,15 @@
 <head>
     <title>Neraca Saldo</title>
     <style>
-        @page { 
-            size: A4; 
-            margin:    10mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 10pt; 
-            color: #1a1a1a; 
-            margin: 0; 
-            padding: 0; 
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
             line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .full-width { width: 100%; }
@@ -24,76 +21,71 @@
         .font-bold { font-weight: bold; }
         .uppercase { text-transform: uppercase; }
 
-        .report-header { 
-            margin-bottom: 30px; 
-            display: block;
-            width: 100%;
+        .report-header {
+            margin-bottom: 16px;
+            text-align: center;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .report-title { 
-            font-size: 13pt; 
-            font-weight: bold; 
-            color: #333; 
-            margin-top: 4px;
+        .report-title {
+            font-size: 14pt;
+            font-weight: bold;
             letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
         }
-        .period-info { 
-            font-size: 11pt; 
-            color: #4b5563; 
-            margin-top: 6px; 
+        .period-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
         }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-            table-layout: fixed; 
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 16px;
+            font-size: 12pt;
         }
-        th { 
-            padding: 10px 12px;
-            background-color: #f8fafc;
-            color: #1e293b;
+        th {
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
             text-align: left;
             font-weight: bold;
-            border-top: 2pt solid #1e293b;
-            border-bottom: 1pt solid #cbd5e1;
-            font-size: 11pt;
         }
-        td { 
-            padding: 8px 12px; 
-            vertical-align: middle; 
-            font-size: 12pt;
-            border-bottom: 1px solid #f1f5f9;
+        td {
+            padding: 4px 6px;
+            vertical-align: middle;
+            border-bottom: 0.5pt solid #eee;
         }
-        
-        .section-header td { 
-            background-color: #f1f5f9; 
-            font-weight: bold; 
-            padding-top: 12px; 
-            padding-bottom: 10px;
-            color: #0f172a;
+
+        .section-header td {
+            background-color: #eef2f9;
+            font-weight: bold;
+            color: #1e40af;
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
-        
+
         .grand-total td {
             font-weight: bold;
-            background-color: #1e293b;
-            color: white;
-            padding: 12px;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
         </style>
 </head>
 <body>
-    <div class="report-header text-center">
-        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="report-title">Neraca Saldo (Trial Balance)</div>
+    <div class="report-header">
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">NERACA SALDO (TRIAL BALANCE)</div>
         <div class="period-info">
-            Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} s/d {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+            Untuk Periode {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
         </div>
     </div>
 
@@ -135,7 +127,7 @@
                         </tr>
                     @endforeach
                     <tr class="{{ $section['class'] }} font-bold">
-                        <td colspan="2">Subtotal {{ $section['label'] }}</td>
+                        <td colspan="2">Subtotal {{ ucwords(strtolower($section['label'])) }}</td>
                         <td class="text-right">{{ number_format($section['debit'], 0, ',', '.') }}</td>
                         <td class="text-right">{{ number_format($section['credit'], 0, ',', '.') }}</td>
                     </tr>

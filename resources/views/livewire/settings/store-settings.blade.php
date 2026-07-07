@@ -239,6 +239,30 @@
                     </div>
                 </div>
 
+                <!-- Pengaturan Pajak -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="mb-4 border-b pb-2">
+                        <h3 class="text-lg font-bold text-gray-800">Pengaturan Pajak</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Skema Pajak Penghasilan</label>
+                            <select wire:model.live="tax_scheme" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="manual">Manual (dari input Beban Pajak di Pengeluaran)</option>
+                                <option value="umkm_final">PPh Final UMKM (% dari Omzet, dihitung otomatis)</option>
+                            </select>
+                        </div>
+                        @if($tax_scheme === 'umkm_final')
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Tarif PPh Final UMKM (%)</label>
+                            <input type="number" step="0.01" min="0" max="100" wire:model="tax_rate_umkm" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            @error('tax_rate_umkm') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            <p class="mt-1.5 text-xs text-gray-500">Beban pajak di Laporan Laba Rugi akan otomatis dihitung sebagai persentase ini dikali total omzet periode berjalan (PP 23/2018).</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
             <!-- Save Button Section -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <div class="flex items-center justify-between mb-6">

@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>Laporan Pengeluaran</title>
     <style>
-        @page { 
-            size: A4; 
-            margin: 15mm 1cm 10mm 1cm; 
-        }
-        
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            font-size: 9pt; 
-            color: #000; 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.3;
+        @page { margin: 1cm 1.2cm; }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
         }
 
         .text-center { text-align: center; }
@@ -25,92 +22,67 @@
         .uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
 
-        .report-header { 
-            margin-bottom: 25px; 
+        .report-header {
+            margin-bottom: 16px;
             text-align: center;
-            border-bottom: 1.5pt solid #4a7ebb;
-            padding-bottom: 10px;
         }
         .store-name {
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 5px;
         }
-        .store-details {
-            font-size: 8pt;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        .report-title { 
-            font-size: 16pt; 
-            font-weight: bold; 
-            color: #800000; /* Maroon */
-            margin: 5px 0 0 0;
-        }
-        .filter-info { 
-            font-size: 9pt; 
-            margin-top: 5px; 
-            color: #444;
-        }
-        
-        .timestamp {
-            position: fixed;
-            top: -10mm;
-            right: 0;
-            font-size: 7pt;
-            color: #666;
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px;
-        }
-        
-        .column-headers th {
-            padding: 6px 4px;
-            border-bottom: 1.5pt solid #4a7ebb;
+        .report-title {
+            font-size: 14pt;
             font-weight: bold;
-            color: #4a7ebb;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 4px;
+        }
+        .filter-info {
+            font-size: 10pt;
+            margin-top: 3px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 8pt;
+        }
+
+        .column-headers th {
+            padding: 6px;
+            background-color: #1e40af;
+            color: #ffffff;
+            font-weight: bold;
             text-align: left;
-            font-size: 9pt;
         }
 
-        td { 
-            padding: 6px 4px; 
-            vertical-align: middle; 
+        td {
+            padding: 4px 6px;
+            vertical-align: middle;
             border-bottom: 0.5pt solid #eee;
-            font-size: 8.5pt;
         }
 
-        .total-row td { 
-            font-weight: bold; 
-            border-top: 1.5pt solid #4a7ebb;
-            border-bottom: 1.5pt solid #4a7ebb;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            background-color: #f8fafc;
+        .total-row td {
+            font-weight: bold;
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 6px;
         }
 
     </style>
 </head>
 <body>
-    <div class="timestamp">
-        Dicetak Oleh: {{ $printedBy }} | Waktu Cetak: {{ $printedAt }}
-    </div>
-
     <div class="report-header">
-        <div class="store-name uppercase">{{ trim($store['name']) }}</div>
-        <div class="store-details">
-            {{ $store['address'] ?? '' }} | Telp: {{ $store['phone'] ?? '' }}
-        </div>
-        <div class="report-title">Laporan Pengeluaran (Biaya)</div>
+        <div class="store-name">{{ trim($store['name']) }}</div>
+        <div class="report-title">LAPORAN PENGELUARAN (BIAYA)</div>
         @if(isset($periodLabel) && $periodLabel !== 'Semua Periode')
-            <div class="filter-info">Periode: <strong>{{ $periodLabel }}</strong></div>
+            <div class="filter-info">Untuk Periode {{ $periodLabel }}</div>
         @endif
         @if($search)
-            <div class="filter-info">Pencarian Kata Kunci: <strong>"{{ $search }}"</strong></div>
+            <div class="filter-info">Pencarian Kata Kunci: "{{ $search }}"</div>
         @endif
     </div>
 
@@ -130,21 +102,21 @@
             @php $totalAmount += $expense->amount; @endphp
             <tr>
                 <td>{{ $expense->date ? $expense->date->format('d/m/Y') : '-' }}</td>
-                <td class="font-bold">{{ $expense->category }}</td>
+                <td>{{ $expense->category }}</td>
                 <td>{{ $expense->description }}</td>
                 <td>{{ $expense->account ? ($expense->account->code . ' - ' . $expense->account->name) : 'Tanpa Akun (Non-Jurnal)' }}</td>
-                <td class="text-right font-bold">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
             </tr>
             @empty
             <tr>
                 <td colspan="5" class="text-center italic" style="padding: 20px; color: #777;">Data Pengeluaran Tidak Ditemukan</td>
             </tr>
             @endforelse
-            
+
             @if($expenses->count() > 0)
             <tr class="total-row">
-                <td colspan="4" class="text-right uppercase font-bold" style="color: #4a7ebb;">TOTAL PENGELUARAN</td>
-                <td class="text-right font-bold" style="color: #800000; font-size: 10pt;">Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
+                <td colspan="4" class="text-right uppercase">Total Pengeluaran</td>
+                <td class="text-right">Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
             </tr>
             @endif
         </tbody>

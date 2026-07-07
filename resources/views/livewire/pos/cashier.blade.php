@@ -135,7 +135,7 @@
                             @forelse($cart as $id => $item)
                             <tr wire:key="cart-row-{{ $id }}" class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
                                 <td class="px-2 md:px-4 py-2 md:py-3 align-top">
-                                    <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs md:text-sm">{{ $item['name'] }}</div>
+                                    <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs">{{ $item['name'] }}</div>
                                     
                                     <!-- Price & Unit Display/Selector -->
                                     <div class="flex items-center gap-1.5 mt-1 flex-nowrap overflow-hidden">
@@ -176,11 +176,11 @@
                                     <div class="w-16 mx-auto">
                                         <input type="number" 
                                                 wire:model.live.debounce.300ms="cart.{{ $id }}.qty"
-                                                class="w-full px-1 py-1 text-center text-sm font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                                                class="w-full px-1 py-1 text-center text-xs font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                                                 min="1">
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-right align-top font-bold text-gray-900">
+                                <td class="px-4 py-3 text-right align-top font-bold text-gray-900 text-xs">
                                     {{ number_format($item['subtotal'], 0, ',', '.') }}
                                 </td>
                                 <td class="px-2 py-3 text-center align-top">
@@ -494,13 +494,13 @@
                             </div>
                             
                             <!-- Product Info - Click to Add -->
-                             <div class="cursor-pointer" @click="hIdx = {{ $index }}; document.getElementById('pos-search-input').focus()" wire:click="addToCart({{ $product->id }})">
+                             <div class="cursor-pointer" @click="hIdx = {{ $index }}" wire:click="addToCart({{ $product->id }})">
                                  <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis hover:text-blue-600">{{ $product->name }}</h4>
                                  <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
                              </div>
                              
                              <!-- Add Button - Click to Add -->
-                             <button @click="hIdx = {{ $index }}; document.getElementById('pos-search-input').focus()" wire:click="addToCart({{ $product->id }})" class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
+                             <button @click="hIdx = {{ $index }}" wire:click="addToCart({{ $product->id }})" class="w-full py-2 {{ $product->total_stock > 0 ? 'bg-gray-900 group-hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed' }} text-white rounded-lg text-sm font-semibold transition-colors">
                                  + Tambah
                              </button>
                         </div>

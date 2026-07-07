@@ -186,9 +186,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Tidak ada data akun ditemukan.</td>
-                    </tr>
+                    <x-empty-table colspan="7" message="Tidak ada data akun ditemukan." subheader="Silakan sesuaikan pencarian Anda atau tambah akun baru." />
                     @endforelse
                 </tbody>
             </table>

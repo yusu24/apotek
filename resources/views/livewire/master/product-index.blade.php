@@ -332,7 +332,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500 italic">Belum ada perubahan harga jual.</td></tr>
+                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500">Belum ada perubahan harga jual.</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -373,7 +373,7 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500 italic">Belum ada riwayat pembelian.</td></tr>
+                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500">Belum ada riwayat pembelian.</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>

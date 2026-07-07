@@ -13,7 +13,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -286,6 +286,7 @@
                                 path === '/dashboard' ||
                                 path.includes('/cashier') ||
                                 path.includes('/goods-receipts/create') ||
+                                path.includes('/opening-balance') ||
                                 /\/goods-receipts\/\d+\/edit/.test(path);
 
                             if (isExcludedPage) {

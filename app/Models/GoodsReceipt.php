@@ -75,6 +75,6 @@ class GoodsReceipt extends Model
 
     public function journalEntries()
     {
-        return \App\Models\JournalEntry::where('source', 'purchase')->where('source_id', $this->id);
+        return $this->hasMany(\App\Models\JournalEntry::class, 'source_id')->where('source', 'purchase');
     }
 }

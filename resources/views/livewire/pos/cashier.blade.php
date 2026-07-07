@@ -1,9 +1,9 @@
-<div class="h-full bg-gray-50 font-sans" 
-     x-data="{ 
-        showAlert: false, 
+<div class="h-full bg-gray-50 font-sans"
+     x-data="{
+        showAlert: false,
         mobileCartOpen: false,
         showPayment: @entangle('showPaymentModal'),
-        hIdx: @entangle('highlightIndex'),
+        hIdx: {{ (int) $highlightIndex }},
         alertMsg: '',
         alertType: 'error',
         showAlertFn(msg, type = 'error') {
@@ -12,6 +12,34 @@
             this.showAlert = true;
             setTimeout(() => this.showAlert = false, 3000);
         },
+        isTypingInField() {
+            let tag = document.activeElement ? document.activeElement.tagName : '';
+            return ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag);
+        },
+        handleKey(dir, cols = 1) {
+            let count = {{ count($products) }};
+            if (count === 0) return;
+
+            if (dir === 'up') {
+                this.hIdx -= cols;
+                if (this.hIdx < 0) {
+                    this.hIdx = (cols > 1) ? this.hIdx + count : count - 1;
+                }
+            } else if (dir === 'down') {
+                this.hIdx += cols;
+                if (this.hIdx >= count) {
+                    this.hIdx = (cols > 1) ? this.hIdx - count : 0;
+                }
+            } else if (dir === 'right') {
+                this.hIdx++;
+                if (this.hIdx >= count) this.hIdx = 0;
+            } else if (dir === 'left') {
+                this.hIdx--;
+                if (this.hIdx < 0) this.hIdx = count - 1;
+            }
+
+            this.hIdx = Math.max(0, Math.min(count - 1, this.hIdx));
+        },
         init() {
             this.$watch('showPayment', value => {
                 if (value) {
@@ -19,9 +47,26 @@
                 }
             });
         }
-     }" 
+     }"
      @cart-error.window="showAlertFn($event.detail.message, 'error')"
-     @cart-updated.window="showAlertFn($event.detail.message, 'success')">
+     @cart-updated.window="showAlertFn($event.detail.message, 'success')"
+     @keydown.down.window="
+        if (isTypingInField() && $event.target.id !== 'pos-search-input') return;
+        $event.preventDefault();
+        let isGrid = !$wire.get('search');
+        let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
+        handleKey('down', cols);
+     "
+     @keydown.up.window="
+        if (isTypingInField() && $event.target.id !== 'pos-search-input') return;
+        $event.preventDefault();
+        let isGrid = !$wire.get('search');
+        let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
+        handleKey('up', cols);
+     "
+     @keydown.right.window="if (!isTypingInField() || $event.target.id === 'pos-search-input') { $event.preventDefault(); handleKey('right', 1); }"
+     @keydown.left.window="if (!isTypingInField() || $event.target.id === 'pos-search-input') { $event.preventDefault(); handleKey('left', 1); }"
+     @keydown.enter.window="if (!isTypingInField() || $event.target.id === 'pos-search-input') { $event.preventDefault(); $wire.selectHighlighted(hIdx); }">
     <!-- Notification -->
     <div>
         
@@ -335,48 +380,10 @@
                             </svg>
                         </span>
                         
-                        <input type="text" 
-                            x-data="{ 
-                                handleKey(dir, cols = 1) {
-                                    let count = {{ count($products) }};
-                                    if (count === 0) return;
-                                    
-                                    if (dir === 'up') {
-                                        hIdx -= cols;
-                                        if (hIdx < 0) {
-                                            hIdx = (cols > 1) ? hIdx + count : count - 1;
-                                        }
-                                    } else if (dir === 'down') {
-                                        hIdx += cols;
-                                        if (hIdx >= count) {
-                                            hIdx = (cols > 1) ? hIdx - count : 0;
-                                        }
-                                    } else if (dir === 'right') {
-                                        hIdx++;
-                                        if (hIdx >= count) hIdx = 0;
-                                    } else if (dir === 'left') {
-                                        hIdx--;
-                                        if (hIdx < 0) hIdx = count - 1;
-                                    }
-                                    
-                                    hIdx = Math.max(0, Math.min(count - 1, hIdx));
-                                } 
-                            }"
+                        <input type="text"
                             wire:model.live.debounce.300ms="search"
-                            wire:keydown.enter="selectHighlighted"
-                            @keydown.down.prevent="
-                                let isGrid = !$wire.get('search');
-                                let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
-                                handleKey('down', cols);
-                            "
-                            @keydown.up.prevent="
-                                let isGrid = !$wire.get('search');
-                                let cols = isGrid ? getComputedStyle(document.getElementById('product-grid')).getPropertyValue('grid-template-columns').split(' ').length : 1;
-                                handleKey('up', cols);
-                            "
-                            @keydown.right.prevent="handleKey('right', 1)"
-                            @keydown.left.prevent="handleKey('left', 1)"
-                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                            @input="hIdx = 0"
+                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Cari produk / Scan barcode (F2)..." 
                             id="pos-search-input"
                             autocomplete="off"

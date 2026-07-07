@@ -452,14 +452,15 @@ class Cashier extends Component
     public function incrementHighlight() { $this->moveHighlight('right', 1); }
     public function decrementHighlight() { $this->moveHighlight('left', 1); }
 
-    public function selectHighlighted()
+    public function selectHighlighted($index = null)
     {
+        $index = $index !== null ? (int) $index : $this->highlightIndex;
         $products = $this->products;
-        
-        if (!empty($products) && isset($products[$this->highlightIndex])) {
-            $this->addToCart($products[$this->highlightIndex]->id);
+
+        if (!empty($products) && isset($products[$index])) {
+            $this->addToCart($products[$index]->id);
             // Don't reset highlightIndex so user can quickly add next item
-            // $this->highlightIndex = 0; 
+            // $this->highlightIndex = 0;
             if (!empty($this->search)) {
                 $this->search = '';
                 $this->highlightIndex = 0;

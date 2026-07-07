@@ -21,6 +21,6 @@ class SupplierPayment extends Model
 
     public function journalEntries()
     {
-        return \App\Models\JournalEntry::where('source', 'supplier_payment')->where('source_id', $this->id);
+        return $this->hasMany(\App\Models\JournalEntry::class, 'source_id')->where('source', 'supplier_payment');
     }
 }

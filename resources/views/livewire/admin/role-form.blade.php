@@ -64,10 +64,10 @@
         </div>
 
         <div class="flex items-center justify-end gap-3 sticky bottom-6 z-10">
-            <a href="{{ route('admin.roles.index') }}" wire:navigate class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-bold shadow-sm">
+            <a href="{{ route('admin.roles.index') }}" wire:navigate class="btn btn-lg btn-secondary">
                 Batal
             </a>
-            <button type="submit" class="px-8 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold shadow-lg flex items-center gap-2">
+            <button type="submit" class="btn btn-lg btn-primary">
                 <svg wire:loading.remove wire:target="save" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                 </svg>

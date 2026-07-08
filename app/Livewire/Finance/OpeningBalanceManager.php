@@ -173,7 +173,7 @@ class OpeningBalanceManager extends Component
         $this->updateSummary();
 
         if (!$this->summary['is_balanced']) {
-            session()->flash('error', 'Neraca belum seimbang! Selisih: Rp ' . number_format(abs($this->summary['difference']), 0, ',', '.'));
+            session()->flash('error', 'Neraca belum seimbang! Selisih: Rp. ' . number_format(abs($this->summary['difference']), 0, ',', '.') . ',-');
             return;
         }
 

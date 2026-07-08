@@ -179,12 +179,12 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 flex justify-end gap-3">
-                        <button type="button" @click="open = false" 
-                            class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        <button type="button" @click="open = false"
+                            class="btn btn-secondary">
                             Batal
                         </button>
-                        <button type="submit" 
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        <button type="submit"
+                            class="btn btn-primary">
                             {{ $isEditMode ? 'Simpan Perubahan' : 'Simpan Data' }}
                         </button>
                     </div>

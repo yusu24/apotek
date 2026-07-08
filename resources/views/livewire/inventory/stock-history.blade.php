@@ -115,8 +115,8 @@
 
                 <!-- Reset Button -->
                 <div>
-                    <button wire:click="resetFilters" 
-                        class="w-full px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors">
+                    <button wire:click="resetFilters"
+                        class="btn btn-secondary w-full">
                         Reset Filter
                     </button>
                 </div>

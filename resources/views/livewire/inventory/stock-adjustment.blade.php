@@ -65,10 +65,10 @@
 
             <!-- Compact Actions -->
             <div class="flex justify-end items-center gap-3 pt-3 border-t border-gray-100">
-                <a href="{{ route('inventory.index') }}" wire:navigate class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-white shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <a href="{{ route('inventory.index') }}" wire:navigate class="btn btn-secondary">
                     Batal
                 </a>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <button type="submit" class="btn btn-primary">
                     Simpan
                 </button>
             </div>

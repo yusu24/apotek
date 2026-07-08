@@ -77,7 +77,7 @@ class Account extends Model
 
     public function getFormattedBalanceAttribute(): string
     {
-        return 'Rp ' . number_format((float)$this->balance, 0, ',', '.');
+        return 'Rp. ' . number_format((float)$this->balance, 0, ',', '.') . ',-';
     }
 
     /**

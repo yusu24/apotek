@@ -105,11 +105,11 @@
                     <!-- Modal Footer -->
                     <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
                         <button type="button" wire:click="closeModal"
-                            class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
+                            class="btn btn-secondary">
                             Batal
                         </button>
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
+                            class="btn btn-primary">
                             {{ $editMode ? 'Update' : 'Simpan' }}
                         </button>
                     </div>
@@ -164,8 +164,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImport = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImport = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>

@@ -66,7 +66,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-blue-100 text-sm font-medium">Total Pendapatan</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($totalRevenue, 0, ',', '.') }},-</p>
                 </div>
                 <div class="bg-blue-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -90,7 +90,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-emerald-100 text-sm font-medium">Rata-rata per Transaksi</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($overallAverage, 0, ',', '.') }}</p>
+                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($overallAverage, 0, ',', '.') }},-</p>
                 </div>
                 <div class="bg-emerald-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
@@ -272,8 +272,8 @@
                                         {{ number_format($item['count'], 0, ',', '.') }} transaksi
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">Rp {{ number_format($item['total'], 0, ',', '.') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">Rp {{ number_format($item['average'], 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">Rp. {{ number_format($item['total'], 0, ',', '.') }},-</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">Rp. {{ number_format($item['average'], 0, ',', '.') }},-</td>
                             </tr>
                         @empty
                             <x-empty-table colspan="4" message="Tidak ada data penjualan untuk periode ini" subheader="Silakan pilih periode lain atau lakukan transaksi penjualan" />
@@ -288,8 +288,8 @@
                                     {{ number_format($totalTransactions, 0, ',', '.') }} transaksi
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-blue-900 text-right">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-sm text-purple-900 text-right">Rp {{ number_format($overallAverage, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-sm text-blue-900 text-right">Rp. {{ number_format($totalRevenue, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-sm text-purple-900 text-right">Rp. {{ number_format($overallAverage, 0, ',', '.') }},-</td>
                         </tr>
                     </tfoot>
                     @endif
@@ -343,8 +343,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImportOmset = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImportOmset = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>

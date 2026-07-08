@@ -82,7 +82,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Aset</p>
             </div>
-            <p class="text-2xl font-bold">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['total_assets'], 0, ',', '.') }},-</p>
         </div>
  
         {{-- Total Liabilitas --}}
@@ -93,7 +93,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Liabilitas</p>
             </div>
-            <p class="text-2xl font-bold">Rp {{ number_format($reportData['total_liabilities'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['total_liabilities'], 0, ',', '.') }},-</p>
         </div>
  
         {{-- Total Ekuitas --}}
@@ -104,7 +104,7 @@
                 </div>
                 <p class="text-sm font-bold tracking-wider uppercase">Total Ekuitas</p>
             </div>
-            <p class="text-2xl font-bold">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }},-</p>
         </div>
     </div>
 
@@ -140,19 +140,19 @@
                                     @forelse($group['accounts'] as $account)
                                     <div class="flex justify-between items-center py-1">
                                         <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                        <span class="text-sm text-gray-800 font-medium">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                        <span class="text-sm text-gray-800 font-medium">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                     </div>
                                     @empty
                                     <div class="flex justify-between items-center py-1 opacity-40">
                                         <span class="text-xs italic text-gray-400">Belum ada data {{ $group['label'] }}</span>
-                                        <span class="text-xs text-gray-400 font-medium">Rp 0</span>
+                                        <span class="text-xs text-gray-400 font-medium">Rp. 0,-</span>
                                     </div>
                                     @endforelse
                                     
                                     @if($group['accounts']->count() > 0)
                                     <div class="flex justify-between items-center pt-1 border-t border-blue-50 mt-1">
                                         <span class="text-[11px] font-bold text-gray-400 uppercase">Subtotal</span>
-                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($group['total'], 0, ',', '.') }},-</span>
                                     </div>
                                     @endif
                                 </div>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-blue-200 bg-blue-50/50 p-2 rounded">
                         <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Aset Lancar</span>
-                        <span class="text-lg font-bold text-blue-800">Rp {{ number_format($reportData['total_current_assets'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-blue-800">Rp. {{ number_format($reportData['total_current_assets'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
 
@@ -180,12 +180,12 @@
                                     @foreach($group['accounts'] as $account)
                                     <div class="flex justify-between items-center py-1">
                                         <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                        <span class="text-sm text-gray-800">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                     </div>
                                     @endforeach
                                     <div class="flex justify-between items-center pt-1 border-t border-indigo-50">
                                         <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
-                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($group['total'], 0, ',', '.') }},-</span>
                                     </div>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-indigo-200 bg-indigo-50/50 p-2 rounded">
                         <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Aset Tetap</span>
-                        <span class="text-lg font-bold text-indigo-800">Rp {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-indigo-800">Rp. {{ number_format($reportData['total_fixed_assets'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
 
@@ -202,7 +202,7 @@
                 <div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-bold text-gray-800">TOTAL ASET</span>
-                        <span class="text-2xl font-bold text-blue-700">Rp {{ number_format($reportData['total_assets'], 0, ',', '.') }}</span>
+                        <span class="text-2xl font-bold text-blue-700">Rp. {{ number_format($reportData['total_assets'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
             </div>
@@ -229,12 +229,12 @@
                                     @foreach($group['accounts'] as $account)
                                     <div class="flex justify-between items-center py-1">
                                         <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                        <span class="text-sm text-gray-800">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                     </div>
                                     @endforeach
                                     <div class="flex justify-between items-center pt-1 border-t border-red-50">
                                         <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
-                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($group['total'], 0, ',', '.') }},-</span>
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-red-200 bg-red-50/50 p-2 rounded">
                         <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Liabilitas Lancar</span>
-                        <span class="text-lg font-bold text-red-800">Rp {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-red-800">Rp. {{ number_format($reportData['total_current_liabilities'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
 
@@ -261,12 +261,12 @@
                                     @foreach($group['accounts'] as $account)
                                     <div class="flex justify-between items-center py-1">
                                         <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                        <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                        <span class="text-sm text-gray-800">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                     </div>
                                     @endforeach
                                     <div class="flex justify-between items-center pt-1 border-t border-orange-50">
                                         <span class="text-sm font-bold text-gray-700">Subtotal {{ $group['label'] }}</span>
-                                        <span class="text-sm font-bold text-gray-900">Rp {{ number_format($group['total'], 0, ',', '.') }}</span>
+                                        <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($group['total'], 0, ',', '.') }},-</span>
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-orange-200 bg-orange-50/50 p-2 rounded">
                         <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Liabilitas Jangka Panjang</span>
-                        <span class="text-lg font-bold text-orange-800">Rp {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-orange-800">Rp. {{ number_format($reportData['total_long_term_liabilities'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
 
@@ -291,12 +291,12 @@
                                 @foreach($reportData['equity_groups']['paid_in_capital']['accounts'] as $account)
                                 <div class="flex justify-between items-center py-1">
                                     <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                    <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    <span class="text-sm text-gray-800">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                 </div>
                                 @endforeach
                                 <div class="flex justify-between items-center pt-1 border-t border-green-50">
                                     <span class="text-sm font-bold text-gray-700">Subtotal Modal Sendiri</span>
-                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($reportData['equity_groups']['paid_in_capital']['total'], 0, ',', '.') }}</span>
+                                    <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($reportData['equity_groups']['paid_in_capital']['total'], 0, ',', '.') }},-</span>
                                 </div>
                             </div>
                         </div>
@@ -308,12 +308,12 @@
                                 @foreach($reportData['equity_groups']['retained_earnings']['accounts'] as $account)
                                 <div class="flex justify-between items-center py-1">
                                     <span class="text-sm text-gray-600">{{ $account->name }}</span>
-                                    <span class="text-sm text-gray-800">Rp {{ number_format($account->balance, 0, ',', '.') }}</span>
+                                    <span class="text-sm text-gray-800">Rp. {{ number_format($account->balance, 0, ',', '.') }},-</span>
                                 </div>
                                 @endforeach
                                 <div class="flex justify-between items-center pt-1 border-t border-green-50">
                                     <span class="text-sm font-bold text-gray-700">Subtotal Laba Ditahan</span>
-                                    <span class="text-sm font-bold text-gray-900">Rp {{ number_format($reportData['equity_groups']['retained_earnings']['total'], 0, ',', '.') }}</span>
+                                    <span class="text-sm font-bold text-gray-900">Rp. {{ number_format($reportData['equity_groups']['retained_earnings']['total'], 0, ',', '.') }},-</span>
                                 </div>
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                                 <div class="flex justify-between items-center py-1">
                                     <span class="text-sm text-gray-600 italic">Laba Bersih s/d Per Tanggal</span>
                                     <span class="text-sm font-bold {{ $reportData['net_income'] >= 0 ? 'text-green-700' : 'text-red-700' }}">
-                                        Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}
+                                        Rp. {{ number_format($reportData['net_income'], 0, ',', '.') }},-
                                     </span>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@
                     </div>
                     <div class="flex justify-between items-center mt-6 pt-3 border-t-2 border-green-200 bg-green-50/50 p-2 rounded">
                         <span class="text-sm font-extrabold text-gray-800 uppercase tracking-tight">Total Ekuitas</span>
-                        <span class="text-lg font-bold text-green-800">Rp {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
+                        <span class="text-lg font-bold text-green-800">Rp. {{ number_format($reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
 
@@ -342,7 +342,7 @@
                 <div class="bg-red-50 p-4 rounded-lg border-2 border-red-200">
                     <div class="flex justify-between items-center">
                         <span class="text-lg font-bold text-gray-800">TOTAL LIABILITAS + EKUITAS</span>
-                        <span class="text-2xl font-bold text-red-700">Rp {{ number_format($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }}</span>
+                        <span class="text-2xl font-bold text-red-700">Rp. {{ number_format($reportData['total_liabilities'] + $reportData['total_equity'] + $reportData['net_income'], 0, ',', '.') }},-</span>
                     </div>
                 </div>
             </div>

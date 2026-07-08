@@ -89,15 +89,15 @@
                 </td>
                 <td class="py-3 px-4 text-center text-gray-600">{{ $item->batch->batch_no ?? '-' }}</td>
                 <td class="py-3 px-4 text-center font-bold">{{ $item->quantity }}</td>
-                <td class="py-3 px-4 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                <td class="py-3 px-4 text-right font-bold text-gray-900">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
+                <td class="py-3 px-4 text-right">Rp. {{ number_format($item->price, 0, ',', '.') }},-</td>
+                <td class="py-3 px-4 text-right font-bold text-gray-900">Rp. {{ number_format($item->quantity * $item->price, 0, ',', '.') }},-</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot class="text-gray-900">
             <tr>
                 <td colspan="4" class="py-4 px-4 text-right font-bold uppercase tracking-wide">Total Refund</td>
-                <td class="py-4 px-4 text-right text-xl font-bold bg-gray-50 rounded-lg">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
+                <td class="py-4 px-4 text-right text-xl font-bold bg-gray-50 rounded-lg">Rp. {{ number_format($return->total_amount, 0, ',', '.') }},-</td>
             </tr>
         </tfoot>
     </table>

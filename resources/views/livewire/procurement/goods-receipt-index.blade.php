@@ -115,9 +115,9 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-right text-sm font-medium text-gray-900">
-                                <div>Rp {{ number_format($gr->total_amount, 0, ',', '.') }}</div>
+                                <div>Rp. {{ number_format($gr->total_amount, 0, ',', '.') }},-</div>
                                 @if($gr->payment_status !== 'paid')
-                                    <div class="text-[10px] text-orange-600 font-bold mt-1">Sisa: Rp {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }}</div>
+                                    <div class="text-[10px] text-orange-600 font-bold mt-1">Sisa: Rp. {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }},-</div>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $gr->user->name ?? '-' }}</td>
@@ -206,7 +206,7 @@
                             </div>
                             <div>
                                 <span class="text-xs font-normal text-gray-400 block mb-1">Total Pembelian</span>
-                                <span class="text-xl font-extrabold text-blue-600">Rp {{ number_format($selectedReceipt->total_amount, 0, ',', '.') }}</span>
+                                <span class="text-xl font-extrabold text-blue-600">Rp. {{ number_format($selectedReceipt->total_amount, 0, ',', '.') }},-</span>
                             </div>
                         </div>
                     </div>
@@ -267,8 +267,8 @@
                             </svg>
                             <span>Export PDF</span>
                         </a>
-                        <button type="button" wire:click="closeDetailModal" 
-                            class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">
+                        <button type="button" wire:click="closeDetailModal"
+                            class="btn btn-secondary">
                             Tutup
                         </button>
                     </div>
@@ -301,7 +301,7 @@
                         <div class="bg-blue-50/30 p-6 rounded-2xl border border-blue-100/50">
                             <span class="text-xs font-medium text-blue-500 block mb-2">Sisa Hutang</span>
                             <div class="flex items-baseline gap-2">
-                                <span class="text-sm font-medium text-gray-500">Rp</span>
+                                <span class="text-sm font-medium text-gray-500">Rp.</span>
                                 <span class="text-3xl font-bold text-gray-900">{{ number_format($remaining_debt, 0, ',', '.') }}</span>
                             </div>
                         </div>
@@ -311,7 +311,7 @@
                             <label class="block text-xs font-medium text-gray-400 mb-2">Jumlah Bayar</label>
                             <div class="relative" x-data="money($wire.entangle('payment_amount'))">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <span class="text-sm font-medium text-gray-400">Rp</span>
+                                    <span class="text-sm font-medium text-gray-400">Rp.</span>
                                 </div>
                                 <input type="text" x-bind="input"
                                     class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-lg transition-all placeholder:text-gray-300"
@@ -365,12 +365,12 @@
 
                     <!-- Modal Footer -->
                     <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
-                        <button type="button" wire:click="closePaymentModal" 
-                            class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">
+                        <button type="button" wire:click="closePaymentModal"
+                            class="btn btn-secondary">
                             Batal
                         </button>
-                        <button type="submit" 
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-normal hover:bg-blue-700 transition-all shadow-sm text-sm">
+                        <button type="submit"
+                            class="btn btn-primary">
                             Simpan Pembayaran
                         </button>
                     </div>

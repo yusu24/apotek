@@ -38,7 +38,7 @@
                                     @endif
                                 </td>
                                 <td class="px-5 py-3 text-right font-medium text-gray-900">
-                                    Rp {{ number_format($ar['amount'], 0, ',', '.') }}
+                                    Rp. {{ number_format($ar['amount'], 0, ',', '.') }},-
                                 </td>
                             </tr>
                         @empty
@@ -50,7 +50,7 @@
             <!-- Footer Total -->
             <div class="px-5 py-4 border-t border-gray-100 bg-gray-50 flex justify-between items-center mt-auto">
                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Piutang Usaha</span>
-                <span class="text-lg font-bold text-green-700">Rp {{ number_format($totalReceivables, 0, ',', '.') }}</span>
+                <span class="text-lg font-bold text-green-700">Rp. {{ number_format($totalReceivables, 0, ',', '.') }},-</span>
             </div>
         </div>
         @endcan
@@ -90,7 +90,7 @@
                                     @endif
                                 </td>
                                 <td class="px-5 py-3 text-right font-medium text-gray-900">
-                                    Rp {{ number_format($ap['amount'], 0, ',', '.') }}
+                                    Rp. {{ number_format($ap['amount'], 0, ',', '.') }},-
                                 </td>
                             </tr>
                         @empty
@@ -102,7 +102,7 @@
             <!-- Footer Total -->
             <div class="px-5 py-4 border-t border-gray-100 bg-gray-50 flex justify-between items-center mt-auto">
                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Hutang Usaha</span>
-                <span class="text-lg font-bold text-red-700">Rp {{ number_format($totalPayables, 0, ',', '.') }}</span>
+                <span class="text-lg font-bold text-red-700">Rp. {{ number_format($totalPayables, 0, ',', '.') }},-</span>
             </div>
         </div>
         @endcan

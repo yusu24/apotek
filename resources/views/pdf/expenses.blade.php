@@ -105,7 +105,7 @@
                 <td>{{ $expense->category }}</td>
                 <td>{{ $expense->description }}</td>
                 <td>{{ $expense->account ? ($expense->account->code . ' - ' . $expense->account->name) : 'Tanpa Akun (Non-Jurnal)' }}</td>
-                <td class="text-right">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($expense->amount, 0, ',', '.') }},-</td>
             </tr>
             @empty
             <tr>
@@ -116,7 +116,7 @@
             @if($expenses->count() > 0)
             <tr class="total-row">
                 <td colspan="4" class="text-right uppercase">Total Pengeluaran</td>
-                <td class="text-right">Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($totalAmount, 0, ',', '.') }},-</td>
             </tr>
             @endif
         </tbody>

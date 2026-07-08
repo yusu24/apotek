@@ -96,10 +96,10 @@
                     </div>
                     
                     <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse gap-3">
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        <button type="submit" class="btn btn-primary">
                             {{ $editMode ? 'Update Satuan' : 'Simpan Satuan' }}
                         </button>
-                        <button type="button" wire:click="closeModal" class="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm">
+                        <button type="button" wire:click="closeModal" class="btn btn-secondary">
                             Batal
                         </button>
                     </div>

@@ -30,7 +30,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-blue-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kas & Bank</p>
-                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalCashBank, 0, ',', '.') }}</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalCashBank, 0, ',', '.') }},-</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -48,7 +48,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-white font-bold text-xs mb-1 uppercase tracking-wider opacity-90">Total Piutang Usaha</p>
-                    <h2 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalReceivable, 0, ',', '.') }}</h2>
+                    <h2 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalReceivable, 0, ',', '.') }},-</h2>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -64,7 +64,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-red-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kewajiban Lancar</p>
-                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalPayable, 0, ',', '.') }}</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalPayable, 0, ',', '.') }},-</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -81,14 +81,14 @@
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="flex flex-row gap-4 w-full md:w-auto items-center">
                 @can('manage accounts')
-                <button wire:click="create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0">
+                <button wire:click="create" class="btn btn-primary">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     <span class="hidden sm:inline">Tambah Akun</span>
                 </button>
                 @endcan
 
                 @can('import accounts')
-                <button x-data @click="$dispatch('open-import-modal')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 shadow-sm font-bold flex items-center justify-center gap-2 transition duration-200 text-sm whitespace-nowrap shrink-0">
+                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     <span class="hidden sm:inline">Import Excel</span>
                 </button>
@@ -278,10 +278,10 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition duration-200">
+                        <button type="submit" class="btn btn-primary w-full sm:w-auto sm:ml-3">
                             Simpan Data
                         </button>
-                        <button type="button" wire:click="$set('showModal', false)" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition duration-200">
+                        <button type="button" wire:click="$set('showModal', false)" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">
                             Batal
                         </button>
                     </div>
@@ -336,8 +336,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImport = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImport = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>

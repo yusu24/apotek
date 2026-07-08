@@ -79,7 +79,7 @@
                 style="background-color: {{ $config['hex'] }};"
                 wire:click="setActiveTab('{{ $key }}')">
                 <h3 class="text-[12px] font-black text-white uppercase tracking-wider text-center opacity-95">{{ $config['label'] }}</h3>
-                <p class="text-[12px] font-black text-white truncate text-center leading-tight mt-1">Rp{{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}</p>
+                <p class="text-[12px] font-black text-white truncate text-center leading-tight mt-1">Rp. {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }},-</p>
             </div>
         @endforeach
     </div>
@@ -182,12 +182,12 @@
                             @endif
                         </td>
                         @endif
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">Rp {{ number_format($item['total_amount'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">Rp. {{ number_format($item['total_amount'], 0, ',', '.') }},-</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-gray-900">
                             @if($item['outstanding'] <= 0)
                                 <span class="text-green-600 font-bold">LUNAS</span>
                             @else
-                                Rp {{ number_format($item['outstanding'], 0, ',', '.') }}
+                                Rp. {{ number_format($item['outstanding'], 0, ',', '.') }},-
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -248,7 +248,7 @@
                             <div>
                                 <span class="text-xs font-medium text-blue-500 block uppercase tracking-wide">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</span>
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-xs font-medium text-gray-500">Rp</span>
+                                    <span class="text-xs font-medium text-gray-500">Rp.</span>
                                     <span class="text-xl font-bold text-gray-900">{{ number_format($maxPaymentAmount, 0, ',', '.') }}</span>
                                 </div>
                             </div>
@@ -259,7 +259,7 @@
                             <label class="block text-xs font-medium text-gray-400 mb-2">Jumlah Bayar</label>
                             <div class="relative" x-data="money($wire.entangle('paymentAmount'))">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <span class="text-sm font-medium text-gray-400">Rp</span>
+                                    <span class="text-sm font-medium text-gray-400">Rp.</span>
                                 </div>
                                 <input type="text" x-bind="input"
                                     class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium text-gray-900 text-lg transition-all placeholder:text-gray-300"
@@ -313,12 +313,12 @@
 
                     <!-- Modal Footer -->
                     <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
-                        <button type="button" wire:click="closePaymentModal" 
-                            class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-normal hover:bg-gray-50 transition-all shadow-sm text-sm">
+                        <button type="button" wire:click="closePaymentModal"
+                            class="btn btn-secondary">
                             Batal
                         </button>
-                        <button type="submit" 
-                            class="px-6 py-2.5 bg-green-600 text-white rounded-xl font-normal hover:bg-green-700 transition-all shadow-sm text-sm">
+                        <button type="submit"
+                            class="btn btn-success">
                             Simpan Pembayaran
                         </button>
                     </div>

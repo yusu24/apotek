@@ -89,7 +89,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-blue-100 text-sm font-medium">Penjualan Kotor</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</p>
+                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['total_sales'], 0, ',', '.') }},-</p>
                 </div>
                 <div class="bg-blue-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -102,7 +102,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-red-100 text-sm font-medium">Total Retur Penjualan</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</p>
+                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['total_returns'], 0, ',', '.') }},-</p>
                 </div>
                 <div class="bg-red-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
@@ -115,7 +115,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-emerald-100 text-sm font-medium">Penjualan Bersih (Riil)</p>
-                    <p class="text-2xl font-bold mt-1">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</p>
+                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['net_sales'], 0, ',', '.') }},-</p>
                 </div>
                 <div class="bg-emerald-500/30 rounded-full p-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
@@ -164,7 +164,7 @@
             </div>
 
             <div class="shrink-0 flex items-center">
-                <button wire:click="resetFilters" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
+                <button wire:click="resetFilters" class="btn btn-sm btn-secondary" title="Reset Filter">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
@@ -204,7 +204,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-right font-bold text-gray-900 dark:text-white">
-                                        Rp {{ number_format($sale->grand_total, 0, ',', '.') }}
+                                        Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-
                                     </td>
                                     <td class="px-6 py-4 text-right no-print">
                                         <div class="flex items-center justify-end gap-2">
@@ -225,7 +225,7 @@
                             <tr>
                                 <td colspan="4" class="px-6 py-4 text-gray-700 dark:text-gray-300 text-right uppercase text-xs">Total Penjualan Bersih (Pendapatan Riil)</td>
                                 <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-400 text-base">
-                                    Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}
+                                    Rp. {{ number_format($stats['net_sales'], 0, ',', '.') }},-
                                 </td>
                                 <td class="px-6 py-4 no-print"></td>
                             </tr>
@@ -255,27 +255,27 @@
                     <div class="space-y-2.5 text-sm">
                         <div class="flex justify-between text-gray-600 dark:text-gray-400">
                             <span>Penjualan Kotor</span>
-                            <span class="font-bold text-gray-900 dark:text-white">Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Rp. {{ number_format($stats['total_sales'], 0, ',', '.') }},-</span>
                         </div>
                         
                         <div class="flex justify-between text-xs text-gray-400 dark:text-gray-500 pl-3 border-l-2 border-gray-200 dark:border-gray-700 italic">
                             <span>Pajak PPN</span>
-                            <span>- Rp {{ number_format($stats['total_tax'], 0, ',', '.') }}</span>
+                            <span>- Rp. {{ number_format($stats['total_tax'], 0, ',', '.') }},-</span>
                         </div>
                         
                         <div class="flex justify-between text-xs text-gray-400 dark:text-gray-500 pl-3 border-l-2 border-gray-200 dark:border-gray-700 italic">
                             <span>Selisih Pembulatan</span>
-                            <span>- Rp {{ number_format($stats['total_rounding'], 0, ',', '.') }}</span>
+                            <span>- Rp. {{ number_format($stats['total_rounding'], 0, ',', '.') }},-</span>
                         </div>
                         
                         <div class="flex justify-between font-semibold text-blue-600 dark:text-blue-400 pt-1 border-t border-dashed border-gray-200 dark:border-gray-700">
                             <span>Subtotal Bersih (DPP)</span>
-                            <span>Rp {{ number_format($stats['total_dpp'], 0, ',', '.') }}</span>
+                            <span>Rp. {{ number_format($stats['total_dpp'], 0, ',', '.') }},-</span>
                         </div>
                         
                         <div class="flex justify-between text-red-600 dark:text-red-400">
                             <span>Retur Penjualan</span>
-                            <span>- Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}</span>
+                            <span>- Rp. {{ number_format($stats['total_returns'], 0, ',', '.') }},-</span>
                         </div>
                         
                         <div class="flex justify-between items-center pt-3 border-t-2 border-gray-100 dark:border-gray-700 font-bold text-emerald-600 dark:text-emerald-400">
@@ -283,7 +283,7 @@
                                 <span class="text-[10px] uppercase tracking-wider">Pendapatan Riil</span>
                                 <span class="text-[8px] text-gray-400 dark:text-gray-500 normal-case font-normal">Rumus: DPP - Retur</span>
                             </div>
-                            <span class="text-base">Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}</span>
+                            <span class="text-base">Rp. {{ number_format($stats['net_sales'], 0, ',', '.') }},-</span>
                         </div>
                     </div>
                 </div>
@@ -356,15 +356,15 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-center font-bold text-gray-700 dark:text-gray-300">{{ $item['quantity'] }}</td>
-                                <td class="px-4 py-3 text-right text-gray-600 dark:text-gray-400">Rp {{ number_format($item['sell_price'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right text-gray-600 dark:text-gray-400">Rp. {{ number_format($item['sell_price'], 0, ',', '.') }},-</td>
                                 <td class="px-4 py-3 text-right text-rose-500">
                                     @if($item['discount_amount'] > 0)
-                                        -Rp {{ number_format($item['discount_amount'], 0, ',', '.') }}
+                                        -Rp. {{ number_format($item['discount_amount'], 0, ',', '.') }},-
                                     @else
                                         <span class="text-gray-300">-</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white">Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white">Rp. {{ number_format($item['subtotal'], 0, ',', '.') }},-</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -393,38 +393,38 @@
                         <div class="flex flex-col gap-1.5 w-full md:max-w-xs text-sm ml-auto">
                             <div class="flex justify-between text-gray-600 dark:text-gray-400">
                                 <span>Subtotal</span>
-                                <span>Rp {{ number_format($selectedSale['total_amount'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['total_amount'], 0, ',', '.') }},-</span>
                             </div>
                             @if(($selectedSale['discount'] ?? 0) > 0)
                             <div class="flex justify-between text-rose-500">
                                 <span>Diskon</span>
-                                <span>-Rp {{ number_format($selectedSale['discount'], 0, ',', '.') }}</span>
+                                <span>-Rp. {{ number_format($selectedSale['discount'], 0, ',', '.') }},-</span>
                             </div>
                             @endif
                             @if(($selectedSale['tax'] ?? 0) > 0)
                             <div class="flex justify-between text-gray-500">
                                 <span>PPN</span>
-                                <span>Rp {{ number_format($selectedSale['tax'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['tax'], 0, ',', '.') }},-</span>
                             </div>
                             @endif
                             @if(($selectedSale['service_charge_amount'] ?? 0) > 0)
                             <div class="flex justify-between text-gray-500">
                                 <span>Service Charge</span>
-                                <span>Rp {{ number_format($selectedSale['service_charge_amount'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['service_charge_amount'], 0, ',', '.') }},-</span>
                             </div>
                             @endif
                             <div class="flex justify-between font-bold text-base text-gray-900 dark:text-white pt-2 border-t border-gray-200 dark:border-gray-600">
                                 <span>Grand Total</span>
-                                <span>Rp {{ number_format($selectedSale['grand_total'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['grand_total'], 0, ',', '.') }},-</span>
                             </div>
                             @if($selectedSale['payment_method'] === 'cash' && ($selectedSale['cash_amount'] ?? 0) > 0)
                             <div class="flex justify-between text-gray-500 text-xs">
                                 <span>Bayar Tunai</span>
-                                <span>Rp {{ number_format($selectedSale['cash_amount'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['cash_amount'], 0, ',', '.') }},-</span>
                             </div>
                             <div class="flex justify-between text-emerald-600 text-xs font-medium">
                                 <span>Kembalian</span>
-                                <span>Rp {{ number_format($selectedSale['change_amount'], 0, ',', '.') }}</span>
+                                <span>Rp. {{ number_format($selectedSale['change_amount'], 0, ',', '.') }},-</span>
                             </div>
                             @endif
                         </div>
@@ -433,11 +433,11 @@
 
                 <!-- Modal Footer -->
                 <div class="px-6 py-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                    <button type="button" wire:click="openReceiptModal({{ $selectedSale['id'] }})" class="text-sm text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1.5 transition-colors">
+                    <button type="button" wire:click="openReceiptModal({{ $selectedSale['id'] }})" class="btn btn-sm btn-secondary">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         Print Struk
                     </button>
-                    <button wire:click="closeDetail" class="px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <button wire:click="closeDetail" class="btn btn-secondary">
                         Tutup
                     </button>
                 </div>
@@ -491,8 +491,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImportOmset = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImportOmset = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>
@@ -544,13 +544,13 @@
                 
                 <!-- Modal Footer: 2 buttons only -->
                 <div class="px-4 py-3 border-t border-gray-100 flex gap-2 bg-gray-50 shrink-0">
-                    <button type="button" onclick="printReceiptIframe()" 
-                        class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2">
+                    <button type="button" onclick="printReceiptIframe()"
+                        class="btn btn-primary flex-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         Cetak
                     </button>
-                    <button type="button" wire:click="closeReceiptModal" 
-                        class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all text-sm">
+                    <button type="button" wire:click="closeReceiptModal"
+                        class="btn btn-secondary flex-1">
                         Kembali
                     </button>
                 </div>

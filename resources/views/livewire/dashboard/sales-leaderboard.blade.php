@@ -22,7 +22,7 @@
 
                 <p class="text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wide mb-2">Omset Hari Ini</p>
                 <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-emerald-200 leading-none">
-                    Rp {{ number_format($dailyTurnover, 0, ',', '.') }}
+                    Rp. {{ number_format($dailyTurnover, 0, ',', '.') }},-
                 </h3>
                 <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
 
@@ -417,7 +417,7 @@
                                         </td>
                                         <td class="text-slate-500 dark:text-slate-400 py-1.5 font-medium pl-1">Total kontribusi</td>
                                         <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
-                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
+                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">Rp. {{ number_format($rank1->total_sales, 0, ',', '.') }},-</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -464,7 +464,7 @@
                             <div class="text-right">
                                 <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
                                 <p class="font-black text-xs text-indigo-600 dark:text-indigo-400">
-                                    Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                    Rp. {{ number_format($row->total_sales, 0, ',', '.') }},-
                                 </p>
                             </div>
                         </div>
@@ -605,7 +605,7 @@
                                      'font-black text-xs',
                                      'text-indigo-600 dark:text-indigo-400' => !$isRank1,
                                  ])>
-                                     Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                     Rp. {{ number_format($row->total_sales, 0, ',', '.') }},-
                                  </p>
                              </div>
                          </div>
@@ -614,7 +614,7 @@
 
                  <!-- Modal Footer -->
                  <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
-                     <button @click="open = false" class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-xl transition-all">
+                     <button @click="open = false" class="btn btn-secondary">
                          Tutup
                      </button>
                  </div>

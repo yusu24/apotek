@@ -16,7 +16,7 @@
         </div>
         <div>
             <label class="text-xs font-bold text-gray-500 uppercase">Total</label>
-            <p class="text-lg font-bold text-green-600">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</p>
+            <p class="text-lg font-bold text-green-600">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</p>
         </div>
     </div>
 
@@ -40,15 +40,15 @@
                         <td class="px-3 py-2 text-gray-900">{{ $item->product->name }}</td>
                         <td class="px-3 py-2 text-right text-gray-900">{{ $item->quantity }}</td>
                         <td class="px-3 py-2 text-gray-700">{{ $item->unit->name }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                        <td class="px-3 py-2 text-right font-semibold text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right text-gray-900">Rp. {{ number_format($item->price, 0, ',', '.') }},-</td>
+                        <td class="px-3 py-2 text-right font-semibold text-gray-900">Rp. {{ number_format($item->subtotal, 0, ',', '.') }},-</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="bg-gray-50 font-bold">
                     <tr>
                         <td colspan="4" class="px-3 py-2 text-right">Total:</td>
-                        <td class="px-3 py-2 text-right text-green-600">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right text-green-600">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
                     </tr>
                 </tfoot>
             </table>
@@ -60,15 +60,15 @@
     <div class="grid grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
         <div>
             <label class="text-xs font-bold text-gray-600">Jumlah Dibayar</label>
-            <p class="text-sm font-bold text-gray-900">Rp {{ number_format($sale->payment_amount, 0, ',', '.') }}</p>
+            <p class="text-sm font-bold text-gray-900">Rp. {{ number_format($sale->payment_amount, 0, ',', '.') }},-</p>
         </div>
         <div>
             <label class="text-xs font-bold text-gray-600">Diskon</label>
-            <p class="text-sm font-bold text-gray-900">Rp {{ number_format($sale->discount, 0, ',', '.') }}</p>
+            <p class="text-sm font-bold text-gray-900">Rp. {{ number_format($sale->discount, 0, ',', '.') }},-</p>
         </div>
         <div>
             <label class="text-xs font-bold text-gray-600">Kembalian</label>
-            <p class="text-sm font-bold text-green-600">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</p>
+            <p class="text-sm font-bold text-green-600">Rp. {{ number_format($sale->change_amount, 0, ',', '.') }},-</p>
         </div>
     </div>
     @endif

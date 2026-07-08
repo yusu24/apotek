@@ -180,7 +180,7 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Total Pembelian:</div>
-                <div class="info-value">Rp {{ number_format($receipt->total_amount, 0, ',', '.') }}</div>
+                <div class="info-value">Rp. {{ number_format($receipt->total_amount, 0, ',', '.') }},-</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Status Pembayaran:</div>

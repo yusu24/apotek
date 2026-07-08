@@ -47,21 +47,21 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Aset</p>
-            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_assets'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_assets'], 0, ',', '.') }},-</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-red-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Liabilitas</p>
-            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_liabilities'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_liabilities'], 0, ',', '.') }},-</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-purple-500">
             <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Ekuitas</p>
-            <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['total_equity'], 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_equity'], 0, ',', '.') }},-</p>
         </div>
         <div class="p-6 rounded-xl shadow-md border-b-4 {{ $summary['is_balanced'] ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500' }}">
             <p class="text-xs font-bold {{ $summary['is_balanced'] ? 'text-green-600' : 'text-orange-600' }} uppercase tracking-wider mb-1">Selisih (Balance Check)</p>
             <div class="flex items-center gap-2">
                 <p class="text-2xl font-bold {{ $summary['is_balanced'] ? 'text-green-700' : 'text-orange-700' }}">
-                    Rp {{ number_format(abs($summary['difference']), 0, ',', '.') }}
+                    Rp. {{ number_format(abs($summary['difference']), 0, ',', '.') }},-
                 </p>
                 @if($summary['is_balanced'])
                     <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
@@ -106,7 +106,7 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Awal Kas (Tunai)</label>
                             <div class="relative group" x-data="money($wire.entangle('cash_amount').live)">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp.</span>
                                 <input type="text" x-bind="input" placeholder="0"
                                     {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3 disabled:bg-gray-50 disabled:text-gray-500">
@@ -116,7 +116,7 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Awal Bank</label>
                             <div class="relative group" x-data="money($wire.entangle('bank_amount').live)">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp.</span>
                                 <input type="text" x-bind="input" placeholder="0"
                                     {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3 disabled:bg-gray-50 disabled:text-gray-500">
@@ -126,7 +126,7 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Saldo Persediaan Barang</label>
                             <div class="relative group" x-data="money($wire.entangle('inventory_amount').live)">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp</span>
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-blue-500 transition-colors">Rp.</span>
                                 <input type="text" x-bind="input" placeholder="0"
                                     {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
                                     class="w-full pl-12 rounded-lg border-gray-200 focus:ring-blue-500 focus:border-blue-500 transition-all font-bold text-lg py-3 disabled:bg-gray-50 disabled:text-gray-500">
@@ -152,9 +152,9 @@
                             <span class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm">2</span>
                             Aset Tetap
                         </h3>
-                        <button type="button" wire:click="addAsset" 
+                        <button type="button" wire:click="addAsset"
                             @if($is_locked || !auth()->user()->can('edit opening balances')) disabled @endif
-                            class="text-sm bg-green-50 text-green-600 px-4 py-2 rounded-lg font-bold hover:bg-green-100 transition flex items-center gap-2 border border-green-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="btn btn-sm btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             Tambah Aset
                         </button>
@@ -202,9 +202,9 @@
                             <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-sm">3</span>
                             Liabilitas (Utang Awal)
                         </h3>
-                        <button type="button" wire:click="addDebt" 
+                        <button type="button" wire:click="addDebt"
                             @if($is_locked || !auth()->user()->can('edit opening balances')) disabled @endif
-                            class="text-sm bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-100 transition flex items-center gap-2 border border-red-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="btn btn-sm btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             Tambah Utang
                         </button>
@@ -258,7 +258,7 @@
                     <div class="max-w-md">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Modal Awal Pemilik</label>
                         <div class="relative group" x-data="money($wire.entangle('capital_amount').live)">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-purple-500 transition-colors">Rp</span>
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 group-focus-within:text-purple-500 transition-colors">Rp.</span>
                             <input type="text" x-bind="input" placeholder="0"
                                 {{ $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
                                 class="w-full pl-12 rounded-lg border-gray-200 focus:ring-purple-500 focus:border-purple-500 transition-all font-bold text-xl py-3 border-2 border-purple-100 bg-purple-50/10 disabled:bg-gray-100 disabled:text-gray-500">
@@ -289,9 +289,9 @@
                     <button type="button" onclick="history.back()" class="btn btn-lg btn-secondary">
                         Batal
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                         {{ !$summary['is_balanced'] || $is_locked || !auth()->user()->can('edit opening balances') ? 'disabled' : '' }}
-                        class="px-8 py-2.5 {{ $summary['is_balanced'] && !$is_locked && auth()->user()->can('edit opening balances') ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30' : 'bg-gray-400 cursor-not-allowed opacity-50' }} text-white rounded-lg transition font-bold shadow-lg flex items-center gap-2">
+                        class="btn btn-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400">
                         <svg class="w-5 h-5 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         Simpan & Posting Jurnal
                     </button>

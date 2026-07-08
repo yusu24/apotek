@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="mt-4 flex justify-end items-center">
-            <button wire:click="resetFilters" class="text-sm text-blue-600 font-bold hover:underline">Reset Filter</button>
+            <button wire:click="resetFilters" class="btn btn-sm btn-secondary">Reset Filter</button>
         </div>
     </div>
 
@@ -185,8 +185,8 @@
                 
                 {{-- Modal Footer --}}
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
-                    <button wire:click="closeSourceModal" 
-                        class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition shadow-sm">
+                    <button wire:click="closeSourceModal"
+                        class="btn btn-secondary">
                         Tutup
                     </button>
                 </div>
@@ -228,10 +228,10 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
-                    <button wire:click="cancelDelete" type="button" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-semibold transition">
+                    <button wire:click="cancelDelete" type="button" class="btn btn-secondary">
                         Batal
                     </button>
-                    <button wire:click="deleteJournal" type="button" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition shadow-sm">
+                    <button wire:click="deleteJournal" type="button" class="btn btn-danger">
                         Ya, Hapus
                     </button>
                 </div>

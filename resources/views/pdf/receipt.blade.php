@@ -123,30 +123,30 @@
         <table>
             <tr>
                 <td>Subtotal:</td>
-                <td class="text-right font-bold">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">Rp. {{ number_format($sale->total_amount, 0, ',', '.') }},-</td>
             </tr>
             @if($sale->discount > 0)
             <tr>
                 <td>Diskon:</td>
-                <td class="text-right">- Rp {{ number_format($sale->discount, 0, ',', '.') }}</td>
+                <td class="text-right">- Rp. {{ number_format($sale->discount, 0, ',', '.') }},-</td>
             </tr>
             @endif
             @if($sale->service_charge_amount > 0)
             <tr>
                 <td>Service ({{ $sale->service_charge_percentage }}%):</td>
-                <td class="text-right">Rp {{ number_format($sale->service_charge_amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($sale->service_charge_amount, 0, ',', '.') }},-</td>
             </tr>
             @endif
             @if($sale->tax > 0)
             <tr>
                 <td>PPN ({{ strtoupper($sale->ppn_mode) }}):</td>
-                <td class="text-right">Rp {{ number_format($sale->tax, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($sale->tax, 0, ',', '.') }},-</td>
             </tr>
             @endif
             @if($sale->rounding != 0)
             <tr>
                 <td>Pembulatan:</td>
-                <td class="text-right">{{ $sale->rounding > 0 ? '+' : '' }} Rp {{ number_format($sale->rounding, 0, ',', '.') }}</td>
+                <td class="text-right">{{ $sale->rounding > 0 ? '+' : '' }} Rp. {{ number_format($sale->rounding, 0, ',', '.') }},-</td>
             </tr>
             @endif
         </table>
@@ -156,7 +156,7 @@
         <table>
             <tr>
                 <td class="font-bold">TOTAL:</td>
-                <td class="text-right font-bold" style="font-size: 14px;">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+                <td class="text-right font-bold" style="font-size: 14px;">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
             </tr>
             @if($sale->payment_method === 'tempo')
             <tr>
@@ -165,12 +165,12 @@
             </tr>
             <tr>
                 <td>Uang Muka / DP:</td>
-                <td class="text-right">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</td>
             </tr>
             @if($sale->receivables)
             <tr>
                 <td class="font-bold">Sisa Tagihan:</td>
-                <td class="text-right font-bold">Rp {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</td>
+                <td class="text-right font-bold">Rp. {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }},-</td>
             </tr>
             <tr>
                 <td>Jatuh Tempo:</td>
@@ -184,11 +184,11 @@
             </tr>
             <tr>
                 <td>Bayar:</td>
-                <td class="text-right">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</td>
             </tr>
             <tr>
                 <td>Kembali:</td>
-                <td class="text-right">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($sale->change_amount, 0, ',', '.') }},-</td>
             </tr>
             @endif
         </table>

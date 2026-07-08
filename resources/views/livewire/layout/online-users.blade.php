@@ -48,9 +48,9 @@ $colorClasses = ($textColor === 'text-white')
          :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
         
         <div class="p-3 border-b flex justify-between items-center border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">
-            <h3 class="text-xs font-bold uppercase tracking-widest flex items-center gap-2 text-gray-500 dark:text-gray-400">
+            <h3 class="text-xs font-bold tracking-widest flex items-center gap-2 text-gray-500 dark:text-gray-400">
                 <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                Sedang Aktif ({{ count($onlineUsers) }})
+                Sedang aktif ({{ count($onlineUsers) }})
             </h3>
         </div>
 

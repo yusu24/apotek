@@ -41,7 +41,7 @@ $colorClasses = ($textColor === 'text-white')
          :class="$store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
         
         <div class="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Notifikasi</h3>
+            <h3 class="text-xs font-bold text-gray-500 tracking-widest">Notifikasi</h3>
             @if($this->unreadCount > 0)
                 <button wire:click="markAllAsRead" class="text-[10px] text-blue-600 hover:text-blue-800 transition-colors">Semua Dibaca</button>
             @endif

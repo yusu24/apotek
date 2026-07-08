@@ -60,7 +60,7 @@
         $taxCatPrevious = ($showComparison ? $previous['taxDetails'] : collect())->groupBy('category')->map(fn($items) => $items->sum('amount'));
         $taxCategories = $taxCatCurrent->keys()->merge($taxCatPrevious->keys())->unique()->sort()->values();
 
-        $fmt = fn($v) => 'Rp ' . number_format((float) $v, 0, ',', '.');
+        $fmt = fn($v) => 'Rp. ' . number_format((float) $v, 0, ',', '.') . ',-';
         $fmtSigned = fn($v) => $v < 0 ? '(' . $fmt(abs($v)) . ')' : $fmt($v);
     @endphp
     <div class="letterhead">
@@ -140,8 +140,8 @@
             @empty
             <tr class="sub-item">
                 <td class="label">- Tidak ada beban operasional -</td>
-                <td class="amount">Rp 0</td>
-                @if($showComparison)<td class="amount">Rp 0</td>@endif
+                <td class="amount">Rp. 0,-</td>
+                @if($showComparison)<td class="amount">Rp. 0,-</td>@endif
             </tr>
             @endforelse
             <tr class="total-item">
@@ -231,8 +231,8 @@
                 @empty
                 <tr class="sub-item">
                     <td class="label">- Tidak ada beban pajak -</td>
-                    <td class="amount">Rp 0</td>
-                    @if($showComparison)<td class="amount">Rp 0</td>@endif
+                    <td class="amount">Rp. 0,-</td>
+                    @if($showComparison)<td class="amount">Rp. 0,-</td>@endif
                 </tr>
                 @endforelse
             @endif

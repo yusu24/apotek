@@ -110,9 +110,9 @@
             </div>
             <div class="flex items-center gap-2">
                 @can('delete products')
-                <button wire:click="deleteSelected" 
+                <button wire:click="deleteSelected"
                     wire:confirm="Hapus {{ count($selectedProducts) }} produk terpilih? Tindakan ini tidak dapat dibatalkan."
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                    class="btn btn-sm btn-danger">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     Hapus Terpilih
                 </button>
@@ -216,12 +216,12 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Rp {{ number_format($product->sell_price, 0, ',', '.') }}
+                                Rp. {{ number_format($product->sell_price, 0, ',', '.') }},-
                                 <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">
-                                    Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
+                                    Rp. {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }},-
                                 </div>
                                 @if($product->purchase_price_updated_at)
                                     <div class="text-[10px] text-gray-500">
@@ -322,9 +322,9 @@
                                                     <div class="text-[10px] text-gray-500 uppercase">{{ $history['action'] }}</div>
                                                 </td>
                                                 <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
-                                                    Rp {{ number_format($history['new_price'], 0, ',', '.') }}
+                                                    Rp. {{ number_format($history['new_price'], 0, ',', '.') }},-
                                                     @if($history['action'] == 'updated')
-                                                        <div class="text-gray-400 text-[10px] line-through">Rp {{ number_format($history['old_price'], 0, ',', '.') }}</div>
+                                                        <div class="text-gray-400 text-[10px] line-through">Rp. {{ number_format($history['old_price'], 0, ',', '.') }},-</div>
                                                     @endif
                                                 </td>
                                                 <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]" title="{{ $history['user'] }}">
@@ -368,7 +368,7 @@
                                                     {{ $history['supplier'] }}
                                                 </td>
                                                 <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
-                                                    Rp {{ number_format($history['price'], 0, ',', '.') }}
+                                                    Rp. {{ number_format($history['price'], 0, ',', '.') }},-
                                                     <div class="text-[10px] text-gray-500">/ {{ $history['unit'] }}</div>
                                                 </td>
                                             </tr>
@@ -431,8 +431,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImport = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImport = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>

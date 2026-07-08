@@ -56,7 +56,7 @@
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-emerald-600">
             <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Keuntungan</div>
-            <div class="text-2xl font-bold text-emerald-700">Rp {{ number_format($statistics['total_margin_value'], 0, ',', '.') }}</div>
+            <div class="text-2xl font-bold text-emerald-700">Rp. {{ number_format($statistics['total_margin_value'], 0, ',', '.') }},-</div>
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
             <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Rata-rata Margin</div>
@@ -113,7 +113,7 @@
             </div>
             
             <div class="shrink-0 flex items-center">
-                <button wire:click="$set('search', ''); $set('categoryFilter', ''); $set('marginFilter', 'all'); $set('perPage', 10);" class="text-xs text-blue-600 font-bold hover:text-blue-800 transition py-2" title="Reset Filter">
+                <button wire:click="$set('search', ''); $set('categoryFilter', ''); $set('marginFilter', 'all'); $set('perPage', 10);" class="btn btn-sm btn-secondary" title="Reset Filter">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                 </button>
             </div>
@@ -169,17 +169,17 @@
 
                             <td class="px-6 py-4 text-sm text-right text-gray-500">
                                 @if($product->avg_buy_price || $product->last_buy_price)
-                                    Rp {{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }}
+                                    Rp. {{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }},-
                                 @else
                                     <span class="text-gray-300 italic">N/A</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-right text-gray-500 font-medium">
-                                Rp {{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }}
+                                Rp. {{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }},-
                             </td>
                             <td class="px-6 py-4 text-sm text-right">
                                 <span class="font-black {{ $product->margin_amount >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
-                                    Rp {{ number_format($product->margin_amount, 0, ',', '.') }}
+                                    Rp. {{ number_format($product->margin_amount, 0, ',', '.') }},-
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-right">

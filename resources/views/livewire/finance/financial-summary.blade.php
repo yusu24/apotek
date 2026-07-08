@@ -23,7 +23,7 @@
                     <span class="text-xs font-medium uppercase text-white">Total Saldo (Kas & Bank)</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp</span>
+                    <span class="text-sm opacity-80">Rp.</span>
                     <span>{{ number_format($totalCash, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Dompet Kasir & Rekening</div>
@@ -40,7 +40,7 @@
                     <span class="text-xs font-medium uppercase text-white">Total Kewajiban (Hutang)</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp</span>
+                    <span class="text-sm opacity-80">Rp.</span>
                     <span>{{ number_format($totalDebt, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Tagihan Supplier / Pinjaman</div>
@@ -57,7 +57,7 @@
                     <span class="text-xs font-medium uppercase text-white">Posisi Kas Bersih</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp</span>
+                    <span class="text-sm opacity-80">Rp.</span>
                     <span>{{ number_format($netPosition, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/30 inline-block px-2 py-0.5 rounded-lg text-white">Likuiditas Dana Tersedia</div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-sm font-bold text-blue-600 dark:text-blue-400 tracking-tight">
-                                    Rp {{ number_format($acc->balance, 0, ',', '.') }}
+                                    Rp. {{ number_format($acc->balance, 0, ',', '.') }},-
                                 </div>
                                 <a href="{{ route('accounting.ledger', ['accountId' => $acc->id]) }}" wire:navigate class="text-[10px] text-gray-400 hover:text-blue-500 underline flex items-center justify-end gap-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -114,7 +114,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-sm font-bold text-orange-600 dark:text-orange-400 tracking-tight">
-                                    Rp {{ number_format($acc->balance, 0, ',', '.') }}
+                                    Rp. {{ number_format($acc->balance, 0, ',', '.') }},-
                                 </div>
                                 <a href="{{ route('accounting.ledger', ['accountId' => $acc->id]) }}" wire:navigate class="text-[10px] text-gray-400 hover:text-orange-500 underline flex items-center justify-end gap-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

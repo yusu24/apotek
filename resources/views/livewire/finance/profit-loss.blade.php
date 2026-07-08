@@ -118,7 +118,7 @@
                 </div>
                 <p class="text-indigo-100 text-sm font-medium">Penjualan Bersih</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($revenue, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($revenue, 0, ',', '.') }},-</p>
             <p class="text-xs text-indigo-200/70 mt-1 italic">DPP({{ number_format($grossRevenue, 0, ',', '.') }}) - Retur({{ number_format($totalReturns, 0, ',', '.') }})</p>
         </div>
 
@@ -130,7 +130,7 @@
                 </div>
                 <p class="text-amber-100 text-sm font-medium">Total HPP</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($cogs, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($cogs, 0, ',', '.') }},-</p>
             <p class="text-xs text-amber-200/70 mt-1 italic">Modal Barang Terjual</p>
         </div>
 
@@ -142,7 +142,7 @@
                 </div>
                 <p class="text-cyan-100 text-sm font-medium">Gross Profit Margin (Laba Kotor)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($grossProfit, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($grossProfit, 0, ',', '.') }},-</p>
             <p class="text-xs text-cyan-200/70 mt-1 italic">Penjualan - HPP</p>
         </div>
 
@@ -154,7 +154,7 @@
                 </div>
                 <p class="text-rose-100 text-sm font-medium">Operating Expense (Beban)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($expenses, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($expenses, 0, ',', '.') }},-</p>
             <p class="text-xs text-rose-200/70 mt-1 italic">Operasional & Lainnya</p>
         </div>
 
@@ -166,7 +166,7 @@
                 </div>
                 <p class="text-amber-100 text-sm font-medium">Pre-Tax Profit (Laba Sebelum Pajak)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($netProfitBeforeTax, 0, ',', '.') }},-</p>
             <p class="text-xs text-amber-200/70 mt-1 italic">Sebelum Potong Pajak</p>
         </div>
 
@@ -178,7 +178,7 @@
                 </div>
                 <p class="{{ $netProfit >= 0 ? 'text-emerald-100' : 'text-red-100' }} text-sm font-medium">Net Profit Margin (Laba Bersih)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfit, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($netProfit, 0, ',', '.') }},-</p>
             <p class="text-xs {{ $netProfit >= 0 ? 'text-emerald-200/70' : 'text-red-200/70' }} mt-1 italic">Setelah Pajak</p>
         </div>
     </div>
@@ -208,29 +208,29 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 font-semibold">{{ $sale->invoice_no }}</td>
-                            <td class="px-6 py-4 text-right">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">-Rp {{ number_format($sale->discount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-blue-600">Rp {{ number_format($sale->tax, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right font-bold text-gray-900">Rp {{ number_format($sale->total_amount - $sale->discount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right">Rp. {{ number_format($sale->total_amount, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right text-rose-600">-Rp. {{ number_format($sale->discount, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right text-blue-600">Rp. {{ number_format($sale->tax, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right font-bold text-gray-900">Rp. {{ number_format($sale->total_amount - $sale->discount, 0, ',', '.') }},-</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
                             <td colspan="2" class="px-6 py-4">TOTAL DPP</td>
-                            <td class="px-6 py-4 text-right underline underline-offset-4 decoration-blue-500 text-blue-600">Rp {{ number_format($grossRevenue, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-blue-700">Rp {{ number_format($totalTax, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right bg-blue-50">Rp {{ number_format($grossRevenue - $totalDiscount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right underline underline-offset-4 decoration-blue-500 text-blue-600">Rp. {{ number_format($grossRevenue, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right text-rose-600">Rp. {{ number_format($totalDiscount, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right text-blue-700">Rp. {{ number_format($totalTax, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right bg-blue-50">Rp. {{ number_format($grossRevenue - $totalDiscount, 0, ',', '.') }},-</td>
                         </tr>
                         @if($totalReturns > 0)
                         <tr class="bg-rose-50">
                             <td colspan="5" class="px-6 py-3 text-rose-600">Retur Penjualan</td>
-                            <td class="px-6 py-3 text-right text-rose-600">-Rp {{ number_format($totalReturns, 0, ',', '.') }}</td>
+                            <td class="px-6 py-3 text-right text-rose-600">-Rp. {{ number_format($totalReturns, 0, ',', '.') }},-</td>
                         </tr>
                         <tr class="bg-indigo-50">
                             <td colspan="5" class="px-6 py-3 text-indigo-700">PENDAPATAN BERSIH (DPP - Retur)</td>
-                            <td class="px-6 py-3 text-right text-indigo-700">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
+                            <td class="px-6 py-3 text-right text-indigo-700">Rp. {{ number_format($revenue, 0, ',', '.') }},-</td>
                         </tr>
                         @endif
                     </tfoot>
@@ -264,15 +264,15 @@
                             <td class="px-6 py-4 text-gray-500">{{ \Carbon\Carbon::parse($item->sale_date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 font-bold">{{ $item->product_name }}</td>
                             <td class="px-6 py-4 text-center">{{ $item->quantity }}</td>
-                            <td class="px-6 py-4 text-right text-gray-500">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right font-bold">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right text-gray-500">Rp. {{ number_format($item->cost_price, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-right font-bold">Rp. {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }},-</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
                             <td colspan="4" class="px-6 py-4">TOTAL HPP</td>
-                            <td class="px-6 py-4 text-right bg-orange-50 text-orange-700">Rp {{ number_format($cogs, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right bg-orange-50 text-orange-700">Rp. {{ number_format($cogs, 0, ',', '.') }},-</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -304,14 +304,14 @@
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4">{{ $expense->description }}</td>
                             <td class="px-6 py-4 uppercase text-xs font-bold text-gray-400">{{ $expense->category }}</td>
-                            <td class="px-6 py-4 text-right font-bold text-rose-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right font-bold text-rose-600">Rp. {{ number_format($expense->amount, 0, ',', '.') }},-</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
                             <td colspan="3" class="px-6 py-4">TOTAL BEBAN</td>
-                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp {{ number_format($expenses, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp. {{ number_format($expenses, 0, ',', '.') }},-</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -342,14 +342,14 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($tax->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4">{{ $tax->description }}</td>
-                            <td class="px-6 py-4 text-right font-bold text-rose-600">Rp {{ number_format($tax->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right font-bold text-rose-600">Rp. {{ number_format($tax->amount, 0, ',', '.') }},-</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
                             <td colspan="2" class="px-6 py-4">TOTAL PAJAK</td>
-                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp {{ number_format($taxExpenses, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp. {{ number_format($taxExpenses, 0, ',', '.') }},-</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -383,26 +383,26 @@
                 <div class="text-sm font-bold space-y-1">
                     <div class="flex justify-between">
                         <span class="opacity-60">Laba Kotor</span>
-                        <span>Rp {{ number_format($grossProfit, 0, ',', '.') }}</span>
+                        <span>Rp. {{ number_format($grossProfit, 0, ',', '.') }},-</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="opacity-60">Beban Ops</span>
-                        <span class="text-rose-400">- Rp {{ number_format($expenses, 0, ',', '.') }}</span>
+                        <span class="text-rose-400">- Rp. {{ number_format($expenses, 0, ',', '.') }},-</span>
                     </div>
                     <div class="border-t border-gray-700 my-1 pt-1 flex justify-between">
                         <span class="opacity-80">Laba Sblm Pajak</span>
-                        <span class="{{ $netProfitBeforeTax >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</span>
+                        <span class="{{ $netProfitBeforeTax >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">Rp. {{ number_format($netProfitBeforeTax, 0, ',', '.') }},-</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="opacity-60">Beban Pajak PPh</span>
-                        <span class="text-rose-400">- Rp {{ number_format($taxExpenses, 0, ',', '.') }}</span>
+                        <span class="text-rose-400">- Rp. {{ number_format($taxExpenses, 0, ',', '.') }},-</span>
                     </div>
                 </div>
             </div>
             <div class="flex flex-col items-center md:items-end">
                 <p class="text-gray-400 text-sm font-bold uppercase mb-1">Laba Bersih Setelah Pajak</p>
                 <div class="text-4xl font-bold tracking-tighter">
-                    Rp {{ number_format($netProfit, 0, ',', '.') }}
+                    Rp. {{ number_format($netProfit, 0, ',', '.') }},-
                 </div>
             </div>
         </div>
@@ -453,8 +453,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">Import Sekarang</button>
-                            <button type="button" @click="openImportOmset = false" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                            <button type="submit" class="btn btn-success w-full sm:w-auto sm:ml-3">Import Sekarang</button>
+                            <button type="button" @click="openImportOmset = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
                 </div>

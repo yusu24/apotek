@@ -259,13 +259,13 @@
                     <tr>
                         <td>
                             <div class="item-name">{{ $item->product->name }}</div>
-                            <div class="item-qty">{{ number_format($item->quantity, 0) }} x Rp {{ number_format($item->sell_price, 0, ',', '.') }}</div>
+                            <div class="item-qty">{{ number_format($item->quantity, 0) }} x Rp. {{ number_format($item->sell_price, 0, ',', '.') }},-</div>
                             @if($item->notes)
                             <div style="font-size: 11px; font-style: italic; color: #6b7280; margin-top: 3px;">{{ $item->notes }}</div>
                             @endif
                         </td>
                         <td style="text-align: center; color: #6b7280;">{{ $item->quantity }}</td>
-                        <td class="item-price">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                        <td class="item-price">Rp. {{ number_format($item->subtotal, 0, ',', '.') }},-</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -275,35 +275,35 @@
             <div class="totals-section">
                 <div class="total-row">
                     <span>Subtotal</span>
-                    <span style="font-weight: 600;">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</span>
+                    <span style="font-weight: 600;">Rp. {{ number_format($sale->total_amount, 0, ',', '.') }},-</span>
                 </div>
                 @if($sale->discount > 0)
                 <div class="total-row">
                     <span>Diskon</span>
-                    <span style="color: #ef4444;">- Rp {{ number_format($sale->discount, 0, ',', '.') }}</span>
+                    <span style="color: #ef4444;">- Rp. {{ number_format($sale->discount, 0, ',', '.') }},-</span>
                 </div>
                 @endif
                 @if($sale->service_charge_amount > 0)
                 <div class="total-row">
                     <span>Service ({{ $sale->service_charge_percentage }}%)</span>
-                    <span>Rp {{ number_format($sale->service_charge_amount, 0, ',', '.') }}</span>
+                    <span>Rp. {{ number_format($sale->service_charge_amount, 0, ',', '.') }},-</span>
                 </div>
                 @endif
                 @if($sale->tax > 0)
                 <div class="total-row">
                     <span>PPN ({{ strtoupper($sale->ppn_mode) }})</span>
-                    <span>Rp {{ number_format($sale->tax, 0, ',', '.') }}</span>
+                    <span>Rp. {{ number_format($sale->tax, 0, ',', '.') }},-</span>
                 </div>
                 @endif
                 @if($sale->rounding != 0)
                 <div class="total-row">
                     <span>Pembulatan</span>
-                    <span>{{ $sale->rounding > 0 ? '+' : '' }} Rp {{ number_format($sale->rounding, 0, ',', '.') }}</span>
+                    <span>{{ $sale->rounding > 0 ? '+' : '' }} Rp. {{ number_format($sale->rounding, 0, ',', '.') }},-</span>
                 </div>
                 @endif
                 <div class="total-row grand">
                     <span>TOTAL</span>
-                    <span>Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</span>
+                    <span>Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</span>
                 </div>
             </div>
 
@@ -320,12 +320,12 @@
                 </div>
                 <div class="payment-row" style="border-top: 1px dashed #f59e0b; padding-top: 8px; margin-top: 5px;">
                     <span style="font-weight: 600;">Uang Muka / DP</span>
-                    <span style="font-weight: 600;">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</span>
+                    <span style="font-weight: 600;">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</span>
                 </div>
                 @if($sale->receivables)
                 <div class="payment-row">
                     <span style="font-weight: 600; color: #ef4444;">Sisa Tagihan</span>
-                    <span style="font-weight: 600; color: #ef4444;">Rp {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</span>
+                    <span style="font-weight: 600; color: #ef4444;">Rp. {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }},-</span>
                 </div>
                 <div class="payment-row">
                     <span style="font-weight: 600;">Jatuh Tempo</span>
@@ -345,11 +345,11 @@
                 </div>
                 <div class="payment-row" style="border-top: 1px dashed #10b981; padding-top: 8px; margin-top: 5px;">
                     <span style="font-weight: 600;">Bayar</span>
-                    <span style="font-weight: 600;">Rp {{ number_format($sale->cash_amount, 0, ',', '.') }}</span>
+                    <span style="font-weight: 600;">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</span>
                 </div>
                 <div class="payment-row">
                     <span style="font-weight: 600;">Kembali</span>
-                    <span style="font-weight: 600; color: #10b981;">Rp {{ number_format($sale->change_amount, 0, ',', '.') }}</span>
+                    <span style="font-weight: 600; color: #10b981;">Rp. {{ number_format($sale->change_amount, 0, ',', '.') }},-</span>
                 </div>
             </div>
             @endif

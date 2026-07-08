@@ -58,7 +58,7 @@
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
                             <td class="px-6 py-4 font-normal">{{ optional($return->supplier)->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-right font-normal">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right font-normal">Rp. {{ number_format($return->total_amount, 0, ',', '.') }},-</td>
                             <td class="px-6 py-4 text-center text-gray-600">{{ optional($return->user)->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-center">{{ $return->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-6 py-4 text-center text-gray-500 text-xs italic">{{ $return->notes ?: '-' }}</td>
@@ -159,10 +159,10 @@
                                                 @error("returnItems.{$batchId}.quantity") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                             </td>
                                             <td class="px-4 py-3 text-right text-gray-500 italic">
-                                                Rp {{ number_format($item['cost_price'], 0, ',', '.') }}
+                                                Rp. {{ number_format($item['cost_price'], 0, ',', '.') }},-
                                             </td>
                                             <td class="px-4 py-3 text-right font-bold text-blue-600">
-                                                Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['cost_price'] ?: 0), 0, ',', '.') }}
+                                                Rp. {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['cost_price'] ?: 0), 0, ',', '.') }},-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -181,7 +181,7 @@
                                     <tfoot class="bg-blue-50/30">
                                         <tr class="font-bold">
                                             <td colspan="6" class="px-4 py-4 text-right uppercase tracking-widest text-[10px] text-gray-500">Total Nilai Retur</td>
-                                            <td class="px-4 py-4 text-right text-lg text-blue-700 font-bold">Rp {{ number_format(collect($returnItems)->filter(fn($i) => !empty($i['selected']))->sum(fn($i) => (float)($i['quantity'] ?: 0) * (float)($i['cost_price'] ?: 0)), 0, ',', '.') }}</td>
+                                            <td class="px-4 py-4 text-right text-lg text-blue-700 font-bold">Rp. {{ number_format(collect($returnItems)->filter(fn($i) => !empty($i['selected']))->sum(fn($i) => (float)($i['quantity'] ?: 0) * (float)($i['cost_price'] ?: 0)), 0, ',', '.') }},-</td>
                                         </tr>
                                     </tfoot>
                                 @endif
@@ -199,12 +199,12 @@
                 </div>
 
                 <div class="px-6 py-4 bg-gray-50 flex justify-end items-center gap-3">
-                    <button type="button" wire:click="$set('showModal', false)" 
-                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm font-normal transition duration-200 text-sm">
+                    <button type="button" wire:click="$set('showModal', false)"
+                        class="btn btn-secondary">
                         Batal
                     </button>
-                    <button wire:click="saveReturn" 
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-normal flex items-center justify-center gap-2 transition duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed" 
+                    <button wire:click="saveReturn"
+                        class="btn btn-primary"
                         @if(empty($returnItems)) disabled @endif>
                         Simpan
                     </button>
@@ -269,23 +269,23 @@
                                         <td class="px-4 py-3 font-medium text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
                                         <td class="px-4 py-3 text-center text-gray-500">{{ $item->batch->batch_no ?? '-' }}</td>
                                         <td class="px-4 py-3 text-center font-bold">{{ $item->quantity }}</td>
-                                        <td class="px-4 py-3 text-right">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
-                                        <td class="px-4 py-3 text-right font-bold text-blue-600">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-right">Rp. {{ number_format($item->cost_price, 0, ',', '.') }},-</td>
+                                        <td class="px-4 py-3 text-right font-bold text-blue-600">Rp. {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }},-</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot class="bg-blue-50/30">
                                 <tr>
                                     <td colspan="4" class="px-4 py-3 text-right font-bold text-gray-600 uppercase text-xs">Total</td>
-                                    <td class="px-4 py-3 text-right font-bold text-lg text-blue-700">Rp {{ number_format($selectedReturn->total_amount, 0, ',', '.') }}</td>
+                                    <td class="px-4 py-3 text-right font-bold text-lg text-blue-700">Rp. {{ number_format($selectedReturn->total_amount, 0, ',', '.') }},-</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
                 <div class="px-6 py-4 bg-gray-50 flex justify-end">
-                     <button type="button" wire:click="$set('showDetailModal', false)" 
-                        class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm font-normal transition duration-200 text-sm">
+                     <button type="button" wire:click="$set('showDetailModal', false)"
+                        class="btn btn-secondary">
                         Tutup
                     </button>
                 </div>

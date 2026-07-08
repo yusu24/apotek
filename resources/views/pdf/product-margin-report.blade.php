@@ -100,7 +100,7 @@
             </tr>
             <tr>
                 <td class="summary-label">Total {{ $reportMode === 'realized' ? 'Keuntungan' : 'Nilai Margin' }}</td>
-                <td class="font-bold">: Rp {{ number_format($stats['total_margin_value'], 0, ',', '.') }}</td>
+                <td class="font-bold">: Rp. {{ number_format($stats['total_margin_value'], 0, ',', '.') }},-</td>
             </tr>
             <tr>
                 <td class="summary-label">Rata-rata Margin Persentase</td>

@@ -7,7 +7,7 @@
     $white = '#ffffff';
     $colspan = $showComparison ? 3 : 2;
 
-    $fmt = fn($v) => 'Rp ' . number_format((float) $v, 0, ',', '.');
+    $fmt = fn($v) => 'Rp. ' . number_format((float) $v, 0, ',', '.') . ',-';
     $fmtSigned = fn($v) => $v < 0 ? '(' . $fmt(abs($v)) . ')' : $fmt($v);
 
     $revCatCurrent = collect($current['revenueByCategory'])->keyBy('category_name');
@@ -96,8 +96,8 @@
         @empty
         <tr>
             <td style="color: {{ $black }};">&nbsp;&nbsp;- Tidak ada beban operasional -</td>
-            <td style="text-align: right; color: {{ $black }};">Rp 0</td>
-            @if($showComparison)<td style="text-align: right; color: {{ $black }};">Rp 0</td>@endif
+            <td style="text-align: right; color: {{ $black }};">Rp. 0,-</td>
+            @if($showComparison)<td style="text-align: right; color: {{ $black }};">Rp. 0,-</td>@endif
         </tr>
         @endforelse
         <tr>
@@ -176,8 +176,8 @@
             @empty
             <tr>
                 <td style="color: {{ $black }};">&nbsp;&nbsp;- Tidak ada beban pajak -</td>
-                <td style="text-align: right; color: {{ $black }};">Rp 0</td>
-                @if($showComparison)<td style="text-align: right; color: {{ $black }};">Rp 0</td>@endif
+                <td style="text-align: right; color: {{ $black }};">Rp. 0,-</td>
+                @if($showComparison)<td style="text-align: right; color: {{ $black }};">Rp. 0,-</td>@endif
             </tr>
             @endforelse
         @endif

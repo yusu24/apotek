@@ -252,14 +252,14 @@
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
                                     <div class="relative" wire:key="wrap-buy-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.buy_price'))">
-                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
+                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp.</span>
                                         <input type="text" x-bind="input" wire:key="input-buy-{{ $item['row_id'] ?? $index }}" data-col="buy_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.buy_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                 </td>
                                 <td class="px-4 py-3 align-top border-r border-gray-100 text-right">
                                     <div class="relative" wire:key="wrap-sell-{{ $item['row_id'] ?? $index }}" x-data="money($wire.entangle('items.{{ $index }}.sell_price'))">
-                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp</span>
+                                        <span class="absolute left-1.5 top-2 text-[9px] text-gray-400">Rp.</span>
                                         <input type="text" x-bind="input" wire:key="input-sell-{{ $item['row_id'] ?? $index }}" data-col="sell_price" data-row="{{ $index }}" placeholder="0" class="w-full text-xs rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right pr-1 pl-5 py-1.5 font-normal text-gray-700">
                                     </div>
                                     @error("items.{$index}.sell_price") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
@@ -301,7 +301,7 @@
                                     @price-changed.window="if($event.detail.row == '{{ $index }}') updateTotal()"
                                     @input.window="if($event.target.dataset.col === 'qty' && $event.target.dataset.row === '{{ $index }}') updateTotal()"
                                     x-init="$nextTick(() => updateTotal())">
-                                    <span x-text="'Rp ' + total.toLocaleString('id-ID')"></span>
+                                    <span x-text="'Rp. ' + total.toLocaleString('id-ID') + ',-'"></span>
                                 </td>
                                 <td class="px-3 py-3 align-middle text-center">
                                     <div class="flex items-center justify-center gap-1">
@@ -348,7 +348,7 @@
                                         <div class="p-1.5 bg-blue-600 rounded-lg text-white">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         </div>
-                                        <span x-text="'Rp ' + grandTotal.toLocaleString('id-ID')"></span>
+                                        <span x-text="'Rp. ' + grandTotal.toLocaleString('id-ID') + ',-'"></span>
                                     </span>
                                 </div>
                             </td>
@@ -380,19 +380,24 @@
             @if(session()->has('message'))
                 <span class="text-green-600 text-xs font-medium bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">{{ session('message') }}</span>
             @endif
-            <button type="submit" 
+            <button type="submit"
                 wire:loading.attr="disabled"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
-                <span wire:loading.remove wire:target="save">{{ $isEdit ? 'Update' : 'Simpan' }}</span>
-                <span wire:loading wire:target="save" class="flex items-center gap-2">
-                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Memproses...
-                </span>
+                wire:target="save"
+                class="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ $isEdit ? 'Update' : 'Simpan' }}
             </button>
         </div>
     </div>
     </form>
+
+    <!-- Standard Loading Overlay -->
+    <div wire:loading wire:target="save" class="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40">
+        <div class="bg-white rounded-xl shadow-xl px-6 py-5 flex items-center gap-3">
+            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-sm font-semibold text-gray-700">Menyimpan...</span>
+        </div>
+    </div>
 </div>

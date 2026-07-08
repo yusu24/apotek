@@ -249,7 +249,7 @@
                 @endif
                 <tr class="font-bold">
                     <td style="padding-top: 5px; font-size: 14px;">TOTAL</td>
-                    <td class="text-right" style="padding-top: 5px; font-size: 14px;">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+                    <td class="text-right" style="padding-top: 5px; font-size: 14px;">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
                 </tr>
                 <tr class="border-t">
                     <td style="padding-top: 5px;">{{ ucfirst($sale->payment_method) }}</td>

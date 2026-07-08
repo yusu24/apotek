@@ -125,7 +125,7 @@ class GoodsReceiptIndex extends Component
             'payment_method' => 'required|in:cash,transfer',
             'bank_account_id' => 'required_if:payment_method,transfer',
         ], [
-            'payment_amount.max' => 'Jumlah bayar tidak boleh melebihi sisa hutang (Rp ' . number_format($this->remaining_debt, 0, ',', '.') . ')',
+            'payment_amount.max' => 'Jumlah bayar tidak boleh melebihi sisa hutang (Rp. ' . number_format($this->remaining_debt, 0, ',', '.') . ',-)',
             'bank_account_id.required_if' => 'Harap pilih akun bank untuk metode Transfer.',
         ]);
 

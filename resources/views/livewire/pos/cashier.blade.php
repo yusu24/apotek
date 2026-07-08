@@ -304,20 +304,20 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                            <span class="font-bold">Rp. {{ number_format($subtotal, 0, ',', '.') }},-</span>
                         </div>
                         
                         @if($showDpp)
                         <div class="flex justify-between text-gray-500">
                             <span>DPP</span>
-                            <span>Rp {{ number_format($dpp, 0, ',', '.') }}</span>
+                            <span>Rp. {{ number_format($dpp, 0, ',', '.') }},-</span>
                         </div>
                         @endif
 
                         @if($global_discount > 0)
                         <div class="flex justify-between text-red-600">
                             <span>Diskon Global</span>
-                            <span class="font-bold">- Rp {{ number_format($global_discount, 0, ',', '.') }}</span>
+                            <span class="font-bold">- Rp. {{ number_format($global_discount, 0, ',', '.') }},-</span>
                         </div>
                         @endif
 
@@ -325,13 +325,13 @@
                             <button wire:click="togglePpnMode" class="text-gray-600 hover:text-blue-600 transition-colors">
                                 PPN ({{ strtoupper($ppn_mode) }})
                             </button>
-                            <span class="font-bold">Rp {{ number_format($tax, 0, ',', '.') }}</span>
+                            <span class="font-bold">Rp. {{ number_format($tax, 0, ',', '.') }},-</span>
                         </div>
 
                         @if($rounding != 0)
                         <div class="flex justify-between text-indigo-600">
                             <span>Pembulatan</span>
-                            <span class="font-bold">{{ $rounding > 0 ? '+' : '' }} Rp {{ number_format($rounding, 0, ',', '.') }}</span>
+                            <span class="font-bold">{{ $rounding > 0 ? '+' : '' }} Rp. {{ number_format($rounding, 0, ',', '.') }},-</span>
                         </div>
                         @endif
                     </div>
@@ -339,7 +339,7 @@
                     <!-- Total -->
                     <div class="pt-3 border-t border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 font-semibold">Total Bayar</span>
-                        <span class="text-3xl font-bold text-gray-900">Rp {{ number_format($grand_total, 0, ',', '.') }}</span>
+                        <span class="text-3xl font-bold text-gray-900">Rp. {{ number_format($grand_total, 0, ',', '.') }},-</span>
                     </div>
 
                     <!-- Global Errors (like Stock Validation) -->
@@ -352,11 +352,11 @@
 
                 <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-3 pt-3">
-                        <button wire:click="saveOrder" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-900">
+                        <button wire:click="saveOrder" class="btn btn-lg btn-secondary">
                             Simpan
                         </button>
-                        <button wire:click="openPayment" 
-                                class="px-4 py-3 bg-blue-600 text-white rounded-xl font-bold capitalize hover:bg-blue-700 transition-all {{ count($cart) == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
+                        <button wire:click="openPayment"
+                                class="btn btn-lg btn-primary {{ count($cart) == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
                                 {{ count($cart) == 0 ? 'disabled' : '' }}>
                             Bayar
                         </button>
@@ -401,7 +401,7 @@
                                         <div class="text-xs text-gray-500">Stok: {{ $product->total_stock }}</div>
                                     </div>
                                     <div class="font-bold text-blue-600 text-sm whitespace-nowrap">
-                                        Rp {{ number_format($product->sell_price, 0, ',', '.') }}
+                                        Rp. {{ number_format($product->sell_price, 0, ',', '.') }},-
                                     </div>
                                 </div>
                             @endforeach
@@ -503,7 +503,7 @@
                             <!-- Product Info - Click to Add -->
                              <div class="cursor-pointer" @click="hIdx = {{ $index }}" wire:click="addToCart({{ $product->id }})">
                                  <h4 class="font-bold text-sm text-gray-900 mb-1 line-clamp-2 h-10 overflow-hidden text-ellipsis hover:text-blue-600">{{ $product->name }}</h4>
-                                 <p class="text-xs text-blue-600 font-bold mb-2">Rp {{ number_format($product->sell_price, 0, ',', '.') }}</p>
+                                 <p class="text-xs text-blue-600 font-bold mb-2">Rp. {{ number_format($product->sell_price, 0, ',', '.') }},-</p>
                              </div>
                              
                              <!-- Add Button - Click to Add -->
@@ -546,7 +546,7 @@
                     <!-- Total Display -->
                     <div class="text-center p-4 bg-gray-900 rounded-xl">
                         <p class="text-[10px] text-gray-400 mb-1 uppercase tracking-wider font-bold">Total Akhir</p>
-                        <p class="text-3xl font-bold text-white">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
+                        <p class="text-3xl font-bold text-white">Rp. {{ number_format($grand_total, 0, ',', '.') }},-</p>
                     </div>
 
                     @error('checkout')
@@ -681,7 +681,7 @@
                             <div class="pt-2 border-t border-amber-200">
                                 <label class="block text-xs font-bold text-amber-800 mb-1">Uang Muka / DP (Opsional)</label>
                                 <div class="flex items-center bg-white rounded-lg border border-amber-300 px-3">
-                                    <span class="text-gray-500 font-bold mr-2">Rp</span>
+                                    <span class="text-gray-500 font-bold mr-2">Rp.</span>
                                     <input type="text" 
                                            class="flex-1 py-2 text-right font-bold text-gray-900 border-none focus:ring-0 placeholder-gray-300" 
                                            placeholder="0"
@@ -689,7 +689,7 @@
                                 </div>
                                 <div class="flex justify-between mt-2 text-sm font-bold">
                                     <span class="text-amber-800">Sisa Hutang:</span>
-                                    <span class="text-red-600">Rp {{ number_format(max(0, (float)$grand_total - (float)$cash_amount), 0, ',', '.') }}</span>
+                                    <span class="text-red-600">Rp. {{ number_format(max(0, (float)$grand_total - (float)$cash_amount), 0, ',', '.') }},-</span>
                                 </div>
                             </div>
                         </div>
@@ -809,7 +809,7 @@
                         <div class="bg-gray-50 p-3 rounded-xl">
                             <label class="block text-xs font-semibold text-gray-700 mb-1.5">Uang Tunai</label>
                             <div class="flex items-center" x-data="money($wire.entangle('cash_amount').live)">
-                                <span class="text-xl font-bold text-gray-400 mr-2">Rp</span>
+                                <span class="text-xl font-bold text-gray-400 mr-2">Rp.</span>
                                 <input type="text" x-bind="input" 
                                     class="flex-1 text-2xl font-bold border-0 bg-transparent p-0 focus:ring-0" 
                                     placeholder="0" autofocus>
@@ -824,9 +824,9 @@
                                             wire:click="selectCashSuggestion({{ $suggestion }})"
                                             class="py-1.5 px-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg text-xs font-bold text-gray-700 hover:text-blue-600 transition-all text-center shadow-sm {{ count($this->cashSuggestions) === 1 || ($suggestion == $grand_total && count($this->cashSuggestions) === 3) ? 'col-span-2 bg-blue-50/50 border-blue-200 text-blue-700 hover:bg-blue-100' : '' }}">
                                         @if($suggestion == $grand_total)
-                                            💵 Uang Pas (Rp {{ number_format($suggestion, 0, ',', '.') }})
+                                            💵 Uang Pas (Rp. {{ number_format($suggestion, 0, ',', '.') }},-)
                                         @else
-                                            Rp {{ number_format($suggestion, 0, ',', '.') }}
+                                            Rp. {{ number_format($suggestion, 0, ',', '.') }},-
                                         @endif
                                     </button>
                                 @endforeach
@@ -836,7 +836,7 @@
                         <div class="flex justify-between items-center p-3 bg-green-50 rounded-xl">
                             <span class="text-xs font-semibold text-gray-700">Kembalian</span>
                             <span class="text-xl font-bold {{ $change_amount < 0 ? 'text-red-600' : 'text-green-600' }}">
-                                Rp {{ number_format($change_amount, 0, ',', '.') }}
+                                Rp. {{ number_format($change_amount, 0, ',', '.') }},-
                             </span>
                         </div>
                     </div>
@@ -852,7 +852,7 @@
                             <!-- Total Amount (Prominent) -->
                             <div class="text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
                                 <p class="text-xs font-semibold text-gray-600 mb-1">Total Pembayaran</p>
-                                <p class="text-3xl font-bold text-gray-900">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
+                                <p class="text-3xl font-bold text-gray-900">Rp. {{ number_format($grand_total, 0, ',', '.') }},-</p>
                             </div>
 
                             <!-- QR Code Image -->
@@ -922,8 +922,8 @@
 
                 <!-- Modal Footer -->
                 <div class="p-4 border-t border-gray-100 space-y-2">
-                    <button type="submit" 
-                        class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all text-sm"
+                    <button type="submit"
+                        class="btn btn-lg btn-primary w-full"
                         @if($payment_method == 'qris' && !\App\Models\Setting::get('store_qris_path')) disabled @endif>
                         @if($payment_method == 'qris')
                             Konfirmasi Pembayaran QRIS
@@ -931,8 +931,8 @@
                             Cetak Struk Transaksi
                         @endif
                     </button>
-                    <button type="button" wire:click="$set('showPaymentModal', false)" 
-                        class="w-full py-2 text-gray-600 hover:text-gray-900 font-semibold text-xs">
+                    <button type="button" wire:click="$set('showPaymentModal', false)"
+                        class="btn btn-secondary w-full">
                         Kembali
                     </button>
                 </div>
@@ -946,7 +946,7 @@
          x-show="!mobileCartOpen && !showPayment">
         <div>
             <p class="text-xs text-gray-400 font-medium">{{ count($cart) }} Items di Keranjang</p>
-            <p class="text-lg font-bold">Rp {{ number_format($grand_total, 0, ',', '.') }}</p>
+            <p class="text-lg font-bold">Rp. {{ number_format($grand_total, 0, ',', '.') }},-</p>
         </div>
         <button @click="mobileCartOpen = true" 
                 class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-lg flex items-center gap-2 transform active:scale-95 transition-all">
@@ -985,12 +985,12 @@
                         <div>
                              <h4 class="font-bold text-gray-800 line-clamp-1">{{ $item['name'] }}</h4>
                              <p class="text-xs text-gray-500">
-                                 Rp {{ number_format($item['price'], 0, ',', '.') }} x {{ $item['qty'] }}
+                                 Rp. {{ number_format($item['price'], 0, ',', '.') }},- x {{ $item['qty'] }}
                              </p>
                         </div>
                         <div class="text-right">
                              <p class="font-bold text-blue-600">
-                                 Rp {{ number_format((float)$item['price'] * (float)$item['qty'], 0, ',', '.') }}
+                                 Rp. {{ number_format((float)$item['price'] * (float)$item['qty'], 0, ',', '.') }},-
                              </p>
                              @if(($item['discount_percent'] ?? 0) > 0)
                                  <span class="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded">
@@ -1072,20 +1072,20 @@
         <div class="bg-white border-t border-gray-200 p-4 space-y-3 shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
              <div class="flex justify-between text-sm">
                  <span class="text-gray-600">Subtotal</span>
-                 <span class="font-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                 <span class="font-bold">Rp. {{ number_format($subtotal, 0, ',', '.') }},-</span>
              </div>
 
              @if($showDpp)
              <div class="flex justify-between text-sm text-gray-500">
                  <span>DPP</span>
-                 <span>Rp {{ number_format($dpp, 0, ',', '.') }}</span>
+                 <span>Rp. {{ number_format($dpp, 0, ',', '.') }},-</span>
              </div>
              @endif
 
              @if($global_discount > 0)
              <div class="flex justify-between text-sm text-red-600">
                  <span>Diskon Global</span>
-                 <span>- Rp {{ number_format($global_discount, 0, ',', '.') }}</span>
+                 <span>- Rp. {{ number_format($global_discount, 0, ',', '.') }},-</span>
              </div>
              @endif
 
@@ -1093,19 +1093,19 @@
                  <button wire:click="togglePpnMode" class="text-gray-600 hover:text-blue-600 transition-colors">
                      PPN ({{ strtoupper($ppn_mode) }})
                  </button>
-                 <span class="font-bold">Rp {{ number_format($tax, 0, ',', '.') }}</span>
+                 <span class="font-bold">Rp. {{ number_format($tax, 0, ',', '.') }},-</span>
              </div>
 
              @if($rounding != 0)
              <div class="flex justify-between text-sm text-indigo-600">
                  <span>Pembulatan</span>
-                 <span class="font-bold">{{ $rounding > 0 ? '+' : '' }} Rp {{ number_format($rounding, 0, ',', '.') }}</span>
+                 <span class="font-bold">{{ $rounding > 0 ? '+' : '' }} Rp. {{ number_format($rounding, 0, ',', '.') }},-</span>
              </div>
              @endif
 
              <div class="flex justify-between items-center pt-2">
                  <span class="font-bold text-gray-800 text-lg">Total Bayar</span>
-                 <span class="font-bold text-blue-600 text-xl">Rp {{ number_format($grand_total, 0, ',', '.') }}</span>
+                 <span class="font-bold text-blue-600 text-xl">Rp. {{ number_format($grand_total, 0, ',', '.') }},-</span>
              </div>
              
              @error('checkout')
@@ -1115,8 +1115,8 @@
              @enderror
 
              <div class="grid grid-cols-2 gap-3 pt-2">
-                 <button wire:click="saveOrder" class="btn btn-lg btn-primary bg-gray-800 hover:bg-gray-900">Simpan</button>
-                 <button wire:click="openPayment" class="btn btn-lg btn-primary {{ count($cart) == 0 ? 'opacity-50' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>
+                 <button wire:click="saveOrder" class="btn btn-lg btn-secondary">Simpan</button>
+                 <button wire:click="openPayment" class="btn btn-lg btn-primary {{ count($cart) == 0 ? 'opacity-50 cursor-not-allowed' : '' }}" {{ count($cart) == 0 ? 'disabled' : '' }}>
                      Bayar Sekarang
                  </button>
              </div>
@@ -1167,7 +1167,7 @@
                                         <span class="text-xs">{{ $order->created_at->diffForHumans() }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
-                                        Rp {{ number_format($order->grand_total, 0, ',', '.') }}
+                                        Rp. {{ number_format($order->grand_total, 0, ',', '.') }},-
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                         {{ $order->notes ?: '-' }}
@@ -1203,7 +1203,7 @@
                                 </div>
                                 <div class="text-right">
                                     <p class="text-xs text-gray-500 mb-1">Total</p>
-                                    <p class="font-bold text-blue-600">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</p>
+                                    <p class="font-bold text-blue-600">Rp. {{ number_format($order->grand_total, 0, ',', '.') }},-</p>
                                 </div>
                             </div>
                             
@@ -1294,13 +1294,13 @@
                 
                 <!-- Modal Footer: 2 buttons only -->
                 <div class="px-4 py-3 border-t border-gray-100 flex gap-2 bg-gray-50 shrink-0">
-                    <button type="button" onclick="printReceiptIframe()" 
-                        class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2">
+                    <button type="button" onclick="printReceiptIframe()"
+                        class="btn btn-primary flex-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4a2 2 0 002 2z"></path></svg>
                         Cetak
                     </button>
-                    <button type="button" wire:click="closeReceiptModal" 
-                        class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-bold transition-all text-sm">
+                    <button type="button" wire:click="closeReceiptModal"
+                        class="btn btn-secondary flex-1">
                         Kembali
                     </button>
                 </div>

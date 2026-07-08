@@ -60,9 +60,9 @@
                                 </span>
                                 <div class="text-[10px] text-gray-400 mt-1 uppercase">{{ str_replace('_', ' ', $asset->method) }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right font-medium">Rp {{ number_format($asset->acquisition_cost, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-red-600 font-medium">Rp {{ number_format($asset->total_depreciation, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-blue-600 font-bold">Rp {{ number_format($asset->book_value, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right font-medium">Rp. {{ number_format($asset->acquisition_cost, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-red-600 font-medium">Rp. {{ number_format($asset->total_depreciation, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-blue-600 font-bold">Rp. {{ number_format($asset->book_value, 0, ',', '.') }},-</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <div class="flex justify-center items-center gap-3">
                                     <button wire:click="editAsset({{ $asset->id }})" class="text-blue-600 hover:text-blue-900 transition" title="Edit Aset">
@@ -183,10 +183,10 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 flex justify-end gap-3 border-t dark:border-gray-700">
-                        <button type="button" @click="open = false" class="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm font-bold transition text-sm">
+                        <button type="button" @click="open = false" class="btn btn-secondary">
                             Batal
                         </button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold transition text-sm">
+                        <button type="submit" class="btn btn-primary">
                             Simpan Aset
                         </button>
                     </div>
@@ -243,12 +243,11 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 flex justify-end gap-3 border-t dark:border-gray-700">
-                    <button type="button" @click="open = false" class="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm font-bold transition text-sm">
+                    <button type="button" @click="open = false" class="btn btn-secondary">
                         Batal
                     </button>
-                    <button wire:click="processDepreciation" 
-                        class="px-4 py-2 btn-depreciation-confirm text-white rounded-lg shadow-md font-bold transition text-sm"
-                        style="background-color: #b45309 !important;">
+                    <button wire:click="processDepreciation"
+                        class="btn btn-depreciation-confirm">
                         Jalankan Jurnal Penyusutan
                     </button>
                 </div>

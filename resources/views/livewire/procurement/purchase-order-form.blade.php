@@ -267,10 +267,10 @@
             <!-- Footer Actions -->
             <div class="bg-gray-50 p-4 border-t border-gray-200 flex justify-end items-center rounded-b-lg gap-3">
                 @if($purchaseOrder && $status === 'partial')
-                <button type="button" 
-                    wire:click="markAsDone" 
+                <button type="button"
+                    wire:click="markAsDone"
                     wire:confirm="Yakin ingin menyelesaikan pesanan ini? Status akan diubah menjadi Selesai/Diterima meskipun barang belum diterima semua."
-                    class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold shadow-md transition text-sm flex items-center gap-2">
+                    class="btn btn-success">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     Selesaikan Pesanan
                 </button>
@@ -278,7 +278,7 @@
 
                 @if($purchaseOrder && ($status === 'ordered' || $status === 'partial'))
                 <a href="{{ route('procurement.goods-receipts.create', ['po_id' => $purchaseOrder->id]) }}"
-                    class="px-5 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-bold shadow-md transition text-sm flex items-center gap-2">
+                    class="btn btn-orange">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                     Proses Penerimaan
                 </a>
@@ -312,10 +312,10 @@
                 @endif
 
                 @if(!$isReadOnly)
-                <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-white shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <a href="{{ route('procurement.purchase-orders.index') }}" wire:navigate class="btn btn-secondary">
                     Batal
                 </a>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize flex items-center justify-center gap-2 transition duration-200 text-sm w-fit shrink-0">
+                <button type="submit" class="btn btn-primary">
                     Simpan
                 </button>
                 @endif

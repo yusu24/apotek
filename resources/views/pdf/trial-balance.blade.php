@@ -144,7 +144,7 @@
 
     @if(!$reportData['is_balanced'])
     <div style="color: #b91c1c; font-weight: bold; margin-bottom: 15px;">
-        PERINGATAN: Neraca tidak balance! Selisih: Rp {{ number_format(abs($reportData['difference']), 0, ',', '.') }}
+        PERINGATAN: Neraca tidak balance! Selisih: Rp. {{ number_format(abs($reportData['difference']), 0, ',', '.') }},-
     </div>
     @endif
     </body>

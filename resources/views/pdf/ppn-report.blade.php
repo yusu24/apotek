@@ -122,11 +122,11 @@
         <tbody>
             <tr class="transaction-row">
                 <td>Total PPN Keluaran (Output Tax)</td>
-                <td class="text-right">Rp {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($data['total_ppn_keluaran'], 0, ',', '.') }},-</td>
             </tr>
             <tr class="transaction-row">
                 <td>Total PPN Masukan (Input Tax)</td>
-                <td class="text-right">Rp {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }}</td>
+                <td class="text-right">Rp. {{ number_format($data['total_ppn_masukan'], 0, ',', '.') }},-</td>
             </tr>
             <tr class="total-row">
                 <td>
@@ -139,7 +139,7 @@
                         <span style="color: #10b981;">NIHIL</span>
                     @endif
                 </td>
-                <td class="text-right" style="font-size: 11pt;">Rp {{ number_format(abs($data['kurang_lebih']), 0, ',', '.') }}</td>
+                <td class="text-right" style="font-size: 11pt;">Rp. {{ number_format(abs($data['kurang_lebih']), 0, ',', '.') }},-</td>
             </tr>
         </tbody>
     </table>

@@ -115,7 +115,7 @@
                                 
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-600 mb-1">Hitung Otomatis</label>
-                                    <div class="text-sm font-medium text-gray-700">Rp {{ number_format($priceData['calculated_price'], 0, ',', '.') }}</div>
+                                    <div class="text-sm font-medium text-gray-700">Rp. {{ number_format($priceData['calculated_price'], 0, ',', '.') }},-</div>
                                     <div class="text-xs text-gray-400">Berdasarkan harga dasar</div>
                                 </div>
                                
@@ -132,7 +132,7 @@
                                             $savingPercent = $priceData['calculated_price'] > 0 ? ($saving / $priceData['calculated_price']) * 100 : 0;
                                         @endphp
                                         <div class="text-xs mt-1 {{ $saving > 0 ? 'text-green-600' : 'text-red-600' }}">
-                                            {{ $saving > 0 ? 'Hemat' : 'Lebih mahal' }}: Rp {{ number_format(abs($saving), 0, ',', '.') }} ({{ number_format(abs($savingPercent), 1) }}%)
+                                            {{ $saving > 0 ? 'Hemat' : 'Lebih mahal' }}: Rp. {{ number_format(abs($saving), 0, ',', '.') }},- ({{ number_format(abs($savingPercent), 1) }}%)
                                         </div>
                                     @endif
                                 </div>
@@ -206,10 +206,10 @@
             </div>
 
             <div class="mt-8 flex flex-col sm:flex-row justify-end gap-3 border-t pt-6">
-                <a href="{{ route('products.index') }}" wire:navigate class="w-full sm:w-auto px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
+                <a href="{{ route('products.index') }}" wire:navigate class="btn btn-secondary w-full sm:w-auto">
                     Batal
                 </a>
-                <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md font-bold capitalize transition duration-200 text-sm flex items-center justify-center">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">
                     {{ $product_id ? 'Update' : 'Simpan' }}
                 </button>
             </div>

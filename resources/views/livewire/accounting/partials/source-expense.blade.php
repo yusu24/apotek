@@ -26,7 +26,7 @@
         </div>
         <div>
             <label class="text-xs font-bold text-gray-500 uppercase">Jumlah</label>
-            <p class="text-2xl font-bold text-red-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-red-600">Rp. {{ number_format($expense->amount, 0, ',', '.') }},-</p>
         </div>
     </div>
 

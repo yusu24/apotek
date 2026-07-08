@@ -57,7 +57,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($users as $user)
                         <tr wire:key="user-row-{{ $user->id }}" class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $user->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ \Illuminate\Support\Str::title($user->name) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex flex-wrap gap-1">

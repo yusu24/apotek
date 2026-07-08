@@ -365,7 +365,7 @@
     <div class="mt-8 p-6 bg-gray-900 rounded-xl text-white shadow-xl border border-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
             <div>
-                <p class="text-gray-400 text-sm font-bold uppercase mb-1">Status Laba Rugi</p>
+                <p class="text-gray-400 text-sm font-medium mb-1">Status Laba Rugi</p>
                 @if($netProfit >= 0)
                     <h4 class="text-3xl font-bold text-emerald-400 flex items-center justify-center md:justify-start gap-3">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
@@ -379,7 +379,7 @@
                 @endif
             </div>
             <div class="md:border-x border-gray-800 px-8">
-                <p class="text-gray-400 text-xs font-bold uppercase mb-1">Perhitungan Akhir</p>
+                <p class="text-gray-400 text-sm font-medium mb-1">Perhitungan Akhir</p>
                 <div class="text-sm font-bold space-y-1">
                     <div class="flex justify-between">
                         <span class="opacity-60">Laba Kotor</span>
@@ -400,7 +400,7 @@
                 </div>
             </div>
             <div class="flex flex-col items-center md:items-end">
-                <p class="text-gray-400 text-sm font-bold uppercase mb-1">Laba Bersih Setelah Pajak</p>
+                <p class="text-gray-400 text-sm font-medium mb-1">Laba Bersih Setelah Pajak</p>
                 <div class="text-4xl font-bold tracking-tighter">
                     Rp. {{ number_format($netProfit, 0, ',', '.') }},-
                 </div>

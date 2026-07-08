@@ -92,7 +92,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-xs font-bold uppercase opacity-80 tracking-wider">Total Pendapatan</p>
+                <p class="text-sm font-medium opacity-80">Total Pendapatan</p>
             </div>
             <p class="text-2xl font-bold">Rp. {{ number_format($reportData['total_revenue'], 0, ',', '.') }},-</p>
         </div>
@@ -103,7 +103,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
-                <p class="text-xs font-bold uppercase opacity-80 tracking-wider">Laba Kotor</p>
+                <p class="text-sm font-medium opacity-80">Laba Kotor</p>
             </div>
             <p class="text-2xl font-bold">Rp. {{ number_format($reportData['gross_profit'], 0, ',', '.') }},-</p>
         </div>
@@ -114,7 +114,7 @@
                 <div class="p-2 bg-white/20 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
-                <p class="text-xs font-bold uppercase opacity-80 tracking-wider">Laba Bersih</p>
+                <p class="text-sm font-medium opacity-80">Laba Bersih</p>
             </div>
             <p class="text-2xl font-bold">Rp. {{ number_format($reportData['net_income'], 0, ',', '.') }},-</p>
         </div>
@@ -247,13 +247,13 @@
             @if($reportData['total_revenue'] > 0)
             <div class="grid grid-cols-2 gap-4 mt-6">
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <p class="text-sm font-semibold text-gray-600">Gross Profit Margin (Laba Kotor)</p>
+                    <p class="text-sm font-medium text-gray-600">Gross Profit Margin (Laba Kotor)</p>
                     <p class="text-2xl font-bold text-gray-900 mt-1">
                         {{ number_format(($reportData['gross_profit'] / $reportData['total_revenue']) * 100, 2) }}%
                     </p>
                 </div>
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <p class="text-sm font-semibold text-gray-600">Net Profit Margin (Laba Bersih)</p>
+                    <p class="text-sm font-medium text-gray-600">Net Profit Margin (Laba Bersih)</p>
                     <p class="text-2xl font-bold text-{{ $reportData['net_income'] >= 0 ? 'green' : 'red' }}-700 mt-1">
                         {{ number_format(($reportData['net_income'] / $reportData['total_revenue']) * 100, 2) }}%
                     </p>

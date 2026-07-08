@@ -47,19 +47,19 @@
     {{-- Statistics Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Produk</div>
+            <div class="text-sm font-medium text-gray-400 mb-1">Total Produk</div>
             <div class="text-2xl font-bold text-gray-800">{{ number_format($statistics['total_products']) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Margin Positif</div>
+            <div class="text-sm font-medium text-gray-400 mb-1">Margin Positif</div>
             <div class="text-2xl font-bold text-green-600">{{ number_format($statistics['products_with_positive_margin']) }}</div>
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-emerald-600">
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Keuntungan</div>
+            <div class="text-sm font-medium text-gray-400 mb-1">Total Keuntungan</div>
             <div class="text-2xl font-bold text-emerald-700">Rp. {{ number_format($statistics['total_margin_value'], 0, ',', '.') }},-</div>
         </div>
         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Rata-rata Margin</div>
+            <div class="text-sm font-medium text-gray-400 mb-1">Rata-rata Margin</div>
             <div class="text-2xl font-bold text-purple-600">{{ number_format($statistics['average_margin_percentage'], 1) }}%</div>
         </div>
     </div>

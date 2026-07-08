@@ -46,19 +46,19 @@
     <!-- Summary Analysis Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-blue-500">
-            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Aset</p>
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Aset</p>
             <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_assets'], 0, ',', '.') }},-</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-red-500">
-            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Liabilitas</p>
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Liabilitas</p>
             <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_liabilities'], 0, ',', '.') }},-</p>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-purple-500">
-            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Ekuitas</p>
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Ekuitas</p>
             <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($summary['total_equity'], 0, ',', '.') }},-</p>
         </div>
         <div class="p-6 rounded-xl shadow-md border-b-4 {{ $summary['is_balanced'] ? 'bg-green-50 border-green-500' : 'bg-orange-50 border-orange-500' }}">
-            <p class="text-xs font-bold {{ $summary['is_balanced'] ? 'text-green-600' : 'text-orange-600' }} uppercase tracking-wider mb-1">Selisih (Balance Check)</p>
+            <p class="text-sm font-medium {{ $summary['is_balanced'] ? 'text-green-600' : 'text-orange-600' }} mb-1">Selisih (Balance Check)</p>
             <div class="flex items-center gap-2">
                 <p class="text-2xl font-bold {{ $summary['is_balanced'] ? 'text-green-700' : 'text-orange-700' }}">
                     Rp. {{ number_format(abs($summary['difference']), 0, ',', '.') }},-

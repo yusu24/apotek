@@ -16,7 +16,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap *</label>
-                        <input type="text" wire:model="name" 
+                        <input type="text" wire:model="name"
+                            oninput="let s=this.selectionStart,e=this.selectionEnd; this.value=this.value.toLowerCase().replace(/(^|\s)\S/g, c=>c.toUpperCase()); this.setSelectionRange(s,e);"
                             class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm">
                         @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>

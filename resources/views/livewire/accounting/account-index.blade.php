@@ -29,7 +29,7 @@
         <div class="bg-blue-600 rounded-2xl p-4 text-white shadow-lg shadow-blue-200">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-blue-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kas & Bank</p>
+                    <p class="text-blue-100 text-sm font-medium mb-1">Total Kas & Bank</p>
                     <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalCashBank, 0, ',', '.') }},-</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
@@ -47,7 +47,7 @@
         <div class="bg-orange-500 rounded-2xl p-4 text-white shadow-lg shadow-orange-200">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-white font-bold text-xs mb-1 uppercase tracking-wider opacity-90">Total Piutang Usaha</p>
+                    <p class="text-white text-sm font-medium mb-1 opacity-90">Total Piutang Usaha</p>
                     <h2 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalReceivable, 0, ',', '.') }},-</h2>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
@@ -63,7 +63,7 @@
         <div class="bg-red-600 rounded-2xl p-4 text-white shadow-lg shadow-red-200">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-red-100 font-bold text-xs mb-1 uppercase tracking-wider">Total Kewajiban Lancar</p>
+                    <p class="text-red-100 text-sm font-medium mb-1">Total Kewajiban Lancar</p>
                     <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalPayable, 0, ',', '.') }},-</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">

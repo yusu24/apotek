@@ -59,7 +59,7 @@
         {{-- PPN Keluaran --}}
         <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-300">
             <div class="flex items-center justify-between mb-2">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">PPN Keluaran</h3>
+                <h3 class="text-sm font-medium text-gray-500">PPN Keluaran</h3>
                 <div class="p-1.5 bg-green-100 rounded-lg">
                     <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
                 </div>
@@ -71,7 +71,7 @@
         {{-- PPN Masukan --}}
         <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-300">
             <div class="flex items-center justify-between mb-2">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">PPN Masukan</h3>
+                <h3 class="text-sm font-medium text-gray-500">PPN Masukan</h3>
                 <div class="p-1.5 bg-blue-100 rounded-lg">
                     <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
                 </div>
@@ -83,7 +83,7 @@
         {{-- Kurang/Lebih Bayar --}}
         <div class="bg-white rounded-xl shadow-md p-4 border-l-4 {{ $reportData['status'] === 'kurang_bayar' ? 'border-red-500' : ($reportData['status'] === 'lebih_bayar' ? 'border-yellow-500' : 'border-gray-500') }} hover:shadow-lg transition-shadow duration-300">
             <div class="flex items-center justify-between mb-2">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <h3 class="text-sm font-medium text-gray-500">
                     @if($reportData['status'] === 'kurang_bayar')
                         Kurang Bayar
                     @elseif($reportData['status'] === 'lebih_bayar')

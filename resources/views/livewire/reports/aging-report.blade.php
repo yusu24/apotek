@@ -69,17 +69,19 @@
         ];
     @endphp
 
-    <div class="flex flex-row flex-nowrap gap-2 mb-8 py-2 overflow-x-auto custom-scrollbar">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         @foreach($colorSequence as $key => $config)
             @php
                 $isActive = ($activeTab === $key);
-                $ringClass = $isActive ? "ring-2 ring-white ring-offset-2 scale-[1.03] z-10" : "";
             @endphp
-            <div class="flex-1 min-w-[120px] rounded-xl shadow-xl p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 {{ $ringClass }}" 
-                style="background-color: {{ $config['hex'] }};"
+            <div class="bg-white rounded-xl border p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md {{ $isActive ? 'shadow-md' : 'shadow-sm border-gray-100' }}"
+                style="{{ $isActive ? 'border-color: ' . $config['hex'] . ';' : '' }}"
                 wire:click="setActiveTab('{{ $key }}')">
-                <h3 class="text-[12px] font-black text-white uppercase tracking-wider text-center opacity-95">{{ $config['label'] }}</h3>
-                <p class="text-[12px] font-black text-white truncate text-center leading-tight mt-1">Rp. {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }},-</p>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {{ $config['hex'] }};"></span>
+                    <h3 class="text-xs font-medium text-gray-500 truncate">{{ $config['label'] }}{{ $key !== 'all' ? ' Hari' : '' }}</h3>
+                </div>
+                <p class="text-base font-bold text-gray-900 truncate">Rp. {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }},-</p>
             </div>
         @endforeach
     </div>

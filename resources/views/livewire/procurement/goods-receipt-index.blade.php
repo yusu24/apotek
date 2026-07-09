@@ -90,7 +90,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($receipts as $gr)
                         <tr wire:key="receipt-{{ $gr->id }}" class="hover:bg-blue-50/50 transition-all duration-200">
-                            <td class="px-6 py-4 text-sm font-bold text-gray-900 border-l-4 border-blue-500">{{ $gr->delivery_note_number }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $gr->delivery_note_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($gr->received_date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 <div class="font-medium text-gray-900">{{ $gr->purchaseOrder->supplier->name ?? 'Direct Receipt' }}</div>

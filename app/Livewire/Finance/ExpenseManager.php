@@ -125,11 +125,6 @@ class ExpenseManager extends Component
         $this->reset(['description', 'amount', 'category', 'accountId', 'isEditing', 'editId']);
         $this->date = Carbon::now()->format('Y-m-d');
         $this->type = 'expense';
-
-        // Set default category dynamically
-        $defaultCat = ExpenseCategory::active()->orderBy('name')->first();
-        $this->category = $defaultCat ? $defaultCat->name : null;
-
         $this->showModal = true;
     }
 

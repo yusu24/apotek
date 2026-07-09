@@ -42,6 +42,35 @@ if (!function_exists('formatDateTime')) {
     }
 }
 
+if (!function_exists('format_accounting_standard')) {
+    /**
+     * Format a number as accounting-style currency text (used across PDF reports).
+     *
+     * @param float|int $number
+     * @return string
+     */
+    function format_accounting_standard($number)
+    {
+        $formatted = number_format(abs($number), 2, ',', '.');
+        if ($formatted == '0,00') return '0';
+
+        return ($number < 0 ? '-' : '') . $formatted;
+    }
+}
+
+if (!function_exists('format_accounting')) {
+    /**
+     * Backward-compatible alias for format_accounting_standard().
+     *
+     * @param float|int $number
+     * @return string
+     */
+    function format_accounting($number)
+    {
+        return format_accounting_standard($number);
+    }
+}
+
 if (!function_exists('resizeAndStoreImage')) {
     /**
      * Resize an uploaded image and store it to the specified disk/directory.

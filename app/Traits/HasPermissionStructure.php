@@ -33,6 +33,8 @@ trait HasPermissionStructure
                 'items' => [
                     'view stock' => ['label' => 'Lihat Stok & Opname', 'type' => 'view'],
                     'import stock' => ['label' => 'Import Stok via Excel', 'type' => 'action'],
+                    'import products' => ['label' => 'Import Produk via Excel', 'type' => 'action'],
+                    'import suppliers' => ['label' => 'Import Supplier via Excel', 'type' => 'action'],
                     'adjust stock' => ['label' => 'Penyesuaian Stok', 'type' => 'action'],
                     'view stock movements' => ['label' => 'Riwayat Mutasi Stok', 'type' => 'view'],
                     'view purchase orders' => ['label' => 'Pesanan Pembelian (PO)', 'type' => 'view'],
@@ -74,6 +76,7 @@ trait HasPermissionStructure
                     'view general ledger' => ['label' => 'Buku Besar', 'type' => 'view'],
                     'view ppn report' => ['label' => 'Laporan PPN', 'type' => 'view'],
                     'view ap aging report' => ['label' => 'Laporan Umur Hutang & Piutang', 'type' => 'view'],
+                    'view reports' => ['label' => 'Ringkasan Keuangan (Widget Dashboard)', 'type' => 'view'],
                 ]
             ],
             'Laporan Operasional' => [
@@ -91,6 +94,8 @@ trait HasPermissionStructure
                 'color' => 'cyan',
                 'items' => [
                     'view accounts' => ['label' => 'Daftar Akun (COA)', 'type' => 'view'],
+                    'manage accounts' => ['label' => 'Kelola Akun (Tambah/Edit Bank)', 'type' => 'action'],
+                    'import accounts' => ['label' => 'Import Akun via Excel', 'type' => 'action'],
                     'view journals' => ['label' => 'Lihat Jurnal Umum', 'type' => 'view'],
                     'create journal' => ['label' => 'Input Jurnal Manual', 'type' => 'action'],
                     'edit journals' => ['label' => 'Edit Jurnal Draft', 'type' => 'action'],

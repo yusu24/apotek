@@ -67,6 +67,25 @@ class StockIndex extends Component
         }
     }
 
+    public function incrementHighlight()
+    {
+        $count = count($this->searchResults);
+        if ($count > 0) {
+            $this->highlightIndex = min($this->highlightIndex + 1, $count - 1);
+        }
+    }
+
+    public function decrementHighlight()
+    {
+        $this->highlightIndex = max($this->highlightIndex - 1, 0);
+    }
+
+    public function selectHighlighted()
+    {
+        $this->selectProductByIndex($this->highlightIndex);
+        $this->highlightIndex = 0;
+    }
+
     public function selectProduct($id)
     {
         $product = Product::find($id);

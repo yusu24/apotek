@@ -4,7 +4,7 @@
     <div class="grid grid-cols-2 gap-4 pb-4 border-b">
         <div>
             <label class="text-xs font-bold text-gray-500 uppercase">No. Invoice</label>
-            <p class="text-sm font-bold text-gray-900">{{ $sale->invoice_number }}</p>
+            <p class="text-sm font-bold text-gray-900">{{ $sale->invoice_no }}</p>
         </div>
         <div>
             <label class="text-xs font-bold text-gray-500 uppercase">Tanggal</label>

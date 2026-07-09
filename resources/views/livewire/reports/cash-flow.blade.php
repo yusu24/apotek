@@ -74,7 +74,7 @@
                 </div>
                 <p class="text-sm font-medium opacity-80">Operasional</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_operating']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_operating']) }}</p>
              <p class="text-xs text-white/60 mt-1 italic">Kas dari Operasional</p>
         </div>
 
@@ -86,7 +86,7 @@
                 </div>
                 <p class="text-sm font-medium opacity-80">Investasi</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_investing']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_investing']) }}</p>
              <p class="text-xs text-white/60 mt-1 italic">Kas dari Investasi</p>
         </div>
 
@@ -98,7 +98,7 @@
                 </div>
                 <p class="text-sm font-medium opacity-80">Pendanaan</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($reportData['net_cash_financing']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_financing']) }}</p>
              <p class="text-xs text-white/60 mt-1 italic">Kas dari Pendanaan</p>
         </div>
 
@@ -110,7 +110,7 @@
                 </div>
                 <p class="text-sm font-medium opacity-80">Kenaikan Bersih</p>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting($reportData['net_increase']) }}</p>
+            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_increase']) }}</p>
              <p class="text-xs text-white/60 mt-1 italic">Total Selisih Kas</p>
         </div>
 
@@ -122,7 +122,7 @@
                 </div>
                 <p class="text-sm font-medium opacity-60">Saldo Akhir</p>
             </div>
-            <p class="text-xl font-bold text-gray-900">{{ format_accounting($reportData['ending_balance']) }}</p>
+            <p class="text-xl font-bold text-gray-900">{{ format_accounting_paren($reportData['ending_balance']) }}</p>
              <p class="text-xs text-gray-500 mt-1 italic">Posisi Kas Akhir</p>
         </div>
     </div>
@@ -142,24 +142,24 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Penerimaan dari pelanggan</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['receipts_from_customers']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['receipts_from_customers']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pembayaran ke pemasok</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['payments_to_suppliers']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['payments_to_suppliers']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pengeluaran operasional</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['payments_for_expenses']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['payments_for_expenses']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pendapatan lainnya</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['other_operating']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['other_operating']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Operasional</span>
-                    <span class="text-lg font-bold text-blue-700">{{ format_accounting($reportData['net_cash_operating']) }}</span>
+                    <span class="text-lg font-bold text-blue-700">{{ format_accounting_paren($reportData['net_cash_operating']) }}</span>
                 </div>
             </div>
 
@@ -170,16 +170,16 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Perolehan/Penjualan Aset</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['sale_assets'] + $reportData['purchase_assets']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['sale_assets'] + $reportData['purchase_assets']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Investasi Lainnya</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['other_investing']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['other_investing']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Investasi</span>
-                    <span class="text-lg font-bold text-amber-700">{{ format_accounting($reportData['net_cash_investing']) }}</span>
+                    <span class="text-lg font-bold text-amber-700">{{ format_accounting_paren($reportData['net_cash_investing']) }}</span>
                 </div>
             </div>
 
@@ -190,16 +190,16 @@
                      {{-- Rows --}}
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Pinjaman</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['loans']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['loans']) }}</span>
                     </div>
                      <div class="flex justify-between items-center py-2 hover:bg-gray-50 px-2 rounded">
                         <span class="text-sm text-gray-700">Ekuitas/Modal</span>
-                        <span class="text-sm font-bold text-gray-900">{{ format_accounting($reportData['equity']) }}</span>
+                        <span class="text-sm font-bold text-gray-900">{{ format_accounting_paren($reportData['equity']) }}</span>
                     </div>
                  </div>
                  <div class="flex justify-between items-center mt-3 pt-3 ml-4 border-t border-gray-300">
                     <span class="text-base font-bold text-gray-800">Total Kas Bersih dari Pendanaan</span>
-                    <span class="text-lg font-bold text-indigo-700">{{ format_accounting($reportData['net_cash_financing']) }}</span>
+                    <span class="text-lg font-bold text-indigo-700">{{ format_accounting_paren($reportData['net_cash_financing']) }}</span>
                 </div>
             </div>
             
@@ -207,15 +207,15 @@
             <div class="bg-gray-50 p-4 rounded-lg border-2 border-gray-200 mt-6">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-600">Saldo Kas Awal</span>
-                    <span class="text-base font-bold text-gray-800">{{ format_accounting($reportData['beginning_balance']) }}</span>
+                    <span class="text-base font-bold text-gray-800">{{ format_accounting_paren($reportData['beginning_balance']) }}</span>
                 </div>
                  <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-600">Kenaikan/Penurunan Bersih</span>
-                    <span class="text-base font-bold text-{{ $reportData['net_increase'] >= 0 ? 'green' : 'red' }}-700">{{ format_accounting($reportData['net_increase']) }}</span>
+                    <span class="text-base font-bold text-{{ $reportData['net_increase'] >= 0 ? 'green' : 'red' }}-700">{{ format_accounting_paren($reportData['net_increase']) }}</span>
                 </div>
                 <div class="flex justify-between items-center pt-3 border-t-2 border-gray-300">
                     <span class="text-lg font-bold text-gray-900 uppercase">Saldo Kas Akhir</span>
-                    <span class="text-xl font-bold text-gray-900">{{ format_accounting($reportData['ending_balance']) }}</span>
+                    <span class="text-xl font-bold text-gray-900">{{ format_accounting_paren($reportData['ending_balance']) }}</span>
                 </div>
             </div>
 
@@ -227,7 +227,7 @@
 
 
     @php
-    function format_accounting($number) {
+    function format_accounting_paren($number) {
         if ($number < 0) {
             return '( ' . number_format(abs($number), 0, ',', '.') . ' )';
         }

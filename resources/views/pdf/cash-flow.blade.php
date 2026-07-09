@@ -164,12 +164,5 @@
         </tbody>
     </table>
 
-    @php
-    function format_accounting_standard($number) {
-        $formatted = number_format(abs($number), 2, ',', '.');
-        if ($formatted == '0,00') return '0';
-        return ($number < 0 ? '-' : '') . $formatted;
-    }
-    @endphp
 </body>
 </html>

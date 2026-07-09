@@ -217,21 +217,5 @@
         </tbody>
     </table>
 
-    @php
-    function format_accounting_standard($number) {
-        $formatted = number_format(abs($number), 2, ',', '.');
-        if ($formatted == '0,00') return '0';
-        
-        // Remove .00 if requested or keep it as per reference. Reference shows .00 for some.
-        // Let's keep 2 decimal places as in the reference.
-        
-        return ($number < 0 ? '-' : '') . $formatted;
-    }
-    
-    // Existing format_accounting for backward compat if needed in partials
-    function format_accounting($number) {
-        return format_accounting_standard($number);
-    }
-    @endphp
     </body>
 </html>

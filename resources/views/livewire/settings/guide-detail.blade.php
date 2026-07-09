@@ -19,18 +19,18 @@
                     <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                         <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Navigasi</h3>
                         <nav class="space-y-1">
-                            <a href="#overview" class="block px-3 py-2 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Ringkasan</a>
+                            <a href="#overview" class="block px-3 py-2 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Ringkasan</a>
                             @if(!empty($guide['screenshots']))
-                            <a href="#screenshots" class="block px-3 py-2 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Tampilan</a>
+                            <a href="#screenshots" class="block px-3 py-2 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Tampilan</a>
                             @endif
                             @if(!empty($guide['golden_rules']))
-                            <a href="#rules" class="block px-3 py-2 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Aturan Penting</a>
+                            <a href="#rules" class="block px-3 py-2 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Aturan Penting</a>
                             @endif
                             @if(!empty($guide['procedures']))
-                            <a href="#procedures" class="block px-3 py-2 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Prosedur</a>
+                            <a href="#procedures" class="block px-3 py-2 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Prosedur</a>
                             @endif
                             @if(!empty($guide['form_fields']))
-                            <a href="#forms" class="block px-3 py-2 text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Formulir</a>
+                            <a href="#forms" class="block px-3 py-2 text-xs font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">Formulir</a>
                             @endif
                         </nav>
                     </div>
@@ -47,8 +47,8 @@
                             <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider border border-blue-100 mb-3">
                                 {{ $guide['category'] ?? 'Panduan' }}
                             </span>
-                            <h1 class="text-xl md:text-3xl font-bold text-gray-900">{{ $guide['title'] }}</h1>
-                            <p class="text-gray-500 mt-2 text-sm md:text-lg">{{ $guide['description'] }}</p>
+                            <h1 class="text-lg md:text-2xl font-bold text-gray-900">{{ $guide['title'] }}</h1>
+                            <p class="text-gray-500 mt-2 text-xs md:text-sm">{{ $guide['description'] }}</p>
                         </div>
                              @if($slug === 'user-manual')
                              <a href="{{ route('pdf.user-manual') }}" 
@@ -85,7 +85,7 @@
                                 <div class="space-y-3">
                                     @foreach($guide['buttons'] as $btn)
                                     <div>
-                                        <div class="font-bold text-gray-800 text-sm">{{ $btn['label'] }}</div>
+                                        <div class="font-bold text-gray-800 text-xs">{{ $btn['label'] }}</div>
                                         <div class="text-gray-500 text-xs mt-0.5">{{ $btn['func'] }}</div>
                                     </div>
                                     @endforeach
@@ -99,7 +99,7 @@
                                 <div class="space-y-3">
                                     @foreach($guide['sub_menus'] as $sub)
                                     <div>
-                                        <div class="font-bold text-gray-800 text-sm">{{ $sub['name'] }}</div>
+                                        <div class="font-bold text-gray-800 text-xs">{{ $sub['name'] }}</div>
                                         <div class="text-gray-500 text-xs mt-0.5">{{ $sub['func'] }}</div>
                                     </div>
                                     @endforeach
@@ -113,7 +113,7 @@
                     <!-- Screenshots Gallery -->
                     @if(!empty($guide['screenshots']))
                     <div id="screenshots" class="mb-10 SCROLL-MARGIN-TOP">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Galeri Tampilan</h3>
+                        <h3 class="text-base font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Galeri Tampilan</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($guide['screenshots'] as $shot)
                             <div class="space-y-3">
@@ -131,7 +131,7 @@
                     @if(!empty($guide['golden_rules']))
                     <div id="rules" class="mb-10">
                         <div class="bg-blue-50 border border-blue-100 rounded-xl p-6">
-                            <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-blue-900 mb-4 flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 Aturan Penting
                             </h3>
@@ -139,7 +139,7 @@
                                 @foreach($guide['golden_rules'] as $index => $rule)
                                 <div class="flex gap-4">
                                     <span class="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">{{ $index + 1 }}</span>
-                                    <span class="text-gray-700">{!! str_replace(['**', '##'], ['<strong>', '</strong>'], $rule) !!}</span>
+                                    <span class="text-xs text-gray-700">{!! str_replace(['**', '##'], ['<strong>', '</strong>'], $rule) !!}</span>
                                 </div>
                                 @endforeach
                             </div>
@@ -150,7 +150,7 @@
                     <!-- Procedures -->
                     @if(!empty($guide['procedures']))
                     <div id="procedures" class="mb-10">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Prosedur Penggunaan</h3>
+                        <h3 class="text-base font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Prosedur Penggunaan</h3>
                         <div class="space-y-6">
                             @foreach($guide['procedures'] as $index => $proc)
                             <div class="flex gap-5">
@@ -158,8 +158,8 @@
                                     {{ $index + 1 }}
                                 </div>
                                 <div>
-                                    <h4 class="text-lg font-bold text-gray-900 mb-1">{{ $proc['title'] }}</h4>
-                                    <p class="text-gray-600 leading-relaxed">{!! str_replace(['**', '##'], ['<strong>', '</strong>'], $proc['desc']) !!}</p>
+                                    <h4 class="text-sm font-bold text-gray-900 mb-1">{{ $proc['title'] }}</h4>
+                                    <p class="text-xs text-gray-600 leading-relaxed">{!! nl2br(str_replace(['**', '##'], ['<strong>', '</strong>'], $proc['desc'])) !!}</p>
                                 </div>
                             </div>
                             @endforeach
@@ -170,9 +170,9 @@
                     <!-- Form Fields -->
                     @if(!empty($guide['form_fields']))
                     <div id="forms">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Penjelasan Formulir</h3>
+                        <h3 class="text-base font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Penjelasan Formulir</h3>
                         <div class="overflow-x-auto border border-gray-200 rounded-xl">
-                            <table class="w-full text-sm text-left">
+                            <table class="w-full text-xs text-left">
                                 <thead class="bg-gray-50 border-b border-gray-200">
                                     <tr>
                                         <th class="px-6 py-4 font-bold text-gray-900 w-1/4">Nama Field</th>

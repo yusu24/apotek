@@ -25,13 +25,14 @@ class GuideDetail extends Component
             'initial-setup' => [
                 'title' => 'Setup Awal Aplikasi',
                 'image' => 'guide_setup.png',
-                'description' => 'Panduan konfigurasi sistem apotek dari nol agar siap digunakan untuk operasional kasir, inventori, dan akuntansi keuangan tanpa resiko saldo minus.',
+                'description' => 'Panduan lengkap konfigurasi sistem apotek dari nol, langkah demi langkah, agar siap digunakan untuk operasional kasir, inventori, dan akuntansi keuangan tanpa resiko saldo minus atau data yang salah referensi.',
                 'screenshots' => [],
                 'golden_rules' => [
                     'Isi **Identitas Toko** terlebih dahulu karena data ini dicetak pada struk penjualan dan kop laporan.',
                     'Setup **Daftar Akun (COA) / Rekening** sebelum mencatat transaksi keuangan.',
                     'Wajib menginput **Saldo Awal** (Kas, Bank, dan Persediaan) agar laporan neraca awal seimbang dan saldo tidak minus.',
-                    'Lakukan **Import Data Master** (Kategori, Supplier, Pelanggan, Produk) secara berurutan agar referensi tidak error.'
+                    'Lakukan **Import Data Master** (Kategori, Satuan, Supplier, Pelanggan, Produk) secara berurutan agar referensi tidak error.',
+                    'Lakukan **transaksi percobaan** di kasir sebelum benar-benar melayani pelanggan, untuk memastikan semua pengaturan sudah benar.'
                 ],
                 'sub_menus' => [
                     ['name' => '1. Pengaturan Toko', 'func' => 'Mengatur nama, alamat, nomor telepon, logo, dan tarif PPN toko.'],
@@ -39,23 +40,35 @@ class GuideDetail extends Component
                     ['name' => '3. Setup Rekening Bank', 'func' => 'Menyusun Chart of Accounts (COA) / rekening bank operasional.'],
                     ['name' => '4. Saldo Awal (Opening Balance)', 'func' => 'Mengisi kas laci awal, rekening bank, dan taksiran total nilai persediaan obat awal.'],
                     ['name' => '5. Import Data Master', 'func' => 'Mengimpor database produk obat, supplier, dan pelanggan secara massal.'],
-                    ['name' => '6. Import Omset Historis', 'func' => 'Mengunggah omset tahun lalu jika ingin melihat komparasi laporan Laba Rugi historis.']
+                    ['name' => '6. Import Stok Awal', 'func' => 'Memasukkan jumlah stok, batch, dan tanggal kadaluarsa obat yang sudah dimiliki.'],
+                    ['name' => '7. Import Omset Historis', 'func' => 'Mengunggah omset tahun lalu jika ingin melihat komparasi laporan Laba Rugi historis.'],
+                    ['name' => '8. Uji Coba Transaksi', 'func' => 'Mencoba transaksi kasir sebelum sistem benar-benar dipakai melayani pelanggan.']
                 ],
                 'buttons' => [
                     ['label' => 'Buka Pengaturan Toko', 'func' => 'Mengarah ke halaman /settings/store'],
+                    ['label' => 'Buka Manajemen User', 'func' => 'Mengarah ke halaman /admin/users'],
                     ['label' => 'Buka Saldo Awal', 'func' => 'Mengarah ke halaman /finance/opening-balance'],
                     ['label' => 'Buka Daftar Akun (COA)', 'func' => 'Mengarah ke halaman /accounting/accounts'],
                     ['label' => 'Buka Laporan Penjualan', 'func' => 'Mengarah ke halaman /reports/sales']
                 ],
                 'procedures' => [
-                    ['title' => 'Langkah 1: Mengisi Pengaturan Toko', 'desc' => 'Buka halaman <a href="/settings/store" class="text-blue-600 hover:underline font-bold">Pengaturan Toko</a>. Isi nama apotek, alamat lengkap, nomor telepon, default PPN (misal: 11%), dan upload logo apotek Anda. Klik **Simpan**.'],
-                    ['title' => 'Langkah 2: Menambahkan Pengguna & Staf', 'desc' => 'Buka halaman <a href="/admin/users" class="text-blue-600 hover:underline font-bold">Manajemen User</a>. Klik **Tambah User** untuk membuat akun bagi Staf Gudang, Kasir, atau Apoteker Anda. Pilih peran (role) yang sesuai agar hak akses menu mereka terbatasi secara otomatis.'],
-                    ['title' => 'Langkah 3: Menyiapkan Rekening Bank', 'desc' => 'Buka halaman <a href="/accounting/accounts" class="text-blue-600 hover:underline font-bold">Daftar Akun (COA)</a>. Jika Anda memiliki lebih dari satu rekening bank operasional, klik tombol **Tambah Akun Bank** (akun baru berkode 1-12XX). Isi Nama Bank terkait dan simpan.'],
-                    ['title' => 'Langkah 4: Memasukkan Saldo Awal (Opening Balance) - PENTING', 'desc' => 'Buka halaman <a href="/finance/opening-balance" class="text-blue-600 hover:underline font-bold">Saldo Awal</a>. Masukkan nominal uang tunai di laci, saldo rekening bank, dan taksiran total nilai persediaan obat awal Anda saat ini. Di bagian Ekuitas, isi nominal **Modal Awal** dengan jumlah total penjumlahan Kas + Bank + Persediaan agar Neraca Saldo Awal seimbang (selisih Balanced menunjukkan angka 0). Klik **Konfirmasi & Kunci Saldo Awal**.'],
-                    ['title' => 'Langkah 5: Mengimpor Data Master (Excel)', 'desc' => 'Wajib mengimpor Kategori dan Supplier terlebih dahulu, baru kemudian mengimpor Produk. Buka halaman <a href="/products" class="text-blue-600 hover:underline font-bold">Katalog Produk</a> atau halaman terkait dan klik **Import Excel** -> **Download Template**. Isi file template Excel tersebut, lalu unggah kembali.'],
-                    ['title' => 'Langkah 6: Mengimpor Omset Historis', 'desc' => 'Buka halaman <a href="/reports/sales" class="text-blue-600 hover:underline font-bold">Laporan Penjualan</a>. Klik **Import Omset**, unduh template excel, isi kolom Tanggal/Tahun, Omset, HPP (COGS), dan Laba, lalu unggah kembali. Sistem akan memposting jurnal penjualan historis secara otomatis.']
+                    ['title' => 'Langkah 1: Login & Mengisi Pengaturan Toko', 'desc' => "1. Login menggunakan akun Super Admin/Owner yang diberikan saat instalasi.\n2. Buka halaman <a href=\"/settings/store\" class=\"text-blue-600 hover:underline font-bold\">Pengaturan Toko</a>.\n3. Isi **Nama Apotek**, **Alamat Lengkap**, dan **Nomor Telepon** — data ini akan tercetak di struk kasir dan kop semua laporan.\n4. Isi **Tarif PPN Default** (misal 11%) jika toko Anda dikenakan pajak, atau isi 0 jika tidak.\n5. Upload **Logo Apotek** (opsional, format PNG/JPG).\n6. Klik **Simpan**."],
+                    ['title' => 'Langkah 2: Menambahkan Pengguna & Staf', 'desc' => "1. Buka halaman <a href=\"/admin/users\" class=\"text-blue-600 hover:underline font-bold\">Manajemen User</a>.\n2. Klik tombol **Tambah User**.\n3. Isi Nama Lengkap, Email, dan Password staf.\n4. Pilih **Role/Peran** sesuai jabatan (Kasir, Apoteker, Gudang, Admin) agar hak akses menu mereka otomatis terbatas.\n5. Klik **Simpan** — staf langsung bisa login dengan akun tersebut.\n6. Ulangi untuk setiap staf yang akan menggunakan sistem."],
+                    ['title' => 'Langkah 3: Menyiapkan Daftar Akun (COA) & Rekening Bank', 'desc' => "1. Buka halaman <a href=\"/accounting/accounts\" class=\"text-blue-600 hover:underline font-bold\">Daftar Akun (COA)</a>.\n2. Chart of Accounts standar (Kas, Bank, Piutang, Beban, dll) sudah tersedia otomatis — Anda **tidak perlu** membuatnya dari nol.\n3. Jika memiliki lebih dari satu rekening bank operasional, klik tombol **Tambah Akun Bank**.\n4. Isi Nama Bank terkait (misal: BCA - 1234567890), kode akun baru dibuat otomatis (format 1-12XX).\n5. Klik **Simpan**."],
+                    ['title' => 'Langkah 4: Memasukkan Saldo Awal (Opening Balance) — PENTING', 'desc' => "1. Buka halaman <a href=\"/finance/opening-balance\" class=\"text-blue-600 hover:underline font-bold\">Saldo Awal</a>.\n2. Isi nominal uang tunai fisik di laci kasir pada kolom **Kas**.\n3. Isi saldo setiap rekening **Bank** sesuai buku tabungan/mutasi terakhir.\n4. Isi **Taksiran Nilai Persediaan** — total modal (harga beli) seluruh stok obat yang Anda miliki saat ini.\n5. Di bagian Ekuitas, isi **Modal Awal** dengan angka yang **SAMA** dengan total penjumlahan Kas + Bank + Persediaan, agar Neraca seimbang.\n6. Perhatikan indikator status di layar — kalau masih ada selisih, periksa kembali angka yang diinput.\n7. Klik **Konfirmasi & Kunci Saldo Awal**. Setelah dikunci, saldo awal tidak bisa diubah sendiri lagi."],
+                    ['title' => 'Langkah 5: Mengimpor Data Master (Kategori, Satuan, Supplier, Pelanggan, Produk)', 'desc' => "1. Import **berurutan**: Kategori & Satuan → Supplier → Pelanggan → baru Produk (Produk butuh referensi Kategori/Satuan/Supplier yang sudah ada, kalau dibalik akan gagal).\n2. Buka masing-masing halaman Master, klik **Import Excel** lalu **Download Template**.\n3. Isi template Excel sesuai kolom yang tersedia — jangan mengubah nama header di baris pertama.\n4. Simpan file, kembali ke aplikasi, klik **Import Excel** lagi, pilih file yang sudah diisi.\n5. Klik **Import** dan tunggu notifikasi sukses. Jika ada baris error, sistem menunjukkan baris mana yang bermasalah untuk diperbaiki lalu diimpor ulang."],
+                    ['title' => 'Langkah 6: Mengimpor Stok Awal Obat', 'desc' => "1. Setelah data Produk masuk, buka menu import Stok Awal.\n2. Isi jumlah stok per produk beserta **Nomor Batch** dan **Tanggal Kadaluarsa** — data ini wajib untuk sistem FEFO (First Expired First Out).\n3. Isi juga **Harga Beli** per unit agar perhitungan HPP (Harga Pokok Penjualan) akurat sejak transaksi pertama.\n4. Import, lalu cek kembali di halaman Stok & Inventori bahwa jumlahnya sudah sesuai dengan fisik di apotek."],
+                    ['title' => 'Langkah 7: Mengimpor Omset Historis (Opsional)', 'desc' => "1. Kalau ingin laporan Laba Rugi bisa dibandingkan dengan bulan/tahun sebelumnya, buka <a href=\"/reports/sales\" class=\"text-blue-600 hover:underline font-bold\">Laporan Penjualan</a>.\n2. Klik **Import Omset**, unduh template, isi kolom Tanggal/Periode, Omset, HPP, dan Laba dari catatan lama Anda.\n3. Upload kembali — sistem otomatis membuat jurnal historis tanpa memengaruhi stok maupun kas saat ini."],
+                    ['title' => 'Langkah 8: Uji Coba Transaksi Sebelum Go-Live', 'desc' => "1. Lakukan 1-2 transaksi percobaan di menu **Kasir (POS)** memakai produk sungguhan dengan qty kecil.\n2. Cek struk tercetak dengan benar (nama toko, harga, kembalian).\n3. Cek **Laporan Penjualan** dan **Stok** — pastikan angkanya berkurang/bertambah sesuai transaksi percobaan tadi.\n4. Kalau ada yang salah (misal saldo minus atau harga keliru), perbaiki dulu Saldo Awal/Data Master sebelum melayani pelanggan sungguhan.\n5. Setelah semua benar, sistem siap dipakai untuk operasional harian."]
                 ],
-                'form_fields' => []
+                'form_fields' => [
+                    ['name' => 'Nama Apotek', 'description' => 'Nama resmi toko yang tercetak di kop laporan dan struk penjualan.', 'required' => true],
+                    ['name' => 'PPN Default (%)', 'description' => 'Persentase pajak yang otomatis diterapkan pada transaksi kasir (isi 0 jika toko tidak dikenakan PPN).', 'required' => true],
+                    ['name' => 'Kas Awal', 'description' => 'Nominal uang tunai fisik yang ada di laci kasir saat sistem mulai digunakan.', 'required' => true],
+                    ['name' => 'Saldo Bank Awal', 'description' => 'Saldo setiap rekening bank operasional sesuai mutasi/buku tabungan terakhir.', 'required' => true],
+                    ['name' => 'Nilai Persediaan Awal', 'description' => 'Total taksiran modal (harga beli) seluruh stok obat yang sudah dimiliki sebelum sistem digunakan.', 'required' => true],
+                    ['name' => 'Modal Awal (Ekuitas)', 'description' => 'Harus sama dengan total Kas + Bank + Persediaan Awal, agar Neraca Saldo Awal seimbang (selisih menunjukkan 0).', 'required' => true],
+                ]
             ],
             'dashboard' => [
                 'title' => 'Dashboard & Statistik',

@@ -205,14 +205,16 @@
                             </span>
                             Prosedur Penggunaan
                         </h3>
-                        <div class="relative border-l-2 border-gray-100 ml-4 space-y-7">
+                        <div class="space-y-6">
                             @foreach($guide['procedures'] as $index => $proc)
-                            <div class="relative pl-8">
-                                <div class="absolute -left-4 top-0 w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-md">
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-md">
                                     {{ $index + 1 }}
                                 </div>
-                                <h4 class="text-sm font-bold text-gray-900 mb-1">{{ $proc['title'] }}</h4>
-                                <p class="text-xs text-gray-600 leading-relaxed">{!! nl2br(str_replace(['**', '##'], ['<strong>', '</strong>'], $proc['desc'])) !!}</p>
+                                <div class="min-w-0 pt-0.5">
+                                    <h4 class="text-sm font-bold text-gray-900 mb-1">{{ $proc['title'] }}</h4>
+                                    <p class="text-xs text-gray-600 leading-relaxed">{!! nl2br(str_replace(['**', '##'], ['<strong>', '</strong>'], $proc['desc'])) !!}</p>
+                                </div>
                             </div>
                             @endforeach
                         </div>

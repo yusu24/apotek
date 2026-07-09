@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\ActivityLog;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\JournalEntry;
 use Carbon\Carbon;
 
 #[Layout('layouts.app')]
@@ -205,8 +206,15 @@ class ExpenseManager extends Component
             return;
         }
 
+        // Keep the auto-journal in sync with the current expense data: any journal
+        // previously posted for this expense is stale the moment amount/category/account
+        // changes, so drop it and repost fresh from what was just saved.
+        if ($this->isEditing) {
+            $this->removeExpenseJournal($expense->id);
+        }
+
         $journalWarning = null;
-        if (!$this->isEditing && $this->accountId) {
+        if ($this->accountId) {
             try {
                 (new \App\Services\AccountingService())->postExpenseJournal($expense->id, $this->accountId);
             } catch (\Exception $e) {
@@ -229,6 +237,10 @@ class ExpenseManager extends Component
     {
         $expense = Expense::findOrFail($id);
         $oldData = $expense->toArray();
+
+        // Deleting the expense without also removing its auto-journal used to leave the
+        // journal (and the account balance it affected) permanently orphaned.
+        $this->removeExpenseJournal($expense->id);
         $expense->delete();
 
         ActivityLog::log([
@@ -239,6 +251,25 @@ class ExpenseManager extends Component
         ]);
 
         session()->flash('message', 'Data pengeluaran dihapus.');
+    }
+
+    /**
+     * Reverse (if posted) and remove any journal entries previously auto-posted for this
+     * expense, so callers can safely repost a fresh one or delete the expense outright.
+     */
+    private function removeExpenseJournal(int $expenseId): void
+    {
+        $entries = JournalEntry::where('source', 'expense')
+            ->where('source_id', $expenseId)
+            ->get();
+
+        foreach ($entries as $entry) {
+            if ($entry->is_posted) {
+                $entry->reverse();
+            }
+            $entry->lines()->delete();
+            $entry->delete();
+        }
     }
 
     public function updatingSearch()

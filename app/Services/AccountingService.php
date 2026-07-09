@@ -656,14 +656,21 @@ class AccountingService
     {
         $expense = \App\Models\Expense::findOrFail($expenseId);
         $paymentAccount = Account::findOrFail($accountId);
-        
-        // Find expense account based on category or default to general expense
-        $expenseAccount = Account::where('name', 'like', '%' . $expense->category . '%')
-            ->where('type', 'expense')
-            ->first() ?? Account::where('code', '5-2300')->first(); // Default Beban Operasional Lainnya
+        $isIncome = $expense->type === 'income';
 
-        if (!$expenseAccount) {
-            throw new \Exception("Akun Beban tidak ditemukan. Silakan buat akun beban terlebih dahulu.");
+        // Find the matching Beban/Pendapatan account based on category, falling back to a
+        // generic "lain-lain" account of the correct type so this never blocks the expense
+        // itself from being recorded (see ExpenseManager::save()).
+        $otherAccountType = $isIncome ? 'revenue' : 'expense';
+        $fallbackCode = $isIncome ? '4-2000' : '5-2300'; // Pendapatan Lain-lain / Beban Operasional Lainnya
+
+        $otherAccount = Account::where('name', 'like', '%' . $expense->category . '%')
+            ->where('type', $otherAccountType)
+            ->first() ?? Account::where('code', $fallbackCode)->first();
+
+        if (!$otherAccount) {
+            $label = $isIncome ? 'Pendapatan' : 'Beban';
+            throw new \Exception("Akun {$label} tidak ditemukan. Silakan buat akun {$label} terlebih dahulu.");
         }
 
         DB::beginTransaction();
@@ -672,29 +679,49 @@ class AccountingService
             $entry = JournalEntry::create([
                 'entry_number' => JournalEntry::generateEntryNumber(),
                 'date' => $expense->date,
-                'description' => 'Pengeluaran - ' . $expense->description,
+                'description' => ($isIncome ? 'Pemasukan Lain-lain - ' : 'Pengeluaran - ') . $expense->description,
                 'source' => 'expense',
                 'source_id' => $expenseId,
                 'user_id' => $expense->user_id ?? Auth::id(),
             ]);
 
-            // Dr. Beban
-            JournalEntryLine::create([
-                'journal_entry_id' => $entry->id,
-                'account_id' => $expenseAccount->id,
-                'debit' => $expense->amount,
-                'credit' => 0,
-                'notes' => $expense->description,
-            ]);
+            if ($isIncome) {
+                // Dr. Kas/Bank
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $paymentAccount->id,
+                    'debit' => $expense->amount,
+                    'credit' => 0,
+                    'notes' => 'Penerimaan: ' . $expense->description,
+                ]);
 
-            // Cr. Kas/Bank/Utang
-            JournalEntryLine::create([
-                'journal_entry_id' => $entry->id,
-                'account_id' => $paymentAccount->id,
-                'debit' => 0,
-                'credit' => $expense->amount,
-                'notes' => 'Pembayaran: ' . $expense->description,
-            ]);
+                // Cr. Pendapatan
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $otherAccount->id,
+                    'debit' => 0,
+                    'credit' => $expense->amount,
+                    'notes' => $expense->description,
+                ]);
+            } else {
+                // Dr. Beban
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $otherAccount->id,
+                    'debit' => $expense->amount,
+                    'credit' => 0,
+                    'notes' => $expense->description,
+                ]);
+
+                // Cr. Kas/Bank/Utang
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $paymentAccount->id,
+                    'debit' => 0,
+                    'credit' => $expense->amount,
+                    'notes' => 'Pembayaran: ' . $expense->description,
+                ]);
+            }
 
             // Post journal
             $entry->post();

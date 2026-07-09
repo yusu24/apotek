@@ -35,7 +35,7 @@
             font-size: 14pt;
             font-weight: bold;
             letter-spacing: 1px;
-            color: #1e40af;
+            color: #000000;
             margin-top: 4px;
         }
         .period-info {

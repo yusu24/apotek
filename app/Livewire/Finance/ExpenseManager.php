@@ -8,7 +8,6 @@ use Livewire\Component;
 use App\Models\ActivityLog;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 #[Layout('layouts.app')]
@@ -159,7 +158,10 @@ class ExpenseManager extends Component
             'accountId' => 'nullable|exists:accounts,id',
         ]);
 
-        DB::beginTransaction();
+        // Recording the expense/income itself must never fail just because the optional
+        // auto-journal step below has trouble (e.g. a matching Beban/Pendapatan account
+        // doesn't exist yet) - that used to roll back the whole save and make it look like
+        // the form randomly refused to save.
         try {
             if ($this->isEditing) {
                 $expense = Expense::findOrFail($this->editId);
@@ -197,22 +199,29 @@ class ExpenseManager extends Component
                     'description' => "Menambah pengeluaran baru: {$this->description}",
                     'new_values' => $expense->toArray()
                 ]);
-
-                // Create Journal Entry if account is selected
-                if ($this->accountId) {
-                    $accountingService = new \App\Services\AccountingService();
-                    $accountingService->postExpenseJournal($expense->id, $this->accountId);
-                }
             }
-
-            DB::commit();
-            $this->showModal = false;
-            $this->reset(['description', 'amount', 'category', 'type', 'accountId', 'isEditing', 'editId']);
-            $this->type = 'expense';
-            session()->flash('message', 'Data pengeluaran berhasil disimpan.');
         } catch (\Exception $e) {
-            DB::rollBack();
             session()->flash('error', 'Gagal menyimpan pengeluaran: ' . $e->getMessage());
+            return;
+        }
+
+        $journalWarning = null;
+        if (!$this->isEditing && $this->accountId) {
+            try {
+                (new \App\Services\AccountingService())->postExpenseJournal($expense->id, $this->accountId);
+            } catch (\Exception $e) {
+                $journalWarning = $e->getMessage();
+            }
+        }
+
+        $this->showModal = false;
+        $this->reset(['description', 'amount', 'category', 'type', 'accountId', 'isEditing', 'editId']);
+        $this->type = 'expense';
+
+        if ($journalWarning) {
+            session()->flash('error', 'Data pengeluaran berhasil disimpan, tapi jurnal akuntansi otomatis gagal dibuat: ' . $journalWarning);
+        } else {
+            session()->flash('message', 'Data pengeluaran berhasil disimpan.');
         }
     }
 

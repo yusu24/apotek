@@ -33,7 +33,7 @@
                             Aktif
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full tracking-wider">
                             Belum Ada Transaksi
                         </span>
                     @endif
@@ -57,7 +57,7 @@
                             Aktif
                         </span>
                     @else
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full tracking-wider">
                             Belum Ada Transaksi
                         </span>
                     @endif

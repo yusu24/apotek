@@ -73,30 +73,38 @@ class GuideDetail extends Component
             'dashboard' => [
                 'title' => 'Dashboard & Statistik',
                 'image' => 'guide_dashboard.png',
-                'description' => 'Dashboard adalah pusat informasi visual yang memberikan ringkasan performa apotek secara real-time. Di sini Anda dapat memantau kesehatan bisnis melalui angka omset, jumlah transaksi, dan peringatan stok secara instan.',
+                'description' => 'Dashboard adalah pusat informasi visual yang memberikan ringkasan performa apotek secara real-time — omset & transaksi hari ini, tren penjualan, klasemen kasir, produk terlaris/paling lambat, hingga piutang dan hutang yang mendekati jatuh tempo. Setiap widget hanya tampil kalau akun Anda punya izin (permission) untuk melihatnya, jadi tampilan bisa berbeda antar role (Kasir, Admin, Super Admin).',
                 'screenshots' => [],
                 'golden_rules' => [
-                    'Pantau **Widget Pendapatan** untuk melihat tren penjualan harian.',
-                    'Periksa **Stok Kritis** setiap pagi untuk merencanakan pengiriman barang.',
-                    'Gunakan **Filter Tanggal** untuk membandingkan performa bulanan.'
+                    'Pantau **Omset & Transaksi Hari Ini** setiap pagi dan sore untuk memantau performa harian.',
+                    'Gunakan **Tren Omset Harian** untuk melihat pola penjualan mingguan/bulanan, bukan cuma angka satu hari.',
+                    'Cek **Piutang Jatuh Tempo** secara rutin agar tidak ada tagihan pelanggan yang terlewat ditagih.',
+                    'Cek **Hutang Pembelian** agar pembayaran ke supplier tidak telat dan hubungan bisnis tetap baik.',
+                    'Gunakan grafik **Produk Paling Lambat** untuk menentukan barang mana yang perlu dipromosikan sebelum kadaluarsa.'
                 ],
                 'sub_menus' => [
-                    ['name' => 'Ringkasan Omset', 'func' => 'Menampilkan grafik pendapatan kotor harian dan total omset dalam periode tertentu.'],
-                    ['name' => 'Stok Menipis', 'func' => 'Daftar produk yang sudah mencapai batas minimal stok dan perlu segera dipesan.'],
-                    ['name' => 'Produk Terlaris', 'func' => 'Informasi 5 produk dengan volume penjualan tertinggi untuk optimasi stok.'],
-                    ['name' => 'Aktivitas Terakhir', 'func' => 'Log audit yang mencatat transaksi atau perubahan data terbaru oleh staf.']
+                    ['name' => 'Omset & Transaksi Hari Ini', 'func' => 'Dua kartu ringkas menampilkan total omset dan jumlah transaksi hari ini secara real-time.'],
+                    ['name' => 'Tren Omset Harian', 'func' => 'Grafik garis omset dengan filter periode Harian, Mingguan, atau Bulanan.'],
+                    ['name' => 'Klasemen Penjualan Kasir', 'func' => 'Peringkat kasir dengan omset penjualan tertinggi pada bulan berjalan, lengkap dengan modal "Lihat Semua" untuk daftar lengkap.'],
+                    ['name' => 'Produk Paling Laku', 'func' => 'Grafik batang produk dengan volume penjualan tertinggi, bisa difilter Harian/Mingguan/Bulanan/Tahunan.'],
+                    ['name' => 'Produk Paling Lambat', 'func' => 'Grafik batang produk dengan volume penjualan terendah — kandidat untuk dipromosikan atau dicek tanggal kadaluarsanya.'],
+                    ['name' => 'Piutang Jatuh Tempo', 'func' => 'Tabel tagihan pelanggan yang mendekati atau sudah melewati jatuh tempo, beserta total piutang usaha.'],
+                    ['name' => 'Hutang Pembelian', 'func' => 'Tabel tagihan ke supplier yang mendekati atau sudah melewati jatuh tempo, beserta total hutang usaha.']
                 ],
                 'buttons' => [
-                    ['label' => 'Filter Periode', 'func' => 'Tombol kalender di pojok kanan untuk memilih rentang waktu data (Hari ini, Bulan ini, atau Custom).'],
-                    ['label' => 'Detail Stok', 'func' => 'Klik pada widget stok menipis untuk langsung menuju halaman inventori dengan filter aktif.'],
-                    ['label' => 'Refresh', 'func' => 'Ikon putar untuk memperbarui data dashboard secara manual tanpa memuat ulang seluruh halaman.']
+                    ['label' => 'Dropdown Periode (per widget)', 'func' => 'Setiap grafik (Tren Omset, Produk Terlaris) punya filter periode sendiri-sendiri di pojok kanan atasnya — bukan satu filter tanggal global untuk seluruh dashboard.'],
+                    ['label' => 'Lihat Semua (Klasemen Kasir)', 'func' => 'Membuka modal berisi daftar lengkap peringkat kasir, tidak hanya 3 teratas.'],
+                    ['label' => 'Lihat Semua (Piutang/Hutang)', 'func' => 'Mengarah ke halaman /finance/aging-report untuk melihat seluruh daftar piutang dan hutang, tidak hanya yang mendekati jatuh tempo.']
                 ],
                 'procedures' => [
-                    ['title' => 'Memantau Penjualan Harian', 'desc' => 'Buka Dashboard, lihat grafik utama. Arahkan kursor ke titik grafik untuk melihat detail nominal transaksi pada jam tertentu.'],
-                    ['title' => 'Mengecek Stok yang Harus Dipesan', 'desc' => 'Scroll ke widget "Stok Menipis". Produk dengan warna merah menandakan stok kritis. Klik "Lihat Semua" untuk membuat PO.']
+                    ['title' => 'Memantau Omset & Transaksi Hari Ini', 'desc' => "1. Buka Dashboard, lihat dua kartu di kiri atas: **Omset Hari Ini** dan **Transaksi Hari Ini**.\n2. Badge hijau \"Aktif\" muncul kalau sudah ada transaksi hari itu; badge abu-abu \"Belum Ada Transaksi\" muncul kalau belum ada sama sekali.\n3. Angka ini otomatis terhitung dari transaksi Kasir (POS) dan diperbarui setiap kali halaman dimuat ulang."],
+                    ['title' => 'Melihat Tren Omset', 'desc' => "1. Scroll ke kartu **Tren Omset Harian**.\n2. Gunakan dropdown di kanan atas untuk ganti tampilan: Harian, Mingguan, atau Bulanan.\n3. Arahkan kursor ke titik pada grafik untuk melihat nominal omset pada tanggal/periode tersebut."],
+                    ['title' => 'Memeriksa Klasemen Penjualan Kasir', 'desc' => "1. Lihat kartu **Klasemen Penjualan Kasir** di sisi kanan — peringkat dihitung dari total omset penjualan tiap kasir pada bulan berjalan.\n2. Klik **Lihat Semua** untuk membuka daftar lengkap seluruh kasir, tidak dibatasi 3 teratas saja."],
+                    ['title' => 'Menganalisis Produk Terlaris & Paling Lambat', 'desc' => "1. Scroll ke bagian **Produk Paling Laku** dan **Produk Paling Lambat**.\n2. Ganti periode di dropdown masing-masing grafik (Harian/Mingguan/Bulanan/Tahunan) sesuai kebutuhan analisa.\n3. Gunakan info Produk Paling Lambat untuk memutuskan barang mana yang perlu didiskon atau dipromosikan sebelum kadaluarsa."],
+                    ['title' => 'Memantau Piutang & Hutang Jatuh Tempo', 'desc' => "1. Scroll ke tabel **Piutang Jatuh Tempo** (kiri) dan **Hutang Pembelian** (kanan) di bagian bawah Dashboard.\n2. Baris berwarna merah dengan label **Overdue** artinya sudah melewati tanggal jatuh tempo dan perlu segera ditindaklanjuti.\n3. Klik **Lihat Semua** pada masing-masing tabel untuk membuka halaman lengkap Aging Report (/finance/aging-report)."]
                 ],
                 'form_fields' => [
-                    ['name' => 'Rentang Tanggal', 'description' => 'Pilihan tanggal awal dan akhir untuk memfilter seluruh data dashboard.', 'required' => false]
+                    ['name' => 'Filter Periode Grafik', 'description' => 'Dropdown per-widget (Harian/Mingguan/Bulanan/Tahunan) yang menentukan rentang data yang ditampilkan pada grafik tersebut saja.', 'required' => false]
                 ]
             ],
             'master' => [

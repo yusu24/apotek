@@ -12,13 +12,14 @@ class AccountsImport implements ToModel, WithHeadingRow, WithValidation
     public function model(array $row)
     {
         return new Account([
-            'code'      => $row['kode_akun'],
-            'name'      => $row['nama_akun'],
-            'type'      => $row['tipe'],
-            'category'  => $row['kategori'],
-            'is_active' => true,
-            'is_system' => false,
-            'balance'   => 0,
+            'code'           => $row['kode_akun'],
+            'name'           => $row['nama_akun'],
+            'type'           => $row['tipe'],
+            'category'       => $row['kategori'],
+            'normal_balance' => in_array($row['tipe'], ['asset', 'expense']) ? 'debit' : 'credit',
+            'is_active'      => true,
+            'is_system'      => false,
+            'balance'        => 0,
         ]);
     }
 

@@ -74,6 +74,7 @@ class AuditTestSeeder extends Seeder
         ];
 
         foreach ($accounts as $acc) {
+            $acc['normal_balance'] = in_array($acc['type'], ['asset', 'expense']) ? 'debit' : 'credit';
             Account::create($acc);
         }
 

@@ -308,6 +308,8 @@ class AccountSeeder extends Seeder
         ];
 
         foreach ($accounts as $account) {
+            $account['normal_balance'] = in_array($account['type'], ['asset', 'expense']) ? 'debit' : 'credit';
+
             Account::updateOrCreate(
                 ['code' => $account['code']],
                 $account

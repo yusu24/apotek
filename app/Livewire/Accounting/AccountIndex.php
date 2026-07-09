@@ -105,6 +105,7 @@ class AccountIndex extends Component
                 'name' => $this->name,
                 'type' => $this->type,
                 'category' => $this->category,
+                'normal_balance' => in_array($this->type, ['asset', 'expense']) ? 'debit' : 'credit',
                 'is_active' => $this->is_active,
                 'is_system' => false,
                 'balance' => 0,

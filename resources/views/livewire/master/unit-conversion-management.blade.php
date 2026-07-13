@@ -5,12 +5,6 @@
         </h2>
     </x-slot>
 
-    @if (session()->has('message'))
-        <div class="mb-4 bg-green-50 border-l-4 border-green-400 p-4">
-            <p class="text-xs font-medium text-green-700">{{ session('message') }}</p>
-        </div>
-    @endif
-
     <div class="bg-white rounded-lg shadow">
         <div class="p-6 border-b border-gray-200 flex justify-between items-center">
             <div>

@@ -15,6 +15,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
+        <x-loading-bar />
+        <x-toast />
         <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 bg-gradient-to-tr from-slate-100 via-white to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
             <div class="w-full sm:max-w-md">
                 <!-- Logo Container -->

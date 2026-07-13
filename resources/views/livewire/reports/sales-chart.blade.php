@@ -1,17 +1,4 @@
 <div class="p-6">
-    @if(session()->has('message'))
-        <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 font-bold rounded shadow-sm flex items-center justify-between no-print">
-            <div>{{ session('message') }}</div>
-            <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900 font-bold">×</button>
-        </div>
-    @endif
-    @if(session()->has('error'))
-        <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold rounded shadow-sm flex items-center justify-between no-print">
-            <div>{{ session('error') }}</div>
-            <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900 font-bold">×</button>
-        </div>
-    @endif
-
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>

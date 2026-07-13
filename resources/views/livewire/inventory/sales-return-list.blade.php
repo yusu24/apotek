@@ -3,12 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">Retur Penjualan</h2>
     </div>
 
-    @if (session()->has('message'))
-        <div class="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700 text-xs font-medium">
-            {{ session('message') }}
-        </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">

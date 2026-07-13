@@ -3,18 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">Daftar Jabatan (Roles)</h2>
     </div>
 
-    @if (session()->has('message'))
-        <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded-r shadow-sm text-xs font-medium" role="alert">
-            {{ session('message') }}
-        </div>
-    @endif
-
-    @if (session()->has('error'))
-        <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-r shadow-sm text-xs font-medium" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex items-center gap-4 justify-end">
             <a href="{{ route('admin.roles.create') }}" wire:navigate class="btn btn-primary shrink-0">

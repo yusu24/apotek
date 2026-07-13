@@ -1,17 +1,4 @@
 <div class="p-6 space-y-6">
-    @if(session()->has('message'))
-        <div class="p-4 bg-green-100 border-l-4 border-green-500 text-green-700 font-bold rounded shadow-sm flex items-center justify-between no-print">
-            <div>{{ session('message') }}</div>
-            <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900 font-bold">×</button>
-        </div>
-    @endif
-    @if(session()->has('error'))
-        <div class="p-4 bg-red-100 border-l-4 border-red-500 text-red-700 font-bold rounded shadow-sm flex items-center justify-between no-print">
-            <div>{{ session('error') }}</div>
-            <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900 font-bold">×</button>
-        </div>
-    @endif
-
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
@@ -21,13 +8,6 @@
 
     {{-- Period Filter --}}
     <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden no-print mb-6 relative">
-        <div wire:loading wire:target="generateReport, setThisMonth, setLastMonth, setThisYear, startDate, endDate" class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-20">
-            <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm border">
-                <svg class="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span class="text-sm font-bold text-blue-600">Memperbarui Laporan...</span>
-            </div>
-        </div>
-
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
                 <div class="w-full md:w-40">

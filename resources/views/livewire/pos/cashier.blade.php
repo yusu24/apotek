@@ -219,8 +219,8 @@
                                 </td>
                                 <td class="px-2 py-3 text-center align-top">
                                     <div class="w-16 mx-auto">
-                                        <input type="number" 
-                                                wire:model.live.debounce.300ms="cart.{{ $id }}.qty"
+                                        <input type="number"
+                                                wire:model.blur="cart.{{ $id }}.qty"
                                                 class="w-full px-1 py-1 text-center text-xs font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                                                 min="1">
                                     </div>
@@ -894,9 +894,6 @@
                                             <p class="text-xs font-bold text-gray-700">Ambil Foto / Upload Bukti</p>
                                             <p class="text-[10px] text-gray-500">Format: JPG, PNG, WEBP (Maks. 4MB)</p>
                                         </div>
-                                    </div>
-                                    <div wire:loading wire:target="qris_proof" class="text-xs text-blue-600 mt-1 font-bold flex items-center gap-1">
-                                        <span class="animate-spin">⏳</span> Mengunggah berkas...
                                     </div>
                                 @endif
                                 @error('qris_proof')

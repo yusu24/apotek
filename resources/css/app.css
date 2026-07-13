@@ -386,3 +386,28 @@ table tbody tr:only-child td[colspan] div {
     height: 16px !important;
     flex-shrink: 0 !important;
 }
+
+/* ===== Global Top Loading Bar ===== */
+.loading-bar-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 9999;
+    overflow: hidden;
+    background: transparent;
+    pointer-events: none;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, #2563eb, transparent);
+    animation: loading-bar-indeterminate 1s ease-in-out infinite;
+}
+
+@keyframes loading-bar-indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
+}

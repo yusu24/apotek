@@ -414,6 +414,8 @@
     </script>
     </head>
     <body class="font-sans antialiased">
+        <x-loading-bar />
+        <x-toast />
         <div x-data="{}" class="h-screen bg-milky-white dark:bg-gray-900 overflow-hidden overflow-x-hidden flex flex-col">
             <livewire:layout.navigation />
 

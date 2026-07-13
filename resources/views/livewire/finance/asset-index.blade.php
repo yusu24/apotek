@@ -3,12 +3,6 @@
         <h2 class="text-2xl font-bold text-gray-800">Manajemen Aset Tetap</h2>
     </div>
 
-    @if (session()->has('message'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 mb-4 text-xs font-medium" role="alert">
-            <p>{{ session('message') }}</p>
-        </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b border-gray-100 flex flex-row justify-between items-center gap-3 flex-wrap">
             <div class="flex items-center gap-3 flex-wrap">

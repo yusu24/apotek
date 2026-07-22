@@ -994,7 +994,7 @@ class PdfController extends Controller
      */
     private function exportPurchaseOrderFormat($id, $format = 'a5')
     {
-        $po = \App\Models\PurchaseOrder::with(['supplier', 'items.product.unit', 'user'])->findOrFail($id);
+        $po = \App\Models\PurchaseOrder::with(['supplier', 'items.product.unit', 'items.unit', 'user'])->findOrFail($id);
 
         $storeName = \App\Models\Setting::get('store_name');
         if (!$storeName || $storeName === 'Laravel') {
@@ -1011,7 +1011,7 @@ class PdfController extends Controller
         /** @var \Illuminate\Support\Collection $items */
         $items = $po->items;
         $subtotal = $items->sum(function($item) {
-            return ($item->price ?? 0) * $item->qty;
+            return ($item->unit_price ?? 0) * $item->qty_ordered;
         });
 
         // Generate terbilang (simplified)

@@ -190,7 +190,7 @@
             <tr>
                 <th style="width: 80px;">Kode Barang</th>
                 <th>Nama Barang</th>
-                <th style="width: 40px;">Kts.</th>
+                <th style="width: 60px;">Kts.</th>
                 <th style="width: 70px;">@Harga</th>
                 <th style="width: 90px;">Total Harga</th>
             </tr>
@@ -201,14 +201,14 @@
             @endphp
             @foreach($po->items as $item)
             @php
-                $price = $item->price ?? 0;
-                $total = $item->qty * $price;
+                $price = $item->unit_price ?? 0;
+                $total = $item->qty_ordered * $price;
                 $subtotal += $total;
             @endphp
             <tr>
-                <td>{{ $item->product->barcode ?? 'BU.00186' }}</td>
+                <td>{{ $item->product->barcode ?? '-' }}</td>
                 <td>{{ $item->product->name }}</td>
-                <td class="text-center">{{ $item->qty }}</td>
+                <td class="text-center">{{ (float)$item->qty_ordered }} {{ $item->unit->name ?? $item->product->unit->name ?? 'pcs' }}</td>
                 <td class="text-right">{{ number_format($price, 0, ',', '.') }}</td>
                 <td class="text-right">{{ number_format($total, 0, ',', '.') }}</td>
             </tr>

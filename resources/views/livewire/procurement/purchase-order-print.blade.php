@@ -99,8 +99,8 @@
                     <div class="font-bold text-gray-900">{{ $item->product->name }}</div>
                     <div class="text-xs text-gray-500">Kode: {{ $item->product->barcode ?? '-' }}</div>
                 </td>
-                <td class="py-3 px-4 text-center font-bold">{{ $item->qty_ordered }}</td>
-                <td class="py-3 px-4 text-center text-gray-600">{{ $item->product->unit->name ?? 'pcs' }}</td>
+                <td class="py-3 px-4 text-center font-bold">{{ (float)$item->qty_ordered }}</td>
+                <td class="py-3 px-4 text-center text-gray-600">{{ $item->unit->name ?? $item->product->unit->name ?? 'pcs' }}</td>
             </tr>
             @endforeach
         </tbody>

@@ -241,10 +241,34 @@
 
                 <!-- Pengaturan Email / SMTP -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="mb-4 border-b pb-2">
-                        <h3 class="text-lg font-bold text-gray-800">Pengaturan Email (SMTP)</h3>
-                        <p class="text-sm text-gray-500">Konfigurasi ini digunakan untuk mengirimkan Laporan Mingguan dan Notifikasi.</p>
+                    <div class="mb-4 border-b pb-2 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Pengaturan Email (SMTP)</h3>
+                            <p class="text-sm text-gray-500">Konfigurasi ini digunakan untuk mengirimkan Laporan Mingguan dan Notifikasi.</p>
+                        </div>
+                        <button type="button" wire:click="testSmtpConnection" wire:loading.attr="disabled"
+                            class="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-bold rounded-lg text-xs flex items-center gap-2 transition-all shadow-sm">
+                            <span wire:loading.remove wire:target="testSmtpConnection">✉️ Tes Koneksi Email</span>
+                            <span wire:loading wire:target="testSmtpConnection" class="flex items-center gap-1">
+                                <svg class="animate-spin h-3.5 w-3.5 text-blue-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                Memeriksa koneksi...
+                            </span>
+                        </button>
                     </div>
+
+                    @if (session()->has('smtp_success'))
+                        <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg text-green-700 text-xs font-bold flex items-center gap-2">
+                            <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>{{ session('smtp_success') }}</span>
+                        </div>
+                    @endif
+
+                    @error('smtp_error')
+                        <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg text-red-700 text-xs font-bold flex items-center gap-2">
+                            <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                     
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

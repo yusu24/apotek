@@ -8,6 +8,7 @@ use Livewire\WithFileUploads;
 use App\Models\ActivityLog;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 #[Layout('layouts.app')]
 class StoreSettings extends Component
@@ -251,6 +252,52 @@ class StoreSettings extends Component
         $this->qris_image_url = null;
 
         $this->success_message = 'QRIS berhasil dihapus!';
+    }
+
+    public function testSmtpConnection()
+    {
+        $this->resetErrorBag();
+
+        $this->validate([
+            'mail_host' => 'required|string',
+            'mail_port' => 'required|numeric',
+            'mail_username' => 'required|string',
+            'mail_password' => 'required|string',
+            'mail_from_address' => 'required|email',
+        ], [
+            'mail_host.required' => 'Host SMTP wajib diisi untuk tes pengujian.',
+            'mail_port.required' => 'Port SMTP wajib diisi.',
+            'mail_username.required' => 'Username SMTP wajib diisi.',
+            'mail_password.required' => 'Password Aplikasi wajib diisi.',
+            'mail_from_address.required' => 'Email Pengirim wajib diisi.',
+        ]);
+
+        try {
+            config([
+                'mail.mailers.smtp.host' => $this->mail_host,
+                'mail.mailers.smtp.port' => $this->mail_port,
+                'mail.mailers.smtp.encryption' => $this->mail_encryption ?: 'tls',
+                'mail.mailers.smtp.username' => $this->mail_username,
+                'mail.mailers.smtp.password' => $this->mail_password,
+                'mail.from.address' => $this->mail_from_address,
+                'mail.from.name' => $this->mail_from_name ?: config('app.name'),
+            ]);
+
+            Mail::purge('smtp');
+
+            $recipient = $this->backup_email ?: $this->mail_from_address;
+            $storeName = $this->store_name ?: 'Apotek';
+
+            Mail::raw("Halo! Ini adalah email pengujian (test email) dari Sistem Apotek ({$storeName}).\n\nJika Anda menerima pesan ini, berarti koneksi SMTP server Anda telah TERHUBUNG DENGAN SUKSES!", function ($message) use ($recipient, $storeName) {
+                $message->to($recipient)
+                    ->subject('[Tes Koneksi Email SMTP] ' . $storeName);
+            });
+
+            session()->flash('smtp_success', "Berhasil! Email pengujian telah sukses terkirim ke {$recipient}. Server SMTP terhubung dengan lancar.");
+        } catch (\Exception $e) {
+            \Log::error('SMTP Test Error: ' . $e->getMessage());
+            $this->addError('smtp_error', 'Koneksi SMTP Gagal: ' . $e->getMessage());
+        }
     }
 
     public function render()

@@ -34,10 +34,10 @@ Karena Google mewajibkan proteksi keamanan tinggi, Anda **tidak boleh** mengguna
 
 | Nama Kolom | Contoh Pengisian | Penjelasan |
 | :--- | :--- | :--- |
-| **Email Pengirim Struk / Notifikasi** | `yusuf24ef@gmail.com` | Email yang bertugas mengirimkan struk belanja ke pelanggan. |
-| **Email Penerima Backup Database** | `info@apoteksehat.com` / `yusuf24ef@gmail.com` | Email milik Owner/Pemilik yang khusus menerima file backup database & laporan Excel mingguan. |
+| **Email Pengirim Struk / Notifikasi** | `ampotek9@gmail.com` | Email yang bertugas mengirimkan struk belanja ke pelanggan. |
+| **Email Penerima Backup Database** | `ampotek9@gmail.com` | Email milik Owner/Pemilik yang khusus menerima file backup database & laporan Excel mingguan. |
 | **Nama Pengirim Struk** | `Arrohmah Medica` | Nama apotek yang akan muncul sebagai nama pengirim di inbox email pelanggan. |
-| **Username Email (SMTP)** | `yusuf24ef@gmail.com` | Alamat email Gmail yang dipakai untuk login SMTP (sama dengan Email Pengirim). |
+| **Username Email (SMTP)** | `ampotek9@gmail.com` | Alamat email Gmail yang dipakai untuk login SMTP (sama dengan Email Pengirim). |
 | **Password Aplikasi (SMTP)** | `qjakbvqslzwwxyc` | Kode 16 karakter **App Password** dari Google yang disalin pada Langkah 1. |
 | **Host SMTP** | `smtp.gmail.com` | Server gateway Gmail (tetap diisi `smtp.gmail.com`). |
 | **Port** | `587` | Port enkripsi Gmail (tetap diisi `587`). |

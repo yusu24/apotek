@@ -52,6 +52,7 @@ class StoreSettings extends Component
     public $mail_encryption;
     public $mail_from_address;
     public $mail_from_name;
+    public $backup_email;
 
     public $success_message = '';
 
@@ -68,7 +69,8 @@ class StoreSettings extends Component
             'store_logo_path', 'store_login_logo_path', 'store_sidebar_logo_path',
             'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note',
             'store_qris_path', 'tax_scheme', 'tax_rate_umkm',
-            'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'
+            'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name',
+            'backup_email'
         ]);
 
         $this->store_name = $settings['store_name'] ?? '';
@@ -99,6 +101,7 @@ class StoreSettings extends Component
         $this->mail_encryption = $settings['mail_encryption'] ?? config('mail.mailers.smtp.encryption');
         $this->mail_from_address = $settings['mail_from_address'] ?? config('mail.from.address');
         $this->mail_from_name = $settings['mail_from_name'] ?? config('mail.from.name');
+        $this->backup_email = $settings['backup_email'] ?? $settings['mail_from_address'] ?? $settings['store_email'] ?? '';
     }
 
     public function save()
@@ -126,6 +129,7 @@ class StoreSettings extends Component
             'mail_encryption' => 'nullable|string|max:50',
             'mail_from_address' => 'nullable|email|max:255',
             'mail_from_name' => 'nullable|string|max:255',
+            'backup_email' => 'nullable|email|max:255',
         ]);
 
         if ($this->store_logo) {
@@ -190,6 +194,7 @@ class StoreSettings extends Component
         Setting::set('mail_encryption', $this->mail_encryption);
         Setting::set('mail_from_address', $this->mail_from_address);
         Setting::set('mail_from_name', $this->mail_from_name);
+        Setting::set('backup_email', $this->backup_email);
 
         ActivityLog::log([
             'action' => 'updated',

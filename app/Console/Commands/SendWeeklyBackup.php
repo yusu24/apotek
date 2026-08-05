@@ -51,9 +51,9 @@ class SendWeeklyBackup extends Command
         }
 
         // Send Email
-        $targetEmail = config('mail.from.address');
+        $targetEmail = \App\Models\Setting::get('backup_email', \App\Models\Setting::get('store_email', config('mail.from.address')));
         if (empty($targetEmail)) {
-            $this->error('Target email (MAIL_FROM_ADDRESS) is not configured.');
+            $this->error('Target email for backup is not configured.');
             return 1;
         }
 

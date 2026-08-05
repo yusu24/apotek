@@ -249,18 +249,25 @@
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1">Email Pengirim</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email Pengirim Struk / Notifikasi</label>
                                 <input type="email" wire:model="mail_from_address" placeholder="toko@gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <p class="mt-1 text-xs text-gray-500">Email pengirim saat mengirimkan e-struk ke pelanggan.</p>
                                 @error('mail_from_address') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1">Nama Pengirim</label>
-                                <input type="text" wire:model="mail_from_name" placeholder="Apotek Sehat" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                @error('mail_from_name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email Penerima Backup Database</label>
+                                <input type="email" wire:model="backup_email" placeholder="owner@gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <p class="mt-1 text-xs text-gray-500">Email khusus penerima laporan backup database mingguan.</p>
+                                @error('backup_email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nama Pengirim Struk</label>
+                                <input type="text" wire:model="mail_from_name" placeholder="Apotek Sehat" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_from_name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Username Email (SMTP)</label>
                                 <input type="email" wire:model="mail_username" placeholder="toko@gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -270,7 +277,7 @@
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Password Aplikasi (SMTP)</label>
                                 <input type="password" wire:model="mail_password" placeholder="Gunakan App Password" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                 @error('mail_password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                <p class="mt-1 text-[10px] text-gray-500">Jika pakai Gmail, buat "App Password" dari Pengaturan Akun Google.</p>
+                                <p class="mt-1 text-[10px] text-gray-500">Jika pakai Gmail, buat "App Password" dari Akun Google.</p>
                             </div>
                         </div>
 

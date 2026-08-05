@@ -37,6 +37,28 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                $mailSettings = \App\Models\Setting::whereIn('key', [
+                    'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'
+                ])->pluck('value', 'key')->toArray();
+
+                if (!empty($mailSettings['mail_host'])) {
+                    config([
+                        'mail.mailers.smtp.host' => $mailSettings['mail_host'],
+                        'mail.mailers.smtp.port' => $mailSettings['mail_port'] ?? config('mail.mailers.smtp.port'),
+                        'mail.mailers.smtp.encryption' => $mailSettings['mail_encryption'] ?? config('mail.mailers.smtp.encryption'),
+                        'mail.mailers.smtp.username' => $mailSettings['mail_username'] ?? config('mail.mailers.smtp.username'),
+                        'mail.mailers.smtp.password' => $mailSettings['mail_password'] ?? config('mail.mailers.smtp.password'),
+                        'mail.from.address' => $mailSettings['mail_from_address'] ?? config('mail.from.address'),
+                        'mail.from.name' => $mailSettings['mail_from_name'] ?? config('mail.from.name'),
+                    ]);
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignore DB errors during early boot/migrations
+        }
+
         // Prevent modification when impersonating
         if (!app()->runningInConsole()) {
             \Illuminate\Database\Eloquent\Model::saving(function ($model) {

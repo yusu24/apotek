@@ -239,6 +239,61 @@
                     </div>
                 </div>
 
+                <!-- Pengaturan Email / SMTP -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="mb-4 border-b pb-2">
+                        <h3 class="text-lg font-bold text-gray-800">Pengaturan Email (SMTP)</h3>
+                        <p class="text-sm text-gray-500">Konfigurasi ini digunakan untuk mengirimkan Laporan Mingguan dan Notifikasi.</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Email Pengirim</label>
+                                <input type="email" wire:model="mail_from_address" placeholder="toko@gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_from_address') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nama Pengirim</label>
+                                <input type="text" wire:model="mail_from_name" placeholder="Apotek Sehat" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_from_name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Username Email (SMTP)</label>
+                                <input type="email" wire:model="mail_username" placeholder="toko@gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_username') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Password Aplikasi (SMTP)</label>
+                                <input type="password" wire:model="mail_password" placeholder="Gunakan App Password" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                <p class="mt-1 text-[10px] text-gray-500">Jika pakai Gmail, buat "App Password" dari Pengaturan Akun Google.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Host SMTP</label>
+                                <input type="text" wire:model="mail_host" placeholder="smtp.gmail.com" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_host') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Port</label>
+                                <input type="text" wire:model="mail_port" placeholder="587" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_port') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Enkripsi</label>
+                                <input type="text" wire:model="mail_encryption" placeholder="tls / ssl" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                @error('mail_encryption') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Pengaturan Pajak -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <div class="mb-4 border-b pb-2">

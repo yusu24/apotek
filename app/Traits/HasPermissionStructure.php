@@ -39,6 +39,7 @@ trait HasPermissionStructure
                     'view stock movements' => ['label' => 'Riwayat Mutasi Stok', 'type' => 'view'],
                     'view purchase orders' => ['label' => 'Pesanan Pembelian (PO)', 'type' => 'view'],
                     'view goods receipts' => ['label' => 'Penerimaan Pesanan', 'type' => 'view'],
+                    'delete goods receipts' => ['label' => 'Hapus Penerimaan Pesanan', 'type' => 'action'],
                 ]
             ],
             'Retur Barang' => [

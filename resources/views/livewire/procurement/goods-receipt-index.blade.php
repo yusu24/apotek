@@ -137,6 +137,13 @@
                                         </a>
                                     @endcan
                                     
+                                    @can('delete goods receipts')
+                                        <button wire:click="confirmDelete({{ $gr->id }})" 
+                                            class="text-red-500 hover:text-red-700 transition-colors duration-200" title="Hapus Penerimaan">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    @endcan
+
                                     <button wire:click="showDetail({{ $gr->id }})" 
                                         class="text-blue-600 hover:text-blue-900 transition-colors duration-200" title="Lihat Detail">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -375,6 +382,83 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Delete Confirmation Modal -->
+    @if($showDeleteModal && $deleteReceipt)
+    <div wire:key="delete-modal-{{ $deleteId }}" class="fixed inset-0 z-[70] overflow-y-auto" aria-labelledby="delete-modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" wire:click="closeDeleteModal"></div>
+
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full border border-gray-100 animate-fade-in-up">
+                <!-- Modal Header -->
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-red-50/50">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-red-100 rounded-xl text-red-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900" id="delete-modal-title">
+                            Konfirmasi Hapus Penerimaan Barang
+                        </h3>
+                    </div>
+                    <button wire:click="closeDeleteModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-200/50">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    @error('delete_error')
+                        <div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
+                            <p class="text-xs font-bold text-red-700">{{ $message }}</p>
+                        </div>
+                    @enderror
+
+                    <p class="text-sm text-gray-600">
+                        Apakah Anda yakin ingin menghapus data penerimaan barang <strong class="text-gray-900">No. SJ: {{ $deleteReceipt->delivery_note_number }}</strong>?
+                    </p>
+
+                    <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100 text-xs text-gray-600">
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-400">Supplier:</span>
+                            <span class="font-bold text-gray-800">{{ $deleteReceipt->purchaseOrder->supplier->name ?? 'Direct' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-400">Tanggal Terima:</span>
+                            <span class="font-bold text-gray-800">{{ \Carbon\Carbon::parse($deleteReceipt->received_date)->format('d/m/Y') }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium text-gray-400">Total Transaksi:</span>
+                            <span class="font-bold text-red-600">Rp. {{ number_format($deleteReceipt->total_amount, 0, ',', '.') }},-</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 space-y-1">
+                        <div class="font-bold flex items-center gap-1">
+                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Dampak Penghapusan:
+                        </div>
+                        <ul class="list-disc list-inside space-y-0.5 text-[11px] text-amber-700">
+                            <li>Stok barang yang diterima dari transaksi ini akan dikurangi.</li>
+                            <li>Jurnal akuntansi dan sisa hutang akan dibatalkan.</li>
+                            <li>Status Purchase Order (PO) terkait akan dikembalikan ke posisi semula.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                    <button type="button" wire:click="closeDeleteModal"
+                        class="btn btn-secondary">
+                        Batal
+                    </button>
+                    <button type="button" wire:click="deleteGoodsReceipt"
+                        class="btn bg-red-600 hover:bg-red-700 text-white font-bold">
+                        Ya, Hapus Penerimaan
+                    </button>
+                </div>
             </div>
         </div>
     </div>

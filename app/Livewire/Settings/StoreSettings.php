@@ -44,6 +44,15 @@ class StoreSettings extends Component
     public $store_qris_image;
     public $qris_image_url;
 
+    // Email / SMTP
+    public $mail_host;
+    public $mail_port;
+    public $mail_username;
+    public $mail_password;
+    public $mail_encryption;
+    public $mail_from_address;
+    public $mail_from_name;
+
     public $success_message = '';
 
     public function mount()
@@ -59,6 +68,7 @@ class StoreSettings extends Component
             'store_logo_path', 'store_login_logo_path', 'store_sidebar_logo_path',
             'store_bank_name', 'store_bank_account', 'store_bank_holder', 'store_footer_note',
             'store_qris_path', 'tax_scheme', 'tax_rate_umkm',
+            'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'
         ]);
 
         $this->store_name = $settings['store_name'] ?? '';
@@ -81,6 +91,14 @@ class StoreSettings extends Component
 
         $this->tax_scheme = $settings['tax_scheme'] ?? 'manual';
         $this->tax_rate_umkm = $settings['tax_rate_umkm'] ?? '0.5';
+
+        $this->mail_host = $settings['mail_host'] ?? config('mail.mailers.smtp.host');
+        $this->mail_port = $settings['mail_port'] ?? config('mail.mailers.smtp.port');
+        $this->mail_username = $settings['mail_username'] ?? config('mail.mailers.smtp.username');
+        $this->mail_password = $settings['mail_password'] ?? config('mail.mailers.smtp.password');
+        $this->mail_encryption = $settings['mail_encryption'] ?? config('mail.mailers.smtp.encryption');
+        $this->mail_from_address = $settings['mail_from_address'] ?? config('mail.from.address');
+        $this->mail_from_name = $settings['mail_from_name'] ?? config('mail.from.name');
     }
 
     public function save()
@@ -101,6 +119,13 @@ class StoreSettings extends Component
             'store_qris_image' => 'nullable|image|max:2048',
             'tax_scheme' => 'required|in:manual,umkm_final',
             'tax_rate_umkm' => 'required_if:tax_scheme,umkm_final|nullable|numeric|min:0|max:100',
+            'mail_host' => 'nullable|string|max:255',
+            'mail_port' => 'nullable|numeric',
+            'mail_username' => 'nullable|string|max:255',
+            'mail_password' => 'nullable|string|max:255',
+            'mail_encryption' => 'nullable|string|max:50',
+            'mail_from_address' => 'nullable|email|max:255',
+            'mail_from_name' => 'nullable|string|max:255',
         ]);
 
         if ($this->store_logo) {
@@ -157,6 +182,14 @@ class StoreSettings extends Component
 
         Setting::set('tax_scheme', $this->tax_scheme);
         Setting::set('tax_rate_umkm', $this->tax_rate_umkm);
+
+        Setting::set('mail_host', $this->mail_host);
+        Setting::set('mail_port', $this->mail_port);
+        Setting::set('mail_username', $this->mail_username);
+        Setting::set('mail_password', $this->mail_password);
+        Setting::set('mail_encryption', $this->mail_encryption);
+        Setting::set('mail_from_address', $this->mail_from_address);
+        Setting::set('mail_from_name', $this->mail_from_name);
 
         ActivityLog::log([
             'action' => 'updated',

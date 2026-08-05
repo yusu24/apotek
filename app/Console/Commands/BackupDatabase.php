@@ -46,12 +46,27 @@ class BackupDatabase extends Command
         $dbPass = config('database.connections.mysql.password');
         
         // Detect OS and set mysqldump path
-        $mysqldumpPath = 'mysqldump'; // Default for Linux/VPS or if in PATH
+        $mysqldumpPath = env('DB_DUMP_PATH', 'mysqldump'); // Default for Linux/VPS or if in PATH
         
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $xamppPath = 'C:\xampp\mysql\bin\mysqldump.exe';
-            if (file_exists($xamppPath)) {
-                $mysqldumpPath = $xamppPath;
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && $mysqldumpPath === 'mysqldump') {
+            $possiblePaths = [
+                'C:\xampp\mysql\bin\mysqldump.exe',
+                'D:\xampp\mysql\bin\mysqldump.exe',
+            ];
+            
+            foreach ($possiblePaths as $p) {
+                if (file_exists($p)) {
+                    $mysqldumpPath = $p;
+                    break;
+                }
+            }
+
+            // Check for Laragon if not found in XAMPP
+            if ($mysqldumpPath === 'mysqldump') {
+                $laragonPaths = glob('C:\laragon\bin\mysql\*\bin\mysqldump.exe');
+                if (!empty($laragonPaths)) {
+                    $mysqldumpPath = $laragonPaths[0];
+                }
             }
         }
 
@@ -64,17 +79,32 @@ class BackupDatabase extends Command
             "--result-file={$path}"
         ];
 
+        // Remove password argument if password is empty to avoid some mysqldump issues
+        if (empty($dbPass)) {
+            $command = array_filter($command, fn($arg) => !str_starts_with($arg, '--password='));
+            $command = array_values($command); // re-index
+        }
+
         $process = new Process($command);
         
         try {
             $process->mustRun();
             
-            // Compress the backup
+            // Compress the backup using stream to prevent memory exhaustion
             if (file_exists($path)) {
-                $content = file_get_contents($path);
-                file_put_contents($path . '.gz', gzencode($content, 9));
-                unlink($path); // Delete the uncompressed .sql file
-                $this->info("Backup created and compressed: {$filename}.gz");
+                $src = fopen($path, 'rb');
+                $dest = gzopen($path . '.gz', 'wb9');
+                if ($src && $dest) {
+                    while (!feof($src)) {
+                        gzwrite($dest, fread($src, 1024 * 512)); // 512KB chunks
+                    }
+                    fclose($src);
+                    gzclose($dest);
+                    unlink($path); // Delete the uncompressed .sql file
+                    $this->info("Backup created and compressed: {$filename}.gz");
+                } else {
+                    $this->error("Failed to open file for compression.");
+                }
             }
             
             // Cleanup older backups (keep last 30 days)

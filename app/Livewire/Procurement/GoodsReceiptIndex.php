@@ -164,11 +164,7 @@ class GoodsReceiptIndex extends Component
                     $je->delete();
                 }
 
-                $extraJournals = \App\Models\JournalEntry::where('doc_ref', 'like', 'GR-' . $gr->id . '%')->get();
-                foreach ($extraJournals as $ej) {
-                    $ej->lines()->delete();
-                    $ej->delete();
-                }
+
 
                 // 4. Revert Batch Stock & Movements
                 foreach ($gr->items as $item) {

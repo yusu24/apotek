@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
          <h2 class="text-2xl font-bold text-gray-800">
-            Kelola Pengeluaran
+            Kelola Pengeluaran & Pemasukan
          </h2>
     </div>
 
@@ -13,7 +13,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
                 <input wire:model.live.debounce.300ms="search" 
-                    type="text" placeholder="Cari deskripsi atau kategori..." 
+                    type="text" placeholder="Cari deskripsi..." 
                     class="w-full pl-10 pr-4 rounded-lg border-gray-300 text-sm py-2 focus:ring-2 focus:ring-blue-500 transition-all bg-white shadow-sm">
             </div>
 
@@ -21,7 +21,7 @@
             <div class="flex items-center gap-3 flex-wrap w-full md:w-auto justify-end">
                 <button wire:click="create" class="btn btn-primary flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span>Pengeluaran</span>
+                    <span>Tambah Transaksi</span>
                 </button>
 
                 <!-- Export Buttons -->
@@ -84,7 +84,7 @@
 
             {{-- Custom date range inputs --}}
             @if($filterPeriod === 'custom')
-                <div class="flex items-center gap-2 ml-0 sm:ml-2" x-data>
+                <div class="flex items-center gap-2 ml-0 sm:ml-2 mt-2 sm:mt-0" x-data>
                     <div wire:ignore>
                         <input 
                             x-data="{
@@ -107,10 +107,10 @@
                             x-ref="filterFromInput"
                             type="text"
                             placeholder="Dari tanggal"
-                            class="w-32 rounded-lg border-gray-300 text-xs py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                            class="w-32 rounded-lg border-gray-300 text-sm py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
                         />
                     </div>
-                    <span class="text-gray-400 text-xs">—</span>
+                    <span class="text-gray-400 text-sm">—</span>
                     <div wire:ignore>
                         <input 
                             x-data="{
@@ -133,18 +133,69 @@
                             x-ref="filterToInput"
                             type="text"
                             placeholder="Sampai tanggal"
-                            class="w-32 rounded-lg border-gray-300 text-xs py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
+                            class="w-32 rounded-lg border-gray-300 text-sm py-1.5 px-3 focus:ring-2 focus:ring-blue-500 bg-white shadow-sm"
                         />
                     </div>
                 </div>
             @endif
         </div>
 
+        {{-- Summary Cards --}}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+
+            {{-- Card: Total Pengeluaran --}}
+            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-bold uppercase tracking-wider text-white text-opacity-90 mb-0.5">Total Pengeluaran</p>
+                    <p class="text-xl font-extrabold text-white truncate">Rp {{ number_format($totalExpense, 0, ',', '.') }}</p>
+                </div>
+            </div>
+
+            {{-- Card: Total Pemasukan --}}
+            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
+                <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-bold uppercase tracking-wider text-white mb-0.5">Total Pemasukan</p>
+                    <p class="text-xl font-extrabold text-white truncate">Rp {{ number_format($totalIncome, 0, ',', '.') }}</p>
+                </div>
+            </div>
+
+            {{-- Card: Net --}}
+            @php
+                $netBg = $totalNet >= 0 ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)' : 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)';
+            @endphp
+            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: {{ $netBg }};">
+                <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-bold uppercase tracking-wider text-white text-opacity-90 mb-0.5">
+                        Net {{ $totalNet < 0 ? '(Defisit)' : '(Surplus)' }}
+                    </p>
+                    <p class="text-xl font-extrabold text-white truncate">
+                        {{ $totalNet < 0 ? '-' : '' }}Rp {{ number_format(abs($totalNet), 0, ',', '.') }}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
         <div class="overflow-x-auto rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider">
+                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th wire:click="sortByColumn('date')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('date')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tanggal
                                 @if($sortBy === 'date')
@@ -154,7 +205,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('description')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('description')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Keterangan
                                 @if($sortBy === 'description')
@@ -164,8 +215,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">Tipe</th>
-                        <th wire:click="sortByColumn('category')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th class="px-6 py-3.5 text-left whitespace-nowrap">Tipe</th>
+                        <th wire:click="sortByColumn('category')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Kategori
                                 @if($sortBy === 'category')
@@ -175,8 +226,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">Sumber Dana</th>
-                        <th wire:click="sortByColumn('amount')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th class="px-6 py-3.5 text-left whitespace-nowrap">Sumber Dana</th>
+                        <th wire:click="sortByColumn('amount')" class="px-6 py-3.5 text-right cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center justify-end gap-1">
                                 Jumlah (Rp)
                                 @if($sortBy === 'amount')
@@ -186,26 +237,32 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">User</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-6 py-3.5 text-left whitespace-nowrap">User</th>
+                        <th class="px-6 py-3.5 text-right whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($expenses as $expense)
-                        <tr>
+                        <tr class="hover:bg-gray-50 transition duration-150">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $expense->description }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 @if($expense->type === 'income')
-                                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase tracking-tighter">Pemasukan</span>
+                                    <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs font-medium inline-flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                        Pemasukan
+                                    </span>
                                 @else
-                                    <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[10px] font-bold uppercase tracking-tighter">Pengeluaran</span>
+                                    <span class="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-200 rounded-md text-xs font-medium inline-flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Pengeluaran
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($expense->account)
-                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-[10px] font-bold border border-gray-200 uppercase tracking-tighter">
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium border border-gray-200">
                                         {{ $expense->account->name }}
                                     </span>
                                 @else
@@ -215,7 +272,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->user->name ?? 'System' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
+                                <div class="flex items-center justify-end gap-2">
                                     <button wire:click="edit({{ $expense->id }})" 
                                         class="text-indigo-600 hover:text-indigo-900 transition-colors" title="Edit">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -231,6 +288,20 @@
                         <x-empty-table colspan="8" />
                     @endforelse
                 </tbody>
+                <tfoot class="bg-gray-50 border-t-2 border-gray-300">
+                    <tr>
+                        <td colspan="5" class="px-6 py-3 text-sm font-bold text-gray-700 text-right">Total ({{ $expenses->total() }} data):</td>
+                        <td class="px-6 py-3 text-right">
+                            <div class="flex flex-col items-end gap-0.5">
+                                <span class="text-sm font-bold text-red-700">- Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
+                                @if($totalIncome > 0)
+                                    <span class="text-sm font-bold text-green-700">+ Rp {{ number_format($totalIncome, 0, ',', '.') }}</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <div class="px-6 py-4 border-t border-gray-100">
@@ -249,7 +320,7 @@
                         <div class="sm:flex sm:items-start">
                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    {{ $isEditing ? 'Edit Pengeluaran' : 'Tambah Pengeluaran' }}
+                                    {{ $isEditing ? ($type === 'income' ? 'Edit Pemasukan Lain-lain' : 'Edit Pengeluaran') : ($type === 'income' ? 'Tambah Pemasukan Lain-lain' : 'Tambah Pengeluaran') }}
                                 </h3>
                                 <div class="mt-4 space-y-4">
                                     <div>
@@ -291,15 +362,17 @@
                                         @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700">Tipe Transaksi</label>
-                                        <div class="mt-1 grid grid-cols-2 gap-2">
-                                            <label class="flex items-center justify-center gap-2 border rounded-md py-2 cursor-pointer text-sm {{ $type === 'expense' ? 'border-red-500 bg-red-50 text-red-700 font-semibold' : 'border-gray-300 text-gray-600' }}">
-                                                <input type="radio" wire:model="type" value="expense" class="hidden">
-                                                Pengeluaran
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Transaksi</label>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <label class="flex items-center justify-center gap-2 border-2 rounded-xl py-2.5 px-3 cursor-pointer text-sm transition-all {{ $type === 'expense' ? 'border-red-500 bg-red-50 text-red-700 font-bold shadow-sm' : 'border-gray-200 text-gray-500 hover:bg-gray-50' }}">
+                                                <input type="radio" wire:model.live="type" value="expense" class="hidden">
+                                                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+                                                <span>Pengeluaran</span>
                                             </label>
-                                            <label class="flex items-center justify-center gap-2 border rounded-md py-2 cursor-pointer text-sm {{ $type === 'income' ? 'border-green-500 bg-green-50 text-green-700 font-semibold' : 'border-gray-300 text-gray-600' }}">
-                                                <input type="radio" wire:model="type" value="income" class="hidden">
-                                                Pemasukan Lain-lain
+                                            <label class="flex items-center justify-center gap-2 border-2 rounded-xl py-2.5 px-3 cursor-pointer text-sm transition-all {{ $type === 'income' ? 'border-green-500 bg-green-50 text-green-700 font-bold shadow-sm' : 'border-gray-200 text-gray-500 hover:bg-gray-50' }}">
+                                                <input type="radio" wire:model.live="type" value="income" class="hidden">
+                                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                                                <span>Pemasukan Lain-lain</span>
                                             </label>
                                         </div>
                                         @error('type') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror

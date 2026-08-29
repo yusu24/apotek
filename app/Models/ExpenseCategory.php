@@ -9,7 +9,7 @@ class ExpenseCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'is_active'];
+    protected $fillable = ['name', 'type', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -24,6 +24,24 @@ class ExpenseCategory extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function scopeExpense($query)
+    {
+        return $query->where('type', 'expense');
+    }
+
+    public function scopeIncome($query)
+    {
+        return $query->where('type', 'income');
+    }
+
+    public function scopeOfType($query, $type)
+    {
+        if ($type && in_array($type, ['expense', 'income'])) {
+            return $query->where('type', $type);
+        }
+        return $query;
     }
 
     public function expenses()

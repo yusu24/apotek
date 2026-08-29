@@ -1,30 +1,43 @@
 <div class="p-6">
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">
-            Kelola Kategori Pengeluaran
+            Kelola Kategori Pengeluaran & Pemasukan
         </h2>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-3 mb-6">
-            <div class="relative w-full md:w-64">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </span>
-                <input type="text" wire:model.live="search" placeholder="Cari..." 
-                    class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <!-- Left side: Search & Filter Type -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input type="text" wire:model.live="search" placeholder="Cari kategori..." 
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+                </div>
+
+                <!-- Dropdown Filter Tipe -->
+                <div class="w-full sm:w-48">
+                    <select wire:model.live="filterType" class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+                        <option value="">Semua Tipe Kategori</option>
+                        <option value="expense">🔴 Pengeluaran ({{ $totalExpenseCategories }})</option>
+                        <option value="income">🟢 Pemasukan ({{ $totalIncomeCategories }})</option>
+                    </select>
+                </div>
             </div>
 
+            <!-- Right side: Actions -->
             <div class="flex items-center gap-2 w-full md:w-auto flex-wrap justify-end">
                 @can('manage expense categories')
-                <button wire:click="create" class="btn btn-primary shrink-0">
+                <button wire:click="create" class="btn btn-primary shrink-0 flex items-center gap-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    <span class="hidden sm:inline">Kategori</span>
+                    <span>Tambah Kategori</span>
                 </button>
 
-                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import shrink-0">
+                <button x-data @click="$dispatch('open-import-modal')" class="btn btn-import shrink-0 flex items-center gap-1.5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     <span class="hidden sm:inline">Import</span>
                 </button>
@@ -36,16 +49,30 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4 text-left">Nama Kategori</th>
-                        <th class="px-6 py-4 text-left">Deskripsi</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-6 py-3.5 text-left">Nama Kategori</th>
+                        <th class="px-6 py-3.5 text-left">Tipe</th>
+                        <th class="px-6 py-3.5 text-left">Deskripsi</th>
+                        <th class="px-6 py-3.5 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                {{ $category->name }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-bold text-gray-900">{{ $category->name }}</span>
+                                @if(($category->type ?? 'expense') === 'income')
+                                    <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs inline-flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                        Pemasukan
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-200 rounded-md text-xs inline-flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Pengeluaran
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
                                 {{ $category->description ?? '-' }}
@@ -58,7 +85,7 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </button>
                                     <button wire:click="delete({{ $category->id }})" 
-                                        wire:confirm="Hapus kategori ini? Data pengeluaran terkait tidak akan terhapus, namun tidak akan memiliki kategori lagi."
+                                        wire:confirm="Hapus kategori ini? Data transaksi terkait tidak akan terhapus, namun tidak akan memiliki kategori lagi."
                                         class="text-red-600 hover:text-red-900 transition-colors" title="Hapus">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
@@ -69,7 +96,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="3" message="Belum ada kategori pengeluaran." />
+                        <x-empty-table colspan="4" message="Belum ada data kategori." />
                     @endforelse
                 </tbody>
             </table>

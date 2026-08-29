@@ -120,11 +120,11 @@ class ExpenseManager extends Component
         return $query;
     }
 
-    public function create()
+    public function create($type = 'expense')
     {
         $this->reset(['description', 'amount', 'category', 'accountId', 'isEditing', 'editId']);
         $this->date = Carbon::now()->format('Y-m-d');
-        $this->type = 'expense';
+        $this->type = in_array($type, ['expense', 'income']) ? $type : 'expense';
         $this->showModal = true;
     }
 
@@ -312,8 +312,26 @@ public function render()
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
         $expenses->onEachSide(1);
+
+        // Hitung total dari semua data terfilter (bukan hanya halaman ini)
+        $totalQuery = Expense::when($this->search, function($q) {
+                $q->where(function($sub) {
+                    $sub->where('description', 'like', '%' . $this->search . '%')
+                         ->orWhere('category', 'like', '%' . $this->search . '%');
+                });
+            });
+        $this->applyDateFilter($totalQuery);
+
+        $totalExpense = (clone $totalQuery)->where('type', 'expense')->sum('amount');
+        $totalIncome  = (clone $totalQuery)->where('type', 'income')->sum('amount');
+        $totalNet     = $totalIncome - $totalExpense;
         
-        $categories = ExpenseCategory::active()->orderBy('name')->get();
+        $categories = ExpenseCategory::active()
+            ->when($this->type, function($q) {
+                $q->where('type', $this->type);
+            })
+            ->orderBy('name')
+            ->get();
         
         // Load active accounts (Kas, Bank, Utang)
         $accounts = \App\Models\Account::active()
@@ -322,9 +340,12 @@ public function render()
             ->get();
             
         return view('livewire.finance.expense-manager', [
-            'expenses' => $expenses,
-            'categories' => $categories,
-            'accounts' => $accounts,
+            'expenses'     => $expenses,
+            'categories'   => $categories,
+            'accounts'     => $accounts,
+            'totalExpense' => $totalExpense,
+            'totalIncome'  => $totalIncome,
+            'totalNet'     => $totalNet,
         ]);
     }
 }

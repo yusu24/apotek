@@ -54,8 +54,8 @@ new class extends Component
         'finance.profit-loss' => 'Laporan Laba Rugi',
         'finance.balance-sheet' => 'Neraca (Standar)',
         'finance.income-statement' => 'Laporan Arus Kas',
-        'finance.expenses' => 'Pengeluaran',
-        'finance.expense-categories' => 'Kategori Pengeluaran',
+        'finance.expenses' => 'Pengeluaran & Pemasukan',
+        'finance.expense-categories' => 'Kategori Transaksi',
         'finance.opening-balance' => 'Neraca Saldo Awal',
         'finance.trial-balance' => 'Neraca Saldo Awal',
         'finance.cash-flow' => 'Laporan Arus Kas',
@@ -451,14 +451,14 @@ new class extends Component
                     @can('view expenses')
                     <a href="{{ route('finance.expenses') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.expenses') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengeluaran</span>
+                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Pengeluaran & Pemasukan</span>
                     </a>
                     @endcan
 
                     @can('manage expense categories')
                     <a href="{{ route('finance.expense-categories') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('finance.expense-categories') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 7.586V3a1 1 0 011-1zm0 6h.01"></path></svg>
-                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kategori Pengeluaran</span>
+                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Kategori Transaksi</span>
                     </a>
                     @endcan
 

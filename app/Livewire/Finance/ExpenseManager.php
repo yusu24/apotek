@@ -10,6 +10,7 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\JournalEntry;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 #[Layout('layouts.app')]
 class ExpenseManager extends Component
@@ -233,10 +234,12 @@ class ExpenseManager extends Component
         $expense = Expense::findOrFail($id);
         $oldData = $expense->toArray();
 
-        // Deleting the expense without also removing its auto-journal used to leave the
-        // journal (and the account balance it affected) permanently orphaned.
-        $this->removeExpenseJournal($expense->id);
-        $expense->delete();
+        DB::transaction(function () use ($expense) {
+            // Deleting the expense without also removing its auto-journal used to leave the
+            // journal (and the account balance it affected) permanently orphaned.
+            $this->removeExpenseJournal($expense->id);
+            $expense->delete();
+        });
 
         ActivityLog::log([
             'action' => 'deleted',

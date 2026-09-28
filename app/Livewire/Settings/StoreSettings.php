@@ -98,7 +98,16 @@ class StoreSettings extends Component
         $this->mail_host = $settings['mail_host'] ?? config('mail.mailers.smtp.host');
         $this->mail_port = $settings['mail_port'] ?? config('mail.mailers.smtp.port');
         $this->mail_username = $settings['mail_username'] ?? config('mail.mailers.smtp.username');
-        $this->mail_password = $settings['mail_password'] ?? config('mail.mailers.smtp.password');
+        $rawMailPass = $settings['mail_password'] ?? config('mail.mailers.smtp.password');
+        if (!empty($rawMailPass)) {
+            try {
+                $this->mail_password = \Illuminate\Support\Facades\Crypt::decryptString($rawMailPass);
+            } catch (\Throwable $e) {
+                $this->mail_password = $rawMailPass;
+            }
+        } else {
+            $this->mail_password = '';
+        }
         $this->mail_encryption = $settings['mail_encryption'] ?? config('mail.mailers.smtp.encryption');
         $this->mail_from_address = $settings['mail_from_address'] ?? config('mail.from.address');
         $this->mail_from_name = $settings['mail_from_name'] ?? config('mail.from.name');
@@ -191,7 +200,10 @@ class StoreSettings extends Component
         Setting::set('mail_host', $this->mail_host);
         Setting::set('mail_port', $this->mail_port);
         Setting::set('mail_username', $this->mail_username);
-        Setting::set('mail_password', $this->mail_password);
+        $encryptedPass = !empty($this->mail_password) 
+            ? \Illuminate\Support\Facades\Crypt::encryptString($this->mail_password) 
+            : '';
+        Setting::set('mail_password', $encryptedPass);
         Setting::set('mail_encryption', $this->mail_encryption);
         Setting::set('mail_from_address', $this->mail_from_address);
         Setting::set('mail_from_name', $this->mail_from_name);

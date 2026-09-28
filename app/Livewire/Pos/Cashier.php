@@ -804,6 +804,7 @@ class Cashier extends Component
 
     public function updatedGlobalDiscount()
     {
+        $this->global_discount = max(0, min((float)$this->global_discount, (float)$this->subtotal));
         $this->calculateTotal();
     }
 
@@ -882,11 +883,12 @@ class Cashier extends Component
             'transaction_date' => 'required|date|before_or_equal:' . date('Y-m-d'),
         ];
         if ($this->payment_method === 'qris' && $this->qris_proof) {
-            $validationRules['qris_proof'] = 'nullable|image|max:4096';
+            $validationRules['qris_proof'] = 'nullable|image|mimes:jpeg,jpg,png,webp|max:4096';
         }
         $this->validate($validationRules, [
             'transaction_date.before_or_equal' => 'Tanggal transaksi tidak boleh melebihi hari ini.',
             'qris_proof.image' => 'File bukti pembayaran harus berupa gambar.',
+            'qris_proof.mimes' => 'Format bukti pembayaran harus JPG, PNG, atau WEBP.',
             'qris_proof.max' => 'Ukuran file bukti pembayaran tidak boleh lebih dari 4MB.',
         ]);
 
@@ -908,6 +910,13 @@ class Cashier extends Component
         } else if (!$this->selectedCustomerId) {
                 // If customer not selected, check if inline details are provided
                 if (!empty($this->newCustomerName)) {
+                    $this->validate([
+                        'newCustomerName' => 'required|string|min:2|max:255',
+                        'newCustomerPhone' => 'nullable|string|max:50',
+                        'newCustomerAddress' => 'nullable|string|max:500',
+                    ], [
+                        'newCustomerName.min' => 'Nama pelanggan baru minimal 2 karakter.',
+                    ]);
                     $customer = Customer::create([
                         'name' => $this->newCustomerName,
                         'phone' => $this->newCustomerPhone,

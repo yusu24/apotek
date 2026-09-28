@@ -261,18 +261,21 @@ class ProductMarginReport extends Component
 
     private function applySorting($query, $mode = 'potential')
     {
-        $direction = $this->sortDirection;
+        $direction = strtolower($this->sortDirection) === 'desc' ? 'desc' : 'asc';
         
-        if ($this->sortBy === 'margin_amount') {
+        $allowedSortBy = ['name', 'barcode', 'sell_price', 'avg_sell_price', 'last_buy_price', 'avg_buy_price', 'margin_amount', 'margin_percentage', 'total_sold', 'min_stock'];
+        $sortBy = in_array($this->sortBy, $allowedSortBy) ? $this->sortBy : 'name';
+
+        if ($sortBy === 'margin_amount') {
             $query->orderByRaw('margin_amount ' . $direction);
-        } elseif ($this->sortBy === 'margin_percentage') {
+        } elseif ($sortBy === 'margin_percentage') {
             $query->orderByRaw('margin_percentage ' . $direction);
-        } elseif ($this->sortBy === 'last_buy_price' || $this->sortBy === 'avg_buy_price') {
+        } elseif ($sortBy === 'last_buy_price' || $sortBy === 'avg_buy_price') {
             $query->orderByRaw(($mode === 'potential' ? 'last_buy_price ' : 'avg_buy_price ') . $direction);
-        } elseif ($this->sortBy === 'sell_price' || $this->sortBy === 'avg_sell_price') {
+        } elseif ($sortBy === 'sell_price' || $sortBy === 'avg_sell_price') {
             $query->orderByRaw(($mode === 'potential' ? 'products.sell_price ' : 'avg_sell_price ') . $direction);
         } else {
-            $query->orderBy('products.' . $this->sortBy, $direction);
+            $query->orderBy('products.' . $sortBy, $direction);
         }
     }
 

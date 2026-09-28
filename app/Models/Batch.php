@@ -16,7 +16,7 @@ class Batch extends Model
 
     protected $casts = [
         'buy_price' => 'float',
-        'stock_initial' => 'integer',
+        'stock_in' => 'integer',
         'stock_current' => 'integer',
         'expired_date' => 'date',
     ];

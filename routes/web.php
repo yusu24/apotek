@@ -168,7 +168,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/roles/{id}/edit', App\Livewire\Admin\RoleForm::class)->name('admin.roles.edit');
 
     // Backup Management
-    Route::get('/admin/backups', App\Livewire\Admin\BackupManagement::class)->name('admin.backups');
+    Route::get('/admin/backups', App\Livewire\Admin\BackupManagement::class)
+        ->name('admin.backups')
+        ->middleware('permission:manage backups');
     
     // Activity Log (Super Admin only)
     Route::get('/admin/activity-log', App\Livewire\ActivityLog\ActivityLogIndex::class)->name('admin.activity-log');

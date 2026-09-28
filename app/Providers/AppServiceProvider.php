@@ -44,12 +44,21 @@ class AppServiceProvider extends ServiceProvider
                 ])->pluck('value', 'key')->toArray();
 
                 if (!empty($mailSettings['mail_host'])) {
+                    $mailPassword = $mailSettings['mail_password'] ?? config('mail.mailers.smtp.password');
+                    if (!empty($mailPassword)) {
+                        try {
+                            $mailPassword = \Illuminate\Support\Facades\Crypt::decryptString($mailPassword);
+                        } catch (\Throwable $e) {
+                            // Leave as is if already plain text or decryption fails
+                        }
+                    }
+
                     config([
                         'mail.mailers.smtp.host' => $mailSettings['mail_host'],
                         'mail.mailers.smtp.port' => $mailSettings['mail_port'] ?? config('mail.mailers.smtp.port'),
                         'mail.mailers.smtp.encryption' => $mailSettings['mail_encryption'] ?? config('mail.mailers.smtp.encryption'),
                         'mail.mailers.smtp.username' => $mailSettings['mail_username'] ?? config('mail.mailers.smtp.username'),
-                        'mail.mailers.smtp.password' => $mailSettings['mail_password'] ?? config('mail.mailers.smtp.password'),
+                        'mail.mailers.smtp.password' => $mailPassword,
                         'mail.from.address' => $mailSettings['mail_from_address'] ?? config('mail.from.address'),
                         'mail.from.name' => $mailSettings['mail_from_name'] ?? config('mail.from.name'),
                     ]);

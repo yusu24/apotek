@@ -13,6 +13,7 @@ class BackupManagement extends Component
 
     public function mount()
     {
+        abort_unless(auth()->user()->can('manage backups'), 403);
         $this->loadBackups();
     }
 
@@ -31,6 +32,7 @@ class BackupManagement extends Component
 
     public function createBackup()
     {
+        abort_unless(auth()->user()->can('manage backups'), 403);
         try {
             $exitCode = Artisan::call('app:backup-db');
             
@@ -48,8 +50,11 @@ class BackupManagement extends Component
 
     public function download($path): StreamedResponse
     {
-        if (Storage::disk('local')->exists($path)) {
-            return Storage::disk('local')->download($path);
+        abort_unless(auth()->user()->can('manage backups'), 403);
+        $safePath = 'backups/' . basename($path);
+
+        if (Storage::disk('local')->exists($safePath)) {
+            return Storage::disk('local')->download($safePath);
         }
 
         session()->flash('error', 'File tidak ditemukan.');
@@ -58,8 +63,11 @@ class BackupManagement extends Component
 
     public function delete($path)
     {
-        if (Storage::disk('local')->exists($path)) {
-            Storage::disk('local')->delete($path);
+        abort_unless(auth()->user()->can('manage backups'), 403);
+        $safePath = 'backups/' . basename($path);
+
+        if (Storage::disk('local')->exists($safePath)) {
+            Storage::disk('local')->delete($safePath);
             session()->flash('success', 'File pencadangan berhasil dihapus.');
             $this->loadBackups();
         } else {

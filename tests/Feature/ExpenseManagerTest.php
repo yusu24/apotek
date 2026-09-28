@@ -66,9 +66,5 @@ test('expense manager component can trigger excel and pdf exports', function () 
 
     Livewire::test(ExpenseManager::class)
         ->call('exportPdf')
-        ->assertRedirect(route('pdf.expenses', [
-            'search' => '',
-            'from' => \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d'),
-            'to' => \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d'),
-        ]));
+        ->assertDispatched('open-pdf');
 });

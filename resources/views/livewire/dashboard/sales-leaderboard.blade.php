@@ -219,36 +219,57 @@
 
     <!-- Right Column: Cashier Leaderboard -->
     @can('view dashboard staff leaderboard')
-    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-lg overflow-hidden flex flex-col">
+    @php
+        $totalMonthlyLeaderboardSales = $leaderboard->sum('total_sales');
+        $leaderSales = $leaderboard->first()?->total_sales ?? 1;
+    @endphp
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-slate-100 dark:border-gray-700 shadow-xl overflow-hidden flex flex-col transition-all">
         <div>
-            <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
+            <!-- Header with Gradient Icon & Live Badge -->
+            <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-amber-50/50 via-slate-50/30 to-indigo-50/40 dark:from-gray-900/40 dark:to-gray-800/40">
                 <div class="flex items-center gap-3">
-                    <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                        <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md shadow-amber-500/20"
+                         style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 011.334 1.334l-.8 1.599L18.677 11H20a1 1 0 110 2h-1.323l-1.582 3.954.8 1.599a1 1 0 01-1.334 1.334l-1.599-.8L11 20.677V22a1 1 0 11-2 0v-1.323l-3.954-1.582-1.599.8a1 1 0 01-1.334-1.334l.8-1.599L1.323 13H0a1 1 0 110-2h1.323l1.582-3.954-.8-1.599a1 1 0 011.334-1.334l1.599.8L9 3.323V2a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"></path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-gray-800 dark:text-gray-200">Papan Peringkat Kinerja Staf</h3>
-                        <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal tracking-wide mt-0.5">Klasemen Penjualan Kasir (Bulan Ini)</p>
+                        <h3 class="font-black text-gray-900 dark:text-gray-100 text-sm tracking-tight flex items-center gap-2">
+                            Papan Peringkat Kinerja Staf
+                        </h3>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">
+                            Klasemen Penjualan Kasir • {{ now()->locale('id')->isoFormat('MMMM Y') }}
+                        </p>
                     </div>
                 </div>
-                <div class="text-[10px] bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-200/50 px-2 py-1 rounded-full font-bold uppercase tracking-wider shrink-0">
-                    🔥 Aktif
+
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-sm"
+                     style="background: rgba(245, 158, 11, 0.15); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.3);">
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    <span>Aktif</span>
                 </div>
             </div>
 
-            <!-- Spotlight for Rank 1 -->
+            <!-- Spotlight for Rank 1 (Champion Card) -->
             @if($leaderboard->isNotEmpty())
                 @php
                     $rank1 = $leaderboard->first();
                     $rank1Name = $rank1->user->name ?? 'Kasir';
                     $rank1Avatar = $rank1->user->profile_photo_path
                         ? asset('storage/' . $rank1->user->profile_photo_path)
-                        : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=f1f5f9&color=1e293b&size=128&bold=true';
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($rank1Name) . '&background=fef3c7&color=b45309&size=128&bold=true';
+                    $words = explode(' ', trim($rank1Name));
+                    $initials = (count($words) >= 2)
+                        ? strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1))
+                        : strtoupper(substr($rank1Name, 0, 2));
+
+                    $rank1Share = $totalMonthlyLeaderboardSales > 0 ? round(($rank1->total_sales / $totalMonthlyLeaderboardSales) * 100, 1) : 0;
+                    $rank1Aov = $rank1->total_transactions > 0 ? round($rank1->total_sales / $rank1->total_transactions) : 0;
                 @endphp
-                <div class="px-5 pt-4">
-                    <div style="background: linear-gradient(135deg, #fffdf5 0%, #fffbeb 100%); border: 1px solid #fde68a; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.05);" class="rounded-3xl p-5 relative overflow-hidden group flex flex-col md:flex-row items-center md:items-center gap-5 md:gap-6 text-left"
+                <div class="px-5 pt-5">
+                    <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #fde68a 100%); border: 1.5px solid #fcd34d; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2), 0 4px 6px -2px rgba(245, 158, 11, 0.1);"
+                         class="rounded-3xl p-5 relative overflow-hidden group flex flex-col gap-4 text-left"
                          x-data="{
                             confettiCanvas: null,
                             particles: [],
@@ -261,7 +282,7 @@
                                     if (!this.confettiCanvas) return;
                                     this.resizeCanvas();
                                     this.launchConfetti();
-                                    this.intervalId = setInterval(() => this.launchConfetti(), 8000);
+                                    this.intervalId = setInterval(() => this.launchConfetti(), 9000);
                                 });
                             },
                             destroy() {
@@ -278,17 +299,17 @@
                                 this.resizeCanvas();
                                 const w = this.confettiCanvas.width;
                                 const h = this.confettiCanvas.height;
-                                for (let i = 0; i < 60; i++) {
+                                for (let i = 0; i < 45; i++) {
                                     this.particles.push({
                                         x: Math.random() * w,
-                                        y: -10 - Math.random() * 50,
-                                        w: 4 + Math.random() * 5,
-                                        h: 6 + Math.random() * 8,
+                                        y: -10 - Math.random() * 40,
+                                        w: 4 + Math.random() * 4,
+                                        h: 6 + Math.random() * 6,
                                         color: this.colors[Math.floor(Math.random() * this.colors.length)],
-                                        vx: (Math.random() - 0.5) * 4,
+                                        vx: (Math.random() - 0.5) * 3,
                                         vy: 1.2 + Math.random() * 2,
                                         rotation: Math.random() * 360,
-                                        rotationSpeed: (Math.random() - 0.5) * 10,
+                                        rotationSpeed: (Math.random() - 0.5) * 8,
                                         opacity: 1,
                                         decay: 0.002 + Math.random() * 0.003
                                     });
@@ -303,7 +324,7 @@
                                 this.particles.forEach(p => {
                                     p.x += p.vx;
                                     p.y += p.vy;
-                                    p.vy += 0.04;
+                                    p.vy += 0.03;
                                     p.vx *= 0.99;
                                     p.rotation += p.rotationSpeed;
                                     p.opacity -= p.decay;
@@ -325,109 +346,109 @@
                         <!-- Confetti Canvas -->
                         <canvas x-ref="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"></canvas>
 
-                        <!-- Trophy Background Illustration -->
-                        <div class="absolute pointer-events-none select-none z-0" style="right: 12px; top: 50%; transform: translateY(-50%); opacity: 0.3;">
-                            <svg width="80" height="90" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Left handle (outer arc) -->
-                                <path d="M22 18 C10 18 4 27 4 34 C4 41 10 48 22 48" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
-                                <!-- Right handle (outer arc) -->
-                                <path d="M58 18 C70 18 76 27 76 34 C76 41 70 48 58 48" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" fill="none"/>
-                                <!-- Cup body -->
-                                <path d="M20 8 H60 L56 52 C54 60 46 65 40 65 C34 65 26 60 24 52 Z" fill="#FBBF24"/>
-                                <!-- Cup shine highlight -->
-                                <path d="M26 12 H52 L49 48 C48 56 44 60 40 60 C38 59 33 56 32 48 Z" fill="#FCD34D"/>
-                                <!-- Star -->
-                                <path d="M40 22 L42.9 30.6 L52 30.6 L44.6 35.9 L47.5 44.5 L40 39.2 L32.5 44.5 L35.4 35.9 L28 30.6 L37.1 30.6 Z" fill="white"/>
-                                <!-- Neck/stem -->
-                                <rect x="34" y="65" width="12" height="10" rx="2" fill="#F59E0B"/>
-                                <!-- Base top -->
-                                <rect x="24" y="75" width="32" height="6" rx="3" fill="#D97706"/>
-                                <!-- Base bottom -->
-                                <rect x="20" y="80" width="40" height="7" rx="3" fill="#B45309"/>
+                        <!-- Background Ambient Trophy Watermark -->
+                        <div class="absolute pointer-events-none select-none z-0 right-2 -bottom-4 opacity-15">
+                            <svg width="110" height="110" viewBox="0 0 24 24" fill="#d97706">
+                                <path d="M5 3h14v2H5V3zm0 4h14v2h-1.07A7.002 7.002 0 0113 14.93V17h3v2H8v-2h3v-2.07A7.002 7.002 0 016.07 9H5V7zm13 2H6c0 3.31 2.69 6 6 6s6-2.69 6-6z"/>
                             </svg>
                         </div>
 
-                        <!-- Initials Box with Crown (Left Column) -->
-                        @php
-                            $words = explode(' ', trim($rank1Name));
-                            if (count($words) >= 2) {
-                                $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
-                            } else {
-                                $initials = strtoupper(substr($rank1Name, 0, 2));
-                            }
-                        @endphp
-                        <div class="relative w-24 h-24 md:w-24 md:h-24 shrink-0 mx-auto md:mx-0 rounded-2xl flex items-center justify-center shadow-md overflow-visible" style="background: linear-gradient(135deg, #ffca28 0%, #ff8f00 100%); z-index: 2;">
-                            <!-- Crown on top-left of the initials box -->
-                            <div class="absolute z-10 drop-shadow-md" style="top: -14px; left: -14px; transform: rotate(-15deg);">
-                                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 17h16a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1a1 1 0 011-1z" fill="#d97706" />
-                                    <path d="M3 16l2.5-8 3.5 4.5 3-8 3 8 3.5-4.5 2.5 8H3z" fill="#fbbf24" />
-                                    <path d="M12 4.5l-2.5 5.8 2.5 1.7 2.5-1.7L12 4.5z" fill="#f59e0b" opacity="0.6" />
-                                    <circle cx="3" cy="8" r="1" fill="#ef4444" />
-                                    <circle cx="9" cy="12.5" r="0.8" fill="#3b82f6" />
-                                    <circle cx="12" cy="4" r="1" fill="#ef4444" />
-                                    <circle cx="15" cy="12.5" r="0.8" fill="#3b82f6" />
-                                    <circle cx="21" cy="8" r="1" fill="#ef4444" />
-                                    <circle cx="6" cy="18.5" r="0.6" fill="#fff" />
-                                    <circle cx="12" cy="18.5" r="0.6" fill="#fff" />
-                                    <circle cx="18" cy="18.5" r="0.6" fill="#fff" />
-                                </svg>
+                        <!-- Top Ribbon: Champion Title & Share -->
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase text-white shadow-sm"
+                                 style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%);">
+                                <span>👑</span>
+                                <span>Peringkat 1 Bulan Ini</span>
                             </div>
 
-                            @if($rank1->user?->profile_photo_path)
-                                <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" class="w-full h-full rounded-2xl object-cover" />
-                            @else
-                                <span class="text-white text-4xl font-extrabold tracking-wider select-none">{{ $initials }}</span>
-                            @endif
+                            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold"
+                                 style="background: rgba(255, 255, 255, 0.7); color: #92400e; border: 1px solid #fde68a;">
+                                <span>⚡ {{ $rank1Share }}% Pangsa Omset</span>
+                            </div>
                         </div>
 
-                        <!-- Details (Right Column) -->
-                        <div class="flex-1 min-w-0 w-full" style="z-index: 2;">
-                            <div class="font-extrabold text-[#1e3a8a] dark:text-emerald-200 flex items-center justify-center md:justify-start gap-1.5 mb-2.5 text-sm">
-                                <span>👑 Peringkat 1 Bulan Ini</span>
+                        <!-- Champion Profile row -->
+                        <div class="relative z-10 flex items-center gap-4">
+                            <!-- Avatar with Royal Gold Crown & Ring -->
+                            <div class="relative shrink-0">
+                                <!-- 3D Gold Crown overlay -->
+                                <div class="absolute -top-3.5 -left-3.5 z-20 drop-shadow-md transform -rotate-12">
+                                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none">
+                                        <path d="M4 17h16a1 1 0 011 1v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-1a1 1 0 011-1z" fill="#b45309" />
+                                        <path d="M3 16l2.5-8 3.5 4.5 3-8 3 8 3.5-4.5 2.5 8H3z" fill="#fbbf24" stroke="#d97706" stroke-width="0.5" />
+                                        <circle cx="3" cy="8" r="1.2" fill="#ef4444" />
+                                        <circle cx="12" cy="4" r="1.4" fill="#3b82f6" />
+                                        <circle cx="21" cy="8" r="1.2" fill="#ef4444" />
+                                        <circle cx="7.5" cy="12.5" r="0.9" fill="#10b981" />
+                                        <circle cx="16.5" cy="12.5" r="0.9" fill="#10b981" />
+                                    </svg>
+                                </div>
+
+                                @if($rank1->user?->profile_photo_path)
+                                    <img src="{{ $rank1Avatar }}" alt="{{ $rank1Name }}" 
+                                         class="w-16 h-16 rounded-2xl object-cover shadow-md ring-4 ring-amber-400 ring-offset-2 ring-offset-amber-100" />
+                                @else
+                                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-md ring-4 ring-amber-400 ring-offset-2 ring-offset-amber-100 text-white font-black text-2xl tracking-wider select-none"
+                                         style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">
+                                        {{ $initials }}
+                                    </div>
+                                @endif
                             </div>
 
-                            <table class="w-full text-xs text-slate-600 dark:text-slate-300 border-collapse">
-                                <tbody>
-                                    <tr class="align-middle">
-                                        <td class="py-1.5 w-5 shrink-0">
-                                            <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </td>
-                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 w-[110px] font-medium pl-1">Nama</td>
-                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
-                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5 truncate max-w-[150px]" title="{{ $rank1Name }}">{{ $rank1Name }}</td>
-                                    </tr>
-                                    <tr class="align-middle">
-                                        <td class="py-1.5 w-5 shrink-0">
-                                            <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 100-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-                                            </svg>
-                                        </td>
-                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 font-medium pl-1">Jumlah Transaksi</td>
-                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
-                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">{{ $rank1->total_transactions }}</td>
-                                    </tr>
-                                    <tr class="align-middle">
-                                        <td class="py-1.5 w-5 shrink-0">
-                                            <svg class="w-4 h-4 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </td>
-                                        <td class="text-slate-500 dark:text-slate-400 py-1.5 font-medium pl-1">Total kontribusi</td>
-                                        <td class="text-slate-400 py-1.5 w-4 text-center">:</td>
-                                        <td class="font-extrabold text-[#0f172a] dark:text-white py-1.5">Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!-- Name & Rank Details -->
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-base font-black text-amber-950 truncate tracking-tight" title="{{ $rank1Name }}">
+                                    {{ $rank1Name }}
+                                </h4>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded-md">
+                                        <svg class="w-3 h-3 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                        </svg>
+                                        Kasir Bintang Bulan Ini
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 Sleek Frosted Metric KPI Chips -->
+                        <div class="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                            <!-- Stat 1: Total Omset -->
+                            <div class="col-span-2 sm:col-span-1 rounded-2xl p-2.5 bg-white/70 backdrop-blur-md border border-amber-200/80 shadow-xs">
+                                <div class="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Total Omset</div>
+                                <div class="text-sm font-black text-amber-950 mt-0.5 truncate" title="Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}">
+                                    Rp {{ number_format($rank1->total_sales, 0, ',', '.') }}
+                                </div>
+                            </div>
+
+                            <!-- Stat 2: Total Transaksi -->
+                            <div class="rounded-2xl p-2.5 bg-white/70 backdrop-blur-md border border-amber-200/80 shadow-xs">
+                                <div class="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Transaksi</div>
+                                <div class="text-sm font-black text-amber-950 mt-0.5">
+                                    {{ number_format($rank1->total_transactions) }} <span class="text-[10px] font-semibold text-amber-700">Trx</span>
+                                </div>
+                            </div>
+
+                            <!-- Stat 3: AOV -->
+                            <div class="rounded-2xl p-2.5 bg-white/70 backdrop-blur-md border border-amber-200/80 shadow-xs">
+                                <div class="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">Rata-rata/Trx</div>
+                                <div class="text-sm font-black text-amber-950 mt-0.5 truncate" title="Rp {{ number_format($rank1Aov, 0, ',', '.') }}">
+                                    Rp {{ number_format($rank1Aov, 0, ',', '.') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             @endif
 
+            <!-- Runners-Up Race List -->
             <div class="p-5">
-                <div class="space-y-3">
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Peringkat Selanjutnya</span>
+                    <span class="text-[10px] font-semibold text-slate-400">Kontribusi Penjualan</span>
+                </div>
+
+                <div class="space-y-2.5">
                     @forelse($leaderboard->skip(1)->take(3) as $row)
                         @php
                             $rank = $loop->index + 2;
@@ -437,35 +458,78 @@
                             $avatarUrl = $row->user->profile_photo_path
                                 ? asset('storage/' . $row->user->profile_photo_path)
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f1f5f9&color=475569&size=64&bold=true';
+                            $words = explode(' ', trim($userName));
+                            $rowInitials = (count($words) >= 2)
+                                ? strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1))
+                                : strtoupper(substr($userName, 0, 2));
+
+                            $relativePercent = $leaderSales > 0 ? min(100, round(($row->total_sales / $leaderSales) * 100)) : 0;
+                            $sharePercent = $totalMonthlyLeaderboardSales > 0 ? round(($row->total_sales / $totalMonthlyLeaderboardSales) * 100, 1) : 0;
                         @endphp
 
-                        <div class="flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-900/20 border border-slate-100/50 dark:border-slate-800/50 rounded-xl transition-all duration-300 hover:translate-x-1">
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center justify-center w-6 h-6 shrink-0">
-                                    @if($isRank2)
-                                        <span class="text-base" title="Juara 2">🥈</span>
-                                    @elseif($isRank3)
-                                        <span class="text-base" title="Juara 3">🥉</span>
-                                    @else
-                                        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
-                                    @endif
+                        <div class="group relative overflow-hidden rounded-2xl p-3 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 border"
+                             @if($isRank2)
+                                style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-color: #cbd5e1;"
+                             @elseif($isRank3)
+                                style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fed7aa;"
+                             @else
+                                style="background: #ffffff; border-color: #e2e8f0;"
+                             @endif>
+                            
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <!-- Rank Icon / Badge -->
+                                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-black text-xs shadow-xs"
+                                         @if($isRank2)
+                                            style="background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); color: #1e293b;"
+                                         @elseif($isRank3)
+                                            style="background: linear-gradient(135deg, #fed7aa 0%, #ea580c 100%); color: #ffffff;"
+                                         @else
+                                            style="background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;"
+                                         @endif>
+                                        @if($isRank2) 🥈 @elseif($isRank3) 🥉 @else #{{ $rank }} @endif
+                                    </div>
+
+                                    <!-- User Avatar -->
+                                    <div class="relative shrink-0">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs select-none shadow-xs"
+                                             @if($isRank2)
+                                                style="background: #e2e8f0; color: #334155; border: 1.5px solid #cbd5e1;"
+                                             @elseif($isRank3)
+                                                style="background: #ffedd5; color: #9a3412; border: 1.5px solid #fed7aa;"
+                                             @else
+                                                style="background: #f8fafc; color: #475569; border: 1.5px solid #e2e8f0;"
+                                             @endif>
+                                            {{ $rowInitials }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Name & Transaction info -->
+                                    <div class="min-w-0">
+                                        <h5 class="font-extrabold text-xs text-gray-900 dark:text-gray-100 truncate max-w-[130px]" title="{{ $userName }}">
+                                            {{ $userName }}
+                                        </h5>
+                                        <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                                            {{ $row->total_transactions }} Transaksi • <span class="font-bold text-slate-700 dark:text-slate-300">{{ $sharePercent }}%</span>
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <img src="{{ $avatarUrl }}" alt="{{ $userName }}" class="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-sm shrink-0" />
-
-                                <div class="min-w-0">
-                                    <h5 class="font-bold text-xs text-gray-900 dark:text-gray-100 truncate max-w-[100px]">{{ $userName }}</h5>
-                                    <p class="text-[9px] text-gray-400 dark:text-gray-500 font-normal mt-0.5">
-                                        {{ $row->total_transactions }} Transaksi
-                                    </p>
+                                <!-- Amount -->
+                                <div class="text-right shrink-0">
+                                    <div class="font-black text-xs text-slate-900 dark:text-white">
+                                        Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                    </div>
+                                    <div class="text-[9px] font-semibold text-slate-400">
+                                        {{ $relativePercent }}% dari #1
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="text-right">
-                                <p class="text-[8px] text-gray-400 dark:text-gray-500 font-normal tracking-wide">Kontribusi</p>
-                                <p class="font-black text-xs text-indigo-600 dark:text-indigo-400">
-                                    Rp {{ number_format($row->total_sales, 0, ',', '.') }}
-                                </p>
+                            <!-- Competitive Progress Bar -->
+                            <div class="mt-2.5 w-full bg-slate-200/70 dark:bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-700"
+                                     style="width: {{ $relativePercent }}%; @if($isRank2) background: linear-gradient(90deg, #94a3b8, #475569); @elseif($isRank3) background: linear-gradient(90deg, #f59e0b, #d97706); @else background: linear-gradient(90deg, #6366f1, #4f46e5); @endif"></div>
                             </div>
                         </div>
                     @empty
@@ -486,11 +550,13 @@
 
             <!-- View More Button -->
             @if($leaderboard->count() > 4)
-                <div class="px-5 pb-5 pt-1 border-t border-gray-100 dark:border-gray-700">
-                    <button @click="$dispatch('open-leaderboard-modal')" class="w-full text-center text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors flex items-center justify-center gap-1 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80">
-                        Lihat Klasemen Lengkap
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <div class="px-5 pb-5 pt-1">
+                    <button @click="$dispatch('open-leaderboard-modal')"
+                            class="w-full text-center text-xs font-extrabold transition-all duration-200 flex items-center justify-center gap-2 py-3 rounded-2xl shadow-xs hover:shadow-md hover:-translate-y-0.5 border"
+                            style="background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%); color: #4338ca; border-color: #e0e7ff;">
+                        <span>Lihat Klasemen Lengkap ({{ $leaderboard->count() }} Kasir)</span>
+                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </button>
                 </div>
@@ -527,21 +593,22 @@
                  x-transition:leave="ease-in duration-200"
                  x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                  x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
+                 class="relative transform overflow-hidden rounded-3xl bg-white dark:bg-gray-800 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100 dark:border-gray-700">
                  <!-- Modal Header -->
-                 <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
+                 <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-amber-50/40 via-slate-50/40 to-indigo-50/40 dark:from-gray-900/40 dark:to-gray-800/40">
                      <div class="flex items-center gap-3">
-                         <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-                             <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                         <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-md shadow-amber-500/20"
+                              style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                 <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 011.334 1.334l-.8 1.599L18.677 11H20a1 1 0 110 2h-1.323l-1.582 3.954.8 1.599a1 1 0 01-1.334 1.334l-1.599-.8L11 20.677V22a1 1 0 11-2 0v-1.323l-3.954-1.582-1.599.8a1 1 0 01-1.334-1.334l.8-1.599L1.323 13H0a1 1 0 110-2h1.323l1.582-3.954-.8-1.599a1 1 0 011.334-1.334l1.599.8L9 3.323V2a1 1 0 011-1zm0 5a5 5 0 100 10 5 5 0 000-10z" clip-rule="evenodd"></path>
                              </svg>
                          </div>
                          <div>
-                             <h3 class="text-sm font-bold text-gray-900 dark:text-white" id="modal-title">Klasemen Lengkap Staf</h3>
-                             <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal">Kinerja Penjualan Kasir Bulan Ini</p>
+                             <h3 class="text-sm font-black text-gray-900 dark:text-white" id="modal-title">Klasemen Lengkap Staf Kasir</h3>
+                             <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Periode: {{ now()->locale('id')->isoFormat('MMMM Y') }} • Total: Rp {{ number_format($totalMonthlyLeaderboardSales ?? 0, 0, ',', '.') }}</p>
                          </div>
                      </div>
-                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                     <button @click="open = false" class="p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors">
                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                          </svg>
@@ -556,65 +623,92 @@
                              $isRank1 = $rank === 1;
                              $isRank2 = $rank === 2;
                              $isRank3 = $rank === 3;
+                             $userName = $row->user->name ?? 'Kasir';
+                             $words = explode(' ', trim($userName));
+                             $modalInitials = (count($words) >= 2)
+                                 ? strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1))
+                                 : strtoupper(substr($userName, 0, 2));
+
+                             $relativePercent = $leaderSales > 0 ? min(100, round(($row->total_sales / $leaderSales) * 100)) : 0;
+                             $sharePercent = ($totalMonthlyLeaderboardSales ?? 0) > 0 ? round(($row->total_sales / $totalMonthlyLeaderboardSales) * 100, 1) : 0;
                          @endphp
-                         <div @class([
-                             'flex items-center justify-between py-2.5 px-4 rounded-xl border transition-all duration-300',
-                             'bg-amber-50/60 border-amber-100/70 dark:bg-amber-950/10 dark:border-amber-900/30' => $isRank1,
-                             'bg-slate-50/50 border-slate-100/70 dark:bg-slate-900/20 dark:border-slate-800/50' => !$isRank1,
-                         ])>
-                             <div class="flex items-center gap-3.5">
-                                 <!-- Rank Badge -->
-                                 <div class="w-7 h-7 flex items-center justify-center shrink-0">
-                                     @if($isRank1)
-                                         <span class="text-lg">🥇</span>
-                                     @elseif($isRank2)
-                                         <span class="text-lg">🥈</span>
-                                     @elseif($isRank3)
-                                         <span class="text-lg">🥉</span>
-                                     @else
-                                         <span class="text-xs font-bold text-gray-400 dark:text-gray-500">#{{ $rank }}</span>
-                                     @endif
+                         <div class="p-3.5 rounded-2xl border transition-all duration-200"
+                              @if($isRank1)
+                                 style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fcd34d;"
+                              @elseif($isRank2)
+                                 style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-color: #cbd5e1;"
+                              @elseif($isRank3)
+                                 style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fed7aa;"
+                              @else
+                                 style="background: #ffffff; border-color: #e2e8f0;"
+                              @endif>
+                             
+                             <div class="flex items-center justify-between gap-3">
+                                 <div class="flex items-center gap-3 min-w-0">
+                                     <!-- Rank Badge -->
+                                     <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-black text-xs shadow-xs"
+                                          @if($isRank1)
+                                             style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #ffffff;"
+                                          @elseif($isRank2)
+                                             style="background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); color: #1e293b;"
+                                          @elseif($isRank3)
+                                             style="background: linear-gradient(135deg, #fed7aa 0%, #ea580c 100%); color: #ffffff;"
+                                          @else
+                                             style="background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0;"
+                                          @endif>
+                                         @if($isRank1) 🥇 @elseif($isRank2) 🥈 @elseif($isRank3) 🥉 @else #{{ $rank }} @endif
+                                     </div>
+
+                                     <!-- Avatar -->
+                                     <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs select-none shadow-xs shrink-0"
+                                          @if($isRank1)
+                                             style="background: #fef3c7; color: #b45309; border: 1.5px solid #fcd34d;"
+                                          @elseif($isRank2)
+                                             style="background: #e2e8f0; color: #334155; border: 1.5px solid #cbd5e1;"
+                                          @elseif($isRank3)
+                                             style="background: #ffedd5; color: #9a3412; border: 1.5px solid #fed7aa;"
+                                          @else
+                                             style="background: #f8fafc; color: #475569; border: 1.5px solid #e2e8f0;"
+                                          @endif>
+                                         {{ $modalInitials }}
+                                     </div>
+
+                                     <!-- Cashier Info -->
+                                     <div class="min-w-0">
+                                         <h4 class="text-xs font-black text-gray-900 dark:text-white truncate">
+                                             {{ $userName }}
+                                         </h4>
+                                         <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                                             {{ $row->total_transactions }} Transaksi • <span class="font-bold text-slate-700 dark:text-slate-300">{{ $sharePercent }}%</span>
+                                         </p>
+                                     </div>
                                  </div>
 
-                                 <!-- Avatar -->
-                                 <div class="relative shrink-0">
-                                     @if($row->user->profile_photo_path ?? null)
-                                         <img src="{{ asset('storage/' . $row->user->profile_photo_path) }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-gray-800">
-                                     @else
-                                         <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center text-xs font-extrabold text-indigo-600 dark:text-indigo-400 ring-2 ring-white dark:ring-gray-800">
-                                             {{ strtoupper(substr($row->user->name ?? 'K', 0, 2)) }}
-                                         </div>
-                                     @endif
-                                 </div>
-
-                                 <!-- Cashier Info -->
-                                 <div>
-                                     <h4 @class([
-                                         'text-xs font-bold text-gray-900 dark:text-white',
-                                         'text-amber-900 dark:text-amber-300' => $isRank1,
-                                     ])>{{ $row->user->name ?? 'Kasir' }}</h4>
-                                     <p class="text-[9px] text-gray-400 dark:text-gray-500 font-medium">{{ $row->total_transactions }} Transaksi</p>
+                                 <!-- Turnover Contribution -->
+                                 <div class="text-right shrink-0">
+                                     <div class="font-black text-xs"
+                                          @if($isRank1) style="color: #b45309;" @else style="color: #0f172a;" @endif>
+                                         Rp {{ number_format($row->total_sales, 0, ',', '.') }}
+                                     </div>
+                                     <div class="text-[9px] font-semibold text-slate-400">
+                                         {{ $relativePercent }}% dari #1
+                                     </div>
                                  </div>
                              </div>
 
-                             <!-- Turnover Contribution -->
-                             <div class="text-right">
-                                 <p class="text-[8px] text-gray-400 dark:text-gray-500 font-semibold tracking-wider uppercase">Kontribusi</p>
-                                 <p @if($isRank1) style="color: #b45309;" @endif
-                                    @class([
-                                     'font-black text-xs',
-                                     'text-indigo-600 dark:text-indigo-400' => !$isRank1,
-                                 ])>
-                                     Rp {{ number_format($row->total_sales, 0, ',', '.') }}
-                                 </p>
+                             <!-- Progress bar in modal -->
+                             <div class="mt-2.5 w-full bg-slate-200/70 dark:bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
+                                 <div class="h-full rounded-full"
+                                      style="width: {{ $relativePercent }}%; @if($isRank1) background: linear-gradient(90deg, #fbbf24, #d97706); @elseif($isRank2) background: linear-gradient(90deg, #94a3b8, #475569); @elseif($isRank3) background: linear-gradient(90deg, #f59e0b, #d97706); @else background: linear-gradient(90deg, #6366f1, #4f46e5); @endif"></div>
                              </div>
                          </div>
                      @endforeach
                  </div>
 
                  <!-- Modal Footer -->
-                 <div class="p-6 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
-                     <button @click="open = false" class="btn btn-secondary">
+                 <div class="p-5 border-t border-gray-100 dark:border-gray-700 flex justify-end bg-gray-50/50 dark:bg-gray-900/20">
+                     <button @click="open = false" 
+                             class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-xs">
                          Tutup
                      </button>
                  </div>

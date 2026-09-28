@@ -16,7 +16,6 @@ class GoodsReceiptForm extends Component
     public $items = []; // ['product_id', 'product_name', 'batch_no', 'expired_date', 'qty_received', 'buy_price']
 
     public $purchaseOrders = [];
-    public $products = [];
     public $accounts = []; // New Property
     
     public $po_id; // For query string
@@ -35,7 +34,6 @@ class GoodsReceiptForm extends Component
         
         $this->received_date = date('Y-m-d');
         $this->purchaseOrders = \App\Models\PurchaseOrder::whereIn('status', ['ordered', 'partial'])->get();
-        $this->products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->select('id', 'name', 'barcode', 'unit_id')->get();
         // $this->accounts = \App\Models\Account::whereIn('category', ['cash_bank', 'current_asset'])->active()->get(); 
         // FIX: Only show Bank Accounts for Transfer option
         $this->accounts = \App\Models\Account::query()
@@ -277,7 +275,7 @@ class GoodsReceiptForm extends Component
                 $field = $parts[2];
 
                 if ($field === 'product_id') {
-                    $product = $this->products->firstWhere('id', $value);
+                    $product = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->find($value);
                     if ($product) {
                         $this->items[$index]['unit_id'] = $product->unit_id;
                         $this->items[$index]['conversion_factor'] = 1;
@@ -292,7 +290,7 @@ class GoodsReceiptForm extends Component
                     $productId = $this->items[$index]['product_id'] ?? null;
                     
                     if ($productId) {
-                        $product = $this->products->firstWhere('id', $productId);
+                        $product = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])->find($productId);
                         if ($product) {
                             $oldFactor = (float)($this->items[$index]['conversion_factor'] ?? 1);
                             $newFactor = 1;
@@ -661,7 +659,13 @@ class GoodsReceiptForm extends Component
             return array_key_exists('product_id', $item);
         });
 
+        $products = \App\Models\Product::with(['unit', 'unitConversions.fromUnit', 'unitConversions.toUnit'])
+            ->select('id', 'name', 'barcode', 'unit_id')
+            ->orderBy('name')
+            ->get();
+
         return view('livewire.procurement.goods-receipt-form', [
+            'products' => $products,
             'searchResults' => $this->searchResults
         ]);
     }

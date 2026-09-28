@@ -325,8 +325,13 @@ public function render()
             });
         $this->applyDateFilter($totalQuery);
 
-        $totalExpense = (clone $totalQuery)->where('type', 'expense')->sum('amount');
-        $totalIncome  = (clone $totalQuery)->where('type', 'income')->sum('amount');
+        $totals = $totalQuery->selectRaw('
+            COALESCE(SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END), 0) as total_expense,
+            COALESCE(SUM(CASE WHEN type = "income" THEN amount ELSE 0 END), 0) as total_income
+        ')->first();
+
+        $totalExpense = (float)($totals->total_expense ?? 0);
+        $totalIncome  = (float)($totals->total_income ?? 0);
         $totalNet     = $totalIncome - $totalExpense;
         
         $categories = ExpenseCategory::active()

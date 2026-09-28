@@ -1144,7 +1144,7 @@ class Cashier extends Component
 
 
     #[Computed]
-    public function getProductsProperty()
+    public function products()
     {
         return Product::query()
             ->with(['unit', 'unitConversions'])
@@ -1167,7 +1167,8 @@ class Cashier extends Component
         $this->calculateChange();
     }
 
-    public function getCashSuggestionsProperty()
+    #[Computed]
+    public function cashSuggestions()
     {
         $total = (float)$this->grand_total;
         if ($total <= 0) {
@@ -1182,6 +1183,12 @@ class Cashier extends Component
         return array_values(array_unique($suggestions));
     }
 
+    #[Computed]
+    public function categories()
+    {
+        return \App\Models\Category::orderBy('name')->get();
+    }
+
     public function closeReceiptModal()
     {
         $this->showReceiptModal = false;
@@ -1190,11 +1197,9 @@ class Cashier extends Component
 
     public function render()
     {
-        $categories = \App\Models\Category::all();
-
         return view('livewire.pos.cashier', [
             'products' => $this->products,
-            'categories' => $categories,
+            'categories' => $this->categories,
         ]);
     }
 }

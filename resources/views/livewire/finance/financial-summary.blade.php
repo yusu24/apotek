@@ -23,7 +23,7 @@
                     <span class="text-sm font-medium text-white opacity-90">Total Saldo (Kas & Bank)</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp.</span>
+                    <span class="text-sm opacity-80 font-bold">Rp</span>
                     <span>{{ number_format($totalCash, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Dompet Kasir & Rekening</div>
@@ -40,7 +40,7 @@
                     <span class="text-sm font-medium text-white opacity-90">Total Kewajiban (Hutang)</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp.</span>
+                    <span class="text-sm opacity-80 font-bold">Rp</span>
                     <span>{{ number_format($totalDebt, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Tagihan Supplier / Pinjaman</div>
@@ -48,16 +48,16 @@
         </div>
 
         <!-- Net Balance -->
-        <div class="rounded-xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #000000 !important;">
+        <div class="rounded-xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
             <div class="relative z-10">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-white rounded-xl text-black">
+                    <div class="p-2 bg-white rounded-xl text-slate-900">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     </div>
                     <span class="text-sm font-medium text-white opacity-90">Posisi Kas Bersih</span>
                 </div>
                 <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80">Rp.</span>
+                    <span class="text-sm opacity-80 font-bold">Rp</span>
                     <span>{{ number_format($netPosition, 0, ',', '.') }}</span>
                 </div>
                 <div class="text-[10px] font-medium bg-white/30 inline-block px-2 py-0.5 rounded-lg text-white">Likuiditas Dana Tersedia</div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-sm font-bold text-blue-600 dark:text-blue-400 tracking-tight">
-                                    Rp. {{ number_format($acc->balance, 0, ',', '.') }},-
+                                    Rp {{ number_format($acc->balance, 0, ',', '.') }}
                                 </div>
                                 <a href="{{ route('accounting.ledger', ['accountId' => $acc->id]) }}" wire:navigate class="text-[10px] text-gray-400 hover:text-blue-500 underline flex items-center justify-end gap-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -114,7 +114,7 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-sm font-bold text-orange-600 dark:text-orange-400 tracking-tight">
-                                    Rp. {{ number_format($acc->balance, 0, ',', '.') }},-
+                                    Rp {{ number_format($acc->balance, 0, ',', '.') }}
                                 </div>
                                 <a href="{{ route('accounting.ledger', ['accountId' => $acc->id]) }}" wire:navigate class="text-[10px] text-gray-400 hover:text-orange-500 underline flex items-center justify-end gap-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

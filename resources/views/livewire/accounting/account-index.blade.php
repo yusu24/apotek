@@ -13,7 +13,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-blue-100 text-sm font-medium mb-1">Total Kas & Bank</p>
-                    <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalCashBank, 0, ',', '.') }},-</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalCashBank, 0, ',', '.') }}</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -31,7 +31,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-white text-sm font-medium mb-1 opacity-90">Total Piutang Usaha</p>
-                    <h2 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalReceivable, 0, ',', '.') }},-</h2>
+                    <h2 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalReceivable, 0, ',', '.') }}</h2>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -47,7 +47,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-red-100 text-sm font-medium mb-1">Total Kewajiban Lancar</p>
-                    <h3 class="text-2xl font-bold text-white">Rp. {{ number_format($this->totalPayable, 0, ',', '.') }},-</h3>
+                    <h3 class="text-2xl font-bold text-white">Rp {{ number_format($this->totalPayable, 0, ',', '.') }}</h3>
                 </div>
                 <div class="bg-white/20 p-2 rounded-xl">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <!-- Filter Actions Bar -->
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="flex flex-row gap-4 w-full md:w-auto items-center">
@@ -108,7 +108,7 @@
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-4 text-left">Kode</th>
                         <th class="px-6 py-4 text-left">Nama Akun</th>

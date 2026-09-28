@@ -7,7 +7,7 @@
     </div>
 
 
-    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b bg-gray-50">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <!-- Search & Filters -->
@@ -103,7 +103,7 @@
         <!-- Scrollable Table Container -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider">
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-4 w-10 text-center">
                             <input type="checkbox" wire:model.live="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
@@ -194,13 +194,13 @@
                                     {{ $categoryName }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                Rp. {{ number_format($product->sell_price, 0, ',', '.') }},-
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                Rp {{ number_format($product->sell_price, 0, ',', '.') }}
                                 <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    Rp. {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }},-
+                                <div class="text-sm font-medium text-gray-900">
+                                    Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
                                 </div>
                                 @if($product->purchase_price_updated_at)
                                     <div class="text-[10px] text-gray-500">

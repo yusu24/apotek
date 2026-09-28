@@ -98,7 +98,7 @@
                 </div>
                 <p class="text-indigo-100 text-sm font-medium">Penjualan Bersih</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($revenue, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($revenue, 0, ',', '.') }}</p>
             <p class="text-xs text-indigo-200/70 mt-1 italic">DPP({{ number_format($grossRevenue, 0, ',', '.') }}) - Retur({{ number_format($totalReturns, 0, ',', '.') }})</p>
         </div>
 
@@ -110,7 +110,7 @@
                 </div>
                 <p class="text-amber-100 text-sm font-medium">Total HPP</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($cogs, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($cogs, 0, ',', '.') }}</p>
             <p class="text-xs text-amber-200/70 mt-1 italic">Modal Barang Terjual</p>
         </div>
 
@@ -122,7 +122,7 @@
                 </div>
                 <p class="text-cyan-100 text-sm font-medium">Gross Profit Margin (Laba Kotor)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($grossProfit, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($grossProfit, 0, ',', '.') }}</p>
             <p class="text-xs text-cyan-200/70 mt-1 italic">Penjualan - HPP</p>
         </div>
 
@@ -134,7 +134,7 @@
                 </div>
                 <p class="text-rose-100 text-sm font-medium">Operating Expense (Beban)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($expenses, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($expenses, 0, ',', '.') }}</p>
             <p class="text-xs text-rose-200/70 mt-1 italic">Operasional & Lainnya</p>
         </div>
 
@@ -146,7 +146,7 @@
                 </div>
                 <p class="text-amber-100 text-sm font-medium">Pre-Tax Profit (Laba Sebelum Pajak)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($netProfitBeforeTax, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</p>
             <p class="text-xs text-amber-200/70 mt-1 italic">Sebelum Potong Pajak</p>
         </div>
 
@@ -158,7 +158,7 @@
                 </div>
                 <p class="{{ $netProfit >= 0 ? 'text-emerald-100' : 'text-red-100' }} text-sm font-medium">Net Profit Margin (Laba Bersih)</p>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp. {{ number_format($netProfit, 0, ',', '.') }},-</p>
+            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfit, 0, ',', '.') }}</p>
             <p class="text-xs {{ $netProfit >= 0 ? 'text-emerald-200/70' : 'text-red-200/70' }} mt-1 italic">Setelah Pajak</p>
         </div>
     </div>

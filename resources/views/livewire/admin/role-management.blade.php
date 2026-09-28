@@ -13,12 +13,12 @@
             </a>
         </div>
         <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-50 border-b border-gray-100">
-                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Jabatan</th>
-                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Jumlah User</th>
-                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Guard</th>
-                    <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
+            <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-4 text-left">Nama Jabatan</th>
+                    <th class="px-6 py-4 text-left">Jumlah User</th>
+                    <th class="px-6 py-4 text-left">Guard</th>
+                    <th class="px-6 py-4 text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50 text-sm">
@@ -31,7 +31,7 @@
                         {{ $role->users_count }} User
                     </td>
                     <td class="px-6 py-4">
-                        <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-[10px] font-bold uppercase tracking-wider">{{ $role->guard_name }}</span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider">{{ $role->guard_name }}</span>
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end gap-2">

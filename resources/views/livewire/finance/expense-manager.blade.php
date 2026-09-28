@@ -5,7 +5,7 @@
          </h2>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <!-- Left side: Search Box -->
             <div class="relative w-full sm:max-w-[200px]">
@@ -193,7 +193,7 @@
 
         <div class="overflow-x-auto rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
                         <th wire:click="sortByColumn('date')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">

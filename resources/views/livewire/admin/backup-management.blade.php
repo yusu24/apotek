@@ -15,12 +15,12 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-100">
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nama File</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Ukuran</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Tanggal Dibuat</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Aksi</th>
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 text-left">Nama File</th>
+                        <th class="px-6 py-4 text-center">Ukuran</th>
+                        <th class="px-6 py-4 text-center">Tanggal Dibuat</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50 text-sm">

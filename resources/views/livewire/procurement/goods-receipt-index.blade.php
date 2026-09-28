@@ -5,7 +5,7 @@
         </h2>
     </div>
 
-    <div class="bg-white rounded-xl shadow overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
                 <!-- Search Box -->
@@ -40,7 +40,7 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider">
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
                         <th wire:click="sortByColumn('delivery_note_number')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
@@ -103,21 +103,28 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex flex-col gap-1">
-                                    <span class="inline-flex items-center w-fit px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-{{ $gr->payment_status_color }}-100 text-{{ $gr->payment_status_color }}-800">
+                                    @php
+                                        $grBadgeStyles = match($gr->payment_status) {
+                                            'paid' => 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
+                                            'partial' => 'bg-amber-50 text-amber-700 border border-amber-200/80',
+                                            default => 'bg-rose-50 text-rose-700 border border-rose-200/80',
+                                        };
+                                    @endphp
+                                    <span class="inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $grBadgeStyles }}">
                                         {{ $gr->payment_status_label }}
                                     </span>
                                     @if($gr->payment_status !== 'paid' && $gr->due_date)
-                                        <span class="text-[10px] text-red-500 font-bold flex items-center gap-1">
+                                        <span class="text-[10px] text-rose-500 font-bold flex items-center gap-1">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             {{ \Carbon\Carbon::parse($gr->due_date)->format('d/m/y') }}
                                         </span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-right text-sm font-medium text-gray-900">
-                                <div>Rp. {{ number_format($gr->total_amount, 0, ',', '.') }},-</div>
+                            <td class="px-4 py-3 text-right text-sm font-semibold text-gray-900">
+                                <div>Rp {{ number_format($gr->total_amount, 0, ',', '.') }}</div>
                                 @if($gr->payment_status !== 'paid')
-                                    <div class="text-[10px] text-orange-600 font-bold mt-1">Sisa: Rp. {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }},-</div>
+                                    <div class="text-[10px] text-amber-600 font-bold mt-1">Sisa: Rp {{ number_format($gr->total_amount - $gr->paid_amount, 0, ',', '.') }}</div>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $gr->user->name ?? '-' }}</td>

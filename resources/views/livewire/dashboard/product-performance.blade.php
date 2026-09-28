@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
     {{-- ── TOP SELLING CHART ───────────────────────────────────────────── --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-slate-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-slate-100 dark:border-gray-700 overflow-hidden">
         <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -136,7 +136,7 @@
     </div>
 
     {{-- ── SLOW MOVING CHART ───────────────────────────────────────────── --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-slate-100 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-slate-100 dark:border-gray-700 overflow-hidden">
         <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/20">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg">

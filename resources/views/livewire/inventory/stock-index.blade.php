@@ -16,23 +16,21 @@
 
     <!-- Low Stock Alert -->
     @if($low_stock_products->count() > 0)
-        <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 shadow-sm">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm text-yellow-700">
-                        Perhatian: Ada <span class="font-medium">{{ $low_stock_products->count() }}</span> produk dengan stok menipis (di bawah minimum).
-                    </p>
-                </div>
+        <div class="mb-6 bg-amber-50 border border-amber-200/80 rounded-xl p-4 shadow-sm flex items-center gap-3">
+            <div class="p-2 bg-amber-100 rounded-lg text-amber-700 shrink-0">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-amber-900">
+                    Perhatian: Ada <span class="font-bold underline">{{ $low_stock_products->count() }} produk</span> dengan stok menipis (di bawah batas minimum).
+                </p>
             </div>
         </div>
     @endif
 
-    <div class="bg-white rounded-xl shadow overflow-hidden print:shadow-none print:rounded-none border mb-6">
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden print:shadow-none print:rounded-none border border-gray-100 mb-6">
         <div class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4 no-print">
             <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto flex-1 md:items-center">
                 <div class="flex gap-2 shrink-0">
@@ -145,7 +143,7 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 custom-print-table">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider">
+                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
                         <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
@@ -197,11 +195,11 @@
                             </td>
                             <td class="px-6 py-4">
                                 @if(($product->total_stock ?? 0) <= 0)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-100 text-red-800">Habis</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/60">Habis</span>
                                 @elseif(($product->total_stock ?? 0) <= $product->min_stock)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-yellow-100 text-yellow-800">Menipis</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/60">Menipis</span>
                                 @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800">Aman</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">Aman</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">

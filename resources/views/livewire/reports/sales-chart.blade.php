@@ -281,14 +281,14 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($data as $item)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $item['label'] }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item['label'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800">
                                         {{ number_format($item['count'], 0, ',', '.') }} transaksi
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">Rp. {{ number_format($item['total'], 0, ',', '.') }},-</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">Rp. {{ number_format($item['average'], 0, ',', '.') }},-</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">Rp {{ number_format($item['total'], 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">Rp {{ number_format($item['average'], 0, ',', '.') }}</td>
                             </tr>
                         @empty
                             <x-empty-table colspan="4" message="Tidak ada data penjualan untuk periode ini" subheader="Silakan pilih periode lain atau lakukan transaksi penjualan" />
@@ -303,8 +303,8 @@
                                     {{ number_format($totalTransactions, 0, ',', '.') }} transaksi
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-blue-900 text-right">Rp. {{ number_format($totalRevenue, 0, ',', '.') }},-</td>
-                            <td class="px-6 py-4 text-sm text-purple-900 text-right">Rp. {{ number_format($overallAverage, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4 text-sm text-blue-900 text-right">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-sm text-purple-900 text-right">Rp {{ number_format($overallAverage, 0, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                     @endif

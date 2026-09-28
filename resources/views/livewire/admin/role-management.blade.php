@@ -25,13 +25,13 @@
                 @foreach($roles as $role)
                 <tr class="hover:bg-gray-50/50 transition-colors">
                     <td class="px-6 py-4">
-                        <div class="font-bold text-gray-800">{{ ucwords(str_replace(['-', '_'], ' ', $role->name)) }}</div>
+                        <div class="text-gray-800">{{ ucwords(str_replace(['-', '_'], ' ', $role->name)) }}</div>
                     </td>
-                    <td class="px-6 py-4 font-medium text-gray-600">
+                    <td class="px-6 py-4 text-gray-600">
                         {{ $role->users_count }} User
                     </td>
                     <td class="px-6 py-4">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider">{{ $role->guard_name }}</span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700 border border-slate-200 tracking-wider">{{ $role->guard_name }}</span>
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end gap-2">

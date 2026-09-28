@@ -29,18 +29,18 @@
                         @forelse($topReceivables as $ar)
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td class="px-5 py-3">
-                                    <div class="font-semibold text-gray-900 dark:text-gray-100">{{ $ar['name'] }}</div>
+                                    <div class="text-gray-900 dark:text-gray-100">{{ $ar['name'] }}</div>
                                     <div class="text-[10px] text-gray-400 mt-0.5">{{ $ar['ref'] }}</div>
                                 </td>
                                 <td class="px-5 py-3">
-                                    <div class="{{ $ar['is_overdue'] ? 'text-rose-600 font-bold' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <div class="{{ $ar['is_overdue'] ? 'text-rose-600' : 'text-gray-600 dark:text-gray-300' }}">
                                         {{ $ar['due_date'] }}
                                     </div>
                                     @if($ar['is_overdue'])
-                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-600 border border-rose-100 uppercase tracking-wider mt-0.5">Overdue</span>
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 border border-rose-100 tracking-wider mt-0.5">Overdue</span>
                                     @endif
                                 </td>
-                                <td class="px-5 py-3 text-right font-bold text-gray-900 dark:text-gray-100">
+                                <td class="px-5 py-3 text-right text-gray-900 dark:text-gray-100">
                                     Rp {{ number_format($ar['amount'], 0, ',', '.') }}
                                 </td>
                             </tr>
@@ -84,18 +84,18 @@
                         @forelse($topPayables as $ap)
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-gray-700/50 transition-colors">
                                 <td class="px-5 py-3">
-                                    <div class="font-semibold text-gray-900 dark:text-gray-100">{{ $ap['name'] }}</div>
+                                    <div class="text-gray-900 dark:text-gray-100">{{ $ap['name'] }}</div>
                                     <div class="text-[10px] text-gray-400 mt-0.5">{{ $ap['ref'] }}</div>
                                 </td>
                                 <td class="px-5 py-3">
-                                    <div class="{{ $ap['is_overdue'] ? 'text-rose-600 font-bold' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <div class="{{ $ap['is_overdue'] ? 'text-rose-600' : 'text-gray-600 dark:text-gray-300' }}">
                                         {{ $ap['due_date'] }}
                                     </div>
                                     @if($ap['is_overdue'])
-                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-600 border border-rose-100 uppercase tracking-wider mt-0.5">Overdue</span>
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 border border-rose-100 tracking-wider mt-0.5">Overdue</span>
                                     @endif
                                 </td>
-                                <td class="px-5 py-3 text-right font-bold text-gray-900 dark:text-gray-100">
+                                <td class="px-5 py-3 text-right text-gray-900 dark:text-gray-100">
                                     Rp {{ number_format($ap['amount'], 0, ',', '.') }}
                                 </td>
                             </tr>

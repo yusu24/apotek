@@ -263,12 +263,12 @@
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $expense->description }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($expense->type === 'income')
-                                    <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs font-medium inline-flex items-center gap-1.5">
+                                    <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs inline-flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
                                         Pemasukan
                                     </span>
                                 @else
-                                    <span class="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-200 rounded-md text-xs font-medium inline-flex items-center gap-1.5">
+                                    <span class="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-200 rounded-md text-xs inline-flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                                         Pengeluaran
                                     </span>
@@ -277,16 +277,16 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($expense->account)
-                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium border border-gray-200">
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs border border-gray-200">
                                         {{ $expense->account->name }}
                                     </span>
                                 @else
                                     <span class="text-gray-400 italic">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->user->name ?? 'System' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-2">
                                     <button wire:click="edit({{ $expense->id }})" 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Edit">

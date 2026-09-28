@@ -94,7 +94,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($orders as $po)
                         <tr>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $po->po_number }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $po->po_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm">
@@ -107,7 +107,7 @@
                                         default => 'bg-slate-100 text-slate-700 border border-slate-200',
                                     };
                                 @endphp
-                                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full {{ $poBadgeStyles }}">
+                                <span class="inline-flex items-center px-2.5 py-0.5 text-xs rounded-full {{ $poBadgeStyles }}">
                                     {{ [
                                         'draft' => 'Draf',
                                         'ordered' => 'Dipesan',
@@ -118,7 +118,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-right">
+                            <td class="px-6 py-4 text-sm text-right">
                                 <div class="flex items-center justify-end gap-3">
                                     <a href="{{ $po->status === 'draft' ? route('procurement.purchase-orders.edit', $po->id) : route('procurement.purchase-orders.view', $po->id) }}" wire:navigate 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" 

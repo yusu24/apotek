@@ -91,7 +91,7 @@
                         @forelse($customers as $customer)
                             <tr class="hover:bg-blue-50/30 dark:hover:bg-gray-700/30 transition-colors group">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-200">{{ $customer->name }}</span>
+                                    <span class="text-sm text-gray-900 dark:text-gray-200">{{ $customer->name }}</span>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">

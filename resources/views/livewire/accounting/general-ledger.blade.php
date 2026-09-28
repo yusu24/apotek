@@ -112,7 +112,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-500" colspan="3">Saldo Awal Periode</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 text-right">-</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 text-right">-</td>
-                                <td class="px-6 py-4 text-sm text-gray-800 text-right font-bold font-mono bg-gray-50">{{ number_format($openingBalance, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800 text-right font-mono bg-gray-50">{{ number_format($openingBalance, 0, ',', '.') }}</td>
                             </tr>
 
                             <!-- Transactions -->
@@ -121,11 +121,11 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $line->journalEntry->date->format('d/m/Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                                     {{ $line->journalEntry->entry_number }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">
-                                    <div class="font-medium">{{ $line->journalEntry->description }}</div>
+                                    <div>{{ $line->journalEntry->description }}</div>
                                     @if($line->notes)
                                         <div class="text-xs text-gray-500 italic mt-0.5">{{ $line->notes }}</div>
                                     @endif
@@ -136,7 +136,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
                                     {{ $line->credit > 0 ? number_format($line->credit, 0, ',', '.') : '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-bold font-mono bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono bg-gray-50">
                                     {{ number_format($line->running_balance, 0, ',', '.') }}
                                 </td>
                             </tr>

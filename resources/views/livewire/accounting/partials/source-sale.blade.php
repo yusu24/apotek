@@ -40,15 +40,15 @@
                         <td class="px-3 py-2 text-gray-900">{{ $item->product->name }}</td>
                         <td class="px-3 py-2 text-right text-gray-900">{{ $item->quantity }}</td>
                         <td class="px-3 py-2 text-gray-700">{{ $item->unit->name }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">Rp. {{ number_format($item->price, 0, ',', '.') }},-</td>
-                        <td class="px-3 py-2 text-right font-semibold text-gray-900">Rp. {{ number_format($item->subtotal, 0, ',', '.') }},-</td>
+                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="bg-gray-50 font-bold">
                     <tr>
                         <td colspan="4" class="px-3 py-2 text-right">Total:</td>
-                        <td class="px-3 py-2 text-right text-green-600">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
+                        <td class="px-3 py-2 text-right text-green-600">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>

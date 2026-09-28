@@ -242,13 +242,13 @@
                                 <tbody class="divide-y divide-gray-200">
                                     @foreach($guide['form_fields'] as $field)
                                     <tr class="hover:bg-gray-50/50">
-                                        <td class="px-6 py-4 font-bold text-gray-800">{{ $field['name'] }}</td>
+                                        <td class="px-6 py-4 text-gray-800">{{ $field['name'] }}</td>
                                         <td class="px-6 py-4 text-gray-600 leading-relaxed">{{ $field['description'] }}</td>
                                         <td class="px-6 py-4 text-center">
                                             @if($field['required'])
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Ya</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-red-100 text-red-800">Ya</span>
                                             @else
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Tidak</span>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-gray-100 text-gray-800">Tidak</span>
                                             @endif
                                         </td>
                                     </tr>

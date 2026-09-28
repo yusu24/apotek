@@ -119,11 +119,11 @@
                     @forelse($transactions as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                <div class="font-medium text-gray-900 dark:text-white">{{ $item->created_at->format('d/m/Y') }}</div>
+                                <div class="text-sm text-gray-900 dark:text-white">{{ $item->created_at->format('d/m/Y') }}</div>
                                 <div class="text-xs">{{ $item->created_at->format('H:i') }}</div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">{{ $item->product->name ?? '-' }}</div>
+                                <div class="text-sm text-gray-900 dark:text-white">{{ $item->product->name ?? '-' }}</div>
                                 <div class="text-xs text-gray-500">{{ $item->product->barcode ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -146,7 +146,7 @@
                                     ];
                                     $label = $labels[$item->type] ?? ucfirst($item->type);
                                 @endphp
-                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold border {{ $typeColor }}">
+                                <span class="px-2.5 py-1 rounded-lg text-xs border {{ $typeColor }}">
                                     {{ $label }}
                                 </span>
                             </td>
@@ -157,7 +157,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <span class="text-sm font-bold {{ $item->quantity < 0 ? 'text-red-600' : 'text-green-600' }}">
+                                <span class="text-sm {{ $item->quantity < 0 ? 'text-red-600' : 'text-green-600' }}">
                                     {{ $item->quantity > 0 ? '+' : '' }}{{ number_format($item->quantity, 0) }}
                                 </span>
                             </td>

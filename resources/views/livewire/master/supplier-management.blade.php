@@ -68,7 +68,7 @@
                     @forelse($suppliers as $supplier)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition duration-150">
                             <td class="px-6 py-4">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white">{{ $supplier->name }}</div>
+                                <div class="text-sm text-gray-900 dark:text-white">{{ $supplier->name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-600 dark:text-gray-300">{{ $supplier->contact_person ?? '-' }}</div>
@@ -79,7 +79,7 @@
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-600 dark:text-gray-300 max-w-xs truncate">{{ $supplier->address ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right">
                                 <div class="flex justify-end items-center gap-3">
                                     <button wire:click="edit({{ $supplier->id }})" class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

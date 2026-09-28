@@ -168,8 +168,8 @@
                                 <input type="checkbox" wire:model.live="selectedProducts" value="{{ $product->id }}" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
-                                <div class="text-xs text-gray-500 mt-1 uppercase">{{ $product->barcode }}</div>
+                                <div class="text-sm text-gray-900">{{ $product->name }}</div>
+                                <div class="text-xs text-gray-500 mt-1">{{ $product->barcode }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
@@ -190,16 +190,16 @@
                                     $colorIndex = crc32($categoryName) % count($colors);
                                     $color = $colors[$colorIndex];
                                 @endphp
-                                <span class="px-2 py-1 text-xs font-medium leading-5 rounded-full {{ $color['bg'] }} {{ $color['text'] }}">
+                                <span class="px-2 py-1 text-xs leading-5 rounded-full {{ $color['bg'] }} {{ $color['text'] }}">
                                     {{ $categoryName }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 Rp {{ number_format($product->sell_price, 0, ',', '.') }}
                                 <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
+                                <div class="text-sm text-gray-900">
                                     Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
                                 </div>
                                 @if($product->purchase_price_updated_at)
@@ -215,7 +215,7 @@
                                     {{ $product->min_stock }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                                 <div class="flex justify-center items-center gap-3">
                                     <button wire:click="viewHistory({{ $product->id }})" 
                                         class="text-green-600 hover:text-green-900 transition duration-150" title="Riwayat Harga">
@@ -298,12 +298,12 @@
                                             <tr class="hover:bg-gray-50">
                                                 <td class="px-3 py-2 text-xs text-gray-900">
                                                     {{ $history['date']->format('d/m/Y H:i') }}
-                                                    <div class="text-[10px] text-gray-500 uppercase">{{ $history['action'] }}</div>
+                                                    <div class="text-[10px] text-gray-500 capitalize">{{ $history['action'] }}</div>
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
-                                                    Rp. {{ number_format($history['new_price'], 0, ',', '.') }},-
+                                                <td class="px-3 py-2 text-xs text-right text-gray-900">
+                                                    Rp {{ number_format($history['new_price'], 0, ',', '.') }}
                                                     @if($history['action'] == 'updated')
-                                                        <div class="text-gray-400 text-[10px] line-through">Rp. {{ number_format($history['old_price'], 0, ',', '.') }},-</div>
+                                                        <div class="text-gray-400 text-[10px] line-through">Rp {{ number_format($history['old_price'], 0, ',', '.') }}</div>
                                                     @endif
                                                 </td>
                                                 <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]" title="{{ $history['user'] }}">
@@ -346,8 +346,8 @@
                                                 <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[120px]" title="{{ $history['supplier'] }}">
                                                     {{ $history['supplier'] }}
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-right font-bold text-gray-900">
-                                                    Rp. {{ number_format($history['price'], 0, ',', '.') }},-
+                                                <td class="px-3 py-2 text-xs text-right text-gray-900">
+                                                    Rp {{ number_format($history['price'], 0, ',', '.') }}
                                                     <div class="text-[10px] text-gray-500">/ {{ $history['unit'] }}</div>
                                                 </td>
                                             </tr>

@@ -146,7 +146,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($paginatedItems as $item)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ $type === 'ap' ? ($item['supplier'] ?? '-') : ($item['customer'] ?? '-') }}
                             @if($type === 'ar' && isset($item['customer_phone']))
                                 <span class="block text-xs text-gray-500">{{ $item['customer_phone'] }}</span>
@@ -158,7 +158,7 @@
                             {{ $item['due_date'] && $item['due_date'] !== '-' ? \Carbon\Carbon::parse($item['due_date'])->format('d/m/Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full 
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 rounded-full 
                                 {{ $item['age'] > 90 ? 'bg-red-100 text-red-800' : 
                                    ($item['age'] > 60 ? 'bg-yellow-100 text-yellow-800' : 
                                    ($item['age'] > 30 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800')) }}">
@@ -168,20 +168,20 @@
                         @if($type === 'ar')
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                             @if($item['status'] === 'paid' || $item['outstanding'] <= 0)
-                                <span class="px-2 inline-flex text-xs leading-5 font-bold rounded-full bg-green-100 text-green-800">
+                                <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-green-100 text-green-800">
                                     LUNAS
                                 </span>
                             @elseif(isset($item['days_remaining']))
                                 @if($item['days_remaining'] < 0)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-red-100 text-red-800">
                                         Telat {{ abs($item['days_remaining']) }} Hari
                                     </span>
                                 @elseif($item['days_remaining'] == 0)
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
+                                    <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-orange-100 text-orange-800">
                                         Jatuh Tempo Hari Ini
                                     </span>
                                 @else
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-green-100 text-green-800">
                                         {{ $item['days_remaining'] }} Hari Lagi
                                     </span>
                                 @endif
@@ -190,12 +190,12 @@
                             @endif
                         </td>
                         @endif
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">Rp. {{ number_format($item['total_amount'], 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-gray-900">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">Rp {{ number_format($item['total_amount'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
                             @if($item['outstanding'] <= 0)
-                                <span class="text-green-600 font-bold">LUNAS</span>
+                                <span class="text-green-600">LUNAS</span>
                             @else
-                                Rp. {{ number_format($item['outstanding'], 0, ',', '.') }},-
+                                Rp {{ number_format($item['outstanding'], 0, ',', '.') }}
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -204,11 +204,11 @@
                                     $entityName = ($type === 'ap') ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer');
                                 @endphp
                                 <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ addslashes($entityName) }}')"
-                                    class="inline-flex items-center px-4 py-1.5 border border-transparent text-xs font-bold rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-sm">
+                                    class="inline-flex items-center px-4 py-1.5 border border-transparent text-xs rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-sm">
                                     Bayar
                                 </button>
                             @else
-                                <span class="text-xs text-green-600 font-bold flex items-center justify-center">
+                                <span class="text-xs text-green-600 flex items-center justify-center">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     Terbayar
                                 </span>

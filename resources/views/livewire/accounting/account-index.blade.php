@@ -138,15 +138,15 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($accounts as $account)
                     <tr class="hover:bg-gray-50 transition duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 font-mono">{{ $account->code }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">{{ $account->code }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                             {{ $account->name }}
                             @if($account->is_system)
-                                <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] leading-4 font-bold rounded bg-gray-100 text-gray-600 border border-gray-200">SYSTEM</span>
+                                <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] leading-4 rounded bg-gray-100 text-gray-600 border border-gray-200">System</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                            <span class="px-2 py-1 text-xs rounded-full 
                                 @if($account->type == 'asset') bg-green-100 text-green-800
                                 @elseif($account->type == 'liability') bg-red-100 text-red-800
                                 @elseif($account->type == 'equity') bg-purple-100 text-purple-800
@@ -156,15 +156,15 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ str_replace('_', ' ', $account->category) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-bold">{{ $account->formatted_balance }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{{ $account->formatted_balance }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             @if($account->is_active)
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Aktif</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-green-100 text-green-800">Aktif</span>
                             @else
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Non-Aktif</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-gray-100 text-gray-800">Non-Aktif</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                             <div class="flex justify-end items-center gap-3">
                                 @can('manage accounts')
                                     <button wire:click="edit({{ $account->id }})" class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit Akun">

@@ -42,7 +42,7 @@
                     @forelse($products as $product)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
+                            <div class="text-sm text-gray-900">{{ $product->name }}</div>
                             <div class="text-xs text-gray-500">{{ $product->barcode }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -64,19 +64,19 @@
                                 $colorIndex = crc32($categoryName) % count($colors);
                                 $color = $colors[$colorIndex];
                             @endphp
-                            <span class="px-2 py-1 text-xs font-medium leading-5 rounded-full {{ $color['bg'] }} {{ $color['text'] }}">
+                            <span class="px-2 py-1 text-xs leading-5 rounded-full {{ $color['bg'] }} {{ $color['text'] }}">
                                 {{ $categoryName }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800">
                                 {{ $product->unit->name ?? 'Belum diset' }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center text-sm text-gray-500 whitespace-nowrap">
                             {{ $product->unit_conversions_count ?? 0 }} Level
                         </td>
-                        <td class="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
+                        <td class="px-6 py-4 text-right text-sm whitespace-nowrap">
                             <div class="flex items-center justify-end gap-3">
                                 <button wire:click="edit({{ $product->id }})" 
                                     class="text-blue-600 hover:text-blue-900 transition-colors" title="Atur Satuan">

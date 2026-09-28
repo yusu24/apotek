@@ -77,7 +77,7 @@
                             <td class="px-6 py-4 text-sm text-gray-500">
                                 {{ $category->description ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-3">
                                     @can('manage expense categories')
                                     <button wire:click="edit({{ $category->id }})" 

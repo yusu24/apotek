@@ -45,19 +45,19 @@
                     @forelse($assets as $asset)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-bold text-gray-900">{{ $asset->asset_code }}</div>
+                                <div class="text-gray-900">{{ $asset->asset_code }}</div>
                                 <div class="text-sm text-gray-500">{{ $asset->asset_name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 bg-gray-100 rounded-md text-xs">
                                     {{ $taxGroups[$asset->tax_group]['label'] ?? $asset->tax_group }}
                                 </span>
-                                <div class="text-[10px] text-gray-400 mt-1 uppercase">{{ str_replace('_', ' ', $asset->method) }}</div>
+                                <div class="text-[10px] text-gray-400 mt-1 capitalize">{{ str_replace('_', ' ', $asset->method) }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right font-medium">Rp. {{ number_format($asset->acquisition_cost, 0, ',', '.') }},-</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-red-600 font-medium">Rp. {{ number_format($asset->total_depreciation, 0, ',', '.') }},-</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-blue-600 font-bold">Rp. {{ number_format($asset->book_value, 0, ',', '.') }},-</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-right">Rp {{ number_format($asset->acquisition_cost, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-red-600">Rp {{ number_format($asset->total_depreciation, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-blue-600">Rp {{ number_format($asset->book_value, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                 <div class="flex justify-center items-center gap-3">
                                     <button wire:click="editAsset({{ $asset->id }})" class="text-blue-600 hover:text-blue-900 transition" title="Edit Aset">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

@@ -37,12 +37,12 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($users as $user)
                         <tr wire:key="user-row-{{ $user->id }}" class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ \Illuminate\Support\Str::title($user->name) }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Illuminate\Support\Str::title($user->name) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($user->roles as $role)
-                                        <span class="px-3 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded-full 
+                                        <span class="px-3 py-0.5 text-[10px] capitalize rounded-full 
                                             {{ $role->name === 'super-admin' ? 'bg-red-100 text-red-700 border border-red-200' : 
                                             ($role->name === 'admin' ? 'bg-slate-100 text-slate-700 border border-slate-200' : 
                                             ($role->name === 'kasir' ? 'bg-amber-100 text-amber-700 border border-amber-200' : 
@@ -53,12 +53,12 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider
+                                <span class="px-2 py-1 rounded-md text-[10px]
                                     {{ $user->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }}">
                                     {{ $user->is_active ? 'Aktif' : 'Non-Aktif' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-3">
                                     @can('manage users')
                                     <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate

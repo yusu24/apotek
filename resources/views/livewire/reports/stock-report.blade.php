@@ -131,11 +131,11 @@
                                     <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] font-mono text-gray-600 dark:text-gray-300">
                                         {{ $batch->product->barcode }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white capitalize font-medium">
+                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white capitalize">
                                         {{ $batch->product->name }}
                                         <div class="text-[11px] text-gray-400 no-print">{{ $batch->batch_no }} - Kadaluarsa: {{ $batch->expired_date->format('d/m/Y') }}</div>
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-500 dark:text-gray-400 uppercase">
+                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-500 dark:text-gray-400">
                                         {{ $batch->product->unit->name }}
                                     </td>
                                     <td class="px-4 py-4 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-900 dark:text-white">
@@ -161,7 +161,7 @@
                                     </td>
                                     <td></td>
                                     <td class="px-6 py-4 print:px-2 print:py-1 text-right border-l border-gray-100 dark:border-gray-800 print:border-l-0 tabular-nums">
-                                        <div class="text-sm print:text-[10px] text-gray-900 dark:text-white">Rp. {{ number_format($totalInventoryValue, 0, ',', '.') }},-</div>
+                                        <div class="text-sm print:text-[10px] text-gray-900 dark:text-white">Rp {{ number_format($totalInventoryValue, 0, ',', '.') }}</div>
                                     </td>
                                 </tr>
                             </tfoot>

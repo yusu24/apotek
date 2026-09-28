@@ -43,18 +43,18 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($productBatches as $batch)
                 <tr>
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $batch->batch_no }}</td>
-                    <td class="px-6 py-4 text-sm {{ $batch->expired_date < now() ? 'text-red-600 font-bold' : 'text-gray-500' }}">
+                    <td class="px-6 py-4 text-sm text-gray-900">{{ $batch->batch_no }}</td>
+                    <td class="px-6 py-4 text-sm {{ $batch->expired_date < now() ? 'text-red-600' : 'text-gray-500' }}">
                         {{ $batch->expired_date ? \Carbon\Carbon::parse($batch->expired_date)->format('d/m/Y') : '-' }}
                     </td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $batch->stock_current }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">{{ $batch->stock_current }}</td>
                     <td class="px-6 py-4">
                         @if($batch->expired_date < now())
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Expired</span>
+                            <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-red-100 text-red-800">Expired</span>
                         @elseif($batch->expired_date < now()->addMonths(3))
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Near Exp</span>
+                            <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-yellow-100 text-yellow-800">Near Exp</span>
                         @else
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Good</span>
+                            <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-green-100 text-green-800">Good</span>
                         @endif
                     </td>
                 </tr>
@@ -145,19 +145,19 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($movement->type == 'in')
-                                <span class="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-800">Masuk</span>
+                                <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">Masuk</span>
                             @elseif($movement->type == 'out')
-                                <span class="px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-800">Keluar</span>
+                                <span class="px-2 py-1 rounded text-xs bg-red-100 text-red-800">Keluar</span>
                             @elseif($movement->type == 'sale')
-                                <span class="px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-800">Penjualan</span>
+                                <span class="px-2 py-1 rounded text-xs bg-blue-100 text-blue-800">Penjualan</span>
                             @elseif($movement->type == 'adjustment')
-                                <span class="px-2 py-1 rounded text-xs font-semibold bg-purple-100 text-purple-800">Opname</span>
+                                <span class="px-2 py-1 rounded text-xs bg-purple-100 text-purple-800">Opname</span>
                             @endif
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->batch->batch_no ?? '-' }}</td>
                         
                         <!-- Masuk -->
-                        <td class="px-6 py-4 text-sm font-bold text-center text-green-600">
+                        <td class="px-6 py-4 text-sm text-center text-green-600">
                             @if($movement->quantity > 0)
                                 +{{ number_format($movement->quantity, 0, ',', '.') }}
                             @else
@@ -166,7 +166,7 @@
                         </td>
 
                         <!-- Keluar -->
-                        <td class="px-6 py-4 text-sm font-bold text-center text-red-600">
+                        <td class="px-6 py-4 text-sm text-center text-red-600">
                             @if($movement->quantity < 0)
                                 {{ number_format(abs($movement->quantity), 0, ',', '.') }}
                             @else
@@ -175,11 +175,11 @@
                         </td>
 
                         <!-- Saldo (Stock After) -->
-                        <td class="px-6 py-4 text-sm font-bold text-center text-blue-600">
+                        <td class="px-6 py-4 text-sm text-center text-blue-600">
                             {{ number_format($movement->stock_after ?? $movement->running_balance, 0, ',', '.') }}
                         </td>
 
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $movement->doc_ref ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ $movement->doc_ref ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->description }}</td>
                         <td class="px-6 py-4 text-sm text-gray-500">{{ $movement->user->name ?? 'System' }}</td>
                     </tr>

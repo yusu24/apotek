@@ -166,7 +166,7 @@
                                     {{ \Carbon\Carbon::parse($line->journalEntry->date)->format('d/m/Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="font-medium text-gray-700 dark:text-gray-300">{{ $line->account->name }}</div>
+                                    <div class="text-gray-700 dark:text-gray-300">{{ $line->account->name }}</div>
                                     <div class="text-[10px] text-gray-400 font-mono">{{ $line->account->code }}</div>
                                 </td>
                                 <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
@@ -174,7 +174,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
                                     @if($line->debit > 0)
-                                        <span class="font-bold text-emerald-600 dark:text-emerald-400 tracking-tight">
+                                        <span class="text-emerald-600 dark:text-emerald-400 tracking-tight">
                                             + {{ number_format($line->debit, 0, ',', '.') }}
                                         </span>
                                     @else
@@ -183,7 +183,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
                                     @if($line->credit > 0)
-                                        <span class="font-bold text-red-600 dark:text-red-400 tracking-tight text-opacity-80">
+                                        <span class="text-red-600 dark:text-red-400 tracking-tight text-opacity-80">
                                             - {{ number_format($line->credit, 0, ',', '.') }}
                                         </span>
                                     @else
@@ -191,7 +191,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
-                                    <span class="font-bold text-gray-900 dark:text-gray-200 tracking-tight">
+                                    <span class="text-gray-900 dark:text-gray-200 tracking-tight">
                                         {{ number_format($line->running_balance, 0, ',', '.') }}
                                     </span>
                                 </td>

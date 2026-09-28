@@ -116,27 +116,27 @@
                     <!-- ASET -->
                     @if(isset($reportData['assets']) && $reportData['assets']->count() > 0)
                     <tr class="bg-blue-100">
-                        <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900 uppercase">ASET</td>
+                        <td colspan="4" class="px-6 py-3 text-sm text-gray-900">Aset</td>
                     </tr>
                     @foreach($reportData['assets'] as $account)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->code }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->name }}</td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_debit > 0 ? 'Rp. ' . number_format($account->total_debit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_debit > 0 ? 'Rp ' . number_format($account->total_debit, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_credit > 0 ? 'Rp. ' . number_format($account->total_credit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_credit > 0 ? 'Rp ' . number_format($account->total_credit, 0, ',', '.') : '-' }}
                         </td>
                     </tr>
                     @endforeach
                     <tr class="bg-blue-50 font-bold">
                         <td colspan="2" class="px-6 py-3 text-sm text-gray-900">Subtotal Aset</td>
                         <td class="px-6 py-3 text-sm text-right text-blue-600">
-                            Rp. {{ number_format($reportData['total_assets_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_assets_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3 text-sm text-right text-blue-600">
-                            Rp. {{ number_format($reportData['total_assets_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_assets_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @endif
@@ -144,27 +144,27 @@
                     <!-- KEWAJIBAN -->
                     @if(isset($reportData['liabilities']) && $reportData['liabilities']->count() > 0)
                     <tr class="bg-yellow-100">
-                        <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900 uppercase">KEWAJIBAN</td>
+                        <td colspan="4" class="px-6 py-3 text-sm text-gray-900">Kewajiban</td>
                     </tr>
                     @foreach($reportData['liabilities'] as $account)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->code }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->name }}</td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_debit > 0 ? 'Rp. ' . number_format($account->total_debit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_debit > 0 ? 'Rp ' . number_format($account->total_debit, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_credit > 0 ? 'Rp. ' . number_format($account->total_credit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_credit > 0 ? 'Rp ' . number_format($account->total_credit, 0, ',', '.') : '-' }}
                         </td>
                     </tr>
                     @endforeach
                     <tr class="bg-yellow-50 font-bold">
                         <td colspan="2" class="px-6 py-3 text-sm text-gray-900">Subtotal Kewajiban</td>
                         <td class="px-6 py-3 text-sm text-right text-yellow-600">
-                            Rp. {{ number_format($reportData['total_liabilities_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_liabilities_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3 text-sm text-right text-yellow-600">
-                            Rp. {{ number_format($reportData['total_liabilities_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_liabilities_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @endif
@@ -172,27 +172,27 @@
                     <!-- EKUITAS -->
                     @if(isset($reportData['equity']) && $reportData['equity']->count() > 0)
                     <tr class="bg-purple-100">
-                        <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900 uppercase">EKUITAS</td>
+                        <td colspan="4" class="px-6 py-3 text-sm text-gray-900">Ekuitas</td>
                     </tr>
                     @foreach($reportData['equity'] as $account)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->code }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->name }}</td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_debit > 0 ? 'Rp. ' . number_format($account->total_debit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_debit > 0 ? 'Rp ' . number_format($account->total_debit, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_credit > 0 ? 'Rp. ' . number_format($account->total_credit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_credit > 0 ? 'Rp ' . number_format($account->total_credit, 0, ',', '.') : '-' }}
                         </td>
                     </tr>
                     @endforeach
                     <tr class="bg-purple-50 font-bold">
                         <td colspan="2" class="px-6 py-3 text-sm text-gray-900">Subtotal Ekuitas</td>
                         <td class="px-6 py-3 text-sm text-right text-purple-600">
-                            Rp. {{ number_format($reportData['total_equity_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_equity_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3 text-sm text-right text-purple-600">
-                            Rp. {{ number_format($reportData['total_equity_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_equity_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @endif
@@ -200,27 +200,27 @@
                     <!-- PENDAPATAN -->
                     @if(isset($reportData['revenue']) && $reportData['revenue']->count() > 0)
                     <tr class="bg-green-100">
-                        <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900 uppercase">PENDAPATAN</td>
+                        <td colspan="4" class="px-6 py-3 text-sm text-gray-900">Pendapatan</td>
                     </tr>
                     @foreach($reportData['revenue'] as $account)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->code }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->name }}</td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_debit > 0 ? 'Rp. ' . number_format($account->total_debit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_debit > 0 ? 'Rp ' . number_format($account->total_debit, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_credit > 0 ? 'Rp. ' . number_format($account->total_credit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_credit > 0 ? 'Rp ' . number_format($account->total_credit, 0, ',', '.') : '-' }}
                         </td>
                     </tr>
                     @endforeach
                     <tr class="bg-green-50 font-bold">
                         <td colspan="2" class="px-6 py-3 text-sm text-gray-900">Subtotal Pendapatan</td>
                         <td class="px-6 py-3 text-sm text-right text-green-600">
-                            Rp. {{ number_format($reportData['total_revenue_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_revenue_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3 text-sm text-right text-green-600">
-                            Rp. {{ number_format($reportData['total_revenue_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_revenue_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @endif
@@ -228,39 +228,39 @@
                     <!-- BEBAN -->
                     @if(isset($reportData['expenses']) && $reportData['expenses']->count() > 0)
                     <tr class="bg-red-100">
-                        <td colspan="4" class="px-6 py-3 text-sm font-bold text-gray-900 uppercase">BEBAN</td>
+                        <td colspan="4" class="px-6 py-3 text-sm text-gray-900">Beban</td>
                     </tr>
                     @foreach($reportData['expenses'] as $account)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->code }}</td>
                         <td class="px-6 py-4 text-sm text-gray-900">{{ $account->name }}</td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_debit > 0 ? 'Rp. ' . number_format($account->total_debit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_debit > 0 ? 'Rp ' . number_format($account->total_debit, 0, ',', '.') : '-' }}
                         </td>
-                        <td class="px-6 py-4 text-sm text-right font-medium text-gray-900">
-                            {{ $account->total_credit > 0 ? 'Rp. ' . number_format($account->total_credit, 0, ',', '.') . ',-' : '-' }}
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">
+                            {{ $account->total_credit > 0 ? 'Rp ' . number_format($account->total_credit, 0, ',', '.') : '-' }}
                         </td>
                     </tr>
                     @endforeach
                     <tr class="bg-red-50 font-bold">
                         <td colspan="2" class="px-6 py-3 text-sm text-gray-900">Subtotal Beban</td>
                         <td class="px-6 py-3 text-sm text-right text-red-600">
-                            Rp. {{ number_format($reportData['total_expenses_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_expenses_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-3 text-sm text-right text-red-600">
-                            Rp. {{ number_format($reportData['total_expenses_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['total_expenses_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                     @endif
 
                     <!-- GRAND TOTAL -->
                     <tr class="bg-gray-800 text-white font-bold">
-                        <td colspan="2" class="px-6 py-4 text-sm uppercase">TOTAL</td>
+                        <td colspan="2" class="px-6 py-4 text-sm">Total</td>
                         <td class="px-6 py-4 text-sm text-right">
-                            Rp. {{ number_format($reportData['grand_total_debit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['grand_total_debit'] ?? 0, 0, ',', '.') }}
                         </td>
                         <td class="px-6 py-4 text-sm text-right">
-                            Rp. {{ number_format($reportData['grand_total_credit'] ?? 0, 0, ',', '.') }},-
+                            Rp {{ number_format($reportData['grand_total_credit'] ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
                 </tbody>

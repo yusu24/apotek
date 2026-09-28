@@ -31,10 +31,10 @@
                                     <div class="w-8 h-8 rounded bg-blue-50 text-blue-600 flex items-center justify-center mr-3 shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                                     </div>
-                                    <span class="font-bold text-gray-800 truncate max-w-xs">{{ $backup['name'] }}</span>
+                                    <span class="text-gray-800 truncate max-w-xs">{{ $backup['name'] }}</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-center font-medium text-gray-600">
+                            <td class="px-6 py-4 text-center text-gray-600">
                                 {{ $backup['size'] }}
                             </td>
                             <td class="px-6 py-4 text-center text-gray-500">

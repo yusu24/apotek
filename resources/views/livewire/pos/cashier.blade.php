@@ -180,7 +180,7 @@
                             @forelse($cart as $id => $item)
                             <tr wire:key="cart-row-{{ $id }}" class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
                                 <td class="px-2 md:px-4 py-2 md:py-3 align-top">
-                                    <div class="font-bold text-gray-900 line-clamp-2 leading-tight mb-1 text-xs">{{ $item['name'] }}</div>
+                                    <div class="text-gray-900 line-clamp-2 leading-tight mb-1 text-xs">{{ $item['name'] }}</div>
                                     
                                     <!-- Price & Unit Display/Selector -->
                                     <div class="flex items-center gap-1.5 mt-1 flex-nowrap overflow-hidden">
@@ -188,7 +188,7 @@
                                         <span class="text-xs font-normal text-blue-700 shrink-0">{{ number_format($item['price'], 0, ',', '.') }}</span>
 
                                         @if(($item['discount_percent'] ?? 0) > 0)
-                                            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded shrink-0">
+                                            <span class="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded shrink-0">
                                                 -{{ $item['discount_percent'] }}%
                                             </span>
                                         @endif
@@ -201,7 +201,7 @@
                                             }
                                         @endphp
                                         @if($isWholesale)
-                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-normal uppercase tracking-tighter shrink-0">Grosir</span>
+                                            <span class="text-[9px] bg-green-100 text-green-700 px-1 rounded font-normal tracking-tighter shrink-0">Grosir</span>
                                         @endif
                                     </div>
 
@@ -221,11 +221,11 @@
                                     <div class="w-16 mx-auto">
                                         <input type="number"
                                                 wire:model.blur="cart.{{ $id }}.qty"
-                                                class="w-full px-1 py-1 text-center text-xs font-bold border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                                                class="w-full px-1 py-1 text-center text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
                                                 min="1">
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-right align-top font-bold text-gray-900 text-xs">
+                                <td class="px-4 py-3 text-right align-top text-gray-900 text-xs">
                                     {{ number_format($item['subtotal'], 0, ',', '.') }}
                                 </td>
                                 <td class="px-2 py-3 text-center align-top">
@@ -244,17 +244,17 @@
                                                  @click.outside="openDisc = false"
                                                  x-transition
                                                  class="absolute bottom-full right-0 mb-2 w-48 bg-white p-3 rounded-xl shadow-xl border border-gray-200 z-50 text-left">
-                                                <label class="text-xs font-bold mb-1.5 block text-gray-700">Diskon Item (%):</label>
+                                                <label class="text-xs mb-1.5 block text-gray-700">Diskon Item (%):</label>
                                                 <div class="flex items-center gap-2">
                                                     <input type="number" 
                                                         wire:model.blur="cart.{{ $id }}.discount_percent"
-                                                        class="w-full px-2 py-1.5 text-xs text-center border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500 font-bold"
+                                                        class="w-full px-2 py-1.5 text-xs text-center border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
                                                         placeholder="0"
                                                         max="100"
                                                         min="0"
                                                         x-ref="discInput_{{ $id }}"
                                                         @keydown.enter="openDisc = false">
-                                                    <span class="text-xs font-bold text-gray-500">%</span>
+                                                    <span class="text-xs text-gray-500">%</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -273,7 +273,7 @@
                                                  @click.outside="openNote = false"
                                                  x-transition
                                                  class="absolute bottom-full right-0 mb-2 w-64 bg-white p-3 rounded-xl shadow-xl border border-gray-200 z-50 text-left">
-                                                <label class="text-xs font-bold mb-1.5 block text-gray-700">Catatan Item:</label>
+                                                <label class="text-xs mb-1.5 block text-gray-700">Catatan Item:</label>
                                                 <input type="text" 
                                                     wire:model.blur="cart.{{ $id }}.notes"
                                                     class="w-full px-2 py-1.5 text-xs border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
@@ -1155,7 +1155,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($pendingOrders as $order)
                                 <tr wire:key="pending-desktop-{{ $order->id }}">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $order->invoice_no }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -1163,13 +1163,13 @@
                                         <br>
                                         <span class="text-xs">{{ $order->created_at->diffForHumans() }}</span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
-                                        Rp. {{ number_format($order->grand_total, 0, ',', '.') }},-
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        Rp {{ number_format($order->grand_total, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                         {{ $order->notes ?: '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-2">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm flex justify-end gap-2">
                                         <button wire:click="restorePendingOrder({{ $order->id }})" 
                                                 class="p-2 text-blue-600 hover:text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
                                                 title="Lanjutkan">

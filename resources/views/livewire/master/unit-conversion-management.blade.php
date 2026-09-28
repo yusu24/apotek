@@ -32,11 +32,11 @@
                     @forelse($conversions as $conversion)
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $conversion->product->name }}</div>
+                                <div class="text-sm text-gray-900">{{ $conversion->product->name }}</div>
                                 <div class="text-xs text-gray-500">{{ $conversion->product->barcode ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
                                     {{ $conversion->fromUnit->name }}
                                 </span>
                             </td>
@@ -46,12 +46,12 @@
                                 </svg>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                     {{ $conversion->toUnit->name }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <div class="text-sm font-bold text-gray-900">{{ number_format($conversion->conversion_factor, 2) }}</div>
+                                <div class="text-sm text-gray-900">{{ number_format($conversion->conversion_factor, 2) }}</div>
                                 <div class="text-xs text-gray-500">1 {{ $conversion->fromUnit->name }} = {{ $conversion->conversion_factor }} {{ $conversion->toUnit->name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">

@@ -36,15 +36,15 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr wire:key="category-{{ $category->id }}">
-                            <td class="px-6 py-4 text-sm font-bold text-gray-900">{{ $category->code }}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $category->name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $category->code }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $category->name }}</td>
                             <td class="px-6 py-4 text-sm">
                                 @if($category->type === 'income')
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                         Pemasukan
                                     </span>
                                 @else
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
                                         Pengeluaran
                                     </span>
                                 @endif
@@ -52,12 +52,12 @@
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $category->description ?? '-' }}</td>
                             <td class="px-6 py-4 text-center">
                                 <button wire:click="toggleStatus({{ $category->id }})" 
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs transition-colors
                                     {{ $category->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }}">
                                     {{ $category->is_active ? 'Aktif' : 'Nonaktif' }}
                                 </button>
                             </td>
-                            <td class="px-6 py-4 text-sm font-medium text-right">
+                            <td class="px-6 py-4 text-sm text-right">
                                 <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
                                     <button wire:click="edit({{ $category->id }})" 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Edit">

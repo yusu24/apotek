@@ -71,19 +71,19 @@
                         {{-- Journal Header Row --}}
                         <tr class="bg-gray-100 border-t-2 border-gray-300">
                             <td class="px-4 py-3 align-top">
-                                <div class="font-bold text-gray-900">{{ $journal->date->format('d/m/y') }}</div>
-                                <div class="text-[10px] text-blue-600 font-bold uppercase">{{ $journal->entry_number }}</div>
+                                <div class="text-gray-900">{{ $journal->date->format('d/m/y') }}</div>
+                                <div class="text-[10px] text-blue-600">{{ $journal->entry_number }}</div>
                             </td>
-                            <td class="px-4 py-3 align-top font-bold text-gray-800">
+                            <td class="px-4 py-3 align-top text-gray-800">
                                 {{ $journal->description }}
                                 <span class="block text-[9px] text-gray-500 font-normal mt-1">S: {{ $journal->source }}</span>
                             </td>
                             <td class="px-4 py-3" colspan="3"></td>
                             <td class="px-4 py-3 text-center align-top">
                                 @if($journal->is_posted)
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800 border">POSTED</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] bg-green-100 text-green-800 border">Posted</span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-800 border">DRAFT</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] bg-yellow-100 text-yellow-800 border">Draft</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-center align-top whitespace-nowrap">
@@ -110,7 +110,7 @@
                             <td class="px-4 py-2" colspan="2"></td>
                             <td class="px-4 py-2">
                                 <div class="{{ $line->credit > 0 ? 'ml-6' : '' }} flex flex-col">
-                                    <span class="text-xs font-bold text-gray-700">{{ $line->account->code }} - {{ $line->account->name }}</span>
+                                    <span class="text-xs text-gray-700">{{ $line->account->code }} - {{ $line->account->name }}</span>
                                     @if($line->notes)
                                         <span class="text-[9px] text-gray-500">{{ $line->notes }}</span>
                                     @endif
@@ -118,14 +118,14 @@
                             </td>
                             <td class="px-4 py-2 text-right">
                                 @if($line->debit > 0)
-                                    <span class="text-xs font-bold text-gray-900">{{ number_format($line->debit, 0, ',', '.') }}</span>
+                                    <span class="text-xs text-gray-900">{{ number_format($line->debit, 0, ',', '.') }}</span>
                                 @else
                                     -
                                 @endif
                             </td>
                             <td class="px-4 py-2 text-right">
                                 @if($line->credit > 0)
-                                    <span class="text-xs font-bold text-gray-900">{{ number_format($line->credit, 0, ',', '.') }}</span>
+                                    <span class="text-xs text-gray-900">{{ number_format($line->credit, 0, ',', '.') }}</span>
                                 @else
                                     -
                                 @endif

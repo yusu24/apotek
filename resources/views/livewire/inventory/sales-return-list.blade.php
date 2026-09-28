@@ -52,7 +52,7 @@
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
                             <td class="px-6 py-4">{{ $return->sale->invoice_no }}</td>
-                            <td class="px-6 py-4">Rp. {{ number_format($return->total_amount, 0, ',', '.') }},-</td>
+                            <td class="px-6 py-4">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4">{{ optional($return->user)->name ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $return->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-6 py-4 text-gray-500">{{ $return->notes ?: '-' }}</td>
@@ -118,7 +118,7 @@
                                             </div>
                                             <div class="flex-1 min-w-0">
                                                 <div class="text-sm font-bold text-gray-900 truncate">{{ $sale->invoice_no }}</div>
-                                                <div class="text-xs text-gray-500">{{ $sale->date->format('d/m/Y') }} • Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</div>
+                                                <div class="text-xs text-gray-500">{{ $sale->date->format('d/m/Y') }} • Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</div>
                                             </div>
                                         </button>
                                     @endforeach
@@ -156,17 +156,17 @@
                                         @foreach($returnItems as $id => $item)
                                             <tr>
                                                 <td class="px-4 py-3">
-                                                    <div class="font-bold text-gray-800">{{ $item['name'] }}</div>
-                                                    <div class="text-xs text-gray-500 italic">Rp. {{ number_format($item['price'], 0, ',', '.') }},-</div>
+                                                    <div class="text-gray-800">{{ $item['name'] }}</div>
+                                                    <div class="text-xs text-gray-500 italic">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
                                                 </td>
-                                                <td class="px-4 py-3 text-center font-bold text-gray-600">{{ $item['max_quantity'] }}</td>
+                                                <td class="px-4 py-3 text-center text-gray-600">{{ $item['max_quantity'] }}</td>
                                                 <td class="px-4 py-3 text-center text-xs text-gray-500">{{ $item['batch_no'] }}</td>
                                                 <td class="px-4 py-3">
                                                     <input type="number" wire:model.live="returnItems.{{ $id }}.quantity" class="w-full h-9 rounded-lg border-gray-300 text-sm text-center focus:ring-blue-500 focus:border-blue-500" min="0" max="{{ $item['max_quantity'] }}">
                                                     @error("returnItems.{$id}.quantity") <span class="text-red-500 text-[10px]">{{ $message }}</span> @enderror
                                                 </td>
-                                                <td class="px-4 py-3 text-right font-bold text-blue-600">
-                                                    Rp. {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['price'] ?: 0), 0, ',', '.') }},-
+                                                <td class="px-4 py-3 text-right text-blue-600">
+                                                    Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['price'] ?: 0), 0, ',', '.') }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -257,18 +257,18 @@
                             <tbody class="divide-y divide-gray-100">
                                 @foreach($selectedReturn->items as $item)
                                     <tr class="hover:bg-gray-50/50">
-                                        <td class="px-4 py-3 font-medium text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
+                                        <td class="px-4 py-3 text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
                                         <td class="px-4 py-3 text-center text-gray-500">{{ $item->batch->batch_no ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-center font-bold">{{ $item->quantity }}</td>
-                                        <td class="px-4 py-3 text-right">Rp. {{ number_format($item->price, 0, ',', '.') }},-</td>
-                                        <td class="px-4 py-3 text-right font-bold text-blue-600">Rp. {{ number_format($item->quantity * $item->price, 0, ',', '.') }},-</td>
+                                        <td class="px-4 py-3 text-center">{{ $item->quantity }}</td>
+                                        <td class="px-4 py-3 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-right text-blue-600">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot class="bg-blue-50/30">
                                 <tr>
                                     <td colspan="4" class="px-4 py-3 text-right font-bold text-gray-600 uppercase text-xs">Total Refund</td>
-                                    <td class="px-4 py-3 text-right font-bold text-lg text-blue-700">Rp. {{ number_format($selectedReturn->total_amount, 0, ',', '.') }},-</td>
+                                    <td class="px-4 py-3 text-right font-bold text-lg text-blue-700">Rp {{ number_format($selectedReturn->total_amount, 0, ',', '.') }}</td>
                                 </tr>
                             </tfoot>
                         </table>

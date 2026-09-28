@@ -226,34 +226,34 @@
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50/50 transition-colors">
                             <td class="px-6 py-4">
-                                <div class="text-sm font-bold text-gray-900">{{ $product->name }}</div>
+                                <div class="text-sm text-gray-900">{{ $product->name }}</div>
                                 <div class="text-[10px] text-gray-400 font-mono">{{ $product->barcode }} | {{ $product->category->name ?? '-' }}</div>
                             </td>
 
                             @if($reportMode === 'realized')
-                                <td class="px-6 py-4 text-center text-sm font-bold text-blue-600">
+                                <td class="px-6 py-4 text-center text-sm text-blue-600">
                                     {{ number_format($product->total_sold) }}
                                 </td>
                             @endif
 
                             <td class="px-6 py-4 text-sm text-right text-gray-500">
                                 @if($product->avg_buy_price || $product->last_buy_price)
-                                    Rp. {{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }},-
+                                    Rp {{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }}
                                 @else
                                     <span class="text-gray-300 italic">N/A</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-right text-gray-500 font-medium">
-                                Rp. {{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }},-
+                            <td class="px-6 py-4 text-sm text-right text-gray-500">
+                                Rp {{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }}
                             </td>
                             <td class="px-6 py-4 text-sm text-right">
-                                <span class="font-black {{ $product->margin_amount >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
-                                    Rp. {{ number_format($product->margin_amount, 0, ',', '.') }},-
+                                <span class="{{ $product->margin_amount >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                    Rp {{ number_format($product->margin_amount, 0, ',', '.') }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <span class="font-bold text-[10px] px-2 py-0.5 rounded-full {{ $product->margin_percentage >= 30 ? 'bg-emerald-100 text-emerald-700' : ($product->margin_percentage < 10 && $product->margin_percentage >= 0 ? 'bg-amber-100 text-amber-700' : ($product->margin_percentage < 0 ? 'bg-rose-100 text-rose-700' : 'bg-gray-100 text-gray-600')) }}">
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full {{ $product->margin_percentage >= 30 ? 'bg-emerald-100 text-emerald-700' : ($product->margin_percentage < 10 && $product->margin_percentage >= 0 ? 'bg-amber-100 text-amber-700' : ($product->margin_percentage < 0 ? 'bg-rose-100 text-rose-700' : 'bg-gray-100 text-gray-600')) }}">
                                         {{ number_format($product->margin_percentage, 1) }}%
                                     </span>
                                 </div>

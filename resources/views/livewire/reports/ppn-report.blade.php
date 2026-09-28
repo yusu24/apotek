@@ -144,10 +144,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $sale->invoice_no }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp. {{ number_format($sale->dpp, 0, ',', '.') }},-</td>
-                       <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-green-600">Rp. {{ number_format($sale->ppn_amount, 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $sale->invoice_no }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($sale->dpp, 0, ',', '.') }}</td>
+                       <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-green-600">Rp {{ number_format($sale->ppn_amount, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($sale->grand_total, 0, ',', '.') }}</td>
                     </tr>
                     @empty
                         <x-empty-table colspan="5" />
@@ -157,9 +157,9 @@
                 <tfoot class="bg-green-50 font-bold">
                     <tr>
                         <td colspan="2" class="px-6 py-4 text-sm text-gray-900">TOTAL PPN KELUARAN:</td>
-                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp. {{ number_format($reportData['total_dpp_keluaran'], 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 text-sm text-right text-green-600">Rp. {{ number_format($reportData['total_ppn_keluaran'], 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp. {{ number_format($reportData['total_dpp_keluaran'] + $reportData['total_ppn_keluaran'], 0, ',', '.') }},-</td>
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp {{ number_format($reportData['total_dpp_keluaran'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 text-sm text-right text-green-600">Rp {{ number_format($reportData['total_ppn_keluaran'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp {{ number_format($reportData['total_dpp_keluaran'] + $reportData['total_ppn_keluaran'], 0, ',', '.') }}</td>
                     </tr>
                 </tfoot>
                 @endif
@@ -190,10 +190,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($purchase->date)->format('d/m/Y') }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $purchase->delivery_note_number }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp. {{ number_format($purchase->dpp, 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-blue-600">Rp. {{ number_format($purchase->ppn_amount, 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900">Rp. {{ number_format($purchase->dpp + $purchase->ppn_amount, 0, ',', '.') }},-</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $purchase->delivery_note_number }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($purchase->dpp, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-blue-600">Rp {{ number_format($purchase->ppn_amount, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($purchase->dpp + $purchase->ppn_amount, 0, ',', '.') }}</td>
                     </tr>
                     @empty
                         <x-empty-table colspan="5" />
@@ -203,9 +203,9 @@
                 <tfoot class="bg-blue-50 font-bold">
                     <tr>
                         <td colspan="2" class="px-6 py-4 text-sm text-gray-900">TOTAL PPN MASUKAN:</td>
-                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp. {{ number_format($reportData['total_dpp_masukan'], 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 text-sm text-right text-blue-600">Rp. {{ number_format($reportData['total_ppn_masukan'], 0, ',', '.') }},-</td>
-                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp. {{ number_format($reportData['total_dpp_masukan'] + $reportData['total_ppn_masukan'], 0, ',', '.') }},-</td>
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp {{ number_format($reportData['total_dpp_masukan'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 text-sm text-right text-blue-600">Rp {{ number_format($reportData['total_ppn_masukan'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 text-sm text-right text-gray-900">Rp {{ number_format($reportData['total_dpp_masukan'] + $reportData['total_ppn_masukan'], 0, ',', '.') }}</td>
                     </tr>
                 </tfoot>
                 @endif

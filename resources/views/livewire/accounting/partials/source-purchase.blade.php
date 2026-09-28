@@ -55,15 +55,15 @@
                         <td class="px-3 py-2 text-gray-700 font-mono text-xs">{{ $item->batch_no }}</td>
                         <td class="px-3 py-2 text-right text-gray-900">{{ $item->quantity }}</td>
                         <td class="px-3 py-2 text-gray-700">{{ $item->unit->name }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">Rp. {{ number_format($item->buy_price, 0, ',', '.') }},-</td>
-                        <td class="px-3 py-2 text-right font-semibold text-gray-900">Rp. {{ number_format($item->subtotal, 0, ',', '.') }},-</td>
+                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
+                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="bg-gray-50 font-bold">
                     <tr>
                         <td colspan="5" class="px-3 py-2 text-right">Total:</td>
-                        <td class="px-3 py-2 text-right text-blue-600">Rp. {{ number_format($receipt->total_amount, 0, ',', '.') }},-</td>
+                        <td class="px-3 py-2 text-right text-blue-600">Rp {{ number_format($receipt->total_amount, 0, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>

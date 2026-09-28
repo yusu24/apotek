@@ -20,29 +20,92 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div class="bg-blue-700 text-white p-4 rounded-xl shadow-sm border border-blue-800">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                <div><p class="text-sm font-medium opacity-80 mb-0.5">Hari Ini</p><p class="text-xl font-bold">{{ number_format($stats['total_today']) }}</p></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+        <!-- Hari Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Hari Ini</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($stats['total_today']) }}
+                    <span class="text-xs font-normal text-gray-400">Aktivitas</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Total log aktivitas hari ini
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
-        <div class="bg-emerald-700 text-white p-4 rounded-xl shadow-sm border border-emerald-800">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
-                <div><p class="text-sm font-medium opacity-80 mb-0.5">Minggu Ini</p><p class="text-xl font-bold">{{ number_format($stats['total_week']) }}</p></div>
+
+        <!-- Minggu Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Minggu Ini</span>
+                    <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($stats['total_week']) }}
+                    <span class="text-xs font-normal text-gray-400">Aktivitas</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Akumulasi 7 hari terakhir
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
-        <div class="bg-indigo-700 text-white p-4 rounded-xl shadow-sm border border-indigo-800">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
-                <div><p class="text-sm font-medium opacity-80 mb-0.5">Bulan Ini</p><p class="text-xl font-bold">{{ number_format($stats['total_month']) }}</p></div>
+
+        <!-- Bulan Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bulan Ini</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($stats['total_month']) }}
+                    <span class="text-xs font-normal text-gray-400">Aktivitas</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Periode bulan berjalan
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
-        <div class="bg-rose-700 text-white p-4 rounded-xl shadow-sm border border-rose-800">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
-                <div><p class="text-sm font-medium opacity-80 mb-0.5">User Aktif</p><p class="text-xl font-bold">{{ number_format($stats['unique_users_today']) }}</p></div>
+
+        <!-- User Aktif -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">User Aktif</span>
+                    <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($stats['unique_users_today']) }}
+                    <span class="text-xs font-normal text-gray-400">User</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Staf beraktivitas hari ini
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-rose-500 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
     </div>

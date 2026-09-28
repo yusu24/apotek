@@ -18,49 +18,61 @@
         @can('view dashboard today sales')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Daily Turnover Card -->
-            <div class="bg-emerald-50/70 border border-emerald-100/80 dark:bg-emerald-950/20 dark:border-emerald-900/30 rounded-2xl p-5 shadow-sm">
-
-                <p class="text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wide mb-2">Omset Hari Ini</p>
-                <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-emerald-200 leading-none">
-                    Rp {{ number_format($dailyTurnover, 0, ',', '.') }}
-                </h3>
-                <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
-
-                <div class="mt-3">
-                    @if($dailyTurnover > 0)
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Aktif
-                        </span>
-                    @else
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full tracking-wider">
-                            Belum Ada Transaksi
-                        </span>
-                    @endif
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Omset Hari Ini</span>
+                        <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                        Rp {{ number_format($dailyTurnover, 0, ',', '.') }}
+                    </div>
+                    <div class="mt-2 flex items-center justify-between">
+                        <span class="text-xs text-gray-400 dark:text-gray-500">{{ now()->translatedFormat('l, d F Y') }}</span>
+                        @if($dailyTurnover > 0)
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Kasir Aktif
+                            </span>
+                        @else
+                            <span class="text-[10px] font-medium text-gray-400">Belum Ada Transaksi</span>
+                        @endif
+                    </div>
+                </div>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                    <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
 
             <!-- Daily Transactions Card -->
-            <div class="bg-indigo-50/70 border border-indigo-100/80 dark:bg-indigo-950/20 dark:border-indigo-900/30 rounded-2xl p-5 shadow-sm">
-
-                <p class="text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wide mb-2">Transaksi Hari Ini</p>
-                <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-indigo-200 leading-none">
-                    {{ number_format($dailyTransactions, 0, ',', '.') }}
-                    <span class="text-sm font-bold text-gray-500 dark:text-indigo-400">Transaksi</span>
-                </h3>
-                <p class="text-[10px] text-gray-400 dark:text-gray-500 font-normal mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
-
-                <div class="mt-3">
-                    @if($dailyTransactions > 0)
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-indigo-700 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 border border-indigo-200/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                            Aktif
-                        </span>
-                    @else
-                        <span class="inline-flex items-center gap-1 text-[9px] font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 border border-gray-200/60 px-2 py-0.5 rounded-full tracking-wider">
-                            Belum Ada Transaksi
-                        </span>
-                    @endif
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Transaksi Hari Ini</span>
+                        <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                        {{ number_format($dailyTransactions, 0, ',', '.') }}
+                        <span class="text-xs font-normal text-gray-400">Transaksi</span>
+                    </div>
+                    <div class="mt-2 flex items-center justify-between">
+                        <span class="text-xs text-gray-400 dark:text-gray-500">{{ now()->translatedFormat('l, d F Y') }}</span>
+                        @if($dailyTransactions > 0)
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                                Transaksi Masuk
+                            </span>
+                        @else
+                            <span class="text-[10px] font-medium text-gray-400">Belum Ada Transaksi</span>
+                        @endif
+                    </div>
+                </div>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                    <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
         </div>

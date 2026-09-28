@@ -210,7 +210,7 @@
                                         {{ $sale->user->name }}
                                     </td>
                                     <td class="px-4 py-3 text-sm">
-                                        <span class="px-2 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                                        <span class="px-2.5 py-0.5 rounded-full text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                                             {{ $sale->payment_method }}
                                         </span>
                                     </td>

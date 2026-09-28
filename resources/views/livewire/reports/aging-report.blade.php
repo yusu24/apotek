@@ -126,38 +126,38 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 text-gray-800 font-bold uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4 text-left">
+                        <th class="px-4 py-3 text-left">
                             {{ $type === 'ap' ? 'Supplier' : 'Customer' }}
                         </th>
-                        <th class="px-6 py-4 text-left">
+                        <th class="px-4 py-3 text-left">
                             {{ $type === 'ap' ? 'No. Surat Jalan' : 'No. Invoice' }}
                         </th>
-                        <th class="px-6 py-4 text-left">Tanggal</th>
-                        <th class="px-6 py-4 text-left">Jatuh Tempo</th>
-                        <th class="px-6 py-4 text-center">Umur (Hari)</th>
+                        <th class="px-4 py-3 text-left">Tanggal</th>
+                        <th class="px-4 py-3 text-left">Jatuh Tempo</th>
+                        <th class="px-4 py-3 text-center">Umur (Hari)</th>
                         @if($type === 'ar')
-                             <th class="px-6 py-4 text-center">Status Jatuh Tempo</th>
+                             <th class="px-4 py-3 text-center">Status Jatuh Tempo</th>
                         @endif
-                        <th class="px-6 py-4 text-right">Total Tagihan</th>
-                        <th class="px-6 py-4 text-right">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-4 py-3 text-right">Total Tagihan</th>
+                        <th class="px-4 py-3 text-right">Sisa {{ $type === 'ap' ? 'Hutang' : 'Piutang' }}</th>
+                        <th class="px-4 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($paginatedItems as $item)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                             {{ $type === 'ap' ? ($item['supplier'] ?? '-') : ($item['customer'] ?? '-') }}
                             @if($type === 'ar' && isset($item['customer_phone']))
-                                <span class="block text-xs text-gray-500">{{ $item['customer_phone'] }}</span>
+                                <span class="text-xs text-gray-500 font-normal ml-1">({{ $item['customer_phone'] }})</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item['invoice_number'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ \Carbon\Carbon::parse($item['date'])->format('d/m/Y') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">{{ $item['invoice_number'] }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ \Carbon\Carbon::parse($item['date'])->format('d/m/Y') }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                             {{ $item['due_date'] && $item['due_date'] !== '-' ? \Carbon\Carbon::parse($item['due_date'])->format('d/m/Y') : '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
                             <span class="px-3 py-1 inline-flex text-xs leading-5 rounded-full 
                                 {{ $item['age'] > 90 ? 'bg-red-100 text-red-800' : 
                                    ($item['age'] > 60 ? 'bg-yellow-100 text-yellow-800' : 
@@ -166,7 +166,7 @@
                             </span>
                         </td>
                         @if($type === 'ar')
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
                             @if($item['status'] === 'paid' || $item['outstanding'] <= 0)
                                 <span class="px-2 inline-flex text-xs leading-5 rounded-full bg-green-100 text-green-800">
                                     LUNAS
@@ -190,15 +190,15 @@
                             @endif
                         </td>
                         @endif
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-500">Rp {{ number_format($item['total_amount'], 0, ',', '.') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-500 font-mono">Rp {{ number_format($item['total_amount'], 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900 font-mono">
                             @if($item['outstanding'] <= 0)
-                                <span class="text-green-600">LUNAS</span>
+                                <span class="text-green-600 font-medium">LUNAS</span>
                             @else
                                 Rp {{ number_format($item['outstanding'], 0, ',', '.') }}
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
                             @if($item['outstanding'] > 0)
                                 @php
                                     $entityName = ($type === 'ap') ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer');

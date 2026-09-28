@@ -15,25 +15,25 @@
         <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                 <tr>
-                    <th class="px-6 py-4 text-left">Nama Jabatan</th>
-                    <th class="px-6 py-4 text-left">Jumlah User</th>
-                    <th class="px-6 py-4 text-left">Guard</th>
-                    <th class="px-6 py-4 text-right">Aksi</th>
+                    <th class="px-4 py-3 text-left">Nama Jabatan</th>
+                    <th class="px-4 py-3 text-left">Jumlah User</th>
+                    <th class="px-4 py-3 text-left">Guard</th>
+                    <th class="px-4 py-3 text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50 text-sm">
                 @foreach($roles as $role)
                 <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-6 py-4">
+                    <td class="px-4 py-3 text-sm">
                         <div class="text-gray-800">{{ ucwords(str_replace(['-', '_'], ' ', $role->name)) }}</div>
                     </td>
-                    <td class="px-6 py-4 text-gray-600">
+                    <td class="px-4 py-3 text-sm text-gray-600">
                         {{ $role->users_count }} User
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 py-3 text-sm">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700 border border-slate-200 tracking-wider">{{ $role->guard_name }}</span>
                     </td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-4 py-3 text-sm text-right">
                         <div class="flex justify-end gap-2">
                             <a href="{{ route('admin.roles.edit', $role->id) }}" wire:navigate class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Hak Akses">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

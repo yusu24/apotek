@@ -57,36 +57,39 @@
             <table class="w-full text-left border-collapse min-w-[800px]">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-4 py-4 text-left">Tgl & No</th>
-                        <th class="px-4 py-4 text-left">Deskripsi</th>
-                        <th class="px-4 py-4 text-left">Akun</th>
-                        <th class="px-4 py-4 text-right">Debit</th>
-                        <th class="px-4 py-4 text-right">Kredit</th>
-                        <th class="px-4 py-4 text-center">Status</th>
-                        <th class="px-4 py-4 text-center">Aksi</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Tanggal</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">No. Jurnal</th>
+                        <th class="px-4 py-3 text-left">Deskripsi</th>
+                        <th class="px-4 py-3 text-left">Akun</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap">Debit</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap">Kredit</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Status</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($journals as $journal)
                         {{-- Journal Header Row --}}
                         <tr class="bg-gray-100 border-t-2 border-gray-300">
-                            <td class="px-4 py-3 align-top">
-                                <div class="text-gray-900">{{ $journal->date->format('d/m/y') }}</div>
-                                <div class="text-[10px] text-blue-600">{{ $journal->entry_number }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                {{ $journal->date->format('d/m/Y') }}
                             </td>
-                            <td class="px-4 py-3 align-top text-gray-800">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-blue-600">
+                                {{ $journal->entry_number }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-800">
                                 {{ $journal->description }}
-                                <span class="block text-[9px] text-gray-500 font-normal mt-1">S: {{ $journal->source }}</span>
+                                <span class="text-xs text-gray-500 font-normal ml-1">({{ $journal->source }})</span>
                             </td>
-                            <td class="px-4 py-3" colspan="3"></td>
-                            <td class="px-4 py-3 text-center align-top">
+                            <td class="px-4 py-3 text-sm" colspan="3"></td>
+                            <td class="px-4 py-3 text-center whitespace-nowrap text-sm">
                                 @if($journal->is_posted)
-                                    <span class="px-2 py-0.5 rounded text-[10px] bg-green-100 text-green-800 border">Posted</span>
+                                    <span class="px-2 py-0.5 rounded text-xs bg-green-100 text-green-800 border border-green-200">Posted</span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded text-[10px] bg-yellow-100 text-yellow-800 border">Draft</span>
+                                    <span class="px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-800 border border-yellow-200">Draft</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-center align-top whitespace-nowrap">
+                            <td class="px-4 py-3 text-center whitespace-nowrap text-sm">
                                 <div class="flex items-center justify-center gap-3">
                                     @can('edit journals')
                                     <a href="{{ route('accounting.journals.edit', $journal->id) }}" 
@@ -107,42 +110,43 @@
                         {{-- Journal Lines --}}
                         @foreach($journal->lines as $line)
                         <tr class="hover:bg-gray-50 transition border-b border-gray-100 italic bg-white">
-                            <td class="px-4 py-2" colspan="2"></td>
-                            <td class="px-4 py-2">
-                                <div class="{{ $line->credit > 0 ? 'ml-6' : '' }} flex flex-col">
-                                    <span class="text-xs text-gray-700">{{ $line->account->code }} - {{ $line->account->name }}</span>
+                            <td class="px-4 py-2 text-sm" colspan="3"></td>
+                            <td class="px-4 py-2 text-sm">
+                                <div class="{{ $line->credit > 0 ? 'ml-6' : '' }} flex items-center gap-1.5 not-italic">
+                                    <span class="text-sm text-gray-700 font-mono">{{ $line->account->code }}</span>
+                                    <span class="text-sm text-gray-700">- {{ $line->account->name }}</span>
                                     @if($line->notes)
-                                        <span class="text-[9px] text-gray-500">{{ $line->notes }}</span>
+                                        <span class="text-xs text-gray-500 font-normal">({{ $line->notes }})</span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-4 py-2 text-right">
+                            <td class="px-4 py-2 text-right whitespace-nowrap text-sm text-gray-900 not-italic font-mono">
                                 @if($line->debit > 0)
-                                    <span class="text-xs text-gray-900">{{ number_format($line->debit, 0, ',', '.') }}</span>
+                                    Rp {{ number_format($line->debit, 0, ',', '.') }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="px-4 py-2 text-right">
+                            <td class="px-4 py-2 text-right whitespace-nowrap text-sm text-gray-900 not-italic font-mono">
                                 @if($line->credit > 0)
-                                    <span class="text-xs text-gray-900">{{ number_format($line->credit, 0, ',', '.') }}</span>
+                                    Rp {{ number_format($line->credit, 0, ',', '.') }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="px-2 py-2" colspan="2"></td>
+                            <td class="px-2 py-2 text-sm" colspan="2"></td>
                         </tr>
                         @endforeach
                     @empty
                         <tr>
-                            <x-empty-table colspan="7" />
+                            <x-empty-table colspan="8" />
                         </tr>
                     @endforelse
                 </tbody>
                 @if($journals->count() > 0)
                 <tfoot class="bg-gray-50">
                     <tr>
-                        <td colspan="7" class="px-6 py-4">
+                        <td colspan="8" class="px-6 py-4">
                             @include('components.custom-pagination', ['items' => $journals])
                         </td>
                     </tr>

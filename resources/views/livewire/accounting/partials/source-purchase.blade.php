@@ -40,30 +40,30 @@
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-3 py-2 text-left">Produk</th>
-                        <th class="px-3 py-2 text-left">Batch No</th>
-                        <th class="px-3 py-2 text-right">Qty</th>
-                        <th class="px-3 py-2 text-left">Satuan</th>
-                        <th class="px-3 py-2 text-right">Harga Beli</th>
-                        <th class="px-3 py-2 text-right">Subtotal</th>
+                        <th class="px-4 py-3 text-left">Produk</th>
+                        <th class="px-4 py-3 text-left">Batch No</th>
+                        <th class="px-4 py-3 text-right">Qty</th>
+                        <th class="px-4 py-3 text-left">Satuan</th>
+                        <th class="px-4 py-3 text-right">Harga Beli</th>
+                        <th class="px-4 py-3 text-right">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @foreach($receipt->items as $item)
                     <tr>
-                        <td class="px-3 py-2 text-gray-900">{{ $item->product->name }}</td>
-                        <td class="px-3 py-2 text-gray-700 font-mono text-xs">{{ $item->batch_no }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">{{ $item->quantity }}</td>
-                        <td class="px-3 py-2 text-gray-700">{{ $item->unit->name }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
-                        <td class="px-3 py-2 text-right text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900">{{ $item->product->name }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700 font-mono">{{ $item->batch_no }}</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-900">{{ $item->quantity }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ $item->unit->name }}</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-900">Rp {{ number_format($item->buy_price, 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="bg-gray-50 font-bold">
                     <tr>
-                        <td colspan="5" class="px-3 py-2 text-right">Total:</td>
-                        <td class="px-3 py-2 text-right text-blue-600">Rp {{ number_format($receipt->total_amount, 0, ',', '.') }}</td>
+                        <td colspan="5" class="px-4 py-3 text-sm text-right">Total:</td>
+                        <td class="px-4 py-3 text-sm text-right text-blue-600">Rp {{ number_format($receipt->total_amount, 0, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>

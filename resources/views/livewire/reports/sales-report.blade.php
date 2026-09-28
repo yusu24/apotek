@@ -189,35 +189,35 @@
                     <table class="w-full text-left">
                         <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                             <tr>
-                                <th class="px-6 py-4 text-left">No. Invois</th>
-                                <th class="px-6 py-4 text-left">Tanggal</th>
-                                <th class="px-6 py-4 text-left">Kasir</th>
-                                <th class="px-6 py-4 text-left">Metode</th>
-                                <th class="px-6 py-4 text-right">Total</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
+                                <th class="px-4 py-3 text-left">No. Invois</th>
+                                <th class="px-4 py-3 text-left">Tanggal</th>
+                                <th class="px-4 py-3 text-left">Kasir</th>
+                                <th class="px-4 py-3 text-left">Metode</th>
+                                <th class="px-4 py-3 text-right">Total</th>
+                                <th class="px-4 py-3 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                             @forelse($sales as $sale)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                    <td class="px-4 py-3 text-sm text-gray-900 dark:text-white font-mono">
                                         {{ $sale->invoice_no }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                    <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                                         {{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y H:i') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                    <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                                         {{ $sale->user->name }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-1 rounded-full text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                                             {{ $sale->payment_method }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-right text-sm text-gray-900 dark:text-white">
+                                    <td class="px-4 py-3 text-right text-sm text-gray-900 dark:text-white font-mono">
                                         Rp {{ number_format($sale->grand_total, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-right no-print">
+                                    <td class="px-4 py-3 text-right text-sm no-print">
                                         <div class="flex items-center justify-end gap-2">
                                             <button wire:click="viewSale({{ $sale->id }})" class="text-blue-500 hover:text-blue-700 transition-colors" title="Lihat Detail">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -234,11 +234,11 @@
                         </tbody>
                         <tfoot class="bg-gray-50 dark:bg-gray-900/40 font-bold border-t-2 border-gray-100 dark:border-gray-800">
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-gray-700 dark:text-gray-300 text-right uppercase text-xs">Total Penjualan Bersih (Pendapatan Riil)</td>
-                                <td class="px-6 py-4 text-right text-emerald-700 dark:text-emerald-400 text-base">
+                                <td colspan="4" class="px-4 py-3 text-gray-700 dark:text-gray-300 text-right uppercase text-xs">Total Penjualan Bersih (Pendapatan Riil)</td>
+                                <td class="px-4 py-3 text-right text-emerald-700 dark:text-emerald-400 text-base font-mono">
                                     Rp. {{ number_format($stats['net_sales'], 0, ',', '.') }},-
                                 </td>
-                                <td class="px-6 py-4 no-print"></td>
+                                <td class="px-4 py-3 no-print"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -347,6 +347,8 @@
                             <tr>
                                 <th class="px-4 py-3 text-left">#</th>
                                 <th class="px-4 py-3 text-left">Produk</th>
+                                <th class="px-4 py-3 text-center">Satuan</th>
+                                <th class="px-4 py-3 text-center">Batch</th>
                                 <th class="px-4 py-3 text-center">Qty</th>
                                 <th class="px-4 py-3 text-right">Harga</th>
                                 <th class="px-4 py-3 text-right">Diskon</th>
@@ -357,25 +359,25 @@
                             @foreach($selectedSale['sale_items'] as $index => $item)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                                 <td class="px-4 py-3 text-sm text-gray-400">{{ $index + 1 }}</td>
-                                <td class="px-4 py-3">
-                                    <div class="text-sm text-gray-900 dark:text-white">{{ $item['product_name'] }}</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">
-                                        {{ $item['unit_name'] }}
-                                        @if($item['batch_number'] !== '-')
-                                            · Batch: {{ $item['batch_number'] }}
-                                        @endif
-                                    </div>
+                                <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                    {{ $item['product_name'] }}
+                                </td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-500">
+                                    {{ $item['unit_name'] }}
+                                </td>
+                                <td class="px-4 py-3 text-center text-sm text-gray-500 font-mono">
+                                    {{ $item['batch_number'] !== '-' ? $item['batch_number'] : '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-center text-sm text-gray-700 dark:text-gray-300">{{ $item['quantity'] }}</td>
-                                <td class="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400">Rp {{ number_format($item['sell_price'], 0, ',', '.') }}</td>
-                                <td class="px-4 py-3 text-right text-sm text-rose-500">
+                                <td class="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400 font-mono">Rp {{ number_format($item['sell_price'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right text-sm text-rose-500 font-mono">
                                     @if($item['discount_amount'] > 0)
                                         -Rp {{ number_format($item['discount_amount'], 0, ',', '.') }}
                                     @else
                                         <span class="text-gray-300">-</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-right text-sm text-gray-900 dark:text-white">Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right text-sm text-gray-900 dark:text-white font-mono">Rp {{ number_format($item['subtotal'], 0, ',', '.') }}</td>
                             </tr>
                             @endforeach
                         </tbody>

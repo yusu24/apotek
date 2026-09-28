@@ -112,55 +112,62 @@
                     <table class="w-full text-left border-collapse custom-print-table">
                         <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs print:bg-transparent">
                             <tr>
-                                <th class="px-6 py-4 text-left">NO.</th>
-                                <th class="px-4 py-4 text-left">KODE BARANG</th>
-                                <th class="px-4 py-4 text-left">NAMA BARANG</th>
-                                <th class="px-4 py-4 text-left">SATUAN</th>
-                                <th class="px-4 py-4 text-right">STOK</th>
-                                <th class="px-4 py-4 text-right">Harga Beli</th>
-                                <th class="px-6 py-4 text-right">Saldo</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">NO.</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">KODE BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">NAMA BARANG</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">NO. BATCH</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">KADALUARSA</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-left">SATUAN</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-right">STOK</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-right">Harga Beli</th>
+                                <th class="px-4 py-3 print:px-2 print:py-1 text-right">Saldo</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-800 print:divide-none">
                             @php $index = ($batches->currentPage() - 1) * $batches->perPage() + 1; @endphp
                             @forelse($batches as $batch)
                                 <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-900/40 transition-colors print:border-none">
-                                    <td class="px-6 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white">
                                         {{ $index++ }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] font-mono text-gray-600 dark:text-gray-300">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] font-mono text-gray-600 dark:text-gray-300">
                                         {{ $batch->product->barcode }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white capitalize">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-900 dark:text-white capitalize">
                                         {{ $batch->product->name }}
-                                        <div class="text-[11px] text-gray-400 no-print">{{ $batch->batch_no }} - Kadaluarsa: {{ $batch->expired_date->format('d/m/Y') }}</div>
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-500 dark:text-gray-400">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] font-mono text-gray-600 dark:text-gray-300">
+                                        {{ $batch->batch_no }}
+                                    </td>
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-600 dark:text-gray-300">
+                                        {{ $batch->expired_date ? $batch->expired_date->format('d/m/Y') : '-' }}
+                                    </td>
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-sm print:text-[10px] text-gray-500 dark:text-gray-400">
                                         {{ $batch->product->unit->name }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-900 dark:text-white">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-900 dark:text-white">
                                         {{ number_format($batch->stock_current, 0) }}
                                     </td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-600 dark:text-gray-400 tabular-nums">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-600 dark:text-gray-400 tabular-nums">
                                         {{ number_format($batch->buy_price, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-900 dark:text-white tabular-nums">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-right text-sm print:text-[10px] text-gray-900 dark:text-white tabular-nums">
                                         {{ number_format($batch->stock_current * $batch->buy_price, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @empty
-                                <x-empty-table colspan="7" message="Data tidak ditemukan untuk kriteria filter ini." />
+                                <x-empty-table colspan="9" message="Data tidak ditemukan untuk kriteria filter ini." />
                             @endforelse
                         </tbody>
                         @if($batches->count() > 0)
                             <tfoot class="bg-gray-50 dark:bg-gray-900/80 print:bg-transparent">
                                 <tr class="font-bold border-t-2 border-gray-100 dark:border-gray-800 print:border-t-2 print:border-gray-800">
-                                    <td colspan="4" class="px-6 py-4 print:px-2 print:py-1 text-xs text-gray-400 print:text-gray-900 uppercase text-center">TOTAL KESELURUHAN</td>
-                                    <td class="px-4 py-4 print:px-2 print:py-1 text-right tabular-nums">
+                                    <td colspan="6" class="px-4 py-3 print:px-2 print:py-1 text-xs text-gray-400 print:text-gray-900 uppercase text-center">TOTAL KESELURUHAN</td>
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-right tabular-nums">
                                         <div class="text-sm print:text-[10px] text-gray-900 dark:text-white">{{ number_format($totalStock, 0) }}</div>
                                     </td>
                                     <td></td>
-                                    <td class="px-6 py-4 print:px-2 print:py-1 text-right border-l border-gray-100 dark:border-gray-800 print:border-l-0 tabular-nums">
+                                    <td class="px-4 py-3 print:px-2 print:py-1 text-right border-l border-gray-100 dark:border-gray-800 print:border-l-0 tabular-nums">
                                         <div class="text-sm print:text-[10px] text-gray-900 dark:text-white">Rp {{ number_format($totalInventoryValue, 0, ',', '.') }}</div>
                                     </td>
                                 </tr>

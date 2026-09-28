@@ -231,20 +231,20 @@
                             Penjelasan Formulir
                         </h3>
                         <div class="overflow-x-auto border border-gray-200 rounded-xl">
-                            <table class="w-full text-xs text-left">
+                            <table class="w-full text-sm text-left">
                                 <thead class="bg-gray-50 border-b border-gray-200">
                                     <tr>
-                                        <th class="px-6 py-4 font-bold text-gray-900 w-1/4">Nama Field</th>
-                                        <th class="px-6 py-4 font-bold text-gray-900">Keterangan</th>
-                                        <th class="px-6 py-4 font-bold text-gray-900 text-center w-24">Wajib?</th>
+                                        <th class="px-4 py-3 font-bold text-gray-900 w-1/4">Nama Field</th>
+                                        <th class="px-4 py-3 font-bold text-gray-900">Keterangan</th>
+                                        <th class="px-4 py-3 font-bold text-gray-900 text-center w-24">Wajib?</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                     @foreach($guide['form_fields'] as $field)
                                     <tr class="hover:bg-gray-50/50">
-                                        <td class="px-6 py-4 text-gray-800">{{ $field['name'] }}</td>
-                                        <td class="px-6 py-4 text-gray-600 leading-relaxed">{{ $field['description'] }}</td>
-                                        <td class="px-6 py-4 text-center">
+                                        <td class="px-4 py-3 text-sm text-gray-800">{{ $field['name'] }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600 leading-relaxed">{{ $field['description'] }}</td>
+                                        <td class="px-4 py-3 text-sm text-center">
                                             @if($field['required'])
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-red-100 text-red-800">Ya</span>
                                             @else

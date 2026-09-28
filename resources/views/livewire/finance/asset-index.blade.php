@@ -33,31 +33,37 @@
             <table class="w-full text-left">
                 <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-normal">
                     <tr>
-                        <th class="px-6 py-4 whitespace-nowrap">Kode & Nama</th>
-                        <th class="px-6 py-4 whitespace-nowrap">Kelompok Pajak</th>
-                        <th class="px-6 py-4 whitespace-nowrap text-right">Nilai Perolehan</th>
-                        <th class="px-6 py-4 whitespace-nowrap text-right">Akum. Penyusutan</th>
-                        <th class="px-6 py-4 whitespace-nowrap text-right">Nilai Buku</th>
-                        <th class="px-6 py-4 whitespace-nowrap text-center">Aksi</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Kode Aset</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Nama Aset</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Kelompok Pajak</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Metode</th>
+                        <th class="px-4 py-3 whitespace-nowrap text-right">Nilai Perolehan</th>
+                        <th class="px-4 py-3 whitespace-nowrap text-right">Akum. Penyusutan</th>
+                        <th class="px-4 py-3 whitespace-nowrap text-right">Nilai Buku</th>
+                        <th class="px-4 py-3 whitespace-nowrap text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($assets as $asset)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-gray-900">{{ $asset->asset_code }}</div>
-                                <div class="text-sm text-gray-500">{{ $asset->asset_name }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500">
+                                {{ $asset->asset_code }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 bg-gray-100 rounded-md text-xs">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                {{ $asset->asset_name }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                <span class="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-700">
                                     {{ $taxGroups[$asset->tax_group]['label'] ?? $asset->tax_group }}
                                 </span>
-                                <div class="text-[10px] text-gray-400 mt-1 capitalize">{{ str_replace('_', ' ', $asset->method) }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right">Rp {{ number_format($asset->acquisition_cost, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-red-600">Rp {{ number_format($asset->total_depreciation, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-blue-600">Rp {{ number_format($asset->book_value, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 capitalize">
+                                {{ str_replace('_', ' ', $asset->method) }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($asset->acquisition_cost, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-red-600">Rp {{ number_format($asset->total_depreciation, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-blue-600">Rp {{ number_format($asset->book_value, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
                                 <div class="flex justify-center items-center gap-3">
                                     <button wire:click="editAsset({{ $asset->id }})" class="text-blue-600 hover:text-blue-900 transition" title="Edit Aset">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -66,7 +72,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="6" />
+                        <x-empty-table colspan="8" />
                     @endforelse
                 </tbody>
             </table>

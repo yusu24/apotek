@@ -109,34 +109,34 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             <!-- Opening Balance Row -->
                             <tr class="bg-gray-50 italic">
-                                <td class="px-6 py-4 text-sm text-gray-500" colspan="3">Saldo Awal Periode</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 text-right">-</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 text-right">-</td>
-                                <td class="px-6 py-4 text-sm text-gray-800 text-right font-mono bg-gray-50">{{ number_format($openingBalance, 0, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-500" colspan="3">Saldo Awal Periode</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 text-right">-</td>
+                                <td class="px-4 py-3 text-sm text-gray-500 text-right">-</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right font-mono bg-gray-50">{{ number_format($openingBalance, 0, ',', '.') }}</td>
                             </tr>
 
                             <!-- Transactions -->
                             @forelse($ledgerLines as $line)
                             <tr class="hover:bg-gray-50 transition duration-150">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                     {{ $line->journalEntry->date->format('d/m/Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-blue-600">
                                     {{ $line->journalEntry->entry_number }}
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    <div>{{ $line->journalEntry->description }}</div>
+                                <td class="px-4 py-3 text-sm text-gray-700">
+                                    {{ $line->journalEntry->description }}
                                     @if($line->notes)
-                                        <div class="text-xs text-gray-500 italic mt-0.5">{{ $line->notes }}</div>
+                                        <span class="text-xs text-gray-400 italic ml-1">({{ $line->notes }})</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
                                     {{ $line->debit > 0 ? number_format($line->debit, 0, ',', '.') : '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right font-mono">
                                     {{ $line->credit > 0 ? number_format($line->credit, 0, ',', '.') : '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-mono bg-gray-50">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right font-mono bg-gray-50">
                                     {{ number_format($line->running_balance, 0, ',', '.') }}
                                 </td>
                             </tr>

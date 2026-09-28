@@ -49,19 +49,19 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-3.5 text-left">Nama Kategori</th>
-                        <th class="px-6 py-3.5 text-left">Tipe</th>
-                        <th class="px-6 py-3.5 text-left">Deskripsi</th>
-                        <th class="px-6 py-3.5 text-right">Aksi</th>
+                        <th class="px-4 py-3 text-left">Nama Kategori</th>
+                        <th class="px-4 py-3 text-left">Tipe</th>
+                        <th class="px-4 py-3 text-left">Deskripsi</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
                                 {{ $category->name }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @if(($category->type ?? 'expense') === 'income')
                                     <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs inline-flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
@@ -74,10 +74,10 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
+                            <td class="px-4 py-3 text-sm text-gray-500">
                                 {{ $category->description ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-3">
                                     @can('manage expense categories')
                                     <button wire:click="edit({{ $category->id }})" 

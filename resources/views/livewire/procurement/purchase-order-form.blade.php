@@ -169,10 +169,11 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200">Informasi Produk</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-24">QTY</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-28">Satuan</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-20">Aksi</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-36">Barcode</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200">Nama Produk</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-24">QTY</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-28">Satuan</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-20">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">
@@ -181,20 +182,18 @@
                                         $product = $tableProducts->firstWhere('id', $item['product_id']);
                                     @endphp
                                     <tr class="group hover:bg-gray-50/80 transition-all duration-150">
-                                        <td class="px-6 py-5">
-                                            <div class="flex-1 min-w-0">
-                                                <div class="text-[13px] font-normal text-gray-900 leading-none group-hover:text-blue-700 transition-colors truncate mb-1.5">{{ $product->name ?? '-' }}</div>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="text-[9px] text-gray-400 tracking-widest bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{{ $product->barcode ?? 'No Barcode' }}</span>
-                                                </div>
-                                            </div>
+                                        <td class="px-4 py-3 text-sm text-gray-500 font-mono border-r border-gray-100">
+                                            {{ $product->barcode ?? '-' }}
                                         </td>
-                                        <td class="px-6 py-4 text-center">
+                                        <td class="px-4 py-3 text-sm text-gray-900 border-r border-gray-100">
+                                            {{ $product->name ?? '-' }}
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-center border-r border-gray-100">
                                             <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-normal rounded-lg group-hover:bg-blue-100 group-hover:text-blue-800 transition-colors">
                                                 {{ $item['qty'] }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 text-center">
+                                        <td class="px-4 py-3 text-sm text-center border-r border-gray-100">
                                             @php
                                                 $unitName = $product->unit?->name ?? '-';
                                                 if (!empty($item['unit_id'])) {
@@ -215,7 +214,7 @@
                                             @endphp
                                             <span class="text-xs text-gray-500 tracking-wide bg-gray-50 px-2 py-1 rounded border border-gray-100">{{ $unitName }}</span>
                                         </td>
-                                        <td class="px-6 py-4 text-center">
+                                        <td class="px-4 py-3 text-sm text-center">
                                             @if(!$isReadOnly)
                                             <div class="flex items-center justify-center gap-1">
                                                 <button type="button" wire:click="openModal({{ $index }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
@@ -230,7 +229,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-6 py-12 text-center">
+                                        <td colspan="5" class="px-4 py-12 text-center text-sm">
                                             <div class="flex flex-col items-center">
                                                 <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-3 border border-gray-100">
                                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
@@ -244,7 +243,7 @@
                             </tbody>
                             <tfoot class="bg-gray-50/50 border-t border-gray-100">
                                 <tr>
-                                    <td colspan="4" class="px-6 py-4">
+                                    <td colspan="5" class="px-4 py-3">
                                         <div class="flex items-center justify-end gap-3 text-sm">
                                             <span class="text-gray-500 font-medium tracking-tight">Ringkasan Pesanan:</span>
                                             <span class="text-blue-700 bg-blue-50 px-4 py-1.5 rounded-lg font-medium border border-blue-100 flex items-center gap-2">

@@ -179,7 +179,7 @@
                         <tbody class="divide-y divide-gray-100">
                             @forelse($cart as $id => $item)
                             <tr wire:key="cart-row-{{ $id }}" class="hover:bg-blue-50 group transition-colors" x-data="{ openDisc: false, openNote: false }">
-                                <td class="px-2 md:px-4 py-2 md:py-3 align-top">
+                                <td class="px-2 md:px-4 py-2 md:py-3 align-top text-sm">
                                     <div class="text-gray-900 line-clamp-2 leading-tight mb-1 text-xs">{{ $item['name'] }}</div>
                                     
                                     <!-- Price & Unit Display/Selector -->
@@ -217,7 +217,7 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-2 py-3 text-center align-top">
+                                <td class="px-2 py-3 text-center align-top text-sm">
                                     <div class="w-16 mx-auto">
                                         <input type="number"
                                                 wire:model.blur="cart.{{ $id }}.qty"
@@ -225,10 +225,10 @@
                                                 min="1">
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 text-right align-top text-gray-900 text-xs">
+                                <td class="px-4 py-3 text-right align-top text-gray-900 text-sm">
                                     {{ number_format($item['subtotal'], 0, ',', '.') }}
                                 </td>
-                                <td class="px-2 py-3 text-center align-top">
+                                <td class="px-2 py-3 text-center align-top text-sm">
                                     <div class="flex items-center justify-center gap-1">
                                         <!-- Discount Toggle & Popover -->
                                         <div class="relative">
@@ -1155,21 +1155,19 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($pendingOrders as $order)
                                 <tr wire:key="pending-desktop-{{ $order->id }}">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-900">
                                         {{ $order->invoice_no }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                                         {{ $order->created_at->format('d/m/Y H:i') }}
-                                        <br>
-                                        <span class="text-xs">{{ $order->created_at->diffForHumans() }}</span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-900">
                                         Rp {{ number_format($order->grand_total, 0, ',', '.') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                                    <td class="px-6 py-3 text-sm text-gray-500 max-w-xs truncate">
                                         {{ $order->notes ?: '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm flex justify-end gap-2">
+                                    <td class="px-6 py-3 whitespace-nowrap text-right text-sm flex justify-end gap-2">
                                         <button wire:click="restorePendingOrder({{ $order->id }})" 
                                                 class="p-2 text-blue-600 hover:text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition"
                                                 title="Lanjutkan">

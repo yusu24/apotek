@@ -229,42 +229,42 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
-                            <th class="px-6 py-4">Tanggal</th>
-                            <th class="px-6 py-4">No. Ref</th>
-                            <th class="px-6 py-4 text-right">Subtotal</th>
-                            <th class="px-6 py-4 text-right">Diskon</th>
-                            <th class="px-6 py-4 text-right">PPN (Pajak)</th>
-                            <th class="px-6 py-4 text-right">Total Netto</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">No. Ref</th>
+                            <th class="px-4 py-3 text-right">Subtotal</th>
+                            <th class="px-4 py-3 text-right">Diskon</th>
+                            <th class="px-4 py-3 text-right">PPN (Pajak)</th>
+                            <th class="px-4 py-3 text-right">Total Netto</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
                         @foreach($salesDetails as $sale)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4">{{ $sale->invoice_no }}</td>
-                            <td class="px-6 py-4 text-right">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">-Rp {{ number_format($sale->discount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-blue-600">Rp {{ number_format($sale->tax, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-gray-900">Rp {{ number_format($sale->total_amount - $sale->discount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($sale->date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $sale->invoice_no }}</td>
+                            <td class="px-4 py-3 text-sm text-right">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-rose-600">-Rp {{ number_format($sale->discount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-blue-600">Rp {{ number_format($sale->tax, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-gray-900">Rp {{ number_format($sale->total_amount - $sale->discount, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
-                            <td colspan="2" class="px-6 py-4">TOTAL DPP</td>
-                            <td class="px-6 py-4 text-right underline underline-offset-4 decoration-blue-500 text-blue-600">Rp {{ number_format($grossRevenue, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-blue-700">Rp {{ number_format($totalTax, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right bg-blue-50">Rp {{ number_format($grossRevenue - $totalDiscount, 0, ',', '.') }}</td>
+                            <td colspan="2" class="px-4 py-3 text-sm">TOTAL DPP</td>
+                            <td class="px-4 py-3 text-sm text-right underline underline-offset-4 decoration-blue-500 text-blue-600">Rp {{ number_format($grossRevenue, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-rose-600">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-blue-700">Rp {{ number_format($totalTax, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right bg-blue-50">Rp {{ number_format($grossRevenue - $totalDiscount, 0, ',', '.') }}</td>
                         </tr>
                         @if($totalReturns > 0)
                         <tr class="bg-rose-50">
-                            <td colspan="5" class="px-6 py-3 text-rose-600">Retur Penjualan</td>
-                            <td class="px-6 py-3 text-right text-rose-600">-Rp {{ number_format($totalReturns, 0, ',', '.') }}</td>
+                            <td colspan="5" class="px-4 py-3 text-sm text-rose-600">Retur Penjualan</td>
+                            <td class="px-4 py-3 text-sm text-right text-rose-600">-Rp {{ number_format($totalReturns, 0, ',', '.') }}</td>
                         </tr>
                         <tr class="bg-indigo-50">
-                            <td colspan="5" class="px-6 py-3 text-indigo-700">PENDAPATAN BERSIH (DPP - Retur)</td>
-                            <td class="px-6 py-3 text-right text-indigo-700">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
+                            <td colspan="5" class="px-4 py-3 text-sm text-indigo-700">PENDAPATAN BERSIH (DPP - Retur)</td>
+                            <td class="px-4 py-3 text-sm text-right text-indigo-700">Rp {{ number_format($revenue, 0, ',', '.') }}</td>
                         </tr>
                         @endif
                     </tfoot>
@@ -285,28 +285,28 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
-                            <th class="px-6 py-4">Tanggal Jual</th>
-                            <th class="px-6 py-4">Produk</th>
-                            <th class="px-6 py-4 text-center">Qty</th>
-                            <th class="px-6 py-4 text-right">Harga Beli</th>
-                            <th class="px-6 py-4 text-right">Total HPP</th>
+                            <th class="px-4 py-3">Tanggal Jual</th>
+                            <th class="px-4 py-3">Produk</th>
+                            <th class="px-4 py-3 text-center">Qty</th>
+                            <th class="px-4 py-3 text-right">Harga Beli</th>
+                            <th class="px-4 py-3 text-right">Total HPP</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
                         @foreach($cogsDetails as $item)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-gray-500">{{ \Carbon\Carbon::parse($item->sale_date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4 text-gray-900">{{ $item->product_name }}</td>
-                            <td class="px-6 py-4 text-center">{{ $item->quantity }}</td>
-                            <td class="px-6 py-4 text-right text-gray-500">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-right text-gray-900">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ \Carbon\Carbon::parse($item->sale_date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $item->product_name }}</td>
+                            <td class="px-4 py-3 text-sm text-center">{{ $item->quantity }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-gray-500">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-gray-900">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
-                            <td colspan="4" class="px-6 py-4">TOTAL HPP</td>
-                            <td class="px-6 py-4 text-right bg-orange-50 text-orange-700">Rp {{ number_format($cogs, 0, ',', '.') }}</td>
+                            <td colspan="4" class="px-4 py-3 text-sm">TOTAL HPP</td>
+                            <td class="px-4 py-3 text-sm text-right bg-orange-50 text-orange-700">Rp {{ number_format($cogs, 0, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -326,26 +326,26 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
-                            <th class="px-6 py-4">Tanggal</th>
-                            <th class="px-6 py-4">Keterangan</th>
-                            <th class="px-6 py-4">Kategori</th>
-                            <th class="px-6 py-4 text-right">Jumlah</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Keterangan</th>
+                            <th class="px-4 py-3">Kategori</th>
+                            <th class="px-4 py-3 text-right">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
                         @foreach($expenseDetails as $expense)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4">{{ $expense->description }}</td>
-                            <td class="px-6 py-4 text-xs text-gray-500 capitalize">{{ $expense->category }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $expense->description }}</td>
+                            <td class="px-4 py-3 text-sm text-xs text-gray-500 capitalize">{{ $expense->category }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-rose-600">Rp {{ number_format($expense->amount, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
-                            <td colspan="3" class="px-6 py-4">TOTAL BEBAN</td>
-                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp {{ number_format($expenses, 0, ',', '.') }}</td>
+                            <td colspan="3" class="px-4 py-3 text-sm">TOTAL BEBAN</td>
+                            <td class="px-4 py-3 text-sm text-right bg-rose-50 text-rose-700">Rp {{ number_format($expenses, 0, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -366,24 +366,24 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
                         <tr>
-                            <th class="px-6 py-4">Tanggal</th>
-                            <th class="px-6 py-4">Keterangan</th>
-                            <th class="px-6 py-4 text-right">Jumlah</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Keterangan</th>
+                            <th class="px-4 py-3 text-right">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
                         @foreach($taxDetails as $tax)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($tax->date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4">{{ $tax->description }}</td>
-                            <td class="px-6 py-4 text-right text-rose-600">Rp {{ number_format($tax->amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($tax->date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $tax->description }}</td>
+                            <td class="px-4 py-3 text-sm text-right text-rose-600">Rp {{ number_format($tax->amount, 0, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot class="bg-gray-50 font-bold text-gray-900 border-t-2">
                         <tr>
-                            <td colspan="2" class="px-6 py-4">TOTAL PAJAK</td>
-                            <td class="px-6 py-4 text-right bg-rose-50 text-rose-700">Rp. {{ number_format($taxExpenses, 0, ',', '.') }},-</td>
+                            <td colspan="2" class="px-4 py-3 text-sm">TOTAL PAJAK</td>
+                            <td class="px-4 py-3 text-sm text-right bg-rose-50 text-rose-700">Rp. {{ number_format($taxExpenses, 0, ',', '.') }},-</td>
                         </tr>
                     </tfoot>
                 </table>

@@ -105,12 +105,13 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 w-10 text-center">
+                        <th class="px-4 py-3 w-10 text-center">
                             <input type="checkbox" wire:model.live="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
                         </th>
-                        <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Barcode</th>
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
-                                Info Produk
+                                Nama Produk
                                 @if($sortBy === 'name')
                                     <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
@@ -118,7 +119,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('category_id')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('category_id')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Kategori
                                 @if($sortBy === 'category_id')
@@ -128,7 +129,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('sell_price')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('sell_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Harga Jual
                                 @if($sortBy === 'sell_price')
@@ -138,7 +139,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('purchase_price')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('purchase_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Harga Beli
                                 @if($sortBy === 'purchase_price')
@@ -148,8 +149,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('min_stock')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
-                            <div class="flex items-center gap-1">
+                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-center cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
                                 Stok Min
                                 @if($sortBy === 'min_stock')
                                     <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,20 +159,22 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50 transition duration-150 {{ in_array($product->id, $selectedProducts) ? 'bg-blue-50/50' : '' }}">
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-4 py-3 text-center text-sm">
                                 <input type="checkbox" wire:model.live="selectedProducts" value="{{ $product->id }}" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">{{ $product->name }}</div>
-                                <div class="text-xs text-gray-500 mt-1">{{ $product->barcode }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500">
+                                {{ $product->barcode }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 text-sm text-gray-900">
+                                {{ $product->name }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @php
                                     $categoryName = $product->category->name ?? '-';
                                     // Generate consistent color based on category name
@@ -194,28 +197,19 @@
                                     {{ $categoryName }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                                 Rp {{ number_format($product->sell_price, 0, ',', '.') }}
                                 <span class="text-xs font-normal text-gray-500">/ {{ $product->unit->name ?? 'unit' }}</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">
-                                    Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
-                                </div>
-                                @if($product->purchase_price_updated_at)
-                                    <div class="text-[10px] text-gray-500">
-                                        Update: {{ $product->purchase_price_updated_at->format('d/m/Y') }}
-                                    </div>
-                                @else
-                                    <div class="text-[10px] text-gray-400 italic">Belum ada data</div>
-                                @endif
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                Rp {{ number_format($product->purchase_price ?? 0, 0, ',', '.') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm {{ $product->min_stock > 0 ? 'text-orange-600' : 'text-gray-500' }}">
+                            <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
+                                <span class="{{ $product->min_stock > 0 ? 'text-orange-600' : 'text-gray-500' }}">
                                     {{ $product->min_stock }}
-                                </div>
+                                </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
                                 <div class="flex justify-center items-center gap-3">
                                     <button wire:click="viewHistory({{ $product->id }})" 
                                         class="text-green-600 hover:text-green-900 transition duration-150" title="Riwayat Harga">
@@ -242,7 +236,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="7" />
+                        <x-empty-table colspan="8" />
                     @endforelse
                 </tbody>
             </table>
@@ -286,32 +280,40 @@
                             </h4>
                             <div class="overflow-x-auto border rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
+                                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                                         <tr>
-                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Update</th>
-                                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Harga Jual</th>
-                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Oleh</th>
+                                            <th class="px-4 py-3 text-left">Tanggal</th>
+                                            <th class="px-4 py-3 text-left">Aksi</th>
+                                            <th class="px-4 py-3 text-right">Harga Baru</th>
+                                            <th class="px-4 py-3 text-right">Harga Lama</th>
+                                            <th class="px-4 py-3 text-left">Oleh</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white">
                                         @forelse($sellPriceHistory as $history)
                                             <tr class="hover:bg-gray-50">
-                                                <td class="px-3 py-2 text-xs text-gray-900">
+                                                <td class="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
                                                     {{ $history['date']->format('d/m/Y H:i') }}
-                                                    <div class="text-[10px] text-gray-500 capitalize">{{ $history['action'] }}</div>
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-right text-gray-900">
+                                                <td class="px-4 py-3 text-sm text-gray-600 capitalize">
+                                                    {{ $history['action'] }}
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-right text-gray-900 whitespace-nowrap">
                                                     Rp {{ number_format($history['new_price'], 0, ',', '.') }}
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-right text-gray-400 whitespace-nowrap">
                                                     @if($history['action'] == 'updated')
-                                                        <div class="text-gray-400 text-[10px] line-through">Rp {{ number_format($history['old_price'], 0, ',', '.') }}</div>
+                                                        <span class="line-through">Rp {{ number_format($history['old_price'], 0, ',', '.') }}</span>
+                                                    @else
+                                                        -
                                                     @endif
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[100px]" title="{{ $history['user'] }}">
+                                                <td class="px-4 py-3 text-sm text-gray-600 truncate max-w-[100px]" title="{{ $history['user'] }}">
                                                     {{ $history['user'] }}
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500">Belum ada perubahan harga jual.</td></tr>
+                                            <tr><td colspan="5" class="px-4 py-4 text-center text-sm text-gray-500">Belum ada perubahan harga jual.</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -328,31 +330,40 @@
                             </h4>
                             <div class="overflow-x-auto border rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
+                                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                                         <tr>
-                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tgl PO</th>
-                                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Supplier</th>
-                                            <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Harga Beli</th>
+                                            <th class="px-4 py-3 text-left">Tgl PO</th>
+                                            <th class="px-4 py-3 text-left">No. PO</th>
+                                            <th class="px-4 py-3 text-left">Supplier</th>
+                                            <th class="px-4 py-3 text-right">Harga Beli</th>
+                                            <th class="px-4 py-3 text-left">Satuan</th>
+                                            <th class="px-4 py-3 text-left">User</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white">
                                         @forelse($buyPriceHistory as $history)
                                             <tr class="hover:bg-gray-50">
-                                                <td class="px-3 py-2 text-xs text-gray-900">
+                                                <td class="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
                                                     {{ \Carbon\Carbon::parse($history['date'])->format('d/m/Y') }}
-                                                    <div class="text-[10px] text-blue-600">{{ $history['po_number'] }}</div>
-                                                    <div class="text-[10px] text-gray-400">by {{ $history['user'] }}</div>
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-gray-600 truncate max-w-[120px]" title="{{ $history['supplier'] }}">
+                                                <td class="px-4 py-3 text-sm font-mono text-blue-600 whitespace-nowrap">
+                                                    {{ $history['po_number'] }}
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-gray-600 truncate max-w-[120px]" title="{{ $history['supplier'] }}">
                                                     {{ $history['supplier'] }}
                                                 </td>
-                                                <td class="px-3 py-2 text-xs text-right text-gray-900">
+                                                <td class="px-4 py-3 text-sm text-right text-gray-900 whitespace-nowrap">
                                                     Rp {{ number_format($history['price'], 0, ',', '.') }}
-                                                    <div class="text-[10px] text-gray-500">/ {{ $history['unit'] }}</div>
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{ $history['unit'] }}
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{ $history['user'] }}
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr><td colspan="3" class="px-3 py-4 text-center text-xs text-gray-500">Belum ada riwayat pembelian.</td></tr>
+                                            <tr><td colspan="6" class="px-4 py-4 text-center text-sm text-gray-500">Belum ada riwayat pembelian.</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>

@@ -151,28 +151,31 @@
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                         <tr>
-                            <th class="px-6 py-4 text-left">Tanggal</th>
-                            <th class="px-6 py-4 text-left">Akun</th>
-                            <th class="px-6 py-4 text-left">Keterangan</th>
-                            <th class="px-6 py-4 text-right">Debit</th>
-                            <th class="px-6 py-4 text-right">Kredit</th>
-                            <th class="px-6 py-4 text-right">Saldo</th>
+                            <th class="px-4 py-3 text-left">Tanggal</th>
+                            <th class="px-4 py-3 text-left">Kode</th>
+                            <th class="px-4 py-3 text-left">Nama Akun</th>
+                            <th class="px-4 py-3 text-left">Keterangan</th>
+                            <th class="px-4 py-3 text-right">Debit</th>
+                            <th class="px-4 py-3 text-right">Kredit</th>
+                            <th class="px-4 py-3 text-right">Saldo</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
                         @forelse($recentTransactions as $line)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{ \Carbon\Carbon::parse($line->journalEntry->date)->format('d/m/Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-gray-700 dark:text-gray-300">{{ $line->account->name }}</div>
-                                    <div class="text-[10px] text-gray-400 font-mono">{{ $line->account->code }}</div>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                    {{ $line->account->code }}
                                 </td>
-                                <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                    {{ $line->account->name }}
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                                     {{ $line->notes ?? $line->journalEntry->description }}
                                 </td>
-                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <td class="px-4 py-3 text-right whitespace-nowrap text-sm">
                                     @if($line->debit > 0)
                                         <span class="text-emerald-600 dark:text-emerald-400 tracking-tight">
                                             + {{ number_format($line->debit, 0, ',', '.') }}
@@ -181,7 +184,7 @@
                                         <span class="text-gray-300 dark:text-gray-600">-</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <td class="px-4 py-3 text-right whitespace-nowrap text-sm">
                                     @if($line->credit > 0)
                                         <span class="text-red-600 dark:text-red-400 tracking-tight text-opacity-80">
                                             - {{ number_format($line->credit, 0, ',', '.') }}
@@ -190,14 +193,14 @@
                                         <span class="text-gray-300 dark:text-gray-600">-</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                <td class="px-4 py-3 text-right whitespace-nowrap text-sm">
                                     <span class="text-gray-900 dark:text-gray-200 tracking-tight">
                                         {{ number_format($line->running_balance, 0, ',', '.') }}
                                     </span>
                                 </td>
                             </tr>
                         @empty
-                            <x-empty-table colspan="6" message="Belum ada transaksi pada periode ini." />
+                            <x-empty-table colspan="7" message="Belum ada transaksi pada periode ini." />
                         @endforelse
                     </tbody>
                 </table>

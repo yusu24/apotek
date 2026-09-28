@@ -20,42 +20,45 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dari Satuan</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">→</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ke Satuan</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Faktor</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Barcode</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Produk</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Dari Satuan</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">→</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Ke Satuan</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Faktor Pengali</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($conversions as $conversion)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $conversion->product->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $conversion->product->barcode ?? '-' }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500">
+                                {{ $conversion->product->barcode ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 text-sm text-gray-900">
+                                {{ $conversion->product->name }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
                                     {{ $conversion->fromUnit->name }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
                                 <svg class="w-5 h-5 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                                 </svg>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                     {{ $conversion->toUnit->name }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right">
-                                <div class="text-sm text-gray-900">{{ number_format($conversion->conversion_factor, 2) }}</div>
-                                <div class="text-xs text-gray-500">1 {{ $conversion->fromUnit->name }} = {{ $conversion->conversion_factor }} {{ $conversion->toUnit->name }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm text-gray-900">
+                                {{ number_format($conversion->conversion_factor, 2) }}
+                                <span class="text-xs text-gray-400 ml-1">({{ $conversion->toUnit->name }}/{{ $conversion->fromUnit->name }})</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                            <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
+                                <div class="flex items-center justify-center gap-2">
                                     <button wire:click="edit({{ $conversion->id }})" 
                                         class="text-blue-600 hover:text-blue-900" title="Edit">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +75,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="6" message="Belum ada konversi satuan." subheader="Klik 'Tambah Konversi' untuk memulai." icon="box" />
+                        <x-empty-table colspan="7" message="Belum ada konversi satuan." subheader="Klik 'Tambah Konversi' untuk memulai." icon="box" />
                     @endforelse
                 </tbody>
             </table>

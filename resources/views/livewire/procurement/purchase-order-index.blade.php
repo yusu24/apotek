@@ -56,7 +56,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
-                        <th wire:click="sortByColumn('po_number')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('po_number')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 No. PO
                                 @if($sortBy === 'po_number')
@@ -66,7 +66,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('date')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('date')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Tanggal
                                 @if($sortBy === 'date')
@@ -76,8 +76,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">Supplier</th>
-                        <th wire:click="sortByColumn('status')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th class="px-4 py-3 text-left">Supplier</th>
+                        <th wire:click="sortByColumn('status')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Status
                                 @if($sortBy === 'status')
@@ -87,17 +87,17 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">User</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-4 py-3 text-left">User</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($orders as $po)
                         <tr>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $po->po_number }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $po->po_number }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ \Carbon\Carbon::parse($po->date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $po->supplier->name ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm">
                                 @php
                                     $poBadgeStyles = match($po->status) {
                                         'received' => 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
@@ -117,8 +117,8 @@
                                     ][$po->status] ?? ucfirst($po->status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ $po->user->name ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-right">
                                 <div class="flex items-center justify-end gap-3">
                                     <a href="{{ $po->status === 'draft' ? route('procurement.purchase-orders.edit', $po->id) : route('procurement.purchase-orders.view', $po->id) }}" wire:navigate 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" 

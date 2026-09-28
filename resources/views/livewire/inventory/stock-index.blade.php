@@ -145,7 +145,7 @@
             <table class="min-w-full divide-y divide-gray-200 custom-print-table">
                 <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
-                        <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
@@ -155,8 +155,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">Kategori</th>
-                        <th wire:click="sortByColumn('min_stock')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th class="px-4 py-3 text-left">Kategori</th>
+                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Min Stok
                                 @if($sortBy === 'min_stock')
@@ -166,7 +166,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('total_stock')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('total_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
                             <div class="flex items-center gap-1">
                                 Jumlah
                                 @if($sortBy === 'total_stock')
@@ -176,24 +176,24 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-left">Satuan</th>
-                        <th class="px-6 py-4 text-left">Status</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-4 py-3 text-left">Satuan</th>
+                        <th class="px-4 py-3 text-left">Status</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($products as $product)
                         <tr wire:key="product-{{ $product->id }}">
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $product->name }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ optional($product->category)->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $product->min_stock }}</td>
-                            <td class="px-6 py-4 text-sm {{ $product->total_stock <= 0 ? 'text-red-600' : 'text-gray-900' }}">
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $product->name }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ optional($product->category)->name ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ $product->min_stock }}</td>
+                            <td class="px-4 py-3 text-sm {{ $product->total_stock <= 0 ? 'text-red-600' : 'text-gray-900' }}">
                                 {{ $product->total_stock ?? 0 }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
+                            <td class="px-4 py-3 text-sm text-gray-500">
                                 {{ optional($product->unit)->name ?? 'pcs' }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3 text-sm">
                                 @if(($product->total_stock ?? 0) <= 0)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-rose-50 text-rose-700 border border-rose-200/60">Habis</span>
                                 @elseif(($product->total_stock ?? 0) <= $product->min_stock)
@@ -202,7 +202,7 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200/60">Aman</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <td class="px-4 py-3 text-sm whitespace-nowrap text-right">
                                 <div class="flex items-center justify-end gap-3">
                                     <a href="{{ route('inventory.history', $product->id) }}" wire:navigate
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Detail / History">

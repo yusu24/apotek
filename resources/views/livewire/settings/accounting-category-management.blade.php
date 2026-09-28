@@ -25,20 +25,20 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kategori</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kategori</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr wire:key="category-{{ $category->id }}">
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $category->code }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $category->name }}</td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $category->code }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $category->name }}</td>
+                            <td class="px-4 py-3 text-sm">
                                 @if($category->type === 'income')
                                     <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                         Pemasukan
@@ -49,15 +49,15 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $category->description ?? '-' }}</td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ $category->description ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-center">
                                 <button wire:click="toggleStatus({{ $category->id }})" 
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs transition-colors
                                     {{ $category->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }}">
                                     {{ $category->is_active ? 'Aktif' : 'Nonaktif' }}
                                 </button>
                             </td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-4 py-3 text-sm text-right">
                                 <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
                                     <button wire:click="edit({{ $category->id }})" 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Edit">

@@ -210,7 +210,7 @@
             <table class="min-w-full divide-y divide-gray-200 text-sm">
                 <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
-                        <th wire:click="sortByColumn('date')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('date')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tanggal
                                 @if($sortBy === 'date')
@@ -220,7 +220,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('description')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('description')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Keterangan
                                 @if($sortBy === 'description')
@@ -230,8 +230,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-3.5 text-left whitespace-nowrap">Tipe</th>
-                        <th wire:click="sortByColumn('category')" class="px-6 py-3.5 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Tipe</th>
+                        <th wire:click="sortByColumn('category')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Kategori
                                 @if($sortBy === 'category')
@@ -241,8 +241,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-3.5 text-left whitespace-nowrap">Sumber Dana</th>
-                        <th wire:click="sortByColumn('amount')" class="px-6 py-3.5 text-right cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Sumber Dana</th>
+                        <th wire:click="sortByColumn('amount')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                             <div class="flex items-center justify-end gap-1">
                                 Jumlah (Rp)
                                 @if($sortBy === 'amount')
@@ -252,16 +252,16 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-3.5 text-left whitespace-nowrap">User</th>
-                        <th class="px-6 py-3.5 text-right whitespace-nowrap">Aksi</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">User</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($expenses as $expense)
                         <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{{ $expense->description }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $expense->description }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @if($expense->type === 'income')
                                     <span class="px-2.5 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs inline-flex items-center gap-1.5">
                                         <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
@@ -274,8 +274,8 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $expense->category ?? '-' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                                 @if($expense->account)
                                     <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs border border-gray-200">
                                         {{ $expense->account->name }}
@@ -284,9 +284,9 @@
                                     <span class="text-gray-400 italic">-</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $expense->user->name ?? 'System' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right">{{ number_format($expense->amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $expense->user->name ?? 'System' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-2">
                                     <button wire:click="edit({{ $expense->id }})" 
                                         class="text-blue-600 hover:text-blue-900 transition-colors" title="Edit">

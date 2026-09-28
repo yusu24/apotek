@@ -71,7 +71,7 @@
             <table class="w-full text-left">
                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                     <tr class="text-xs font-bold uppercase text-gray-500 tracking-wider">
-                        <th wire:click="sortByColumn('created_at')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                        <th wire:click="sortByColumn('created_at')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tanggal
                                 @if($sortBy === 'created_at')
@@ -81,7 +81,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('product')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                        <th class="px-4 py-3 whitespace-nowrap">Barcode</th>
+                        <th wire:click="sortByColumn('product')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'product')
@@ -91,7 +92,7 @@
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('type')" class="px-6 py-4 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                        <th wire:click="sortByColumn('type')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tipe
                                 @if($sortBy === 'type')
@@ -101,8 +102,9 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4">Ref / Batch</th>
-                        <th wire:click="sortByColumn('quantity')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100/50 transition-colors">
+                        <th class="px-4 py-3 whitespace-nowrap">No. Referensi</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Batch</th>
+                        <th wire:click="sortByColumn('quantity')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
                             <div class="flex items-center justify-end gap-1">
                                 Qty
                                 @if($sortBy === 'quantity')
@@ -112,21 +114,22 @@
                                 @endif
                             </div>
                         </th>
-                        <th class="px-6 py-4">Admin</th>
+                        <th class="px-4 py-3 whitespace-nowrap">Admin</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
                     @forelse($transactions as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                <div class="text-sm text-gray-900 dark:text-white">{{ $item->created_at->format('d/m/Y') }}</div>
-                                <div class="text-xs">{{ $item->created_at->format('H:i') }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                {{ $item->created_at->format('d/m/Y H:i') }}
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900 dark:text-white">{{ $item->product->name ?? '-' }}</div>
-                                <div class="text-xs text-gray-500">{{ $item->product->barcode ?? '-' }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500 dark:text-gray-400">
+                                {{ $item->product->barcode ?? '-' }}
                             </td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                {{ $item->product->name ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 @php
                                     $colors = [
                                         'sale' => 'text-blue-700 bg-blue-50 border-blue-100',
@@ -150,23 +153,23 @@
                                     {{ $label }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                <div class="font-mono text-xs">{{ $item->doc_ref ?: '-' }}</div>
-                                @if($item->batch)
-                                    <div class="text-[10px] text-gray-400 mt-0.5">Batch: {{ $item->batch->batch_no }}</div>
-                                @endif
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-600 dark:text-gray-400">
+                                {{ $item->doc_ref ?: '-' }}
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <span class="text-sm {{ $item->quantity < 0 ? 'text-red-600' : 'text-green-600' }}">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-600 dark:text-gray-400">
+                                {{ $item->batch ? $item->batch->batch_no : '-' }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm">
+                                <span class="{{ $item->quantity < 0 ? 'text-red-600' : 'text-green-600' }}">
                                     {{ $item->quantity > 0 ? '+' : '' }}{{ number_format($item->quantity, 0) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-500">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                                 {{ $item->user->name ?? '-' }}
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="6" message="Tidak ada transaksi yang ditemukan pada periode ini." />
+                        <x-empty-table colspan="8" message="Tidak ada transaksi yang ditemukan pada periode ini." />
                     @endforelse
                 </tbody>
             </table>

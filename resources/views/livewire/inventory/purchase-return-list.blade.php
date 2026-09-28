@@ -50,13 +50,13 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($returns as $return)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
-                            <td class="px-6 py-4 font-normal">{{ optional($return->supplier)->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-right font-normal">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 text-center text-gray-600">{{ optional($return->user)->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-center">{{ $return->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="px-6 py-4 text-center text-gray-500 text-xs italic">{{ $return->notes ?: '-' }}</td>
-                            <td class="px-6 py-4 text-center flex justify-center gap-2">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-blue-600">{{ $return->return_no }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ optional($return->supplier)->name ?? '-' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-600">{{ optional($return->user)->name ?? '-' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-600">{{ $return->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="px-4 py-3 text-sm text-center text-gray-500">{{ $return->notes ?: '-' }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-center flex justify-center gap-2">
                                 <button wire:click="viewDetails({{ $return->id }})" class="text-blue-600 hover:text-blue-800 transition-colors" title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </button>
@@ -128,7 +128,8 @@
                                         <th class="px-4 py-3 text-center w-10">
                                             <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         </th>
-                                        <th class="px-4 py-3">Produk / Batch</th>
+                                        <th class="px-4 py-3">Produk</th>
+                                        <th class="px-4 py-3 text-center">Batch</th>
                                         <th class="px-4 py-3 text-center">Qty Terima</th>
                                         <th class="px-4 py-3 text-center">Stok Saat Ini</th>
                                         <th class="px-4 py-3 text-center w-32">Qty Retur</th>
@@ -139,30 +140,32 @@
                                 <tbody class="divide-y divide-gray-100">
                                     @foreach($returnItems as $batchId => $item)
                                         <tr class="hover:bg-gray-50/50 transition-colors {{ !empty($item['selected']) ? 'bg-blue-50/20' : '' }}">
-                                            <td class="px-4 py-3 text-center">
+                                            <td class="px-4 py-3 text-center text-sm">
                                                 <input type="checkbox" wire:model.live="returnItems.{{ $batchId }}.selected" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                             </td>
-                                            <td class="px-4 py-3">
-                                                <div class="text-gray-800">{{ $item['product_name'] }}</div>
-                                                <div class="text-xs text-gray-500">No. Batch: {{ $item['batch_no'] }}</div>
+                                            <td class="px-4 py-3 text-sm text-gray-800">
+                                                {{ $item['product_name'] }}
                                             </td>
-                                            <td class="px-4 py-3 text-center text-gray-500">{{ $item['gr_quantity'] }}</td>
-                                            <td class="px-4 py-3 text-center text-gray-600">{{ $item['max_quantity'] }}</td>
-                                            <td class="px-4 py-3">
+                                            <td class="px-4 py-3 text-sm text-center text-gray-500 font-mono">
+                                                {{ $item['batch_no'] }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-center text-gray-500">{{ $item['gr_quantity'] }}</td>
+                                            <td class="px-4 py-3 text-sm text-center text-gray-600">{{ $item['max_quantity'] }}</td>
+                                            <td class="px-4 py-3 text-sm">
                                                 <input type="number" wire:model.live="returnItems.{{ $batchId }}.quantity" class="w-full h-9 rounded-lg border-gray-300 text-sm text-center focus:ring-blue-500 focus:border-blue-500" min="0" max="{{ $item['max_quantity'] }}" @if(empty($item['selected'])) disabled @endif>
                                                 @error("returnItems.{$batchId}.quantity") <span class="text-red-500 text-[10px] mt-1 block">{{ $message }}</span> @enderror
                                             </td>
-                                            <td class="px-4 py-3 text-right text-gray-500 italic">
+                                            <td class="px-4 py-3 text-sm text-right text-gray-500 font-mono">
                                                 Rp {{ number_format($item['cost_price'], 0, ',', '.') }}
                                             </td>
-                                            <td class="px-4 py-3 text-right text-blue-600">
+                                            <td class="px-4 py-3 text-sm text-right text-blue-600 font-medium">
                                                 Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['cost_price'] ?: 0), 0, ',', '.') }}
                                             </td>
                                         </tr>
                                     @endforeach
                                     @if(empty($returnItems))
                                         <tr>
-                                            <td colspan="7" class="px-4 py-12 text-center text-gray-400">
+                                            <td colspan="8" class="px-4 py-12 text-center text-gray-400 text-sm">
                                                 <div class="flex flex-col items-center">
                                                     <svg class="w-10 h-10 text-gray-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                                                     <p class="text-sm">Pilih surat jalan untuk menampilkan barang</p>
@@ -174,7 +177,7 @@
                                 @if(!empty($returnItems))
                                     <tfoot class="bg-blue-50/30">
                                         <tr class="font-bold">
-                                            <td colspan="6" class="px-4 py-4 text-right uppercase tracking-widest text-[10px] text-gray-500">Total Nilai Retur</td>
+                                            <td colspan="7" class="px-4 py-4 text-right uppercase tracking-widest text-[10px] text-gray-500">Total Nilai Retur</td>
                                             <td class="px-4 py-4 text-right text-lg text-blue-700 font-bold">Rp {{ number_format(collect($returnItems)->filter(fn($i) => !empty($i['selected']))->sum(fn($i) => (float)($i['quantity'] ?: 0) * (float)($i['cost_price'] ?: 0)), 0, ',', '.') }}</td>
                                         </tr>
                                     </tfoot>
@@ -260,11 +263,11 @@
                             <tbody class="divide-y divide-gray-100">
                                 @foreach($selectedReturn->items as $item)
                                     <tr class="hover:bg-gray-50/50">
-                                        <td class="px-4 py-3 text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
-                                        <td class="px-4 py-3 text-center text-gray-500">{{ $item->batch->batch_no ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-center">{{ $item->quantity }}</td>
-                                        <td class="px-4 py-3 text-right">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
-                                        <td class="px-4 py-3 text-right text-blue-600">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
+                                        <td class="px-4 py-3 text-sm text-center text-gray-500 font-mono">{{ $item->batch->batch_no ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-center">{{ $item->quantity }}</td>
+                                        <td class="px-4 py-3 text-sm text-right">Rp {{ number_format($item->cost_price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-sm text-right text-blue-600 font-medium">Rp {{ number_format($item->quantity * $item->cost_price, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -126,26 +126,26 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 text-left">Kode</th>
-                        <th class="px-6 py-4 text-left">Nama Akun</th>
-                        <th class="px-6 py-4 text-left">Tipe</th>
-                        <th class="px-6 py-4 text-left">Kategori</th>
-                        <th class="px-6 py-4 text-right">Saldo</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-4 py-3 text-left">Kode</th>
+                        <th class="px-4 py-3 text-left">Nama Akun</th>
+                        <th class="px-4 py-3 text-left">Tipe</th>
+                        <th class="px-4 py-3 text-left">Kategori</th>
+                        <th class="px-4 py-3 text-right">Saldo</th>
+                        <th class="px-4 py-3 text-center">Status</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($accounts as $account)
                     <tr class="hover:bg-gray-50 transition duration-150">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">{{ $account->code }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 font-mono">{{ $account->code }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                             {{ $account->name }}
                             @if($account->is_system)
                                 <span class="ml-2 px-2 py-0.5 inline-flex text-[10px] leading-4 rounded bg-gray-100 text-gray-600 border border-gray-200">System</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm">
                             <span class="px-2 py-1 text-xs rounded-full 
                                 @if($account->type == 'asset') bg-green-100 text-green-800
                                 @elseif($account->type == 'liability') bg-red-100 text-red-800
@@ -155,16 +155,16 @@
                                 {{ ucfirst($account->type) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ str_replace('_', ' ', $account->category) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{{ $account->formatted_balance }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 capitalize">{{ str_replace('_', ' ', $account->category) }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 text-right font-mono">{{ $account->formatted_balance }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
                             @if($account->is_active)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-green-100 text-green-800">Aktif</span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-gray-100 text-gray-800">Non-Aktif</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                        <td class="px-4 py-3 whitespace-nowrap text-right text-sm">
                             <div class="flex justify-end items-center gap-3">
                                 @can('manage accounts')
                                     <button wire:click="edit({{ $account->id }})" class="text-blue-600 hover:text-blue-900 transition duration-150" title="Edit Akun">

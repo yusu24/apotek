@@ -31,21 +31,24 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Produk</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Kategori</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Satuan Dasar</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Jml Konversi</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Aksi</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Barcode</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Nama Produk</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Kategori</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Satuan Dasar</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Jml Konversi</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($products as $product)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $product->name }}</div>
-                            <div class="text-xs text-gray-500">{{ $product->barcode }}</div>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500">
+                            {{ $product->barcode }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                            {{ $product->name }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm">
                             @php
                                 $categoryName = $product->category->name ?? '-';
                                 // Generate consistent color based on category name
@@ -68,15 +71,15 @@
                                 {{ $categoryName }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                        <td class="px-4 py-3 text-center whitespace-nowrap text-sm">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800">
                                 {{ $product->unit->name ?? 'Belum diset' }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-center text-sm text-gray-500 whitespace-nowrap">
+                        <td class="px-4 py-3 text-center text-sm text-gray-500 whitespace-nowrap">
                             {{ $product->unit_conversions_count ?? 0 }} Level
                         </td>
-                        <td class="px-6 py-4 text-right text-sm whitespace-nowrap">
+                        <td class="px-4 py-3 text-right text-sm whitespace-nowrap">
                             <div class="flex items-center justify-end gap-3">
                                 <button wire:click="edit({{ $product->id }})" 
                                     class="text-blue-600 hover:text-blue-900 transition-colors" title="Atur Satuan">
@@ -90,7 +93,7 @@
                         </td>
                     </tr>
                     @empty
-                        <x-empty-table colspan="5" message="Tidak ada data produk ditemukan." />
+                        <x-empty-table colspan="6" message="Tidak ada data produk ditemukan." />
                     @endforelse
                 </tbody>
             </table>

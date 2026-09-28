@@ -38,25 +38,25 @@
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4">No. Retur</th>
-                        <th class="px-6 py-4">No. Invoice</th>
-                        <th class="px-6 py-4">Total</th>
-                        <th class="px-6 py-4">User</th>
-                        <th class="px-6 py-4">Tanggal</th>
-                        <th class="px-6 py-4">Catatan</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-4 py-3">No. Retur</th>
+                        <th class="px-4 py-3">No. Invoice</th>
+                        <th class="px-4 py-3">Total</th>
+                        <th class="px-4 py-3">User</th>
+                        <th class="px-4 py-3">Tanggal</th>
+                        <th class="px-4 py-3">Catatan</th>
+                        <th class="px-4 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($returns as $return)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-normal text-blue-600">{{ $return->return_no }}</td>
-                            <td class="px-6 py-4">{{ $return->sale->invoice_no }}</td>
-                            <td class="px-6 py-4">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">{{ optional($return->user)->name ?? '-' }}</td>
-                            <td class="px-6 py-4">{{ $return->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="px-6 py-4 text-gray-500">{{ $return->notes ?: '-' }}</td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-4 py-3 text-sm font-normal text-blue-600">{{ $return->return_no }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">{{ $return->sale->invoice_no }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900">Rp {{ number_format($return->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ optional($return->user)->name ?? '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ $return->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-500">{{ $return->notes ?: '-' }}</td>
+                            <td class="px-4 py-3 text-sm text-center">
                                 <button wire:click="viewDetails({{ $return->id }})" class="text-blue-600 hover:text-blue-800 transition-colors inline-block mr-2" title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </button>
@@ -146,6 +146,7 @@
                                     <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs">
                                         <tr>
                                             <th class="px-4 py-3">Produk</th>
+                                            <th class="px-4 py-3 text-right">Harga</th>
                                             <th class="px-4 py-3 text-center">Qty Jual</th>
                                             <th class="px-4 py-3 text-center">Batch</th>
                                             <th class="px-4 py-3 text-center w-32">Qty Retur</th>
@@ -155,17 +156,19 @@
                                     <tbody class="divide-y divide-gray-100">
                                         @foreach($returnItems as $id => $item)
                                             <tr>
-                                                <td class="px-4 py-3">
-                                                    <div class="text-gray-800">{{ $item['name'] }}</div>
-                                                    <div class="text-xs text-gray-500 italic">Rp {{ number_format($item['price'], 0, ',', '.') }}</div>
+                                                <td class="px-4 py-3 text-sm text-gray-800">
+                                                    {{ $item['name'] }}
                                                 </td>
-                                                <td class="px-4 py-3 text-center text-gray-600">{{ $item['max_quantity'] }}</td>
-                                                <td class="px-4 py-3 text-center text-xs text-gray-500">{{ $item['batch_no'] }}</td>
-                                                <td class="px-4 py-3">
+                                                <td class="px-4 py-3 text-sm text-right text-gray-600 font-mono">
+                                                    Rp {{ number_format($item['price'], 0, ',', '.') }}
+                                                </td>
+                                                <td class="px-4 py-3 text-sm text-center text-gray-600">{{ $item['max_quantity'] }}</td>
+                                                <td class="px-4 py-3 text-sm text-center text-gray-500 font-mono">{{ $item['batch_no'] }}</td>
+                                                <td class="px-4 py-3 text-sm">
                                                     <input type="number" wire:model.live="returnItems.{{ $id }}.quantity" class="w-full h-9 rounded-lg border-gray-300 text-sm text-center focus:ring-blue-500 focus:border-blue-500" min="0" max="{{ $item['max_quantity'] }}">
                                                     @error("returnItems.{$id}.quantity") <span class="text-red-500 text-[10px]">{{ $message }}</span> @enderror
                                                 </td>
-                                                <td class="px-4 py-3 text-right text-blue-600">
+                                                <td class="px-4 py-3 text-sm text-right text-blue-600 font-medium">
                                                     Rp {{ number_format((float)($item['quantity'] ?: 0) * (float)($item['price'] ?: 0), 0, ',', '.') }}
                                                 </td>
                                             </tr>
@@ -257,11 +260,11 @@
                             <tbody class="divide-y divide-gray-100">
                                 @foreach($selectedReturn->items as $item)
                                     <tr class="hover:bg-gray-50/50">
-                                        <td class="px-4 py-3 text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
-                                        <td class="px-4 py-3 text-center text-gray-500">{{ $item->batch->batch_no ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-center">{{ $item->quantity }}</td>
-                                        <td class="px-4 py-3 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                        <td class="px-4 py-3 text-right text-blue-600">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</td>
+                                        <td class="px-4 py-3 text-sm text-center text-gray-500 font-mono">{{ $item->batch->batch_no ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-center">{{ $item->quantity }}</td>
+                                        <td class="px-4 py-3 text-sm text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-3 text-sm text-right text-blue-600 font-medium">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -57,7 +57,7 @@
                                 $warning = $warnings[$index] ?? null;
                             @endphp
                             <tr class="hover:bg-gray-50 transition duration-150 {{ $warning ? 'bg-yellow-50' : '' }}">
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2.5 text-sm">
                                     <div class="relative">
                                         <select wire:model="lines.{{ $index }}.account_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm {{ $warning ? 'border-yellow-400 bg-yellow-50' : '' }}">
                                             <option value="">-- Pilih Akun --</option>
@@ -78,20 +78,20 @@
                                     </div>
                                     @error("lines.{$index}.account_id") <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                                 </td>
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2.5 text-sm">
                                     <div x-data="money($wire.entangle('lines.{{ $index }}.debit').live)">
                                     <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono {{ $warning && $warning['type'] === 'warning' ? 'border-yellow-400 bg-yellow-50' : '' }}">
                                     </div>
                                 </td>
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2.5 text-sm">
                                     <div x-data="money($wire.entangle('lines.{{ $index }}.credit').live)">
                                     <input type="text" x-bind="input" placeholder="0" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-right font-mono {{ $warning && $warning['type'] === 'warning' ? 'border-yellow-400 bg-yellow-50' : '' }}">
                                     </div>
                                 </td>
-                                <td class="px-4 py-2">
+                                <td class="px-4 py-2.5 text-sm">
                                     <input type="text" wire:model="lines.{{ $index }}.notes" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="Opsional">
                                 </td>
-                                <td class="px-4 py-2 text-center">
+                                <td class="px-4 py-2.5 text-center text-sm">
                                     <button type="button" wire:click="removeLine({{ $index }})" class="text-red-400 hover:text-red-700 transition duration-150" title="Hapus Baris">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>

@@ -35,21 +35,21 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
                     <tr>
-                        <th class="px-6 py-4 text-left">No</th>
-                        <th class="px-6 py-4 text-left">Nama Kategori</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
+                        <th class="px-4 py-3 text-left">No</th>
+                        <th class="px-4 py-3 text-left">Nama Kategori</th>
+                        <th class="px-4 py-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
                     @forelse($categories as $index => $category)
                     <tr class="hover:bg-gray-50/80 transition-colors group">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                             {{ ($categories->currentpage()-1) * $categories->perpage() + $index + 1 }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-3 whitespace-nowrap text-sm">
                             <span class="text-sm font-normal text-gray-900">{{ $category->name }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
                             <div class="flex items-center justify-center gap-2">
                                 <button wire:click="edit({{ $category->id }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

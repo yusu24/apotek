@@ -195,7 +195,8 @@
             <table class="min-w-full divide-y divide-gray-100">
                 <thead class="bg-gray-50/50 text-gray-500 font-normal uppercase text-xs tracking-widest">
                     <tr>
-                        <th wire:click="sortByColumn('name')" class="px-6 py-4 text-left cursor-pointer hover:bg-gray-100">
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Barcode</th>
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
@@ -205,53 +206,59 @@
                                 @endif
                             </div>
                         </th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Kategori</th>
                         
                         @if($reportMode === 'realized')
-                            <th wire:click="sortByColumn('total_sold')" class="px-6 py-4 text-center cursor-pointer hover:bg-gray-100">Qty Laku</th>
+                            <th wire:click="sortByColumn('total_sold')" class="px-4 py-3 text-center cursor-pointer hover:bg-gray-100 whitespace-nowrap">Qty Laku</th>
                         @endif
 
-                        <th wire:click="sortByColumn('avg_buy_price')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('avg_buy_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Harga Beli (L)' : 'HPP Rata-rata' }}
                         </th>
-                        <th wire:click="sortByColumn('avg_sell_price')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('avg_sell_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Harga Jual' : 'Harga Jual Rerata' }}
                         </th>
-                        <th wire:click="sortByColumn('margin_amount')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100 font-bold">
+                        <th wire:click="sortByColumn('margin_amount')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 font-bold whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Margin' : 'Total Margin' }}
                         </th>
-                        <th wire:click="sortByColumn('margin_percentage')" class="px-6 py-4 text-right cursor-pointer hover:bg-gray-100">%</th>
+                        <th wire:click="sortByColumn('margin_percentage')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">%</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-50">
                     @forelse($products as $product)
                         <tr class="hover:bg-gray-50/50 transition-colors">
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">{{ $product->name }}</div>
-                                <div class="text-[10px] text-gray-400 font-mono">{{ $product->barcode }} | {{ $product->category->name ?? '-' }}</div>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-500">
+                                {{ $product->barcode }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-900">
+                                {{ $product->name }}
+                            </td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                {{ $product->category->name ?? '-' }}
                             </td>
 
                             @if($reportMode === 'realized')
-                                <td class="px-6 py-4 text-center text-sm text-blue-600">
+                                <td class="px-4 py-3 text-center text-sm text-blue-600 whitespace-nowrap">
                                     {{ number_format($product->total_sold) }}
                                 </td>
                             @endif
 
-                            <td class="px-6 py-4 text-sm text-right text-gray-500">
+                            <td class="px-4 py-3 text-sm text-right text-gray-600 whitespace-nowrap">
                                 @if($product->avg_buy_price || $product->last_buy_price)
                                     Rp {{ number_format($product->avg_buy_price ?? $product->last_buy_price, 0, ',', '.') }}
                                 @else
                                     <span class="text-gray-300 italic">N/A</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-right text-gray-500">
+                            <td class="px-4 py-3 text-sm text-right text-gray-600 whitespace-nowrap">
                                 Rp {{ number_format($product->avg_sell_price ?? $product->sell_price, 0, ',', '.') }}
                             </td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-4 py-3 text-sm text-right whitespace-nowrap">
                                 <span class="{{ $product->margin_amount >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
                                     Rp {{ number_format($product->margin_amount, 0, ',', '.') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-right">
+                            <td class="px-4 py-3 text-sm text-right whitespace-nowrap">
                                 <div class="flex items-center justify-end gap-2">
                                     <span class="text-[10px] px-2 py-0.5 rounded-full {{ $product->margin_percentage >= 30 ? 'bg-emerald-100 text-emerald-700' : ($product->margin_percentage < 10 && $product->margin_percentage >= 0 ? 'bg-amber-100 text-amber-700' : ($product->margin_percentage < 0 ? 'bg-rose-100 text-rose-700' : 'bg-gray-100 text-gray-600')) }}">
                                         {{ number_format($product->margin_percentage, 1) }}%
@@ -260,7 +267,7 @@
                             </td>
                         </tr>
                     @empty
-                        <x-empty-table colspan="7" message="Tidak ada data untuk periode ini." />
+                        <x-empty-table :colspan="$reportMode === 'realized' ? 8 : 7" message="Tidak ada data untuk periode ini." />
                     @endforelse
                 </tbody>
             </table>

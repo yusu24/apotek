@@ -91,75 +91,129 @@
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         {{-- Penjualan Bersih --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #4338ca; border-color: #3730a3;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Penjualan Bersih</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-indigo-100 text-sm font-medium">Penjualan Bersih</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($revenue, 0, ',', '.') }}">
+                    Rp {{ number_format($revenue, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate" title="DPP - Retur">
+                    DPP - Retur Penjualan
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($revenue, 0, ',', '.') }}</p>
-            <p class="text-xs text-indigo-200/70 mt-1 italic">DPP({{ number_format($grossRevenue, 0, ',', '.') }}) - Retur({{ number_format($totalReturns, 0, ',', '.') }})</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Total HPP --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #b45309; border-color: #92400e;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total HPP</span>
+                    <div class="w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    </div>
                 </div>
-                <p class="text-amber-100 text-sm font-medium">Total HPP</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($cogs, 0, ',', '.') }}">
+                    Rp {{ number_format($cogs, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                    Modal Barang Terjual
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($cogs, 0, ',', '.') }}</p>
-            <p class="text-xs text-amber-200/70 mt-1 italic">Modal Barang Terjual</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Laba Kotor --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #0e7490; border-color: #155e75;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Laba Kotor</span>
+                    <div class="w-8 h-8 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-cyan-100 text-sm font-medium">Gross Profit Margin (Laba Kotor)</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($grossProfit, 0, ',', '.') }}">
+                    Rp {{ number_format($grossProfit, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                    Penjualan - HPP
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($grossProfit, 0, ',', '.') }}</p>
-            <p class="text-xs text-cyan-200/70 mt-1 italic">Penjualan - HPP</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-cyan-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Beban --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #be123c; border-color: #9f1239;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Beban</span>
+                    <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-rose-100 text-sm font-medium">Operating Expense (Beban)</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($expenses, 0, ',', '.') }}">
+                    Rp {{ number_format($expenses, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                    Operasional & Lainnya
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($expenses, 0, ',', '.') }}</p>
-            <p class="text-xs text-rose-200/70 mt-1 italic">Operasional & Lainnya</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-rose-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Laba Sebelum Pajak --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.05] transition-all duration-300 border-b-4" style="background-color: #d97706; border-color: #b45309;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Laba Pre-Tax</span>
+                    <div class="w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-amber-100 text-sm font-medium">Pre-Tax Profit (Laba Sebelum Pajak)</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}">
+                    Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                    Sebelum Potong Pajak
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfitBeforeTax, 0, ',', '.') }}</p>
-            <p class="text-xs text-amber-200/70 mt-1 italic">Sebelum Potong Pajak</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-orange-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Laba Bersih --}}
-        <div class="rounded-xl shadow-lg p-5 text-white transform hover:scale-[1.1] transition-all duration-300 border-b-4 {{ $netProfit >= 0 ? '' : 'animate-pulse' }}" style="background-color: {{ $netProfit >= 0 ? '#059669' : '#b91c1c' }}; border-color: {{ $netProfit >= 0 ? '#047857' : '#991b1b' }};">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Laba Bersih</span>
+                    <div class="w-8 h-8 rounded-full {{ $netProfit >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' }} flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
                 </div>
-                <p class="{{ $netProfit >= 0 ? 'text-emerald-100' : 'text-red-100' }} text-sm font-medium">Net Profit Margin (Laba Bersih)</p>
+                <div class="text-xl lg:text-2xl font-bold {{ $netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} tracking-tight truncate" title="Rp {{ number_format($netProfit, 0, ',', '.') }}">
+                    Rp {{ number_format($netProfit, 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                    Setelah Beban & Pajak
+                </div>
             </div>
-            <p class="text-2xl font-bold mt-1">Rp {{ number_format($netProfit, 0, ',', '.') }}</p>
-            <p class="text-xs {{ $netProfit >= 0 ? 'text-emerald-200/70' : 'text-red-200/70' }} mt-1 italic">Setelah Pajak</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full {{ $netProfit >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }} rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
 

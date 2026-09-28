@@ -60,63 +60,108 @@
     {{-- Summary Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         {{-- Operating --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: #0e7490; border-color: #155e75;">
-             <div class="flex items-center gap-3 mb-1.5">
-                <div class="p-1.5 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Operasional</span>
+                    <div class="w-8 h-8 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Operasional</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="{{ format_accounting_paren($reportData['net_cash_operating']) }}">
+                    {{ format_accounting_paren($reportData['net_cash_operating']) }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500 truncate">
+                    Arus kas operasional
+                </div>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_operating']) }}</p>
-             <p class="text-xs text-white/60 mt-1 italic">Kas dari Operasional</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-cyan-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Investing --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: #b45309; border-color: #92400e;">
-             <div class="flex items-center gap-3 mb-1.5">
-                <div class="p-1.5 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Investasi</span>
+                    <div class="w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Investasi</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="{{ format_accounting_paren($reportData['net_cash_investing']) }}">
+                    {{ format_accounting_paren($reportData['net_cash_investing']) }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500 truncate">
+                    Arus kas investasi aset
+                </div>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_investing']) }}</p>
-             <p class="text-xs text-white/60 mt-1 italic">Kas dari Investasi</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Financing --}}
-         <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: #4338ca; border-color: #3730a3;">
-             <div class="flex items-center gap-3 mb-1.5">
-                <div class="p-1.5 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Pendanaan</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Pendanaan</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="{{ format_accounting_paren($reportData['net_cash_financing']) }}">
+                    {{ format_accounting_paren($reportData['net_cash_financing']) }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500 truncate">
+                    Arus kas pendanaan/modal
+                </div>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_cash_financing']) }}</p>
-             <p class="text-xs text-white/60 mt-1 italic">Kas dari Pendanaan</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Net Increase --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: {{ $reportData['net_increase'] >= 0 ? '#059669' : '#b91c1c' }}; border-color: {{ $reportData['net_increase'] >= 0 ? '#047857' : '#991b1b' }};">
-             <div class="flex items-center gap-3 mb-1.5">
-                <div class="p-1.5 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kenaikan Bersih</span>
+                    <div class="w-8 h-8 rounded-full {{ $reportData['net_increase'] >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' }} flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Kenaikan Bersih</p>
+                <div class="text-xl lg:text-2xl font-bold {{ $reportData['net_increase'] >= 0 ? 'text-gray-900 dark:text-white' : 'text-rose-600 dark:text-rose-400' }} tracking-tight truncate" title="{{ format_accounting_paren($reportData['net_increase']) }}">
+                    {{ format_accounting_paren($reportData['net_increase']) }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500 truncate">
+                    Total selisih kas netto
+                </div>
             </div>
-            <p class="text-xl font-bold">{{ format_accounting_paren($reportData['net_increase']) }}</p>
-             <p class="text-xs text-white/60 mt-1 italic">Total Selisih Kas</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full {{ $reportData['net_increase'] >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }} rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Ending Balance --}}
-         <div class="rounded-xl shadow-lg p-4 text-gray-800 bg-white transform hover:scale-[1.02] transition-all duration-300 border-b-4 border-gray-300">
-             <div class="flex items-center gap-3 mb-1.5">
-                <div class="p-1.5 bg-gray-100 rounded-lg text-gray-600">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Saldo Akhir</span>
+                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-300 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-60">Saldo Akhir</p>
+                <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="{{ format_accounting_paren($reportData['ending_balance']) }}">
+                    {{ format_accounting_paren($reportData['ending_balance']) }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500 truncate">
+                    Posisi kas akhir periode
+                </div>
             </div>
-            <p class="text-xl font-bold text-gray-900">{{ format_accounting_paren($reportData['ending_balance']) }}</p>
-             <p class="text-xs text-gray-500 mt-1 italic">Posisi Kas Akhir</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
     

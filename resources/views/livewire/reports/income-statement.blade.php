@@ -64,39 +64,68 @@
 
     @if(!empty($reportData))
     {{-- Summary Cards --}}
-    {{-- Summary Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {{-- Penerimaan Kas (Revenue) --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: #4338ca; border-color: #3730a3;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
+        {{-- Total Pendapatan --}}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Pendapatan</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Total Pendapatan</p>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($reportData['total_revenue'], 0, ',', '.') }}">
+                    Rp {{ number_format($reportData['total_revenue'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Akumulasi penerimaan & penjualan
+                </div>
             </div>
-            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['total_revenue'], 0, ',', '.') }},-</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
  
         {{-- Laba Kotor --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4" style="background-color: #0e7490; border-color: #155e75;">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Laba Kotor</span>
+                    <div class="w-8 h-8 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Laba Kotor</p>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($reportData['gross_profit'], 0, ',', '.') }}">
+                    Rp {{ number_format($reportData['gross_profit'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Gross Margin (Pendapatan - HPP)
+                </div>
             </div>
-            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['gross_profit'], 0, ',', '.') }},-</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-cyan-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
  
-        {{-- Arus Kas Bersih (Net Income) --}}
-        <div class="rounded-xl shadow-lg p-4 text-white transform hover:scale-[1.02] transition-all duration-300 border-b-4 {{ $reportData['net_income'] >= 0 ? '' : 'animate-pulse' }}" style="background-color: {{ $reportData['net_income'] >= 0 ? '#059669' : '#b91c1c' }}; border-color: {{ $reportData['net_income'] >= 0 ? '#047857' : '#991b1b' }};">
-            <div class="flex items-center gap-3 mb-2">
-                <div class="p-2 bg-white/20 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+        {{-- Laba Bersih --}}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Laba Bersih</span>
+                    <div class="w-8 h-8 rounded-full {{ $reportData['net_income'] >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' }} flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
                 </div>
-                <p class="text-sm font-medium opacity-80">Laba Bersih</p>
+                <div class="text-2xl lg:text-3xl font-bold {{ $reportData['net_income'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} tracking-tight truncate" title="Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}">
+                    Rp {{ number_format($reportData['net_income'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Net Income setelah beban operasional
+                </div>
             </div>
-            <p class="text-2xl font-bold">Rp. {{ number_format($reportData['net_income'], 0, ',', '.') }},-</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full {{ $reportData['net_income'] >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }} rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
 

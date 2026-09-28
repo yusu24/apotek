@@ -12,55 +12,67 @@
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Total Cash & Bank -->
-        <div class="rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #1e40af;">
-            <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-white rounded-xl text-blue-800">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Saldo (Kas & Bank)</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <span class="text-sm font-medium text-white opacity-90">Total Saldo (Kas & Bank)</span>
                 </div>
-                <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80 font-bold">Rp</span>
-                    <span>{{ number_format($totalCash, 0, ',', '.') }}</span>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    Rp {{ number_format($totalCash, 0, ',', '.') }}
                 </div>
-                <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Dompet Kasir & Rekening</div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Dompet kasir & rekening operasional
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
 
         <!-- Total Debt -->
-        <div class="rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background-color: #b91c1c;">
-            <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-white rounded-xl text-red-800">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Kewajiban (Hutang)</span>
+                    <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <span class="text-sm font-medium text-white opacity-90">Total Kewajiban (Hutang)</span>
                 </div>
-                <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80 font-bold">Rp</span>
-                    <span>{{ number_format($totalDebt, 0, ',', '.') }}</span>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    Rp {{ number_format($totalDebt, 0, ',', '.') }}
                 </div>
-                <div class="text-[10px] font-medium bg-white/20 inline-block px-2 py-0.5 rounded-lg text-white">Tagihan Supplier / Pinjaman</div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Tagihan supplier & pinjaman
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-rose-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
 
         <!-- Net Balance -->
-        <div class="rounded-xl shadow-2xl p-6 text-white relative overflow-hidden group dark:border-gray-800" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-            <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="p-2 bg-white rounded-xl text-slate-900">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Posisi Kas Bersih</span>
+                    <div class="w-8 h-8 rounded-full {{ $netPosition >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' }} flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     </div>
-                    <span class="text-sm font-medium text-white opacity-90">Posisi Kas Bersih</span>
                 </div>
-                <div class="text-3xl font-medium mb-1 flex items-baseline gap-1">
-                    <span class="text-sm opacity-80 font-bold">Rp</span>
-                    <span>{{ number_format($netPosition, 0, ',', '.') }}</span>
+                <div class="text-2xl lg:text-3xl font-bold {{ $netPosition >= 0 ? 'text-gray-900 dark:text-white' : 'text-rose-600 dark:text-rose-400' }} tracking-tight">
+                    Rp {{ number_format($netPosition, 0, ',', '.') }}
                 </div>
-                <div class="text-[10px] font-medium bg-white/30 inline-block px-2 py-0.5 rounded-lg text-white">Likuiditas Dana Tersedia</div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Likuiditas dana bersih tersedia
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full {{ $netPosition >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }} rounded-full" style="width: 100%;"></div>
             </div>
         </div>
     </div>

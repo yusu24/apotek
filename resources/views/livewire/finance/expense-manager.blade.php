@@ -141,54 +141,69 @@
         </div>
 
         {{-- Summary Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
             {{-- Card: Total Pengeluaran --}}
-            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                <div class="flex-shrink-0">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/>
-                    </svg>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Pengeluaran</span>
+                        <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+                        </div>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                        Rp {{ number_format($totalExpense, 0, ',', '.') }}
+                    </div>
+                    <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                        Arus kas keluar operasional
+                    </div>
                 </div>
-                <div class="min-w-0">
-                    <p class="text-xs font-bold uppercase tracking-wider text-white text-opacity-90 mb-0.5">Total Pengeluaran</p>
-                    <p class="text-xl font-extrabold text-white truncate">Rp {{ number_format($totalExpense, 0, ',', '.') }}</p>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                    <div class="h-full bg-rose-500 rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
 
             {{-- Card: Total Pemasukan --}}
-            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
-                <div class="flex-shrink-0">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                    </svg>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Pemasukan</span>
+                        <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                        </div>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                        Rp {{ number_format($totalIncome, 0, ',', '.') }}
+                    </div>
+                    <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                        Arus kas masuk non-penjualan
+                    </div>
                 </div>
-                <div class="min-w-0">
-                    <p class="text-xs font-bold uppercase tracking-wider text-white mb-0.5">Total Pemasukan</p>
-                    <p class="text-xl font-extrabold text-white truncate">Rp {{ number_format($totalIncome, 0, ',', '.') }}</p>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                    <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
 
             {{-- Card: Net --}}
-            @php
-                $netBg = $totalNet >= 0 ? 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)' : 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)';
-            @endphp
-            <div class="rounded-xl shadow-sm px-5 py-4 flex items-center gap-4 text-white" style="background: {{ $netBg }};">
-                <div class="flex-shrink-0">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div class="min-w-0">
-                    <p class="text-xs font-bold uppercase tracking-wider text-white text-opacity-90 mb-0.5">
-                        Net {{ $totalNet < 0 ? '(Defisit)' : '(Surplus)' }}
-                    </p>
-                    <p class="text-xl font-extrabold text-white truncate">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Net {{ $totalNet < 0 ? '(Defisit)' : '(Surplus)' }}</span>
+                        <div class="w-8 h-8 rounded-full {{ $totalNet >= 0 ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' }} flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-bold {{ $totalNet < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white' }} tracking-tight">
                         {{ $totalNet < 0 ? '-' : '' }}Rp {{ number_format(abs($totalNet), 0, ',', '.') }}
-                    </p>
+                    </div>
+                    <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                        Selisih kas operasional
+                    </div>
+                </div>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                    <div class="h-full {{ $totalNet >= 0 ? 'bg-blue-600' : 'bg-amber-500' }} rounded-full" style="width: 100%;"></div>
                 </div>
             </div>
-
         </div>
 
         <div class="overflow-x-auto rounded-lg">

@@ -48,56 +48,89 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 no-print">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 no-print">
         <!-- Total Transaksi -->
-        <div class="bg-gradient-to-br from-orange-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-orange-100 text-sm font-medium">Total Transaksi</p>
-                    <p class="text-2xl font-bold mt-1">{{ number_format($stats['transaction_count']) }}</p>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Transaksi</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    </div>
                 </div>
-                <div class="bg-orange-500/30 rounded-full p-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($stats['transaction_count']) }}
+                    <span class="text-xs font-normal text-gray-400">Transaksi</span>
                 </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Faktur penjualan berhasil
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
 
         <!-- Penjualan Kotor -->
-        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-blue-100 text-sm font-medium">Penjualan Kotor</p>
-                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['total_sales'], 0, ',', '.') }},-</p>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Penjualan Kotor</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
                 </div>
-                <div class="bg-blue-500/30 rounded-full p-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}">
+                    Rp {{ number_format($stats['total_sales'], 0, ',', '.') }}
                 </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Total bruto sebelum retur
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
 
         <!-- Total Retur -->
-        <div class="bg-gradient-to-br from-red-600 to-red-700 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-red-100 text-sm font-medium">Total Retur Penjualan</p>
-                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['total_returns'], 0, ',', '.') }},-</p>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Retur Penjualan</span>
+                    <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                    </div>
                 </div>
-                <div class="bg-red-500/30 rounded-full p-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}">
+                    Rp {{ number_format($stats['total_returns'], 0, ',', '.') }}
                 </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Pengembalian barang / retur
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-rose-500 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
 
         <!-- Penjualan Bersih -->
-        <div class="bg-gradient-to-br from-emerald-600 to-green-700 rounded-lg shadow-lg p-6 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-emerald-100 text-sm font-medium">Penjualan Bersih (Riil)</p>
-                    <p class="text-2xl font-bold mt-1">Rp. {{ number_format($stats['net_sales'], 0, ',', '.') }},-</p>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Penjualan Bersih (Riil)</span>
+                    <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    </div>
                 </div>
-                <div class="bg-emerald-500/30 rounded-full p-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}">
+                    Rp {{ number_format($stats['net_sales'], 0, ',', '.') }}
                 </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Omset penerimaan efektif (DPP - Retur)
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
             </div>
         </div>
     </div>

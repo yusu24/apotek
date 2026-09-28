@@ -69,19 +69,25 @@
         ];
     @endphp
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         @foreach($colorSequence as $key => $config)
             @php
                 $isActive = ($activeTab === $key);
             @endphp
-            <div class="bg-white rounded-xl border p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md {{ $isActive ? 'shadow-md' : 'shadow-sm border-gray-100' }}"
-                style="{{ $isActive ? 'border-color: ' . $config['hex'] . ';' : '' }}"
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md flex flex-col justify-between {{ $isActive ? 'shadow-md border-gray-400 dark:border-gray-500 ring-2 ring-blue-500/20' : 'shadow-sm border-slate-100 dark:border-gray-700' }}"
                 wire:click="setActiveTab('{{ $key }}')">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {{ $config['hex'] }};"></span>
-                    <h3 class="text-xs font-medium text-gray-500 truncate">{{ $config['label'] }}{{ $key !== 'all' ? ' Hari' : '' }}</h3>
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider truncate">{{ $config['label'] }}{{ $key !== 'all' ? ' Hari' : '' }}</span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {{ $config['hex'] }};"></span>
+                    </div>
+                    <p class="text-base lg:text-lg font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}">
+                        Rp {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }}
+                    </p>
                 </div>
-                <p class="text-base font-bold text-gray-900 truncate">Rp. {{ number_format($summary[$key === 'all' ? 'total' : $key] ?? 0, 0, ',', '.') }},-</p>
+                <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
+                    <div class="h-full rounded-full" style="width: 100%; background-color: {{ $config['hex'] }};"></div>
+                </div>
             </div>
         @endforeach
     </div>

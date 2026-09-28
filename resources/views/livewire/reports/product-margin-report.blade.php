@@ -45,22 +45,91 @@
     </div>
 
     {{-- Statistics Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
-            <div class="text-sm font-medium text-gray-400 mb-1">Total Produk</div>
-            <div class="text-2xl font-bold text-gray-800">{{ number_format($statistics['total_products']) }}</div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
+        <!-- Total Produk -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Produk</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($statistics['total_products']) }}
+                    <span class="text-xs font-normal text-gray-400">Item</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Total SKU teranalisis
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
-            <div class="text-sm font-medium text-gray-400 mb-1">Margin Positif</div>
-            <div class="text-2xl font-bold text-green-600">{{ number_format($statistics['products_with_positive_margin']) }}</div>
+
+        <!-- Margin Positif -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Margin Positif</span>
+                    <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($statistics['products_with_positive_margin']) }}
+                    <span class="text-xs font-normal text-gray-400">Item</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Produk menghasilkan laba
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-emerald-600">
-            <div class="text-sm font-medium text-gray-400 mb-1">Total Keuntungan</div>
-            <div class="text-2xl font-bold text-emerald-700">Rp. {{ number_format($statistics['total_margin_value'], 0, ',', '.') }},-</div>
+
+        <!-- Total Keuntungan -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Keuntungan</span>
+                    <div class="w-8 h-8 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($statistics['total_margin_value'], 0, ',', '.') }}">
+                    Rp {{ number_format($statistics['total_margin_value'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Akumulasi nilai margin keuntungan
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-teal-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
-            <div class="text-sm font-medium text-gray-400 mb-1">Rata-rata Margin</div>
-            <div class="text-2xl font-bold text-purple-600">{{ number_format($statistics['average_margin_percentage'], 1) }}%</div>
+
+        <!-- Rata-rata Margin -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rata-rata Margin</span>
+                    <div class="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {{ number_format($statistics['average_margin_percentage'], 1) }}%
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Persentase profitabilitas rata-rata
+                </div>
+            </div>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-indigo-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
 

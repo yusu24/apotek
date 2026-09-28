@@ -51,51 +51,73 @@
 
     @if($reportData)
     {{-- Summary Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
         {{-- PPN Keluaran --}}
-        <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-500">PPN Keluaran</h3>
-                <div class="p-1.5 bg-green-100 rounded-lg">
-                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">PPN Keluaran</span>
+                    <div class="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($reportData['total_ppn_keluaran'], 0, ',', '.') }}">
+                    Rp {{ number_format($reportData['total_ppn_keluaran'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Dari {{ number_format($reportData['ppn_keluaran_details']->count()) }} transaksi penjualan
                 </div>
             </div>
-            <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($reportData['total_ppn_keluaran'], 0, ',', '.') }},-</p>
-            <p class="text-[11px] mt-2 text-gray-400 italic">Dari {{ number_format($reportData['ppn_keluaran_details']->count()) }} transaksi</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- PPN Masukan --}}
-        <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-500">PPN Masukan</h3>
-                <div class="p-1.5 bg-blue-100 rounded-lg">
-                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">PPN Masukan</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($reportData['total_ppn_masukan'], 0, ',', '.') }}">
+                    Rp {{ number_format($reportData['total_ppn_masukan'], 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Dari {{ number_format($reportData['ppn_masukan_details']->count()) }} faktur pembelian
                 </div>
             </div>
-            <p class="text-2xl font-bold text-gray-800">Rp. {{ number_format($reportData['total_ppn_masukan'], 0, ',', '.') }},-</p>
-            <p class="text-[11px] mt-2 text-gray-400 italic">Dari {{ number_format($reportData['ppn_masukan_details']->count()) }} transaksi</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
 
         {{-- Kurang/Lebih Bayar --}}
-        <div class="bg-white rounded-xl shadow-md p-4 border-l-4 {{ $reportData['status'] === 'kurang_bayar' ? 'border-red-500' : ($reportData['status'] === 'lebih_bayar' ? 'border-yellow-500' : 'border-gray-500') }} hover:shadow-lg transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-500">
-                    @if($reportData['status'] === 'kurang_bayar')
-                        Kurang Bayar
-                    @elseif($reportData['status'] === 'lebih_bayar')
-                        Lebih Bayar
-                    @else
-                        Nihil
-                    @endif
-                </h3>
-                <div class="p-1.5 {{ $reportData['status'] === 'kurang_bayar' ? 'bg-red-100' : ($reportData['status'] === 'lebih_bayar' ? 'bg-yellow-100' : 'bg-gray-100') }} rounded-lg">
-                    <svg class="w-5 h-5 {{ $reportData['status'] === 'kurang_bayar' ? 'text-red-500' : ($reportData['status'] === 'lebih_bayar' ? 'text-yellow-600' : 'text-gray-500') }}" fill="currentColor" viewBox="0 0 20 20"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path></svg>
+        @php
+            $statusColor = $reportData['status'] === 'kurang_bayar' ? 'rose' : ($reportData['status'] === 'lebih_bayar' ? 'amber' : 'gray');
+        @endphp
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        {{ $reportData['status'] === 'kurang_bayar' ? 'Kurang Bayar' : ($reportData['status'] === 'lebih_bayar' ? 'Lebih Bayar' : 'Nihil') }}
+                    </span>
+                    <div class="w-8 h-8 rounded-full bg-{{ $statusColor }}-50 dark:bg-{{ $statusColor }}-900/30 text-{{ $statusColor }}-600 dark:text-{{ $statusColor }}-400 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="text-2xl lg:text-3xl font-bold {{ $reportData['status'] === 'kurang_bayar' ? 'text-rose-600 dark:text-rose-400' : ($reportData['status'] === 'lebih_bayar' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white') }} tracking-tight truncate" title="Rp {{ number_format(abs($reportData['kurang_lebih']), 0, ',', '.') }}">
+                    Rp {{ number_format(abs($reportData['kurang_lebih']), 0, ',', '.') }}
+                </div>
+                <div class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                    Selisih neto PPN periode berjalan
                 </div>
             </div>
-            <p class="text-2xl font-bold {{ $reportData['status'] === 'kurang_bayar' ? 'text-red-600' : ($reportData['status'] === 'lebih_bayar' ? 'text-yellow-600' : 'text-gray-800') }}">
-                Rp. {{ number_format(abs($reportData['kurang_lebih']), 0, ',', '.') }},-
-            </p>
-            <p class="text-[11px] mt-2 text-gray-400 italic">Selisih PPN</p>
+            <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-4 overflow-hidden">
+                <div class="h-full bg-{{ $statusColor }}-500 rounded-full" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
 

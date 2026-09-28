@@ -91,14 +91,11 @@
                 <form wire:submit.prevent="save">
                     <div class="p-6 space-y-4">
                         <div>
-                            <label class="block text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] mb-2">Nama Kategori</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Nama Kategori <span class="text-red-500">*</span></label>
                             <input type="text" wire:model="name" autofocus
-                                class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-all py-3 font-medium text-gray-700 placeholder:font-normal"
-                                placeholder="Contoh: Analgesik">
-                            @error('name') <span class="text-red-500 text-xs font-bold mt-2 block flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                {{ $message }}
-                            </span> @enderror
+                                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium text-gray-700 placeholder:font-normal"
+                                placeholder="Contoh: Analgesik, Antibiotik, Vitamin">
+                            @error('name') <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span> @enderror
                         </div>
                     </div>
 

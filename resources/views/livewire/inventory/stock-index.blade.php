@@ -226,9 +226,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <x-empty-table colspan="7" />
-                        </tr>
+                        <x-empty-table colspan="7" />
                     @endforelse
                 </tbody>
             </table>

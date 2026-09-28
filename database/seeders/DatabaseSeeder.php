@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorySeeder::class,
             UnitSeeder::class,
+            CustomerSeeder::class,
         ]);
 
         // 5. Suppliers
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
 
         // 7. Expenses
         $this->call([
+            ExpenseCategorySeeder::class,
             ExpenseSeeder::class,
         ]);
 

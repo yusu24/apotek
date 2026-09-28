@@ -74,6 +74,7 @@ class CashierDummySeeder extends Seeder
         }
 
         $products = Product::with(['batches', 'unit'])->get();
+        $customers = \App\Models\Customer::all();
 
         if ($products->isEmpty()) {
             $this->command->error('No products found. Please run ProductSeeder first.');
@@ -92,6 +93,9 @@ class CashierDummySeeder extends Seeder
         DB::beginTransaction();
         try {
             while ($currentDate->lte($endDate)) {
+                $isToday = $currentDate->isToday();
+                $maxHour = $isToday ? max(9, Carbon::now()->hour) : 20;
+
                 foreach ($cashierUsers as $cashier) {
                     $user = $cashier['user'];
                     $profile = $cashier['profile'];
@@ -100,10 +104,13 @@ class CashierDummySeeder extends Seeder
                     $numSales = rand($profile['min_sales'], $profile['max_sales']);
 
                     for ($s = 0; $s < $numSales; $s++) {
-                        // Generate random sale time during store hours (8 AM to 9 PM)
+                        // Generate random sale time during store hours
+                        $saleHour = rand(8, $maxHour);
+                        $saleMinute = ($isToday && $saleHour === Carbon::now()->hour) ? rand(0, max(1, Carbon::now()->minute)) : rand(0, 59);
+
                         $saleTime = $currentDate->copy()
-                            ->addHours(rand(8, 20))
-                            ->addMinutes(rand(0, 59))
+                            ->addHours($saleHour)
+                            ->addMinutes($saleMinute)
                             ->addSeconds(rand(0, 59));
 
                         // Select 1 to 4 random products
@@ -111,13 +118,16 @@ class CashierDummySeeder extends Seeder
                         $selectedProducts = $products->random(min($numProducts, $products->count()));
 
                         $subtotal = 0;
+                        $totalCogs = 0;
                         $itemsData = [];
 
                         foreach ($selectedProducts as $product) {
                             $qty = rand(1, 3);
                             $price = $product->sell_price;
+                            $buyPrice = $product->purchase_price ?? ($price * 0.75);
                             $itemSubtotal = $price * $qty;
                             $subtotal += $itemSubtotal;
+                            $totalCogs += ($buyPrice * $qty);
 
                             // Get or create batch
                             $batch = $product->batches->first();
@@ -128,7 +138,7 @@ class CashierDummySeeder extends Seeder
                                     'expired_date' => $saleTime->copy()->addYears(2),
                                     'stock_in' => 500,
                                     'stock_current' => 500,
-                                    'buy_price' => $price * 0.75,
+                                    'buy_price' => $buyPrice,
                                 ]);
                                 // Refresh relationship/collection so next time we know it exists
                                 $product->setRelation('batches', collect([$batch]));
@@ -157,9 +167,10 @@ class CashierDummySeeder extends Seeder
                         }
 
                         $totalAfterDiscount = $subtotal - $discount;
-                        $tax = $totalAfterDiscount * 0.12; // 12% PPN
-                        $grandTotal = $totalAfterDiscount + $tax;
+                        $tax = 0;
+                        $grandTotal = $totalAfterDiscount;
                         $grandTotalRounded = ceil($grandTotal / 100) * 100;
+                        $profit = $totalAfterDiscount - $totalCogs;
 
                         $paymentMethod = ['cash', 'qris', 'transfer'][rand(0, 2)];
                         $cashAmount = 0;
@@ -178,14 +189,20 @@ class CashierDummySeeder extends Seeder
 
                         $invoiceNo = 'INV/' . $saleTime->format('Ymd') . '/' . strtoupper(Str::random(6));
 
+                        // 35% chance to link to an existing customer
+                        $customer = ($customers->isNotEmpty() && rand(1, 3) === 1) ? $customers->random() : null;
+
                         // Create Sale
                         $sale = Sale::create([
                             'user_id' => $user->id,
+                            'customer_id' => $customer?->id,
                             'invoice_no' => $invoiceNo,
                             'date' => $saleTime,
                             'total_amount' => $subtotal,
                             'discount' => $discount,
                             'tax' => $tax,
+                            'cogs' => $totalCogs,
+                            'profit' => $profit,
                             'grand_total' => $grandTotalRounded,
                             'payment_method' => $paymentMethod,
                             'cash_amount' => $cashAmount,

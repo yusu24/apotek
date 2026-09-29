@@ -18,7 +18,7 @@
             </div>
             <div class="overflow-x-auto flex-1">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-slate-50 dark:bg-gray-800 text-slate-500 dark:text-gray-400 font-semibold border-b border-slate-100 dark:border-gray-700 uppercase text-xs tracking-wider">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Pelanggan</th>
                             <th class="px-4 py-3">No. Ref</th>
@@ -76,7 +76,7 @@
             </div>
             <div class="overflow-x-auto flex-1">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-slate-50 dark:bg-gray-800 text-slate-500 dark:text-gray-400 font-semibold border-b border-slate-100 dark:border-gray-700 uppercase text-xs tracking-wider">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Supplier</th>
                             <th class="px-4 py-3">No. Ref</th>

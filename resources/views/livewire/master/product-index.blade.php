@@ -103,57 +103,57 @@
         <!-- Scrollable Table Container -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 w-10 text-center">
                             <input type="checkbox" wire:model.live="selectAll" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition cursor-pointer">
                         </th>
                         <th class="px-4 py-3 text-left whitespace-nowrap">Barcode</th>
-                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Nama Produk
                                 @if($sortBy === 'name')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('category_id')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('category_id')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Kategori
                                 @if($sortBy === 'category_id')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('sell_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('sell_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Harga Jual
                                 @if($sortBy === 'sell_price')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('purchase_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('purchase_price')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Harga Beli
                                 @if($sortBy === 'purchase_price')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-center cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-center cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center justify-center gap-1">
                                 Stok Min
                                 @if($sortBy === 'min_stock')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
@@ -280,7 +280,7 @@
                             </h4>
                             <div class="overflow-x-auto border rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                         <tr>
                                             <th class="px-4 py-3 text-left">Tanggal</th>
                                             <th class="px-4 py-3 text-left">Aksi</th>
@@ -330,7 +330,7 @@
                             </h4>
                             <div class="overflow-x-auto border rounded-lg">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                         <tr>
                                             <th class="px-4 py-3 text-left">Tgl PO</th>
                                             <th class="px-4 py-3 text-left">No. PO</th>

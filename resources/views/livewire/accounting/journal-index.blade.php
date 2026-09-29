@@ -55,7 +55,7 @@
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse min-w-[800px]">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 text-left whitespace-nowrap">Tanggal</th>
                         <th class="px-4 py-3 text-left whitespace-nowrap">No. Jurnal</th>

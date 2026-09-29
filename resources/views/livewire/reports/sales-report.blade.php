@@ -187,7 +187,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                        <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                             <tr>
                                 <th class="px-4 py-3 text-left">No. Invois</th>
                                 <th class="px-4 py-3 text-left">Tanggal</th>
@@ -343,7 +343,7 @@
                 <!-- Items Table -->
                 <div class="px-6 py-4 max-h-[50vh] overflow-y-auto">
                     <table class="w-full text-sm">
-                        <thead class="bg-gray-50 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400 font-normal uppercase text-xs tracking-wider">
+                        <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                             <tr>
                                 <th class="px-4 py-3 text-left">#</th>
                                 <th class="px-4 py-3 text-left">Produk</th>

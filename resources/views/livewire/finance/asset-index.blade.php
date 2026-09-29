@@ -31,7 +31,7 @@
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-normal">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 whitespace-nowrap">Kode Aset</th>
                         <th class="px-4 py-3 whitespace-nowrap">Nama Aset</th>

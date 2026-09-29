@@ -149,7 +149,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3 text-left">Tanggal</th>
                             <th class="px-4 py-3 text-left">Kode</th>

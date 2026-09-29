@@ -25,21 +25,21 @@
 
         <div class="overflow-x-auto rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
-                        <th class="px-6 py-4 text-left">Nama</th>
-                        <th class="px-6 py-4 text-left">Email</th>
-                        <th class="px-6 py-4 text-left">Role</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-4 py-3 text-left">Nama</th>
+                        <th class="px-4 py-3 text-left">Email</th>
+                        <th class="px-4 py-3 text-left">Role</th>
+                        <th class="px-4 py-3 text-center">Status</th>
+                        <th class="px-4 py-3 text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($users as $user)
                         <tr wire:key="user-row-{{ $user->id }}" class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Illuminate\Support\Str::title($user->name) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ $user->email }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ \Illuminate\Support\Str::title($user->name) }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $user->email }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($user->roles as $role)
                                         <span class="px-3 py-0.5 text-[10px] capitalize rounded-full 
@@ -52,13 +52,13 @@
                                     @endforeach
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-center text-sm">
                                 <span class="px-2 py-1 rounded-md text-[10px]
                                     {{ $user->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }}">
                                     {{ $user->is_active ? 'Aktif' : 'Non-Aktif' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-3">
                                     @can('manage users')
                                     <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate

@@ -15,7 +15,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 text-left">Nama File</th>
                         <th class="px-4 py-3 text-center">Ukuran</th>

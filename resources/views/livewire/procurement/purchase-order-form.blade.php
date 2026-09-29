@@ -167,13 +167,13 @@
             <!-- Items Table Content -->
             <div x-show="activeTab === 'items'" class="">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-100">
+                            <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-36">Barcode</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200">Nama Produk</th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-24">QTY</th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider border-r border-gray-200 w-28">Satuan</th>
-                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-20">Aksi</th>
+                                    <th class="px-4 py-3 text-left border-r border-blue-900 w-36">Barcode</th>
+                                    <th class="px-4 py-3 text-left border-r border-blue-900">Nama Produk</th>
+                                    <th class="px-4 py-3 text-center border-r border-blue-900 w-24">QTY</th>
+                                    <th class="px-4 py-3 text-center border-r border-blue-900 w-28">Satuan</th>
+                                    <th class="px-4 py-3 text-center w-20">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 bg-white">

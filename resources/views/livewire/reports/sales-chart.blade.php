@@ -270,12 +270,12 @@
             <h3 class="font-bold text-lg mb-4 text-gray-800">Rincian Data Penjualan</h3>
             <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Periode</th>
-                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Transaksi</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total Penjualan</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rata-rata</th>
+                            <th scope="col" class="px-6 py-3 text-left whitespace-nowrap">Periode</th>
+                            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">Transaksi</th>
+                            <th scope="col" class="px-6 py-3 text-right whitespace-nowrap">Total Penjualan</th>
+                            <th scope="col" class="px-6 py-3 text-right whitespace-nowrap">Rata-rata</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">

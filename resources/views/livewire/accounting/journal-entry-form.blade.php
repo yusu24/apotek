@@ -41,7 +41,7 @@
                 <!-- Journal Lines Table -->
                 <div class="border rounded-lg overflow-hidden mb-6 shadow-sm">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-800 text-white">
+                        <thead class="bg-blue-950 text-white border-b border-blue-900">
                             <tr>
                                 <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/3">Akun</th>
                                 <th class="px-4 py-3 text-right text-xs font-bold uppercase tracking-wider w-1/6">Debit (Rp)</th>

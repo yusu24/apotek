@@ -36,7 +36,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-6 py-4">No. Retur</th>
                         <th class="px-6 py-4">Supplier</th>
@@ -123,7 +123,7 @@
 
                         <div class="overflow-x-auto border border-gray-100 rounded-xl">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-xs">
+                                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                     <tr>
                                         <th class="px-4 py-3 text-center w-10">
                                             <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -251,7 +251,7 @@
 
                     <div class="overflow-x-auto border border-gray-100 rounded-xl mb-4">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-xs tracking-widest">
+                            <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                 <tr>
                                     <th class="px-4 py-3">Produk</th>
                                     <th class="px-4 py-3 text-center">Batch</th>

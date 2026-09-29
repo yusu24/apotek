@@ -143,34 +143,34 @@
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 custom-print-table">
-                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
-                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
                         <th class="px-4 py-3 text-left">Kategori</th>
-                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('min_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Min Stok
                                 @if($sortBy === 'min_stock')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('total_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100 transition-colors">
+                        <th wire:click="sortByColumn('total_stock')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Jumlah
                                 @if($sortBy === 'total_stock')
-                                    <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7' }}"></path>
                                     </svg>
                                 @endif

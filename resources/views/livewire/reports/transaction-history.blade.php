@@ -69,34 +69,34 @@
     <div class="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
-                <thead class="bg-gray-50 dark:bg-gray-900/50">
-                    <tr class="text-xs font-bold uppercase text-gray-500 tracking-wider">
-                        <th wire:click="sortByColumn('created_at')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
+                    <tr>
+                        <th wire:click="sortByColumn('created_at')" class="px-4 py-3 cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tanggal
                                 @if($sortBy === 'created_at')
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
                         <th class="px-4 py-3 whitespace-nowrap">Barcode</th>
-                        <th wire:click="sortByColumn('product')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors">
+                        <th wire:click="sortByColumn('product')" class="px-4 py-3 cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'product')
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
                                     </svg>
                                 @endif
                             </div>
                         </th>
-                        <th wire:click="sortByColumn('type')" class="px-4 py-3 cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('type')" class="px-4 py-3 cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center gap-1">
                                 Tipe
                                 @if($sortBy === 'type')
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
                                     </svg>
                                 @endif
@@ -104,11 +104,11 @@
                         </th>
                         <th class="px-4 py-3 whitespace-nowrap">No. Referensi</th>
                         <th class="px-4 py-3 whitespace-nowrap">Batch</th>
-                        <th wire:click="sortByColumn('quantity')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100/50 transition-colors whitespace-nowrap">
+                        <th wire:click="sortByColumn('quantity')" class="px-4 py-3 text-right cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <div class="flex items-center justify-end gap-1">
                                 Qty
                                 @if($sortBy === 'quantity')
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
                                     </svg>
                                 @endif

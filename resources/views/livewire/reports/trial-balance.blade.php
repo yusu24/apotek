@@ -103,12 +103,12 @@
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Akun</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Debit</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Kredit</th>
+                        <th class="px-6 py-3 text-left">Kode</th>
+                        <th class="px-6 py-3 text-left">Nama Akun</th>
+                        <th class="px-6 py-3 text-right">Debit</th>
+                        <th class="px-6 py-3 text-right">Kredit</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

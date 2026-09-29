@@ -110,7 +110,7 @@
     <div class="bg-white dark:bg-gray-800 shadow-sm rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700">
         <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse custom-print-table">
-                        <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs print:bg-transparent">
+                        <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900 print:bg-transparent print:text-black">
                             <tr>
                                 <th class="px-4 py-3 print:px-2 print:py-1 text-left">NO.</th>
                                 <th class="px-4 py-3 print:px-2 print:py-1 text-left">KODE BARANG</th>

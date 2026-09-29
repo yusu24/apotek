@@ -96,14 +96,14 @@
 
                 <div class="overflow-x-auto border rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-blue-950 text-white border-b border-blue-900">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Jurnal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Debit (Rp)</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Kredit (Rp)</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-900 uppercase tracking-wider bg-gray-100">Saldo (Rp)</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Tanggal</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">No. Jurnal</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">Keterangan</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider">Debit (Rp)</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider">Kredit (Rp)</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider bg-blue-900/40">Saldo (Rp)</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">

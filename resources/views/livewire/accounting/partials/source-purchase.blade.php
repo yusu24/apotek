@@ -38,7 +38,7 @@
         <h4 class="font-bold text-gray-900 mb-3">Item yang Diterima</h4>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 text-left">Produk</th>
                         <th class="px-4 py-3 text-left">Batch No</th>

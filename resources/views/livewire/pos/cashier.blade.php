@@ -168,7 +168,7 @@
                 <!-- Cart Items (Scrollable Table) -->
                 <div class="flex-1 overflow-auto bg-white">
                     <table class="w-full text-sm text-left">
-                        <thead class="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0 z-10 shadow-sm">
+                        <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900 sticky top-0 z-10 shadow-sm">
                             <tr>
                                 <th class="px-4 py-3">Produk</th>
                                 <th class="px-2 py-3 text-center">Qty</th>
@@ -1143,13 +1143,13 @@
                     <!-- Desktop Table View (hidden on mobile) -->
                     <div class="hidden sm:block overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Invoice</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 text-left whitespace-nowrap">No Invoice</th>
+                                    <th scope="col" class="px-6 py-3 text-left whitespace-nowrap">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3 text-left whitespace-nowrap">Total</th>
+                                    <th scope="col" class="px-6 py-3 text-left whitespace-nowrap">Catatan</th>
+                                    <th scope="col" class="px-6 py-3 text-right whitespace-nowrap">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">

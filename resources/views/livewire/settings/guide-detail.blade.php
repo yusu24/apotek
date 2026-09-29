@@ -232,11 +232,11 @@
                         </h3>
                         <div class="overflow-x-auto border border-gray-200 rounded-xl">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-gray-50 border-b border-gray-200">
+                                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                     <tr>
-                                        <th class="px-4 py-3 font-bold text-gray-900 w-1/4">Nama Field</th>
-                                        <th class="px-4 py-3 font-bold text-gray-900">Keterangan</th>
-                                        <th class="px-4 py-3 font-bold text-gray-900 text-center w-24">Wajib?</th>
+                                        <th class="px-4 py-3 w-1/4">Nama Field</th>
+                                        <th class="px-4 py-3">Keterangan</th>
+                                        <th class="px-4 py-3 text-center w-24">Wajib?</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">

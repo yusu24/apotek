@@ -124,7 +124,7 @@
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-slate-50/80 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-gray-200">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 text-left">Kode</th>
                         <th class="px-4 py-3 text-left">Nama Akun</th>

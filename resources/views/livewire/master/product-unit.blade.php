@@ -29,14 +29,14 @@
         <!-- Mobile-friendly table wrapper -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Barcode</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Nama Produk</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Kategori</th>
-                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Satuan Dasar</th>
-                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Jml Konversi</th>
-                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Aksi</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Barcode</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Nama Produk</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Kategori</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Satuan Dasar</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Jml Konversi</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

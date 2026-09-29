@@ -193,14 +193,14 @@
     <div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-gray-100">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-100">
-                <thead class="bg-gray-50/50 text-gray-500 font-normal uppercase text-xs tracking-widest">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3 text-left whitespace-nowrap">Barcode</th>
-                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-gray-100">
+                        <th wire:click="sortByColumn('name')" class="px-4 py-3 text-left cursor-pointer hover:bg-blue-900 transition-colors">
                             <div class="flex items-center gap-1">
                                 Produk
                                 @if($sortBy === 'name')
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-3 h-3 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="{{ $sortDirection === 'asc' ? 'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' : 'M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z' }}" clip-rule="evenodd"></path>
                                     </svg>
                                 @endif
@@ -209,19 +209,19 @@
                         <th class="px-4 py-3 text-left whitespace-nowrap">Kategori</th>
                         
                         @if($reportMode === 'realized')
-                            <th wire:click="sortByColumn('total_sold')" class="px-4 py-3 text-center cursor-pointer hover:bg-gray-100 whitespace-nowrap">Qty Laku</th>
+                            <th wire:click="sortByColumn('total_sold')" class="px-4 py-3 text-center cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">Qty Laku</th>
                         @endif
 
-                        <th wire:click="sortByColumn('avg_buy_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                        <th wire:click="sortByColumn('avg_buy_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Harga Beli (L)' : 'HPP Rata-rata' }}
                         </th>
-                        <th wire:click="sortByColumn('avg_sell_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">
+                        <th wire:click="sortByColumn('avg_sell_price')" class="px-4 py-3 text-right cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Harga Jual' : 'Harga Jual Rerata' }}
                         </th>
-                        <th wire:click="sortByColumn('margin_amount')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 font-bold whitespace-nowrap">
+                        <th wire:click="sortByColumn('margin_amount')" class="px-4 py-3 text-right cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">
                             {{ $reportMode === 'potential' ? 'Margin' : 'Total Margin' }}
                         </th>
-                        <th wire:click="sortByColumn('margin_percentage')" class="px-4 py-3 text-right cursor-pointer hover:bg-gray-100 whitespace-nowrap">%</th>
+                        <th wire:click="sortByColumn('margin_percentage')" class="px-4 py-3 text-right cursor-pointer hover:bg-blue-900 transition-colors whitespace-nowrap">%</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-50">

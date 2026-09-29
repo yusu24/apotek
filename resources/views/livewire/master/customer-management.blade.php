@@ -79,7 +79,7 @@
             <!-- Table -->
             <div class="flex-1 overflow-x-auto min-h-0 custom-scrollbar">
                 <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs sticky top-0 z-10">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900 sticky top-0 z-10">
                         <tr>
                             <th class="px-4 py-3 text-left">Nama Pelanggan</th>
                             <th class="px-4 py-3 text-left">Telepon</th>

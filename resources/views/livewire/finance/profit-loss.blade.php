@@ -227,7 +227,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Tanggal</th>
                             <th class="px-4 py-3">No. Ref</th>
@@ -283,7 +283,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Tanggal Jual</th>
                             <th class="px-4 py-3">Produk</th>
@@ -324,7 +324,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Tanggal</th>
                             <th class="px-4 py-3">Keterangan</th>
@@ -364,7 +364,7 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs tracking-wider border-b">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
                             <th class="px-4 py-3">Tanggal</th>
                             <th class="px-4 py-3">Keterangan</th>

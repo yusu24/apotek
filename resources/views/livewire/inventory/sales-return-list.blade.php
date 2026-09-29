@@ -36,7 +36,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                     <tr>
                         <th class="px-4 py-3">No. Retur</th>
                         <th class="px-4 py-3">No. Invoice</th>
@@ -143,7 +143,7 @@
 
                             <div class="overflow-x-auto border border-gray-100 rounded-xl">
                                 <table class="w-full text-sm text-left">
-                                    <thead class="bg-gray-50 text-gray-600 font-bold uppercase text-xs">
+                                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                         <tr>
                                             <th class="px-4 py-3">Produk</th>
                                             <th class="px-4 py-3 text-right">Harga</th>
@@ -248,7 +248,7 @@
 
                     <div class="overflow-x-auto border border-gray-100 rounded-xl mb-4">
                         <table class="w-full text-sm text-left">
-                            <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-xs tracking-widest">
+                            <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                                 <tr>
                                     <th class="px-4 py-3">Produk</th>
                                     <th class="px-4 py-3 text-center">Batch</th>

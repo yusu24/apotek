@@ -184,18 +184,18 @@
 
             <div class="overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
                 <table class="w-full divide-y divide-gray-200" style="table-layout: fixed; min-width: 1100px;">
-                    <thead class="bg-gray-50 text-gray-600 font-normal uppercase text-xs">
+                    <thead class="bg-blue-950 text-white font-semibold uppercase text-xs tracking-wider border-b border-blue-900">
                         <tr>
-                            <th class="px-4 py-3 text-left tracking-wider border-r border-gray-100" style="width:200px;">Produk</th>
-                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100" style="width:112px;">Batch No</th>
-                            <th class="px-3 py-3 text-left tracking-wider border-r border-gray-100" style="width:128px;">Exp Date</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:80px;">Qty</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:96px;">Satuan</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Harga Beli</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Harga Jual</th>
-                            <th class="px-3 py-3 text-center tracking-wider border-r border-gray-100" style="width:96px;">Margin</th>
-                            <th class="px-4 py-3 text-right tracking-wider border-r border-gray-100" style="width:160px;">Total</th>
-                            <th class="px-3 py-3 text-center tracking-wider" style="width:64px;">Aksi</th>
+                            <th class="px-4 py-3 text-left border-r border-blue-900" style="width:200px;">Produk</th>
+                            <th class="px-3 py-3 text-left border-r border-blue-900" style="width:112px;">Batch No</th>
+                            <th class="px-3 py-3 text-left border-r border-blue-900" style="width:128px;">Exp Date</th>
+                            <th class="px-3 py-3 text-center border-r border-blue-900" style="width:80px;">Qty</th>
+                            <th class="px-3 py-3 text-center border-r border-blue-900" style="width:96px;">Satuan</th>
+                            <th class="px-4 py-3 text-right border-r border-blue-900" style="width:160px;">Harga Beli</th>
+                            <th class="px-4 py-3 text-right border-r border-blue-900" style="width:160px;">Harga Jual</th>
+                            <th class="px-3 py-3 text-center border-r border-blue-900" style="width:96px;">Margin</th>
+                            <th class="px-4 py-3 text-right border-r border-blue-900" style="width:160px;">Total</th>
+                            <th class="px-3 py-3 text-center" style="width:64px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">

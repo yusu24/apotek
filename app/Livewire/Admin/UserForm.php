@@ -63,6 +63,9 @@ class UserForm extends Component
 
         if ($id) {
             $user = User::with('roles')->findOrFail($id);
+            if ($user->is_developer && !auth()->user()?->is_developer) {
+                abort(404);
+            }
             $this->user_id = $user->id;
             $this->name = $user->name;
             $this->email = $user->email;

@@ -70,8 +70,13 @@ class ActivityLogIndex extends Component
 
     public function viewDetails($logId)
     {
-        $this->selectedLog = ActivityLog::with('user')->find($logId);
-        $this->showDetailModal = true;
+        $isDeveloper = (bool) (auth()->user()?->is_developer ?? false);
+        $this->selectedLog = ActivityLog::with('user')
+            ->when(!$isDeveloper, function ($q) {
+                $q->whereDoesntHave('user', fn($u) => $u->where('is_developer', true));
+            })
+            ->find($logId);
+        $this->showDetailModal = (bool) $this->selectedLog;
     }
 
     public function closeModal()
@@ -92,8 +97,15 @@ class ActivityLogIndex extends Component
     }
 public function render()
     {
+        $isDeveloper = (bool) (auth()->user()?->is_developer ?? false);
+
+        $baseQuery = ActivityLog::query()
+            ->when(!$isDeveloper, function ($q) {
+                $q->whereDoesntHave('user', fn($u) => $u->where('is_developer', true));
+            });
+
         /** @var \Illuminate\Pagination\LengthAwarePaginator $query */
-        $query = ActivityLog::with('user')
+        $query = (clone $baseQuery)->with('user')
             ->when($this->search, function ($q) {
                 $q->where(function($q2) {
                     $q2->where('description', 'like', '%' . $this->search . '%')
@@ -119,24 +131,18 @@ public function render()
             ->paginate($this->perPage);
         $query->onEachSide(1);
 
-        Log::info("ActivityLogIndex Rendering", [
-            'page' => $this->getPage(),
-            'search' => $this->search,
-            'user' => $this->filterUser,
-            'total' => $query->total(),
-            'count' => $query->count()
-        ]);
-
-        $users = User::orderBy('name')->get();
-        $modules = ActivityLog::select('module')->distinct()->orderBy('module')->pluck('module');
-        $actions = ActivityLog::select('action')->distinct()->orderBy('action')->pluck('action');
+        $users = User::when(!$isDeveloper, fn($q) => $q->where('is_developer', false))
+            ->orderBy('name')
+            ->get();
+        $modules = (clone $baseQuery)->select('module')->distinct()->orderBy('module')->pluck('module');
+        $actions = (clone $baseQuery)->select('action')->distinct()->orderBy('action')->pluck('action');
 
         // Statistics
         $stats = [
-            'total_today' => ActivityLog::whereDate('created_at', today())->count(),
-            'total_week' => ActivityLog::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-            'total_month' => ActivityLog::whereMonth('created_at', now()->month)->count(),
-            'unique_users_today' => ActivityLog::whereDate('created_at', today())->distinct('user_id')->count('user_id'),
+            'total_today' => (clone $baseQuery)->whereDate('created_at', today())->count(),
+            'total_week' => (clone $baseQuery)->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'total_month' => (clone $baseQuery)->whereMonth('created_at', now()->month)->count(),
+            'unique_users_today' => (clone $baseQuery)->whereDate('created_at', today())->distinct('user_id')->count('user_id'),
         ];
 
         $this->lastUpdated = now()->format('H:i:s');

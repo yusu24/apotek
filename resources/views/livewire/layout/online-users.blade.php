@@ -54,26 +54,68 @@ $colorClasses = ($textColor === 'text-white')
             </h3>
         </div>
 
-        <div class="max-h-80 overflow-y-auto scrollbar-hide py-1">
+        <div class="max-h-96 overflow-y-auto scrollbar-hide py-1">
             @forelse($onlineUsers as $user)
                 <div class="px-4 py-2 transition-colors flex items-center gap-3 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    @if ($user->profile_photo_path)
-                        <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700 shrink-0">
-                    @else
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                            {{ substr($user->name, 0, 2) }}
-                        </div>
-                    @endif
+                    <div class="relative shrink-0">
+                        @if ($user->profile_photo_path)
+                            <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700">
+                        @else
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                            </div>
+                        @endif
+                        <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                    </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium truncate text-gray-900 dark:text-white">{{ $user->name }}</p>
+                        <div class="flex items-center justify-between gap-1.5">
+                            <p class="text-sm font-medium truncate text-gray-900 dark:text-white">{{ $user->name }}</p>
+                            <span class="px-1.5 py-0.5 text-[9px] font-semibold rounded bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 shrink-0">
+                                {{ $user->role_label }}
+                            </span>
+                        </div>
                         <p class="text-[10px] truncate text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                     </div>
                 </div>
             @empty
-                <div class="p-6 text-center">
-                    <p class="text-xs italic text-gray-400 dark:text-gray-500">Tidak ada pengguna yang aktif selain Anda.</p>
+                <div class="p-4 text-center">
+                    <p class="text-xs italic text-gray-400 dark:text-gray-500">Tidak ada pengguna yang sedang online.</p>
                 </div>
             @endforelse
+
+            @if(isset($offlineUsers) && count($offlineUsers) > 0)
+                <div class="px-3 py-2 mt-1 border-t border-b flex justify-between items-center border-gray-100 bg-gray-50/70 dark:border-gray-700 dark:bg-gray-800/40">
+                    <h4 class="text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 text-gray-400 dark:text-gray-500">
+                        <span class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                        Offline ({{ count($offlineUsers) }})
+                    </h4>
+                </div>
+                @foreach($offlineUsers as $user)
+                    <div class="px-4 py-2 transition-colors flex items-center gap-3 opacity-70 hover:opacity-100 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <div class="relative shrink-0">
+                            @if ($user->profile_photo_path)
+                                <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}" class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700 grayscale">
+                            @else
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                </div>
+                            @endif
+                            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <p class="text-xs font-medium truncate text-gray-700 dark:text-gray-300">{{ $user->name }}</p>
+                                <span class="px-1.5 py-0.5 text-[9px] font-medium rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 shrink-0">
+                                    {{ $user->role_label }}
+                                </span>
+                            </div>
+                            <p class="text-[10px] truncate text-gray-400 dark:text-gray-500">
+                                {{ $user->last_seen_human ? 'Aktif ' . $user->last_seen_human : $user->email }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
         
     </div>

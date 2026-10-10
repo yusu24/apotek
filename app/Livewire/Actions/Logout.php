@@ -18,6 +18,10 @@ class Logout
             'description' => 'User berhasil logout dari sistem'
         ]);
 
+        if (Auth::id()) {
+            \Illuminate\Support\Facades\Cache::forget('user-is-online-' . Auth::id());
+        }
+
         Auth::guard('web')->logout();
 
         Session::invalidate();

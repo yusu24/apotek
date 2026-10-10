@@ -19,11 +19,10 @@ class LogUserActivity
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            $expiresAt = now()->addMinutes(2); // Keep online for 2 minutes
-            Cache::put('user-is-online-' . Auth::user()->id, true, $expiresAt);
-            
-            // Optional: You can also update a last_seen_at column if you want persistence
-            // Auth::user()->update(['last_seen_at' => now()]);
+            $userId = Auth::id();
+            $expiresAt = now()->addMinutes(5); // Keep online for 5 minutes
+            Cache::put('user-is-online-' . $userId, true, $expiresAt);
+            Cache::put('user-last-seen-' . $userId, now()->toIso8601String(), now()->addDays(30));
         }
 
         return $next($request);

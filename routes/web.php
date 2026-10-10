@@ -18,6 +18,10 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/user/ping', function () {
+        return response()->json(['online' => true]);
+    })->name('user.ping');
+
     Route::view('dashboard', 'dashboard')
         ->name('dashboard');
 

@@ -331,6 +331,21 @@
                 document.addEventListener('livewire:init', registerLivewireScrollHook);
             }
             document.addEventListener('livewire:navigated', registerLivewireScrollHook);
+
+            // Global online status heartbeat for all authenticated user roles & pages
+            if (!window.__userActivityHeartbeatStarted) {
+                window.__userActivityHeartbeatStarted = true;
+                const sendActivityPing = () => {
+                    if (navigator.onLine === false) return;
+                    fetch('/user/ping', {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                    }).catch(() => {});
+                };
+                setInterval(sendActivityPing, 45000);
+                window.addEventListener('online', sendActivityPing);
+            }
         </script>
         <style>
             [x-cloak] { display: none !important; }

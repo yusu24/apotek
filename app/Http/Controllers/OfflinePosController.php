@@ -64,7 +64,7 @@ class OfflinePosController extends Controller
                     'unit_id' => $product->unit_id,
                     'unit_name' => $product->unit->name ?? 'Pcs',
                     'total_stock' => (float) ($product->total_stock ?? 0),
-                    'image' => $product->image ? asset('storage/' . $product->image) : null,
+                    'image' => $product->image_path ? asset('storage/' . $product->image_path) : null,
                     'available_units' => $availableUnits,
                 ];
             });

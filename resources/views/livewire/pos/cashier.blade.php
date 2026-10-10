@@ -443,6 +443,15 @@
                             </style>
                         </div>
                     </div>
+
+                    <!-- Offline Mode Button (Integrated in Toolbar) -->
+                    <button type="button"
+                            @click="$dispatch('toggle-offline-pos')"
+                            class="shrink-0 px-3.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all h-[50px] flex items-center justify-center gap-2"
+                            title="Beralih ke Mode Offline">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-bold hidden sm:inline">Online</span>
+                    </button>
                     </div>
 
                     <!-- Category Filter -->

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sim-apotek-pos-v2';
+const CACHE_NAME = 'sim-apotek-pos-v3';
 const URLS_TO_PRECACHE = [
     '/cashier',
     '/pos/offline-catalog'

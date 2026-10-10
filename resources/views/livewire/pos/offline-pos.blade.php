@@ -942,25 +942,17 @@
                     const content = document.getElementById('offline-receipt-print-area');
                     if (!content) return;
                     const win = window.open('', '_blank', 'width=360,height=600');
-                    win.document.write(`
-                        <html>
-                        <head>
-                            <title>Cetak Struk</title>
-                            <style>
-                                body { font-family: monospace; font-size: 12px; width: 58mm; margin: 0 auto; padding: 4px; color: #000; }
-                                .text-center { text-align: center; }
-                                .flex { display: flex; justify-content: space-between; }
-                                .font-bold { font-weight: bold; }
-                                .border-b { border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px; }
-                                .border-t { border-top: 1px dashed #000; padding-top: 4px; margin-top: 4px; }
-                                p { margin: 2px 0; }
-                            </style>
-                        </head>
-                        <body onload="window.print(); setTimeout(() => window.close(), 500);">
-                            ${content.innerHTML}
-                        </body>
-                        </html>
-                    `);
+                    const htmlOpen = '<' + 'html><' + 'head><' + 'title>Cetak Struk<' + '/title><' + 'style>' +
+                        'body { font-family: monospace; font-size: 12px; width: 58mm; margin: 0 auto; padding: 4px; color: #000; }' +
+                        '.text-center { text-align: center; }' +
+                        '.flex { display: flex; justify-content: space-between; }' +
+                        '.font-bold { font-weight: bold; }' +
+                        '.border-b { border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px; }' +
+                        '.border-t { border-top: 1px dashed #000; padding-top: 4px; margin-top: 4px; }' +
+                        'p { margin: 2px 0; }' +
+                        '<' + '/style><' + '/head><' + 'body onload="window.print(); setTimeout(() => window.close(), 500);">';
+                    const htmlClose = '<' + '/body><' + '/html>';
+                    win.document.write(htmlOpen + content.innerHTML + htmlClose);
                     win.document.close();
                 },
 

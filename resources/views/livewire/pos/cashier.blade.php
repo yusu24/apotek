@@ -69,6 +69,7 @@
      @keydown.enter.window="if (!isTypingInField() || $event.target.id === 'pos-search-input') { $event.preventDefault(); $wire.selectHighlighted(hIdx); }">
     <!-- Notification -->
     <div>
+        @include('livewire.pos.offline-pos')
         
         <div x-show="showAlert" 
              x-transition:enter="transition ease-out duration-300"

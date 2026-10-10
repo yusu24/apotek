@@ -78,6 +78,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // POS
     Route::get('/cashier', App\Livewire\Pos\Cashier::class)->name('pos.cashier');
     Route::get('/receipt/{id}', App\Livewire\Pos\Receipt::class)->name('pos.receipt');
+    Route::get('/pos/offline-catalog', [App\Http\Controllers\OfflinePosController::class, 'catalog'])->name('pos.offline-catalog');
+    Route::post('/pos/sync-offline', [App\Http\Controllers\OfflinePosController::class, 'sync'])->name('pos.sync-offline');
 
     // Reports
     Route::get('/reports/sales', App\Livewire\Reports\SalesReport::class)->name('reports.sales');

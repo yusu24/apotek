@@ -470,7 +470,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"></path></svg>
                     <span>Cetak Struk</span>
                 </button>
-                <button @click="completedOfflineTx = null" class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-xs font-bold">
+                <button @click="completedOfflineTx = null; if(isOnline && !manualOfflineOverride && cartItems.length === 0) isOfflineMode = false;" class="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-xs font-bold">
                     Tutup
                 </button>
             </div>
@@ -636,25 +636,80 @@
                         }
                     }
 
-                    // 4. Listen for Online / Offline events
+                    // 4. Listen for Online / Offline events (100% Automatic)
                     window.addEventListener('offline', () => {
-                        this.isOnline = false;
-                        this.isOfflineMode = true;
-                        this.showToast('Koneksi internet terputus! Beralih otomatis ke Mode Kasir Offline.', 'warning');
+                        this.handleConnectionLost();
                     });
 
                     window.addEventListener('online', () => {
-                        this.isOnline = true;
-                        this.showToast('Koneksi internet kembali aktif! Menyinkronkan data...', 'success');
-                        this.syncQueue();
-                        this.refreshCatalog(true);
+                        this.checkRealConnection();
                     });
+
+                    // 5. Real server reachability check every 15s (detects Wi-Fi connected but ISP/Internet down)
+                    setInterval(() => {
+                        this.checkRealConnection();
+                    }, 15000);
                 },
 
+                manualOfflineOverride: false,
                 offlineQueue: [],
+
+                handleConnectionLost() {
+                    const wasOnline = this.isOnline;
+                    this.isOnline = false;
+                    if (!this.isOfflineMode) {
+                        this.isOfflineMode = true;
+                        this.showToast('Koneksi internet terputus! Otomatis beralih ke Mode Kasir Offline.', 'warning');
+                    } else if (wasOnline) {
+                        this.showToast('Koneksi internet terputus.', 'warning');
+                    }
+                },
+
+                handleConnectionRestored() {
+                    const wasOffline = !this.isOnline;
+                    this.isOnline = true;
+                    if (wasOffline) {
+                        this.syncQueue();
+                        this.refreshCatalog(true);
+                        // Automatically return to Online Mode if cashier didn't manually lock offline mode and cart is empty
+                        if (!this.manualOfflineOverride && this.cartItems.length === 0 && !this.showPayModal && !this.completedOfflineTx) {
+                            this.isOfflineMode = false;
+                            this.showToast('Koneksi internet kembali stabil! Otomatis kembali ke Mode Kasir Online.', 'success');
+                        } else {
+                            this.showToast('Internet kembali aktif! Transaksi offline otomatis disinkronkan.', 'success');
+                        }
+                    }
+                },
+
+                async checkRealConnection() {
+                    if (navigator.onLine === false) {
+                        this.handleConnectionLost();
+                        return;
+                    }
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        const res = await fetch('/user/ping', {
+                            method: 'GET',
+                            cache: 'no-store',
+                            credentials: 'same-origin',
+                            signal: controller.signal,
+                            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                        });
+                        clearTimeout(timeoutId);
+                        if (res.ok) {
+                            this.handleConnectionRestored();
+                        } else if (res.status >= 500) {
+                            this.handleConnectionLost();
+                        }
+                    } catch (e) {
+                        this.handleConnectionLost();
+                    }
+                },
 
                 toggleOfflineMode() {
                     this.isOfflineMode = !this.isOfflineMode;
+                    this.manualOfflineOverride = this.isOfflineMode;
                     if (this.isOfflineMode) {
                         this.showToast('Mode Kasir Offline diaktifkan.', 'warning');
                     } else {

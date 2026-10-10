@@ -33,4 +33,9 @@ class Receivable extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(ReceivablePayment::class);
+    }
 }

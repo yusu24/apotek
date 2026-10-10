@@ -279,17 +279,49 @@ class AccountingService
         try {
             // Get accounts
             $cashAccount = Account::where('code', '1-1100')->first(); // Kas
+            $bankAccount = Account::where('code', '1-1200')->first(); // Bank
+            $receivableAccount = Account::where('code', '1-1300')->first(); // Piutang Usaha
             $salesReturnAccount = Account::where('code', '4-1100')->first(); // Retur Penjualan
             $cogsAccount = Account::where('code', '5-1000')->first(); // COGS
             $inventoryAccount = Account::where('code', '1-1400')->first(); // Persediaan
 
-            if (!$cashAccount || !$salesReturnAccount || !$cogsAccount || !$inventoryAccount) {
-                $missing = [];
-                if (!$cashAccount) $missing[] = "Kas (1-1100)";
-                if (!$salesReturnAccount) $missing[] = "Retur Penjualan (4-1100)";
-                if (!$cogsAccount) $missing[] = "COGS (5-1000)";
-                if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
-                
+            $missing = [];
+            if (!$salesReturnAccount) $missing[] = "Retur Penjualan (4-1100)";
+            if (!$cogsAccount) $missing[] = "COGS (5-1000)";
+            if (!$inventoryAccount) $missing[] = "Persediaan (1-1400)";
+
+            // Check if sale was tempo / has receivable
+            $sale = $salesReturn->sale;
+            $receivablePortion = 0;
+            $cashPortion = 0;
+
+            if ($sale && $sale->payment_method === 'tempo') {
+                $receivable = \App\Models\Receivable::where('sale_id', $sale->id)->first();
+                if ($receivable) {
+                    $initialReceivable = (float)$sale->grand_total - (float)$sale->cash_amount;
+                    $paidPayments = \App\Models\ReceivablePayment::where('receivable_id', $receivable->id)->sum('amount');
+                    $priorReturns = SalesReturn::where('sale_id', $sale->id)
+                        ->where('id', '<', $salesReturn->id)
+                        ->sum('total_amount');
+
+                    $availableReceivable = max(0, $initialReceivable - $paidPayments - $priorReturns);
+                    $receivablePortion = min((float)$salesReturn->total_amount, $availableReceivable);
+                    $cashPortion = (float)$salesReturn->total_amount - $receivablePortion;
+                } else {
+                    $cashPortion = (float)$salesReturn->total_amount;
+                }
+            } else {
+                $cashPortion = (float)$salesReturn->total_amount;
+            }
+
+            if ($receivablePortion > 0 && !$receivableAccount) {
+                $missing[] = "Piutang Usaha (1-1300)";
+            }
+            if ($cashPortion > 0 && !$cashAccount) {
+                $missing[] = "Kas (1-1100)";
+            }
+
+            if (!empty($missing)) {
                 throw new \Exception("Akun akuntansi berikut tidak ditemukan: " . implode(', ', $missing) . ". Silakan jalankan 'php artisan db:seed --class=AccountSeeder'.");
             }
 
@@ -326,14 +358,28 @@ class AccountingService
                 'notes' => 'Retur Penjualan ' . $salesReturn->return_no,
             ]);
 
-            // Cr. Kas
-            JournalEntryLine::create([
-                'journal_entry_id' => $entry->id,
-                'account_id' => $cashAccount->id,
-                'debit' => 0,
-                'credit' => $salesReturn->total_amount,
-                'notes' => 'Pengembalian Dana - ' . $salesReturn->return_no,
-            ]);
+            // Cr. Piutang Usaha (if Tempo)
+            if ($receivablePortion > 0 && $receivableAccount) {
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $receivableAccount->id,
+                    'debit' => 0,
+                    'credit' => $receivablePortion,
+                    'notes' => 'Pengurangan Piutang - Retur ' . $salesReturn->return_no,
+                ]);
+            }
+
+            // Cr. Kas/Bank (if Cash refund)
+            if ($cashPortion > 0) {
+                $paymentAcc = in_array($sale->payment_method ?? 'cash', ['qris', 'transfer']) ? ($bankAccount ?? $cashAccount) : $cashAccount;
+                JournalEntryLine::create([
+                    'journal_entry_id' => $entry->id,
+                    'account_id' => $paymentAcc->id,
+                    'debit' => 0,
+                    'credit' => $cashPortion,
+                    'notes' => 'Pengembalian Dana - ' . $salesReturn->return_no,
+                ]);
+            }
 
             // Entry 2: Restore Inventory
             if ($cogsTotal > 0) {

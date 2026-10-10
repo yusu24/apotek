@@ -1,0 +1,367 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>Dokumentasi Teknis & Arsitektur Coding (Technical Handover)</title>
+    <!--[if gte mso 9]>
+    <xml>
+    <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>100</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+        @page {
+    margin: 20mm 15mm 20mm 15mm;
+}
+body {
+    font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #1e293b;
+}
+h1 {
+    font-size: 18pt;
+    color: #0f172a;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+h2 {
+    font-size: 13pt;
+    color: #1e3a8a;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 4px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+}
+h3 {
+    font-size: 11pt;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+}
+p, ul, ol {
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+li {
+    margin-bottom: 3px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+}
+th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: bold;
+}
+tr:nth-child(even) td {
+    background-color: #f8fafc;
+}
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8.5pt;
+    background-color: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #0f172a;
+}
+pre {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 8pt;
+    line-height: 1.35;
+    page-break-inside: avoid;
+}
+pre code {
+    background: transparent;
+    padding: 0;
+}
+blockquote {
+    border-left: 3px solid #3b82f6;
+    background-color: #eff6ff;
+    padding: 6px 12px;
+    margin: 10px 0;
+    font-style: italic;
+    color: #1e40af;
+}
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 16px 0;
+}
+.header-box {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+}
+.header-box p {
+    margin: 0;
+    font-size: 9pt;
+    color: #166534;
+}
+    </style>
+</head>
+<body>
+    <div class="header-box">
+        <p><strong>SIM APOTEK</strong> &bull; Dokumen Resmi Serah Terima &bull; Tanggal Dokumen: 08 Oktober 2026</p>
+    </div>
+    <h1>DOKUMENTASI TEKNIS &amp; ARSITEKTUR CODING (TECHNICAL HANDOVER)</h1>
+<h2>SISTEM INFORMASI MANAJEMEN APOTEK (SIM APOTEK)</h2>
+<hr />
+<h2>1. Ringkasan Eksekutif &amp; Stack Teknologi</h2>
+<p>Sistem Informasi Manajemen Apotek (SIM Apotek) dibangun dengan arsitektur <strong>Monolith Modern (Full-Stack Reactive)</strong> menggunakan framework <strong>Laravel</strong> dan <strong>Livewire 3</strong>, memungkinkan pengalaman pengguna yang interaktif (<em>Single Page Application feel</em>) tanpa kompleksitas API terpisah.</p>
+<h3>Tech Stack:</h3>
+<ul>
+<li><strong>Backend Framework:</strong> Laravel 11 / 12 (PHP 8.2+)</li>
+<li><strong>Reactive Frontend:</strong> Livewire 3.4+ &amp; Livewire Volt</li>
+<li><strong>UI &amp; Styling:</strong> Tailwind CSS 3.x, Alpine.js, Blade Components</li>
+<li><strong>Database Engine:</strong> MySQL 8.0+ / MariaDB 10.6+ (InnoDB Engine)</li>
+<li><strong>Authorization &amp; Roles:</strong> Spatie Laravel Permission 6.x</li>
+<li><strong>Export Reporting Engine:</strong>
+<ul>
+<li>Barryvdh Laravel DomPDF (PDF Reporting berstandar A4 &amp; NCR)</li>
+<li>Maatwebsite Excel (Import / Export format .xlsx)</li>
+</ul>
+</li>
+<li><strong>Build Tool:</strong> Vite 5.x &amp; NPM</li>
+</ul>
+<hr />
+<h2>2. Struktur Direktori Utama</h2>
+<pre><code>app/
+├── Console/Commands/          # Artisan CLI Commands khusus maintenance &amp; cron job
+│   ├── BackupDatabase.php
+│   ├── CheckUrgentAlerts.php
+│   ├── FixExpenseJournals.php
+│   ├── RecalculateBalances.php
+│   ├── RepairJournals.php
+│   ├── SendWeeklyBackup.php
+│   └── SyncReturnReceivables.php   # Perbaikan &amp; sinkronisasi retur tempo ke piutang
+├── Exports/                   # Class export Excel (SalesReportExport, Aging, dll)
+├── Helpers/                   # helpers.php (format rupiah, standard accounting, dll)
+├── Http/Controllers/          # Controller untuk download export PDF, Excel, &amp; Upload Import
+│   ├── ExcelController.php
+│   ├── ImportController.php
+│   └── PdfController.php
+├── Imports/                   # Importer Excel per modul (Produk, Stok, Akun, Omset)
+├── Livewire/                  # Komponen reaktif UI &amp; Business Controller
+│   ├── Accounting/            # COA, Jurnal Umum, Buku Besar (General Ledger)
+│   ├── Admin/                 # Manajemen User, Role, Backup
+│   ├── Dashboard/             # Widget statistik &amp; grafik performa real-time
+│   ├── Finance/               # Laba Rugi, Saldo Awal, Pengeluaran (Expense), Aset Tetap
+│   ├── Inventory/             # Stok, Batch/Kadaluarsa, Retur Penjualan &amp; Pembelian
+│   ├── Master/                # Produk, Kategori, Satuan, Supplier, Pelanggan
+│   ├── Pos/                   # Modul Kasir (Cashier &amp; Cetak Struk Nota)
+│   ├── Procurement/           # Purchase Order (PO) &amp; Penerimaan Barang (Goods Receipt)
+│   ├── Reports/               # Laporan Penjualan, Margin, Aging Hutang/Piutang, Neraca, Arus Kas
+│   └── Settings/              # Pengaturan Toko, POS, Buku Panduan (User Guide)
+├── Models/                    # Eloquent Model (Relasi Database)
+├── Notifications/             # Notifikasi email &amp; alert darurat (kadaluarsa, piutang jatuh tempo)
+├── Services/                  # Service Layer (Business Logic Terpusat)
+│   ├── AccountingService.php  # Engine penjurnalan otomatis, COA, Laporan Keuangan
+│   ├── ProfitLossService.php  # Kalkulasi Laba Rugi real-time &amp; historis
+│   └── TaxService.php         # Perhitungan PPN Keluaran / Masukan
+└── Traits/
+    └── HasPermissionStructure.php # Pemetaan permission granular per fitur
+</code></pre>
+<hr />
+<h2>3. Skema Basis Data &amp; Model Utama (Database Architecture)</h2>
+<h3>3.1. Master Data &amp; Produk</h3>
+<ul>
+<li><code>products</code>: Menyimpan data produk obat (<code>name</code>, <code>sku</code>, <code>barcode</code>, <code>category_id</code>, <code>min_stock</code>, <code>sell_price</code>, dll).</li>
+<li><code>categories</code>: Kategori farmasi/obat (Generik, Paten, Alkes, Kosmetik, dll).</li>
+<li><code>units</code> &amp; <code>unit_conversions</code>: Satuan barang berjenjang (Box, Strip, Tablet) dengan rasio konversi.</li>
+<li><code>suppliers</code>: Rekanan PBF (Pedagang Besar Farmasi) pemasok obat.</li>
+<li><code>customers</code>: Data pasien / pelanggan umum apotek.</li>
+</ul>
+<h3>3.2. Inventori &amp; Batch (FEFO - First Expired First Out)</h3>
+<ul>
+<li><code>batches</code>: Setiap penerimaan obat memiliki record batch tersendiri (<code>batch_number</code>, <code>expired_date</code>, <code>buy_price</code>, <code>stock_current</code>). Pengurangan stok di kasir memprioritaskan batch yang <strong>tanggal kadaluarsanya paling dekat</strong>.</li>
+<li><code>stock_movements</code>: Kartu stok universal (<code>in</code>, <code>out</code>, <code>adjustment</code>, <code>return</code>). Mencatat pergerakan fisik stok beserta referensi dokumennya.</li>
+</ul>
+<h3>3.3. Penjualan &amp; Kasir (POS)</h3>
+<ul>
+<li><code>sales</code>: Header transaksi kasir (<code>invoice_no</code>, <code>date</code>, <code>total_amount</code>, <code>discount</code>, <code>tax</code>, <code>rounding</code>, <code>grand_total</code>, <code>payment_method</code>, <code>cash_amount</code>, <code>status</code>).
+<ul>
+<li><code>payment_method</code>: <code>cash</code>, <code>tempo</code>, <code>transfer</code>, <code>qris</code>.</li>
+</ul>
+</li>
+<li><code>sale_items</code>: Detail obat yang terjual, terhubung ke <code>batch_id</code> untuk akurasi HPP (<em>Cost of Goods Sold</em>).</li>
+<li><code>sales_returns</code> &amp; <code>sales_return_items</code>: Pengembalian obat dari pelanggan, mengembalikan stok ke batch asal serta memotong pendapatan/piutang.</li>
+</ul>
+<h3>3.4. Pengadaan (Procurement) &amp; Hutang</h3>
+<ul>
+<li><code>purchase_orders</code> &amp; <code>purchase_order_items</code>: Surat pesanan obat ke supplier (Status: <code>draft</code>, <code>ordered</code>, <code>partial</code>, <code>received</code>).</li>
+<li><code>goods_receipts</code> &amp; <code>goods_receipt_items</code>: Faktur fisik penerimaan barang dari supplier (surat jalan), mencatat harga beli riil dan nomor batch.</li>
+<li><code>purchase_returns</code>: Pengembalian barang rusak/kadaluarsa ke supplier.</li>
+<li><code>supplier_payments</code>: Pembayaran pelunasan hutang pembelian barang ke supplier.</li>
+</ul>
+<h3>3.5. Piutang (Receivables)</h3>
+<ul>
+<li><code>receivables</code>: Tagihan atas penjualan kasir bertipe <code>tempo</code>.
+<ul>
+<li>Kolom: <code>sale_id</code>, <code>customer_id</code>, <code>amount</code>, <code>paid_amount</code>, <code>remaining_balance</code>, <code>status</code> (<code>unpaid</code>, <code>partial</code>, <code>paid</code>), <code>due_date</code>.</li>
+</ul>
+</li>
+<li><code>receivable_payments</code>: Riwayat cicilan / pelunasan piutang oleh pelanggan.</li>
+</ul>
+<h3>3.6. Akuntansi &amp; Keuangan (Automated Double-Entry)</h3>
+<ul>
+<li><code>accounts</code>: Chart of Accounts (COA) hierarkis:
+<ul>
+<li><code>1-XXXX</code>: Aset (Kas, Bank, Piutang Usaha <code>1-1300</code>, Persediaan <code>1-1400</code>, Aset Tetap).</li>
+<li><code>2-XXXX</code>: Kewajiban (Utang Jatuh Tempo / Dagang <code>2-1200</code>, PPN Keluaran <code>2-1400</code>).</li>
+<li><code>3-XXXX</code>: Ekuitas (Modal Awal, Laba Ditahan).</li>
+<li><code>4-XXXX</code>: Pendapatan (Penjualan <code>4-1000</code>, Retur Penjualan <code>4-1100</code>).</li>
+<li><code>5-XXXX</code>: Beban &amp; HPP (HPP / COGS <code>5-1000</code>, Retur Pembelian <code>5-1100</code>, Biaya Operasional <code>5-2XXX</code>).</li>
+</ul>
+</li>
+<li><code>journal_entries</code>: Header jurnal transaksi (<code>entry_number</code>, <code>date</code>, <code>source</code>, <code>source_id</code>, <code>is_posted</code>).</li>
+<li><code>journal_entry_lines</code>: Detail baris jurnal Debit dan Kredit (<code>debit</code>, <code>credit</code>, <code>account_id</code>, <code>notes</code>).</li>
+<li><code>expenses</code> &amp; <code>expense_categories</code>: Pencatatan pengeluaran operasional toko (listrik, gaji, sewa, ATK).</li>
+<li><code>fixed_assets</code> &amp; <code>asset_depreciations</code>: Inventaris barang modal apotek dan penyusutan bulanan otomatis.</li>
+<li><code>opening_balances</code>: Kunci saldo awal kas, bank, persediaan, dan modal saat pertama kali migrasi.</li>
+</ul>
+<hr />
+<h2>4. Logika Bisnis Inti (Core Business Flows)</h2>
+<h3>4.1. Alur Transaksi Kasir (POS)</h3>
+<ol>
+<li>Kasir memilih produk &amp; satuan. Sistem secara otomatis memilih <strong>Batch dengan tanggal kadaluarsa terdekat (FEFO)</strong> yang masih memiliki stok.</li>
+<li>Saat transaksi disimpan (<code>Cashier::saveSale</code>):
+<ul>
+<li>Insert ke tabel <code>sales</code> &amp; <code>sale_items</code>.</li>
+<li>Stok batch didekrementasi (<code>Batch::decrement</code>).</li>
+<li>Record <code>StockMovement</code> dicatat dengan tipe <code>out</code>.</li>
+<li>Jika metode pembayaran <code>tempo</code>: Sistem membuat record <code>receivables</code> dengan <code>remaining_balance = grand_total - cash_amount</code>.</li>
+<li>Menjalankan otomatisasi jurnal akuntansi via <code>AccountingService::postSaleJournal()</code>.</li>
+</ul>
+</li>
+</ol>
+<h3>4.2. Penjurnalan Otomatis Kasir</h3>
+<ul>
+<li><strong>Penjualan Tunai / Transfer:</strong>
+<ul>
+<li><code>Dr. Kas (1-1100)</code> atau <code>Dr. Bank (1-1200)</code> <em>[Grand\ Total]</em></li>
+<li><code>Cr. Penjualan (4-1000)</code> <em>[DPP]</em></li>
+<li><code>Cr. PPN Keluaran (2-1400)</code> <em>[Pajak\ jika\ ada]</em></li>
+<li><code>Dr. COGS / HPP (5-1000)</code> <em>[Total\ Modal\ Obat]</em></li>
+<li><code>Cr. Persediaan (1-1400)</code> <em>[Total\ Modal\ Obat]</em></li>
+</ul>
+</li>
+<li><strong>Penjualan Tempo (Kredit):</strong>
+<ul>
+<li><code>Dr. Kas (1-1100)</code> <em>[Uang\ Muka\ /\ DP\ jika\ ada]</em></li>
+<li><code>Dr. Piutang Usaha (1-1300)</code> <em>[Sisa\ Tagihan\ Tempo]</em></li>
+<li><code>Cr. Penjualan &amp; PPN</code> <em>[Total]</em></li>
+<li><code>Dr. COGS</code> &amp; <code>Cr. Persediaan</code> <em>[Modal\ Obat]</em></li>
+</ul>
+</li>
+</ul>
+<h3>4.3. Alur Retur Penjualan &amp; Sinkronisasi Piutang</h3>
+<p>Ketika kasir memproses retur penjualan di menu <code>SalesReturnList</code>:</p>
+<ol>
+<li>Sistem menambah kembali stok ke <code>batch_id</code> yang sesuai dan mencatat <code>StockMovement</code> tipe <code>return</code>.</li>
+<li>Record <code>sales_returns</code> dan itemnya dibuat.</li>
+<li><strong>Pengecekan Piutang:</strong> Jika invoice penjualan memiliki record <code>receivables</code>:
+<ul>
+<li>Saldo sisa piutang (<code>remaining_balance</code>) dipotong sebesar nominal retur:
+<strong>\text{Sisa Piutang Baru} = \max(0, \text{remaining_balance} - \text{nominal_retur})</strong></li>
+<li>Jika sisa saldo mencapai 0, status diubah menjadi <code>paid</code> (lunas/selesai) sehingga tagihan <strong>otomatis hilang dari Aging Report</strong>.</li>
+</ul>
+</li>
+<li><strong>Jurnal Retur Penjualan:</strong>
+<ul>
+<li><code>Dr. Retur Penjualan (4-1100)</code> <em>[Total\ Retur]</em></li>
+<li><code>Cr. Piutang Usaha (1-1300)</code> <em>[Sebesar\ piutang\ yang\ belum\ dibayar]</em></li>
+<li><code>Cr. Kas (1-1100)</code> <em>[Hanya\ jika\ ada\ kelebihan\ bayar/DP\ yang\ dikembalikan\ tunai]</em></li>
+<li><code>Dr. Persediaan (1-1400)</code> <em>[Modal\ barang\ yang\ kembali]</em></li>
+<li><code>Cr. COGS (5-1000)</code> <em>[Pengurangan\ HPP]</em></li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>5. Command Artisan Khusus (CLI Maintenance)</h2>
+<p>Sistem dilengkapi sejumlah perintah konsol untuk pemeliharaan data di server produksi:</p>
+<p>| Command Artisan | Fungsi &amp; Kapan Digunakan |
+|---|---|
+| <code>php artisan finance:sync-return-receivables</code> | Menyelaraskan saldo piutang dan jurnal retur tempo historis (mengatasi masalah piutang gantung dan kas minus akibat retur tempo). Mendukung opsi <code>--dry-run</code>. |
+| <code>php artisan finance:repair-journals</code> | Menghasilkan ulang (<em>regenerate</em>) seluruh jurnal akuntansi yang hilang dari transaksi penjualan, pembelian, retur, dan pembayaran lama. |
+| <code>php artisan finance:recalculate-balances</code> | Menghitung ulang saldo buku besar (GL) dan saldo kas/bank dari seluruh mutasi jurnal secara presisi. |
+| <code>php artisan finance:fix-expense-journals</code> | Membersihkan jurnal yatim (<em>orphaned journals</em>) dari pengeluaran yang pernah diedit/dihapus di masa lalu. |
+| <code>php artisan backup:database</code> | Menjalankan <em>dump</em> database otomatis dan menyimpannya di direktori penyimpanan lokal. |
+| <code>php artisan email:urgent-alerts</code> | Mengecek dan mengirim email peringatan obat kadaluarsa dan piutang yang mendekati jatuh tempo. |</p>
+<hr />
+<h2>6. Prosedur Deployment &amp; Sinkronisasi Server (VPS / Cloud)</h2>
+<h3>Skrip Deployment Otomatis (<code>deploy.sh</code>)</h3>
+<p>Pada server produksi (Ubuntu / Debian), deployment dan update kode dilakukan dengan menjalankan:</p>
+<pre><code class="language-bash">bash deploy.sh
+</code></pre>
+<p>Isi tahapan yang dieksekusi:</p>
+<pre><code class="language-bash"># 1. Tarik pembaruan dari Git
+git pull origin main
+
+# 2. Update dependensi tanpa paket dev
+composer install --no-dev --optimize-autoloader
+npm install
+
+# 3. Build aset frontend (Tailwind &amp; JS)
+npm run build
+
+# 4. Migrasi skema database (jika ada update)
+php artisan migrate --force
+
+# 5. Reset cache permission Spatie &amp; optimize Laravel
+php artisan permission:cache-reset
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+</code></pre>
+<h3>Konfigurasi Cron Job Server (<code>crontab -e</code>)</h3>
+<p>Jadwalkan task scheduler Laravel untuk notifikasi otomatis dan backup database mingguan:</p>
+<pre><code class="language-cron">* * * * * cd /path-ke-projek/apotek &amp;&amp; php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1
+</code></pre>
+<h3>Rekomendasi Web Server (Nginx)</h3>
+<ul>
+<li>Pastikan <code>client_max_body_size 64M;</code> untuk mendukung import data master file Excel besar.</li>
+<li>Direktori <code>storage</code> dan <code>bootstrap/cache</code> harus memiliki hak akses tulis:
+<pre><code class="language-bash">chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+</code></pre>
+</li>
+</ul>
+<hr />
+<h2>7. Lembar Pengesahan Serah Terima Kode Program &amp; Teknis (Technical Handover)</h2>
+<p>Dokumen arsitektur dan repositori source code Sistem Informasi Manajemen Apotek (SIM Apotek) ini telah diserahkan dan diverifikasi secara teknis:</p>
+<p>| Pihak | Identitas &amp; Peran |
+|---|---|
+| <strong>PIHAK PERTAMA (Pengembang / Developer)</strong> | Nama: ....................................................<br>Jabatan: Lead Software Engineer |
+| <strong>PIHAK KEDUA (Klien / IT Representative)</strong> | Nama: ....................................................<br>Jabatan: IT Manager / Penanggung Jawab Teknis Klien |</p>
+<p>Kedua belah pihak menyatakan bahwa source code aplikasi, skema database, dokumentasi API/komponen, serta akses server telah diserahterimakan dengan lengkap.</p>
+<br>
+<p>| PIHAK PERTAMA (Developer) | PIHAK KEDUA (Klien / IT) |
+|:---:|:---:|
+| <br><br><br><br><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><br><strong>( .................................................. )</strong> | <br><br><br><br></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br><strong>( .................................................. )</strong> |</p>
+
+</body>
+</html>

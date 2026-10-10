@@ -1,0 +1,323 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+    <meta charset="utf-8">
+    <title>Buku Panduan Penggunaan Aplikasi (User Manual)</title>
+    <!--[if gte mso 9]>
+    <xml>
+    <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>100</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+        @page {
+    margin: 20mm 15mm 20mm 15mm;
+}
+body {
+    font-family: 'DejaVu Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #1e293b;
+}
+h1 {
+    font-size: 18pt;
+    color: #0f172a;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+h2 {
+    font-size: 13pt;
+    color: #1e3a8a;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 4px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+}
+h3 {
+    font-size: 11pt;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+}
+p, ul, ol {
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+li {
+    margin-bottom: 3px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+}
+th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: bold;
+}
+tr:nth-child(even) td {
+    background-color: #f8fafc;
+}
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8.5pt;
+    background-color: #f1f5f9;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #0f172a;
+}
+pre {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 8pt;
+    line-height: 1.35;
+    page-break-inside: avoid;
+}
+pre code {
+    background: transparent;
+    padding: 0;
+}
+blockquote {
+    border-left: 3px solid #3b82f6;
+    background-color: #eff6ff;
+    padding: 6px 12px;
+    margin: 10px 0;
+    font-style: italic;
+    color: #1e40af;
+}
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 16px 0;
+}
+.header-box {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+}
+.header-box p {
+    margin: 0;
+    font-size: 9pt;
+    color: #166534;
+}
+    </style>
+</head>
+<body>
+    <div class="header-box">
+        <p><strong>SIM APOTEK</strong> &bull; Dokumen Resmi Serah Terima &bull; Tanggal Dokumen: 08 Oktober 2026</p>
+    </div>
+    <h1>BUKU PANDUAN PENGGUNAAN APLIKASI (USER MANUAL)</h1>
+<h2>SISTEM INFORMASI MANAJEMEN APOTEK (SIM APOTEK)</h2>
+<hr />
+<h2>1. Pendahuluan</h2>
+<p>Selamat datang di <strong>Sistem Informasi Manajemen Apotek (SIM Apotek)</strong>. Aplikasi ini dirancang khusus untuk memenuhi standar operasional apotek modern, mulai dari pelayanan kasir cepat (<em>Point of Sale</em>), manajemen persediaan obat berbasis <strong>Batch &amp; Kadaluarsa (FEFO)</strong>, pengadaan barang, penagihan piutang pelanggan, hingga pembukuan akuntansi dan laporan laba rugi otomatis.</p>
+<hr />
+<h2>2. Langkah Setup Awal (Sebelum Operasional Dimulai)</h2>
+<p>Agar pembukuan apotek rapi dan tidak terjadi selisih saldo di kemudian hari, ikuti urutan setup awal berikut:</p>
+<h3>Langkah 1: Mengatur Identitas Apotek</h3>
+<ol>
+<li>Masuk ke menu <strong>Pengaturan</strong> <em>\rightarrow</em> <strong>Pengaturan Toko</strong>.</li>
+<li>Masukkan <strong>Nama Apotek</strong>, <strong>Alamat Lengkap</strong>, dan <strong>Nomor Telepon/WhatsApp</strong>. Data ini akan otomatis tercetak pada kop struk kasir dan semua dokumen laporan PDF.</li>
+<li>Masukkan <strong>Tarif PPN Default</strong> (misal: <code>11%</code> jika toko PKP, atau <code>0%</code> jika non-PKP).</li>
+<li>Unggah <strong>Logo Apotek</strong> (format PNG/JPG transparan).</li>
+<li>Klik <strong>Simpan Pengaturan</strong>.</li>
+</ol>
+<h3>Langkah 2: Menyiapkan Rekening Bank Operasional</h3>
+<ol>
+<li>Buka menu <strong>Akuntansi</strong> <em>\rightarrow</em> <strong>Daftar Akun (COA)</strong>.</li>
+<li>Akun kas fisik dan akun standar sudah tersedia otomatis.</li>
+<li>Jika apotek menerima pembayaran via transfer bank (BCA, Mandiri, BRI, dll), klik <strong>Tambah Akun Bank</strong>, masukkan nama bank dan nomor rekening, lalu klik <strong>Simpan</strong>.</li>
+</ol>
+<h3>Langkah 3: Mengunci Saldo Awal (Opening Balance) — PENTING!</h3>
+<ol>
+<li>Buka menu <strong>Keuangan</strong> <em>\rightarrow</em> <strong>Saldo Awal</strong>.</li>
+<li>Masukkan jumlah uang tunai fisik yang ada di laci kasir pada kolom <strong>Kas</strong>.</li>
+<li>Masukkan saldo masing-masing rekening bank pada kolom <strong>Bank</strong>.</li>
+<li>Masukkan <strong>Taksiran Nilai Persediaan</strong> (total modal harga beli dari seluruh obat yang sudah ada di apotek saat sistem mulai dipakai).</li>
+<li>Pada bagian Ekuitas, isi <strong>Modal Awal</strong> dengan angka yang <strong>SAMA</strong> dengan total (Kas + Bank + Persediaan) agar selisih Neraca menunjukkan angka <code>0 (Seimbang)</code>.</li>
+<li>Klik <strong>Konfirmasi &amp; Kunci Saldo Awal</strong>. Setelah dikunci, saldo awal akan menjadi pondasi neraca apotek.</li>
+</ol>
+<h3>Langkah 4: Mengimpor Data Master (Gunakan Template Excel)</h3>
+<p>Lakukan import data master secara <strong>berurutan</strong> agar tidak terjadi kegagalan relasi:</p>
+<ol>
+<li><strong>Kategori &amp; Satuan Obat</strong> (Box, Strip, Botol, Tablet).</li>
+<li><strong>Data Supplier / PBF</strong> (Pedagang Besar Farmasi).</li>
+<li><strong>Data Pelanggan / Pasien Tetap</strong>.</li>
+<li><strong>Data Produk Obat</strong> (Nama produk, kategori, satuan, harga jual, stok minimum).</li>
+<li><strong>Stok Awal Obat</strong> (Jumlah stok awal wajib mencantumkan <strong>Nomor Batch</strong> dan <strong>Tanggal Kadaluarsa</strong>).</li>
+</ol>
+<hr />
+<h2>3. Modul Kasir &amp; Penjualan (Point of Sale / POS)</h2>
+<h3>3.1. Melayani Penjualan Obat Tunai (Cash)</h3>
+<ol>
+<li>Buka menu <strong>Kasir (POS)</strong>.</li>
+<li>Cari nama obat atau <em>scan</em> barcode produk.</li>
+<li>Pilih satuan penjualan (misal: Eceran/Tablet atau Box).</li>
+<li>Sistem otomatis memilih <strong>Batch dengan tanggal kadaluarsa terdekat (FEFO)</strong> yang stoknya masih tersedia.</li>
+<li>Masukkan jumlah (qty) yang dibeli pelanggan.</li>
+<li>Masukkan nominal uang yang dibayarkan pelanggan pada kolom <strong>Bayar Tunai</strong>.</li>
+<li>Klik <strong>Proses Transaksi / Cetak Struk</strong>. Sistem otomatis mencetak nota dan memotong stok obat.</li>
+</ol>
+<h3>3.2. Melayani Penjualan Tempo (Kredit / Piutang)</h3>
+<p>Penjualan tempo digunakan untuk pelanggan tetap, klinik rekanan, atau instansi yang membayar belakangan:</p>
+<ol>
+<li>Pada form kasir, wajib <strong>Pilih Pelanggan</strong> yang sudah terdaftar.</li>
+<li>Pada bagian Metode Pembayaran, pilih <strong>Tempo</strong>.</li>
+<li>Masukkan <strong>Jangka Waktu Tempo</strong> (default: 30 hari).</li>
+<li>Jika pelanggan membayar uang muka (DP), masukkan nominalnya di kolom <strong>Tunai</strong>. Sisa tagihan otomatis dihitung sebagai <strong>Piutang Usaha</strong>.</li>
+<li>Klik <strong>Simpan Transaksi</strong>.</li>
+<li>Transaksi ini otomatis tercatat di menu <strong>Hutang &amp; Piutang (Aging Report)</strong> untuk ditagih saat jatuh tempo.</li>
+</ol>
+<h3>3.3. Penjualan Non-Tunai (Transfer Bank &amp; QRIS)</h3>
+<ol>
+<li>Pilih metode pembayaran <strong>Transfer</strong> atau <strong>QRIS</strong>.</li>
+<li>Pilih rekening bank penerima.</li>
+<li>Masukkan nominal bayar dan nomor referensi mutasi jika diperlukan, lalu selesaikan transaksi.</li>
+</ol>
+<hr />
+<h2>4. Modul Retur Penjualan (Pengembalian Obat dari Pembeli)</h2>
+<p>Jika terjadi kesalahan nota atau pelanggan mengembalikan obat:</p>
+<ol>
+<li>Buka menu <strong>Stok &amp; Inventori</strong> <em>\rightarrow</em> <strong>Retur Penjualan</strong>.</li>
+<li>Klik tombol <strong>Tambah Retur</strong>.</li>
+<li>Cari nomor nota/invoice yang bersangkutan.</li>
+<li>Tentukan jumlah barang yang dikembalikan dan alasan retur.</li>
+<li>Klik <strong>Simpan Retur</strong>.</li>
+</ol>
+<h3>Dampak Otomatis Sistem saat Retur Disimpan:</h3>
+<ul>
+<li><strong>Stok Obat:</strong> Otomatis bertambah kembali ke nomor batch asalnya.</li>
+<li><strong>Jika Nota Awal adalah Penjualan Tunai:</strong> Sistem mencatat pengembalian dana tunai dari kasir ke pelanggan.</li>
+<li><strong>Jika Nota Awal adalah Penjualan Tempo:</strong> Sistem otomatis <strong>memotong sisa tagihan piutang pelanggan</strong>. Jika retur mencakup seluruh nota, tagihan di daftar piutang otomatis berubah menjadi <strong>Lunas/Selesai</strong> dan hilang dari daftar penagihan aktif.</li>
+</ul>
+<blockquote>
+<p><strong>Tips Membaca Laporan Penjualan saat Terjadi Retur:</strong>
+Jika nota dibuat kemarin (misal tanggal 7) lalu diretur hari ini (tanggal 8), maka pada Laporan Penjualan <strong>hanya untuk tanggal 8</strong>, nilai retur tersebut akan memotong penjualan hari itu. Bila penjualan hari ini lebih kecil daripada barang kemarin yang diretur, Penjualan Bersih harian akan tampak minus. Hal ini wajar dalam akuntansi harian. Untuk melihat pendapatan riil sebenarnya, ubah filter tanggal laporan menjadi rentang tanggal (misal: 07 s/d 08), maka nominalnya akan impas dan normal kembali.</p>
+</blockquote>
+<hr />
+<h2>5. Modul Pengadaan Barang (Procurement) &amp; Pembelian</h2>
+<h3>5.1. Surat Pesanan / Purchase Order (PO)</h3>
+<ol>
+<li>Buka menu <strong>Pengadaan</strong> <em>\rightarrow</em> <strong>Purchase Order</strong>.</li>
+<li>Klik <strong>Buat PO Baru</strong>, pilih supplier PBF yang dituju.</li>
+<li>Tambahkan daftar obat dan jumlah yang ingin dipesan.</li>
+<li>Cetak surat pesanan dalam format <strong>A4</strong> atau <strong>NCR</strong> untuk diserahkan ke sales PBF.</li>
+</ol>
+<h3>5.2. Penerimaan Barang dari Supplier (Surat Jalan / Faktur)</h3>
+<ol>
+<li>Saat pesanan obat fisik tiba dari supplier, buka menu <strong>Pengadaan</strong> <em>\rightarrow</em> <strong>Penerimaan Barang</strong>.</li>
+<li>Klik <strong>Terima Barang</strong> (bisa ditarik otomatis dari nomor PO).</li>
+<li>Masukkan <strong>Nomor Surat Jalan / Faktur PBF</strong>.</li>
+<li>Masukkan <strong>Nomor Batch</strong>, <strong>Tanggal Kadaluarsa (Expired Date)</strong>, dan <strong>Harga Beli Riil</strong> per obat.</li>
+<li>Pilih metode pembayaran:
+<ul>
+<li><strong>Tunai / Transfer:</strong> Jika langsung dibayar lunas saat barang datang.</li>
+<li><strong>Tempo:</strong> Jika pembayaran memiliki jangka waktu kredit. Sisa tagihan otomatis masuk ke daftar <strong>Hutang Supplier (AP)</strong>.</li>
+</ul>
+</li>
+<li>Klik <strong>Simpan</strong>. Stok obat bertambah dan kartu stok terupdate otomatis.</li>
+</ol>
+<h3>5.3. Pembayaran Hutang Supplier</h3>
+<ol>
+<li>Buka menu <strong>Keuangan</strong> <em>\rightarrow</em> <strong>Hutang &amp; Piutang (Aging Report)</strong> pada tab <strong>Hutang Supplier (AP)</strong>.</li>
+<li>Cari surat jalan/faktur yang ingin dibayar, klik tombol <strong>Bayar</strong>.</li>
+<li>Masukkan jumlah pembayaran, tanggal bayar, dan sumber kas/bank.</li>
+<li>Klik <strong>Simpan</strong>. Sisa hutang berkurang dan status diperbarui otomatis.</li>
+</ol>
+<hr />
+<h2>6. Modul Stok, Inventori, dan Kadaluarsa</h2>
+<h3>6.1. Pemantauan Stok &amp; Sistem FEFO</h3>
+<ul>
+<li><strong>Stok Menipis:</strong> Obat yang berada di bawah batas stok minimum akan ditandai dengan lencana kuning/merah agar admin gudang segera membuat PO.</li>
+<li><strong>Sistem FEFO (First Expired First Out):</strong> Sistem memprioritaskan penjualan obat yang tanggal kadaluarsanya paling dekat, meminimalisir risiko obat basi di rak apotek.</li>
+<li><strong>Alert Kadaluarsa:</strong> Sistem memberikan peringatan visual untuk obat-obatan yang mendekati tanggal expired (30, 60, 90 hari ke depan).</li>
+</ul>
+<h3>6.2. Stock Opname &amp; Penyesuaian Stok</h3>
+<ol>
+<li>Buka menu <strong>Stok &amp; Inventori</strong> <em>\rightarrow</em> <strong>Penyesuaian Stok (Adjust)</strong> pada produk yang dihitung.</li>
+<li>Masukkan jumlah stok fisik sebenarnya di rak.</li>
+<li>Masukkan alasan penyesuaian (misal: barang pecah, selisih hitung, obat rusak).</li>
+<li>Klik <strong>Simpan</strong>. Sistem otomatis menyesuaikan saldo stok dan mencatat selisihnya pada jurnal akuntansi penyesuaian persediaan.</li>
+</ol>
+<h3>6.3. Kartu Stok Obat</h3>
+<p>Klik ikon <strong>Riwayat Stok / Kartu Stok</strong> pada produk untuk melihat jejak rekam pergerakan obat: dari pembelian mana barang masuk, kasir mana yang menjual, atau retur mana yang terjadi secara detail.</p>
+<hr />
+<h2>7. Modul Keuangan &amp; Biaya Operasional (Expenses)</h2>
+<h3>7.1. Mencatat Biaya Operasional</h3>
+<p>Gunakan modul ini untuk mencatat semua pengeluaran di luar pembelian obat:</p>
+<ol>
+<li>Buka menu <strong>Keuangan</strong> <em>\rightarrow</em> <strong>Biaya / Pengeluaran (Expenses)</strong>.</li>
+<li>Klik <strong>Tambah Pengeluaran</strong>.</li>
+<li>Pilih Kategori Biaya (misal: Biaya Listrik &amp; Air, Gaji Karyawan, Biaya Kebersihan, Biaya Sewa Tempat, ATK Struk).</li>
+<li>Pilih sumber dana pembayaran (Kas Laci atau Transfer Bank).</li>
+<li>Masukkan nominal dan lampirkan catatan/bukti nota jika ada.</li>
+<li>Klik <strong>Simpan</strong>. Pengeluaran ini otomatis memotong kas dan langsung terhitung pada <strong>Laporan Laba Rugi</strong>.</li>
+</ol>
+<h3>7.2. Manajemen Aset Tetap Apotek</h3>
+<ol>
+<li>Buka menu <strong>Keuangan</strong> <em>\rightarrow</em> <strong>Aset Tetap</strong>.</li>
+<li>Masukkan barang modal apotek (misal: Kulkas Vaksin, Komputer Kasir, Rak Etalase, AC).</li>
+<li>Tentukan nilai perolehan dan masa manfaat ekonomisnya. Sistem akan menghitung penyusutan nilai aset secara otomatis setiap bulan.</li>
+</ol>
+<hr />
+<h2>8. Laporan-Laporan Manajemen &amp; Ekspor</h2>
+<p>Seluruh laporan dapat difilter berdasarkan rentang tanggal dan diunduh dalam format <strong>PDF siap cetak</strong> atau <strong>Excel (.xlsx)</strong>:</p>
+<ol>
+<li><strong>Laporan Penjualan:</strong> Ringkasan omset kotor, potongan diskon, retur penjualan, dan penjualan riil per kasir atau metode pembayaran.</li>
+<li><strong>Laporan Margin Produk:</strong> Menganalisis keuntungan kotor dan persentase profit per item obat untuk mengetahui produk paling menguntungkan.</li>
+<li><strong>Laporan Laba Rugi (Income Statement):</strong> Mengkalkulasi Pendapatan Bersih dikurangi HPP (Modal Obat) menghasilkan Laba Kotor, lalu dikurangi Biaya Operasional menghasilkan <strong>Laba Bersih Apotek</strong>.</li>
+<li><strong>Laporan Umur Hutang &amp; Piutang (Aging Report):</strong> Mengelompokkan jatuh tempo tagihan pelanggan dan hutang ke supplier dalam kategori usia tunggakan (0-7, 8-15, 16-30, 31-45, 45+ hari).</li>
+<li><strong>Laporan Arus Kas (Cash Flow):</strong> Menampilkan perputaran arus uang masuk dan keluar dari operasional, investasi, dan pendanaan apotek.</li>
+<li><strong>Laporan PPN (Pajak Pertambahan Nilai):</strong> Rekapitulasi PPN Masukan (dari faktur beli PBF) dan PPN Keluaran (dari penjualan kasir) beserta status Kurang/Lebih Bayar pajak.</li>
+</ol>
+<hr />
+<h2>9. Manajemen Pengguna, Hak Akses, &amp; Keamanan</h2>
+<h3>9.1. Tingkatan Hak Akses (Role Permission)</h3>
+<ul>
+<li><strong>Super Admin / Owner:</strong> Memiliki akses penuh ke seluruh menu, termasuk pengaturan toko, daftar akun bank, kunci saldo awal, manajemen gaji/beban, dan laporan laba rugi.</li>
+<li><strong>Admin:</strong> Mengelola master data, penerimaan barang, stok opname, dan laporan operasional.</li>
+<li><strong>Apoteker:</strong> Bertanggung jawab atas verifikasi resep, stok obat, penyesuaian batch, dan pengadaan obat ke PBF.</li>
+<li><strong>Kasir:</strong> Terbatas hanya untuk membuka kasir POS, melayani pembayaran, mencetak struk, dan melihat riwayat transaksi shift kasir yang bersangkutan.</li>
+<li><strong>Gudang:</strong> Khusus untuk memproses penerimaan barang fisik dari supplier dan mengecek stok di gudang.</li>
+</ul>
+<h3>9.2. Backup Database Rutin</h3>
+<ol>
+<li>Buka menu <strong>Admin</strong> <em>\rightarrow</em> <strong>Backup Database</strong>.</li>
+<li>Klik <strong>Buat Backup Sekarang</strong> untuk mengunduh arsip database apotek ke komputer lokal.</li>
+<li>Sistem juga dikonfigurasi untuk mengirimkan salinan cadangan database otomatis ke email owner setiap minggu.</li>
+</ol>
+<hr />
+<h2>10. Lembar Pengesahan &amp; Berita Acara Serah Terima (BAST)</h2>
+<p>Pada hari ini, ..................... Tanggal ..... Bulan .................. Tahun ............, telah diserahkan sistem aplikasi dan buku panduan operasional Sistem Informasi Manajemen Apotek (SIM Apotek) kepada pihak Klien:</p>
+<p>| Pihak | Identitas &amp; Peran |
+|---|---|
+| <strong>PIHAK PERTAMA (Pengembang)</strong> | Nama: ....................................................<br>Jabatan: Lead Developer / Konsultan Sistem |
+| <strong>PIHAK KEDUA (Klien / Pemilik Apotek)</strong> | Nama: ....................................................<br>Jabatan: Pemilik Apotek (Owner) / Apoteker Penanggung Jawab |</p>
+<p>Kedua belah pihak menyatakan bahwa sistem aplikasi telah selesai diserahterimakan, diuji fungsi, dan siap dioperasikan.</p>
+<br>
+<p>| PIHAK PERTAMA (Pengembang) | PIHAK KEDUA (Klien / Owner) |
+|:---:|:---:|
+| <br><br><br><br><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><br><strong>( .................................................. )</strong> | <br><br><br><br></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br><strong>( .................................................. )</strong> |</p>
+
+</body>
+</html>

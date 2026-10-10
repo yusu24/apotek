@@ -8,6 +8,7 @@ use App\Models\Sale;
 use App\Models\SalesReturn;
 use App\Models\SalesReturnItem;
 use App\Models\Batch;
+use App\Models\Receivable;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
@@ -235,6 +236,23 @@ class SalesReturnList extends Component
                 'description' => "Membuat retur penjualan: {$salesReturn->return_no} untuk Invoice: {$this->selectedSale->invoice_no}",
                 'new_values' => $salesReturn->toArray()
             ]);
+
+            // Update Receivable if original sale has an open receivable record
+            $receivable = Receivable::where('sale_id', $this->selectedSale->id)->first();
+            if ($receivable && (float)$receivable->remaining_balance > 0) {
+                $reduction = min((float)$totalReturnAmount, (float)$receivable->remaining_balance);
+                $newRemaining = max(0, (float)$receivable->remaining_balance - $reduction);
+                $receivable->remaining_balance = $newRemaining;
+                if ($newRemaining <= 0.01) {
+                    $receivable->remaining_balance = 0;
+                    $receivable->status = 'paid';
+                } else {
+                    $receivable->status = 'partial';
+                }
+                $returNote = " [Retur: {$salesReturn->return_no} (-Rp " . number_format($reduction, 0, ',', '.') . ")]";
+                $receivable->notes = trim(($receivable->notes ?? '') . $returNote);
+                $receivable->save();
+            }
 
             // Create Journal Entry
             try {

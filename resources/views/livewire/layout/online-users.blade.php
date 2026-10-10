@@ -8,9 +8,10 @@ $colorClasses = ($textColor === 'text-white')
     <!-- Menu-style Item -->
     <button @click="open = !open" 
             type="button"
+            title="{{ count($onlineUsers) }} pengguna sedang aktif"
             @class([
-                'rounded-lg text-sm font-medium transition-colors group relative flex items-center justify-center',
-                'p-1.5' => $iconOnly,
+                'rounded-xl text-sm font-medium transition-colors group relative flex items-center justify-center',
+                'p-2' => $iconOnly,
                 'w-full px-3 py-2 gap-3' => !$iconOnly,
                 $colorClasses
             ])
@@ -22,9 +23,8 @@ $colorClasses = ($textColor === 'text-white')
             </svg>
             
             @if(count($onlineUsers) > 0)
-                <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500 border border-gray-900"></span>
+                <span style="min-width: 18px; height: 18px;" class="absolute -top-2 -right-2.5 inline-flex items-center justify-center px-1 rounded-full bg-emerald-500 text-white text-[10px] font-bold leading-none tracking-tight shadow-sm ring-2 {{ $textColor === 'text-white' ? 'ring-blue-950' : 'ring-white dark:ring-gray-900' }}">
+                    {{ count($onlineUsers) }}
                 </span>
             @endif
         </div>
@@ -44,7 +44,7 @@ $colorClasses = ($textColor === 'text-white')
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-2"
-         class="absolute w-72 rounded-xl shadow-2xl z-[100] overflow-hidden border right-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
+         class="absolute {{ $direction === 'down' ? 'top-full mt-2' : 'bottom-full mb-2' }} w-72 rounded-xl shadow-2xl z-[100] overflow-hidden border right-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200"
          :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
         
         <div class="p-3 border-b flex justify-between items-center border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">

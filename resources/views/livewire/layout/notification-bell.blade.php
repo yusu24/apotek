@@ -6,18 +6,16 @@ $colorClasses = ($textColor === 'text-white')
 @endphp
     <!-- Menu-style Item -->
     <button type="button" @click="open = !open" 
-            class="{{ $iconOnly ? 'p-1.5' : 'w-full flex items-center px-3 py-2 gap-3' }} rounded-lg text-sm font-medium {{ $colorClasses }} transition-colors group">
+            title="{{ $this->unreadCount > 0 ? $this->unreadCount . ' notifikasi belum dibaca' : 'Notifikasi' }}"
+            class="{{ $iconOnly ? 'p-2' : 'w-full flex items-center px-3 py-2 gap-3' }} rounded-xl text-sm font-medium {{ $colorClasses }} transition-colors group relative">
         <div class="relative flex items-center justify-center">
-            <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 shrink-0 transition-all duration-300" :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             
             @if($this->unreadCount > 0)
-                <span class="absolute -top-1 -right-1 flex h-4 w-4">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-[10px] items-center justify-center text-white font-bold border-2 border-gray-900">
-                        {{ $this->unreadCount }}
-                    </span>
+                <span style="min-width: 18px; height: 18px;" class="absolute -top-2 -right-2.5 inline-flex items-center justify-center px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none tracking-tight shadow-sm ring-2 {{ $textColor === 'text-white' ? 'ring-blue-950' : 'ring-white dark:ring-gray-900' }}">
+                    {{ $this->unreadCount > 99 ? '99+' : $this->unreadCount }}
                 </span>
             @endif
         </div>
@@ -37,13 +35,20 @@ $colorClasses = ($textColor === 'text-white')
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-2"
-         class="absolute {{ $direction === 'down' ? 'top-full mt-2' : 'bottom-full mb-2' }} right-0 {{ $textColor === 'text-white' ? 'xl:right-auto xl:left-0' : 'xl:right-0' }} w-72 bg-white border border-gray-200 rounded-xl shadow-2xl z-[100] overflow-hidden"
-         :class="$store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
+         class="absolute {{ $direction === 'down' ? 'top-full mt-2' : 'bottom-full mb-2' }} right-0 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-[100] overflow-hidden"
+         :class="!{{ $iconOnly ? 'true' : 'false' }} && $store.sidebar.collapsed ? 'xl:left-full xl:bottom-0 xl:mb-0 xl:ml-2' : ''">
         
-        <div class="p-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h3 class="text-xs font-bold text-gray-500 tracking-widest">Notifikasi</h3>
+        <div class="p-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <h3 class="text-xs font-bold text-gray-600 dark:text-gray-300 tracking-wider uppercase">Notifikasi</h3>
+                @if($this->unreadCount > 0)
+                    <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded-full bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-300">
+                        {{ $this->unreadCount }} belum dibaca
+                    </span>
+                @endif
+            </div>
             @if($this->unreadCount > 0)
-                <button wire:click="markAllAsRead" class="text-[10px] text-blue-600 hover:text-blue-800 transition-colors">Semua Dibaca</button>
+                <button wire:click="markAllAsRead" class="text-[11px] font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Tandai Semua Dibaca</button>
             @endif
         </div>
 

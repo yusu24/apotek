@@ -66,7 +66,14 @@ class ExpenseManager extends Component
 
     public function updatedFilterPeriod()
     {
-        if ($this->filterPeriod !== 'custom') {
+        if ($this->filterPeriod === 'custom') {
+            if (!$this->filterDateFrom) {
+                $this->filterDateFrom = Carbon::now()->startOfMonth()->format('Y-m-d');
+            }
+            if (!$this->filterDateTo) {
+                $this->filterDateTo = Carbon::now()->format('Y-m-d');
+            }
+        } else {
             $this->filterDateFrom = '';
             $this->filterDateTo = '';
         }

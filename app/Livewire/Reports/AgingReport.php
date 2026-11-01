@@ -27,6 +27,12 @@ class AgingReport extends Component
     public $maxPaymentAmount = 0;
     public $selectedEntityName = '';
 
+    // Detail Modal Properties
+    public $showDetailModal = false;
+    public $selectedDetailId = null;
+    public $detailReceipt = null;
+    public $detailReceivable = null;
+
     public $accounts = [];
 
     protected $queryString = [
@@ -84,6 +90,60 @@ class AgingReport extends Component
         $this->paymentDate = date('Y-m-d');
         $this->paymentNotes = '';
         $this->showPaymentModal = true;
+    }
+
+    public function openDetailModal($id)
+    {
+        $this->selectedDetailId = $id;
+
+        if ($this->type === 'ap') {
+            $this->detailReceipt = \App\Models\GoodsReceipt::with([
+                'purchaseOrder.supplier',
+                'items.product',
+                'items.unit',
+                'payments.user',
+                'user'
+            ])->find($id);
+            $this->detailReceivable = null;
+        } else {
+            $this->detailReceivable = \App\Models\Receivable::with([
+                'customer',
+                'sale.items.product',
+                'sale.items.unit',
+                'payments.user',
+                'payments.account',
+            ])->find($id);
+            $this->detailReceipt = null;
+        }
+
+        $this->showDetailModal = true;
+    }
+
+    public function closeDetailModal()
+    {
+        $this->showDetailModal = false;
+        $this->selectedDetailId = null;
+        $this->detailReceipt = null;
+        $this->detailReceivable = null;
+    }
+
+    public function payFromDetail()
+    {
+        if ($this->type === 'ap' && $this->detailReceipt) {
+            $receipt = $this->detailReceipt;
+            $outstanding = $receipt->total_amount - $receipt->paid_amount;
+            $entityName = $receipt->purchaseOrder?->supplier?->name ?? 'Supplier';
+            $id = $receipt->id;
+            $this->closeDetailModal();
+            $this->openPaymentModal($id, $outstanding, $entityName);
+        } elseif ($this->type === 'ar' && $this->detailReceivable) {
+            $rec = $this->detailReceivable;
+            $outstanding = $rec->remaining_balance;
+            $entityName = $rec->customer?->name ?? 'Customer';
+            $id = $rec->id;
+            $this->closeDetailModal();
+            $this->openPaymentModal($id, $outstanding, $entityName);
+        }
     }
 
     public function closePaymentModal()

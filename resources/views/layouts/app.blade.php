@@ -275,7 +275,12 @@
                 if (window.hasRegisteredLivewireScrollHook) return;
                 
                 if (typeof Livewire !== 'undefined') {
-                    Livewire.hook('request', ({ succeed }) => {
+                    Livewire.hook('request', ({ succeed, fail }) => {
+                        fail(({ status, preventDefault }) => {
+                            if (!navigator.onLine || status === 0) {
+                                preventDefault();
+                            }
+                        });
                         succeed(() => {
                             const path = window.location.pathname;
 
@@ -345,6 +350,37 @@
                 };
                 setInterval(sendActivityPing, 45000);
                 window.addEventListener('online', sendActivityPing);
+
+                // Register Offline POS Service Worker & pre-warm POS catalog globally
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js').catch(() => {});
+                }
+                if (navigator.onLine && !window.location.pathname.endsWith('/cashier')) {
+                    fetch('/pos/offline-catalog', {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    }).then(r => r.ok ? r.json() : null).then(data => {
+                        if (data && data.products) {
+                            localStorage.setItem('apotek_pos_catalog_v1', JSON.stringify({
+                                products: data.products,
+                                categories: data.categories || [],
+                                customers: data.customers || [],
+                                settings: data.settings || {}
+                            }));
+                        }
+                    }).catch(() => {});
+                }
+
+                // Allow navigating to /cashier from any page when offline (bypass wire:navigate XHR)
+                document.addEventListener('click', (e) => {
+                    if (navigator.onLine) return;
+                    const link = e.target.closest('a[href]');
+                    if (link && link.href && link.href.includes('/cashier')) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        window.location.href = '/cashier';
+                    }
+                }, true);
             }
         </script>
         <style>
@@ -431,6 +467,7 @@
     <body class="font-sans antialiased">
         <x-loading-bar />
         <x-toast />
+        <x-search-menu />
         <div x-data="{}" class="h-screen bg-milky-white dark:bg-gray-900 overflow-hidden overflow-x-hidden flex flex-col">
             <livewire:layout.navigation />
 

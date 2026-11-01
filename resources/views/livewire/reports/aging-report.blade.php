@@ -2,7 +2,15 @@
     {{-- Header --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Umur Hutang &amp; Piutang</h2>
+            <div class="flex items-center gap-3">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Umur Hutang &amp; Piutang</h2>
+                <a href="{{ route('guide.formulas', ['tab' => 'aging']) }}" wire:navigate class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-colors shadow-2xs" title="Pelajari rumus perhitungan umur & sisa hutang/piutang">
+                    <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Rumus Perhitungan</span>
+                </a>
+            </div>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             @can('export aging report')
@@ -152,7 +160,17 @@
                                 <span class="text-xs text-gray-500 font-normal ml-1">({{ $item['customer_phone'] }})</span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">{{ $item['invoice_number'] }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm font-mono">
+                            <button type="button" 
+                                    wire:click="openDetailModal({{ $item['id'] }})"
+                                    class="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-medium hover:underline text-left cursor-pointer" 
+                                    title="Klik untuk melihat detail surat jalan / transaksi">
+                                <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>{{ $item['invoice_number'] }}</span>
+                            </button>
+                        </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ \Carbon\Carbon::parse($item['date'])->format('d/m/Y') }}</td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                             {{ $item['due_date'] && $item['due_date'] !== '-' ? \Carbon\Carbon::parse($item['due_date'])->format('d/m/Y') : '-' }}
@@ -199,20 +217,33 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-center">
-                            @if($item['outstanding'] > 0)
-                                @php
-                                    $entityName = ($type === 'ap') ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer');
-                                @endphp
-                                <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ addslashes($entityName) }}')"
-                                    class="inline-flex items-center px-4 py-1.5 border border-transparent text-xs rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-sm">
-                                    Bayar
+                            <div class="flex items-center justify-center gap-1.5">
+                                <!-- Tombol Lihat Detail Transaksi / Surat Jalan -->
+                                <button type="button"
+                                        wire:click="openDetailModal({{ $item['id'] }})"
+                                        class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors border border-blue-200 dark:border-blue-800 shadow-2xs cursor-pointer"
+                                        title="Lihat Detail Transaksi / Surat Jalan">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
                                 </button>
-                            @else
-                                <span class="text-xs text-green-600 flex items-center justify-center">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Terbayar
-                                </span>
-                            @endif
+
+                                @if($item['outstanding'] > 0)
+                                    @php
+                                        $entityName = ($type === 'ap') ? ($item['supplier'] ?? 'Supplier') : ($item['customer'] ?? 'Customer');
+                                    @endphp
+                                    <button wire:click="openPaymentModal({{ $item['id'] }}, {{ $item['outstanding'] }}, '{{ addslashes($entityName) }}')"
+                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 shadow-sm cursor-pointer">
+                                        Bayar
+                                    </button>
+                                @else
+                                    <span class="text-xs text-green-600 inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Lunas
+                                    </span>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -224,6 +255,337 @@
 
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
             @include('components.custom-pagination', ['items' => $paginatedItems])
+        </div>
+    </div>
+    @endif
+
+    {{-- Detail Modal (Surat Jalan & Transaksi) --}}
+    @if($showDetailModal)
+    <div wire:key="detail-modal-{{ $selectedDetailId }}" class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="detail-modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" wire:click="closeDetailModal"></div>
+
+            <div class="relative inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full border border-gray-100 animate-fade-in-up">
+                
+                @if($type === 'ap' && $detailReceipt)
+                    <!-- AP (Hutang Supplier / Surat Jalan Penerimaan Barang) -->
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50/40">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-blue-100 rounded-xl text-blue-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900" id="detail-modal-title">
+                                    Detail Surat Jalan Penerimaan Barang
+                                </h3>
+                                <p class="text-xs text-gray-500 font-mono">No. Surat Jalan: {{ $detailReceipt->delivery_note_number }}</p>
+                            </div>
+                        </div>
+                        <button type="button" wire:click="closeDetailModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-lg hover:bg-gray-200/50 cursor-pointer">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+                        <!-- Summary Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/80 p-4 rounded-xl border border-gray-100">
+                            <div>
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Supplier</span>
+                                <p class="text-sm font-bold text-gray-900">{{ $detailReceipt->purchaseOrder?->supplier?->name ?? 'Supplier Tidak Diketahui' }}</p>
+                                @if($detailReceipt->purchaseOrder)
+                                    <span class="text-xs text-blue-600 font-medium mt-0.5 inline-flex items-center gap-1">
+                                        PO: {{ $detailReceipt->purchaseOrder->po_number }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Tanggal Transaksi</span>
+                                <p class="text-xs text-gray-700">Diterima: <span class="font-medium text-gray-900">{{ \Carbon\Carbon::parse($detailReceipt->received_date)->format('d M Y') }}</span></p>
+                                <p class="text-xs text-gray-700 mt-0.5">Jatuh Tempo: 
+                                    <span class="font-medium {{ $detailReceipt->due_date && \Carbon\Carbon::parse($detailReceipt->due_date)->isPast() && ($detailReceipt->total_amount - $detailReceipt->paid_amount > 0) ? 'text-red-600 font-bold' : 'text-gray-900' }}">
+                                        {{ $detailReceipt->due_date ? \Carbon\Carbon::parse($detailReceipt->due_date)->format('d M Y') : '-' }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Status & Hutang</span>
+                                <div class="flex flex-col md:items-end gap-1">
+                                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-{{ $detailReceipt->payment_status_color }}-100 text-{{ $detailReceipt->payment_status_color }}-800 uppercase tracking-wider">
+                                        {{ $detailReceipt->payment_status_label }}
+                                    </span>
+                                    <p class="text-xs text-gray-500">Total: Rp {{ number_format($detailReceipt->total_amount, 0, ',', '.') }}</p>
+                                    <p class="text-sm font-extrabold text-red-600">Sisa: Rp {{ number_format(max(0, $detailReceipt->total_amount - $detailReceipt->paid_amount), 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daftar Item Surat Jalan -->
+                        <div>
+                            <div class="mb-2.5 flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-3.5 bg-blue-600 rounded-full"></span>
+                                    Rincian Barang yang Diterima
+                                </h4>
+                                <span class="text-xs text-gray-400 font-normal">{{ $detailReceipt->items->count() }} macam item</span>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+                                <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                    <thead class="bg-gray-50 text-gray-600 font-semibold uppercase">
+                                        <tr>
+                                            <th class="px-3.5 py-2.5 text-left">No</th>
+                                            <th class="px-3.5 py-2.5 text-left">Nama Produk</th>
+                                            <th class="px-3.5 py-2.5 text-center">Qty</th>
+                                            <th class="px-3.5 py-2.5 text-center">Satuan</th>
+                                            <th class="px-3.5 py-2.5 text-center">Batch No</th>
+                                            <th class="px-3.5 py-2.5 text-center">Kadaluarsa</th>
+                                            <th class="px-3.5 py-2.5 text-right">Harga Beli</th>
+                                            <th class="px-3.5 py-2.5 text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                        @forelse($detailReceipt->items as $idx => $item)
+                                            <tr class="hover:bg-blue-50/20 transition-colors">
+                                                <td class="px-3.5 py-2.5 text-gray-400 text-center">{{ $idx + 1 }}</td>
+                                                <td class="px-3.5 py-2.5 font-medium text-gray-900">{{ $item->product?->name ?? 'Produk Dihapus' }}</td>
+                                                <td class="px-3.5 py-2.5 text-center font-bold text-gray-800">{{ number_format($item->qty_received, 0, ',', '.') }}</td>
+                                                <td class="px-3.5 py-2.5 text-center">
+                                                    <span class="px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-semibold uppercase">
+                                                        {{ $item->unit?->name ?? ($item->product?->unit?->name ?? '-') }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-3.5 py-2.5 text-center font-mono text-gray-500">{{ $item->batch_no ?? '-' }}</td>
+                                                <td class="px-3.5 py-2.5 text-center text-gray-600">
+                                                    {{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('d/m/Y') : '-' }}
+                                                </td>
+                                                <td class="px-3.5 py-2.5 text-right font-mono text-gray-600">
+                                                    Rp {{ number_format($item->buy_price ?? 0, 0, ',', '.') }}
+                                                </td>
+                                                <td class="px-3.5 py-2.5 text-right font-mono font-semibold text-gray-900">
+                                                    Rp {{ number_format(($item->qty_received ?? 0) * ($item->buy_price ?? 0), 0, ',', '.') }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="px-4 py-4 text-center text-gray-400">Tidak ada rincian item barang.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Riwayat Pembayaran (jika sudah pernah dicicil) -->
+                        @if($detailReceipt->payments && $detailReceipt->payments->count() > 0)
+                        <div>
+                            <div class="mb-2 flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-3.5 bg-green-600 rounded-full"></span>
+                                    Riwayat Pembayaran Hutang
+                                </h4>
+                            </div>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+                                <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                    <thead class="bg-gray-50 text-gray-600 font-semibold uppercase">
+                                        <tr>
+                                            <th class="px-3.5 py-2 text-left">Tanggal</th>
+                                            <th class="px-3.5 py-2 text-right">Jumlah Dibayar</th>
+                                            <th class="px-3.5 py-2 text-left">Dicatat Oleh</th>
+                                            <th class="px-3.5 py-2 text-left">Catatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                        @foreach($detailReceipt->payments as $pay)
+                                            <tr>
+                                                <td class="px-3.5 py-2 text-gray-700 font-medium">{{ \Carbon\Carbon::parse($pay->payment_date ?? $pay->created_at)->format('d/m/Y') }}</td>
+                                                <td class="px-3.5 py-2 text-right font-mono font-bold text-green-600">Rp {{ number_format($pay->amount, 0, ',', '.') }}</td>
+                                                <td class="px-3.5 py-2 text-gray-600">{{ $pay->user?->name ?? 'Kasir / Staff' }}</td>
+                                                <td class="px-3.5 py-2 text-gray-500 italic">{{ $pay->notes ?? '-' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <div class="text-xs text-gray-400 italic">
+                            @if($detailReceipt->notes)
+                                <span>Catatan: {{ $detailReceipt->notes }}</span>
+                            @endif
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                            <a href="{{ route('pdf.goods-receipt', $detailReceipt->id) }}" target="_blank"
+                               class="btn btn-export-pdf inline-flex items-center gap-1.5" title="Export PDF Surat Jalan">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                </svg>
+                                <span>Lihat Surat Jalan (PDF)</span>
+                            </a>
+
+                            @if(($detailReceipt->total_amount - $detailReceipt->paid_amount) > 0)
+                                <button type="button" wire:click="payFromDetail" class="btn btn-success inline-flex items-center gap-1 cursor-pointer">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    <span>Bayar Hutang</span>
+                                </button>
+                            @endif
+
+                            <button type="button" wire:click="closeDetailModal" class="btn btn-secondary cursor-pointer">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+
+                @elseif($type === 'ar' && $detailReceivable)
+                    <!-- AR (Piutang Customer / Penjualan) -->
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-amber-50/40">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-amber-100 rounded-xl text-amber-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900" id="detail-modal-title">
+                                    Detail Piutang Penjualan
+                                </h3>
+                                <p class="text-xs text-gray-500 font-mono">No. Invoice: {{ $detailReceivable->sale?->invoice_number ?? $detailReceivable->invoice_number }}</p>
+                            </div>
+                        </div>
+                        <button type="button" wire:click="closeDetailModal" class="text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-lg hover:bg-gray-200/50 cursor-pointer">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+                        <!-- Summary Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/80 p-4 rounded-xl border border-gray-100">
+                            <div>
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Customer / Pasien</span>
+                                <p class="text-sm font-bold text-gray-900">{{ $detailReceivable->customer?->name ?? 'Pelanggan Umum' }}</p>
+                                @if($detailReceivable->customer?->phone)
+                                    <p class="text-xs text-gray-500 mt-0.5">{{ $detailReceivable->customer->phone }}</p>
+                                @endif
+                            </div>
+                            <div>
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Tanggal Transaksi</span>
+                                <p class="text-xs text-gray-700">Tanggal: <span class="font-medium text-gray-900">{{ $detailReceivable->created_at->format('d M Y H:i') }}</span></p>
+                                <p class="text-xs text-gray-700 mt-0.5">Jatuh Tempo: 
+                                    <span class="font-medium {{ $detailReceivable->due_date && \Carbon\Carbon::parse($detailReceivable->due_date)->isPast() && ($detailReceivable->remaining_balance > 0) ? 'text-red-600 font-bold' : 'text-gray-900' }}">
+                                        {{ $detailReceivable->due_date ? \Carbon\Carbon::parse($detailReceivable->due_date)->format('d M Y') : '-' }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Total & Sisa Piutang</span>
+                                <p class="text-xs text-gray-500">Total: Rp {{ number_format($detailReceivable->total_amount, 0, ',', '.') }}</p>
+                                <p class="text-sm font-extrabold text-amber-600">Sisa: Rp {{ number_format($detailReceivable->remaining_balance, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Daftar Item Penjualan -->
+                        @if($detailReceivable->sale && $detailReceivable->sale->items && $detailReceivable->sale->items->count() > 0)
+                        <div>
+                            <div class="mb-2.5 flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-3.5 bg-amber-500 rounded-full"></span>
+                                    Rincian Produk yang Dibeli
+                                </h4>
+                            </div>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+                                <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                    <thead class="bg-gray-50 text-gray-600 font-semibold uppercase">
+                                        <tr>
+                                            <th class="px-3.5 py-2.5 text-left">No</th>
+                                            <th class="px-3.5 py-2.5 text-left">Nama Produk</th>
+                                            <th class="px-3.5 py-2.5 text-center">Qty</th>
+                                            <th class="px-3.5 py-2.5 text-center">Satuan</th>
+                                            <th class="px-3.5 py-2.5 text-right">Harga Jual</th>
+                                            <th class="px-3.5 py-2.5 text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                        @foreach($detailReceivable->sale->items as $idx => $sItem)
+                                            <tr class="hover:bg-amber-50/20 transition-colors">
+                                                <td class="px-3.5 py-2.5 text-gray-400 text-center">{{ $idx + 1 }}</td>
+                                                <td class="px-3.5 py-2.5 font-medium text-gray-900">{{ $sItem->product?->name ?? 'Produk' }}</td>
+                                                <td class="px-3.5 py-2.5 text-center font-bold text-gray-800">{{ number_format($sItem->quantity, 0, ',', '.') }}</td>
+                                                <td class="px-3.5 py-2.5 text-center text-gray-600 uppercase">{{ $sItem->unit?->name ?? '-' }}</td>
+                                                <td class="px-3.5 py-2.5 text-right font-mono text-gray-600">Rp {{ number_format($sItem->sell_price, 0, ',', '.') }}</td>
+                                                <td class="px-3.5 py-2.5 text-right font-mono font-semibold text-gray-900">Rp {{ number_format($sItem->subtotal, 0, ',', '.') }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Riwayat Pembayaran Piutang -->
+                        @if($detailReceivable->payments && $detailReceivable->payments->count() > 0)
+                        <div>
+                            <div class="mb-2 flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-3.5 bg-green-600 rounded-full"></span>
+                                    Riwayat Pembayaran Piutang
+                                </h4>
+                            </div>
+                            <div class="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+                                <table class="min-w-full divide-y divide-gray-200 text-xs">
+                                    <thead class="bg-gray-50 text-gray-600 font-semibold uppercase">
+                                        <tr>
+                                            <th class="px-3.5 py-2 text-left">Tanggal</th>
+                                            <th class="px-3.5 py-2 text-right">Jumlah Dibayar</th>
+                                            <th class="px-3.5 py-2 text-left">Metode / Akun</th>
+                                            <th class="px-3.5 py-2 text-left">Catatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                        @foreach($detailReceivable->payments as $rPay)
+                                            <tr>
+                                                <td class="px-3.5 py-2 text-gray-700 font-medium">{{ $rPay->created_at->format('d/m/Y H:i') }}</td>
+                                                <td class="px-3.5 py-2 text-right font-mono font-bold text-green-600">Rp {{ number_format($rPay->amount, 0, ',', '.') }}</td>
+                                                <td class="px-3.5 py-2 text-gray-600">{{ $rPay->account?->name ?? ucfirst($rPay->payment_method ?? 'Kas') }}</td>
+                                                <td class="px-3.5 py-2 text-gray-500 italic">{{ $rPay->notes ?? '-' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row justify-end items-center gap-3">
+                        @if($detailReceivable->sale_id)
+                            <a href="{{ route('pos.receipt', $detailReceivable->sale_id) }}" target="_blank"
+                               class="btn btn-secondary inline-flex items-center gap-1.5" title="Lihat Struk Penjualan">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                </svg>
+                                <span>Lihat Struk</span>
+                            </a>
+                        @endif
+
+                        @if($detailReceivable->remaining_balance > 0)
+                            <button type="button" wire:click="payFromDetail" class="btn btn-success inline-flex items-center gap-1 cursor-pointer">
+                                <span>Bayar Piutang</span>
+                            </button>
+                        @endif
+
+                        <button type="button" wire:click="closeDetailModal" class="btn btn-secondary cursor-pointer">
+                            Tutup
+                        </button>
+                    </div>
+                @endif
+
+            </div>
         </div>
     </div>
     @endif

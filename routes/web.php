@@ -185,6 +185,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Guide
     Route::get('/guide', App\Livewire\Settings\UserGuide::class)->name('guide.index');
+    Route::get('/guide/formulas', App\Livewire\Settings\FormulaGuide::class)->name('guide.formulas');
     Route::get('/guide/detail/{slug}', App\Livewire\Settings\GuideDetail::class)->name('guide.detail');
     Route::view('/guide/handbook', 'guide.index')->name('guide.handbook');
 });

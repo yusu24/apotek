@@ -88,7 +88,7 @@
                     <div wire:ignore>
                         <input 
                             x-data="{
-                                value: @entangle('filterDateFrom'),
+                                value: @entangle('filterDateFrom').live,
                                 instance: undefined,
                                 init() {
                                     this.instance = flatpickr(this.$refs.filterFromInput, {
@@ -114,7 +114,7 @@
                     <div wire:ignore>
                         <input 
                             x-data="{
-                                value: @entangle('filterDateTo'),
+                                value: @entangle('filterDateTo').live,
                                 instance: undefined,
                                 init() {
                                     this.instance = flatpickr(this.$refs.filterToInput, {

@@ -99,7 +99,7 @@
                                 </td>
                                 <td class="px-2 py-3 text-center align-top text-sm">
                                     <div class="w-16 mx-auto">
-                                        <input type="number" min="1" x-model.number="item.qty" @input="recalculate()"
+                                        <input type="number" min="1" x-model.number="item.qty" @input="updateQty(idx, item.qty)"
                                                class="w-full px-1 py-1 text-center text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
                                     </div>
                                 </td>

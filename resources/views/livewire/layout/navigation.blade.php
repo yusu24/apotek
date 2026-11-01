@@ -89,6 +89,7 @@ new class extends Component
         
         // Guide
         'guide.index' => 'Panduan Aplikasi',
+        'guide.formulas' => 'Kamus Rumus & Perhitungan',
         'guide.detail' => 'Detail Panduan Aplikasi',
         'guide.handbook' => 'Buku Panduan',
     ];
@@ -525,8 +526,13 @@ new class extends Component
             @endcanany
 
             <!-- User Guide (Scrollable) -->
-            <x-sidebar-link :href="route('guide.index')" :active="request()->routeIs('guide.*')" icon="book-open">
+            <x-sidebar-link :href="route('guide.index')" :active="request()->routeIs(['guide.index', 'guide.detail', 'guide.handbook'])" icon="book-open">
                 Panduan Aplikasi
+            </x-sidebar-link>
+
+            <!-- Rumus & Perhitungan -->
+            <x-sidebar-link :href="route('guide.formulas')" :active="request()->routeIs('guide.formulas')" icon="calculator">
+                Rumus & Perhitungan
             </x-sidebar-link>
         </div>
     </nav>
@@ -542,8 +548,21 @@ new class extends Component
             </h1>
         </div>
 
-        <!-- Right Section: Profile & Actions -->
-        <div class="flex items-center gap-4">
+        <!-- Right Section: Profile, Search & Actions -->
+        <div class="flex items-center gap-3">
+            <!-- Search Menu Button (di samping lonceng notifikasi) -->
+            <button type="button"
+                    @click="$dispatch('open-search-menu')"
+                    class="flex items-center gap-3 px-3 py-1.5 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-750 border border-gray-200 dark:border-gray-700/80 rounded-lg transition-all shadow-2xs hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+                    title="Cari menu (Ctrl+K)">
+                <svg class="w-3.5 h-3.5 text-orange-500 dark:text-orange-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span class="font-normal text-gray-500 dark:text-gray-400">Search menu...</span>
+                <kbd class="px-1.5 py-0.5 text-[10px] font-semibold text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow-xs"
+                     x-text="navigator.userAgent.indexOf('Mac') !== -1 ? '⌘K' : 'Ctrl K'">Ctrl K</kbd>
+            </button>
+
             @can('view online users')
             <div class="text-gray-600 dark:text-gray-300">
                 <livewire:layout.online-users :iconOnly="true" direction="down" textColor="text-gray-600 dark:text-gray-300" />
@@ -649,7 +668,17 @@ new class extends Component
                 <x-application-logo class="block h-6 w-auto fill-current text-blue-500" />
             @endif
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+            <!-- Mobile Search Menu Button -->
+            <button type="button"
+                    @click="$dispatch('open-search-menu')"
+                    class="text-gray-200 hover:text-white p-1 rounded-md transition-colors"
+                    title="Cari menu (Ctrl+K)">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+
             @can('view online users')
             <livewire:layout.online-users :iconOnly="true" direction="down" textColor="text-white" />
             @endcan

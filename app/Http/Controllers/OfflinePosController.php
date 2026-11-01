@@ -28,9 +28,7 @@ class OfflinePosController extends Controller
     {
         $products = Product::query()
             ->with(['unit', 'unitConversions.fromUnit'])
-            ->withSum(['batches as total_stock' => function ($q) {
-                $q->valid();
-            }], 'stock_current')
+            ->withSum('batches as total_stock', 'stock_current')
             ->orderBy('name')
             ->get()
             ->map(function ($product) {

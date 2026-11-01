@@ -1,7 +1,15 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-            <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Laba Rugi</h2>
+            <div class="flex items-center gap-3">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Laporan Laba Rugi</h2>
+                <a href="{{ route('guide.formulas', ['tab' => 'finance']) }}" wire:navigate class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors shadow-2xs" title="Pelajari rumus & cara hitung laporan ini">
+                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Rumus Perhitungan</span>
+                </a>
+            </div>
         </div>
         <div class="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
             <button x-data @click="$dispatch('open-import-omset-modal')" class="btn btn-import no-print" title="Import Omset Excel">

@@ -411,55 +411,89 @@
             </div>
 
             <!-- Printable Receipt Content -->
-            <div id="offline-receipt-print-area" class="p-4 overflow-y-auto font-mono text-xs text-gray-900 space-y-2 bg-white">
+            <div id="offline-receipt-print-area" class="p-4 overflow-y-auto text-xs text-gray-900 bg-white" style="font-family: Arial, Helvetica, sans-serif; line-height: 1.35;">
                 <template x-if="completedOfflineTx">
                     <div>
-                        <div class="text-center border-b border-dashed border-gray-400 pb-2 mb-2">
-                            <p class="font-bold text-sm uppercase" x-text="catalog.settings.store_name || 'APOTEK'"></p>
-                            <p class="text-[11px] text-gray-600" x-text="catalog.settings.store_address || ''"></p>
-                            <p class="text-[11px] text-gray-600" x-text="catalog.settings.store_phone || ''"></p>
+                        <div class="text-left pb-2 mb-2" style="border-bottom: 1px dashed #000;">
+                            <p class="text-xs" x-text="catalog.settings.store_name || 'APOTEK'"></p>
+                            <p class="text-[11px]" x-text="catalog.settings.store_address || ''"></p>
+                            <p class="text-[11px]" x-text="catalog.settings.store_phone || ''"></p>
                         </div>
-                        <div class="text-[11px] space-y-0.5 border-b border-dashed border-gray-400 pb-2 mb-2">
-                            <div class="flex justify-between"><span>No:</span><span x-text="completedOfflineTx.invoice_no"></span></div>
-                            <div class="flex justify-between"><span>Tgl:</span><span x-text="completedOfflineTx.display_date"></span></div>
-                            <div class="flex justify-between"><span>Kasir:</span><span x-text="catalog.settings.cashier_name || 'Kasir'"></span></div>
-                            <div class="flex justify-between"><span>Metode:</span><span class="uppercase" x-text="completedOfflineTx.payment_method"></span></div>
-                        </div>
-                        <div class="space-y-1.5 border-b border-dashed border-gray-400 pb-2 mb-2">
-                            <template x-for="item in completedOfflineTx.items" :key="item.id">
-                                <div>
-                                    <p class="font-semibold" x-text="item.name"></p>
-                                    <div class="flex justify-between text-[11px]">
-                                        <span x-text="item.qty + ' ' + item.unit_name + ' x ' + formatNumber(item.price)"></span>
-                                        <span x-text="formatNumber(item.subtotal)"></span>
-                                    </div>
-                                </div>
+                        <table class="w-full text-[11px] mb-2" style="border-collapse: collapse;">
+                            <tr><td style="width:34%;">No Faktur</td><td style="width:3%;">:</td><td x-text="completedOfflineTx.invoice_no"></td></tr>
+                            <tr><td>Tanggal</td><td>:</td><td x-text="completedOfflineTx.display_date"></td></tr>
+                            <tr><td>Nama Pasien</td><td>:</td><td class="uppercase" x-text="completedOfflineTx.new_customer_name || '-'"></td></tr>
+                            <tr><td>Jns Obat</td><td>:</td><td>Obat Bebas</td></tr>
+                            <tr><td>Petugas</td><td>:</td><td class="uppercase" x-text="catalog.settings.cashier_name || 'Kasir'"></td></tr>
+                        </table>
+                        <table class="w-full text-[11px]" style="border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px dashed #000;">
+                                    <th class="text-left font-normal pb-1" style="width:10%;">NO</th>
+                                    <th class="text-left font-normal pb-1" style="width:46%;">NAMA BARANG</th>
+                                    <th class="text-center font-normal pb-1" style="width:20%;">JUMLAH</th>
+                                    <th class="text-right font-normal pb-1" style="width:24%;">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="(item, idx) in completedOfflineTx.items" :key="item.id">
+                                    <tr>
+                                        <td class="pt-1 text-left" x-text="(idx + 1) + '.'"></td>
+                                        <td class="pt-1 text-left pr-1" x-text="item.name"></td>
+                                        <td class="pt-1 text-center whitespace-nowrap" x-text="item.qty + ' ' + item.unit_name"></td>
+                                        <td class="pt-1 text-right" x-text="formatNumber(item.subtotal)"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        <table class="w-full text-[11px] mt-2" style="border-collapse: collapse;">
+                            <tr>
+                                <td class="text-right pr-2" style="width:55%;">Sub Total:</td>
+                                <td class="text-right" style="width:45%;" x-text="formatNumber(completedOfflineTx.subtotal)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Diskon:</td>
+                                <td class="text-right" x-text="formatNumber(completedOfflineTx.global_discount || 0)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Total:</td>
+                                <td class="text-right" x-text="formatNumber(Math.max(0, (completedOfflineTx.subtotal || 0) - (completedOfflineTx.global_discount || 0)))"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Pembulatan:</td>
+                                <td class="text-right" x-text="formatNumber(completedOfflineTx.rounding || 0)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Grand Total:</td>
+                                <td class="text-right" x-text="formatNumber(completedOfflineTx.grand_total)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Donasi:</td>
+                                <td class="text-right"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-right pr-2">Bayar:</td>
+                                <td class="text-right" x-text="formatNumber(completedOfflineTx.cash_amount)"></td>
+                            </tr>
+                            <template x-if="completedOfflineTx.payment_method === 'cash' && completedOfflineTx.change_amount > 0">
+                                <tr>
+                                    <td class="text-right pr-2">Kembali:</td>
+                                    <td class="text-right" x-text="formatNumber(completedOfflineTx.change_amount)"></td>
+                                </tr>
                             </template>
-                        </div>
-                        <div class="space-y-1 text-xs">
-                            <div class="flex justify-between"><span>Subtotal</span><span x-text="'Rp ' + formatNumber(completedOfflineTx.subtotal)"></span></div>
-                            <template x-if="completedOfflineTx.global_discount > 0">
-                                <div class="flex justify-between"><span>Diskon</span><span x-text="'-Rp ' + formatNumber(completedOfflineTx.global_discount)"></span></div>
+                            <template x-if="completedOfflineTx.payment_method !== 'cash' || completedOfflineTx.change_amount <= 0">
+                                <tr>
+                                    <td class="text-right pr-2">Nomor Kartu:</td>
+                                    <td class="text-right uppercase" x-text="completedOfflineTx.payment_method === 'cash' ? 'TUNAI' : completedOfflineTx.payment_method"></td>
+                                </tr>
                             </template>
-                            <template x-if="completedOfflineTx.tax > 0">
-                                <div class="flex justify-between"><span>PPN</span><span x-text="'Rp ' + formatNumber(completedOfflineTx.tax)"></span></div>
-                            </template>
-                            <div class="flex justify-between font-bold text-sm pt-1 border-t border-dashed border-gray-400">
-                                <span>TOTAL</span>
-                                <span x-text="'Rp ' + formatNumber(completedOfflineTx.grand_total)"></span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span x-text="completedOfflineTx.payment_method === 'tempo' ? 'DP / Tunai' : 'Bayar'"></span>
-                                <span x-text="'Rp ' + formatNumber(completedOfflineTx.cash_amount)"></span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span x-text="completedOfflineTx.payment_method === 'tempo' ? 'Sisa Piutang' : 'Kembali'"></span>
-                                <span x-text="'Rp ' + formatNumber(completedOfflineTx.change_amount)"></span>
-                            </div>
-                        </div>
-                        <div class="text-center text-[10px] text-gray-500 pt-3 mt-2 border-t border-dashed border-gray-300">
-                            <p>Terima kasih atas kunjungan Anda</p>
-                            <p>Semoga lekas sembuh</p>
+                        </table>
+                        <div class="text-center text-[10px] pt-2 mt-2" style="border-top: 1px dashed #000;">
+                            <p>Harga Sudah Termasuk PPN</p>
+                            <p x-text="catalog.settings.store_address || ''"></p>
+                            <p>Terima Kasih - Semoga Cepat Sembuh</p>
+                            <p>Barang yang sudah dibeli</p>
+                            <p>tidak dapat ditukar/dikembalikan</p>
                         </div>
                     </div>
                 </template>
@@ -1014,13 +1048,23 @@
                     if (!content) return;
                     const win = window.open('', '_blank', 'width=360,height=600');
                     const htmlOpen = '<' + 'html><' + 'head><' + 'title>Cetak Struk<' + '/title><' + 'style>' +
-                        'body { font-family: monospace; font-size: 12px; width: 58mm; margin: 0 auto; padding: 4px; color: #000; }' +
+                        'body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; line-height: 1.35; width: 58mm; margin: 0 auto; padding: 4px; color: #000; }' +
+                        'table { width: 100%; border-collapse: collapse; }' +
+                        'td, th { vertical-align: top; padding: 1px 0; font-size: 10.5px; }' +
+                        '.text-left { text-align: left; }' +
                         '.text-center { text-align: center; }' +
-                        '.flex { display: flex; justify-content: space-between; }' +
-                        '.font-bold { font-weight: bold; }' +
-                        '.border-b { border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px; }' +
-                        '.border-t { border-top: 1px dashed #000; padding-top: 4px; margin-top: 4px; }' +
-                        'p { margin: 2px 0; }' +
+                        '.text-right { text-align: right; }' +
+                        '.uppercase { text-transform: uppercase; }' +
+                        '.font-normal { font-weight: normal; }' +
+                        '.pr-1 { padding-right: 4px; }' +
+                        '.pr-2 { padding-right: 8px; }' +
+                        '.pt-1 { padding-top: 3px; }' +
+                        '.pb-1 { padding-bottom: 3px; }' +
+                        '.pb-2 { padding-bottom: 6px; }' +
+                        '.mb-2 { margin-bottom: 6px; }' +
+                        '.mt-2 { margin-top: 6px; }' +
+                        '.pt-2 { padding-top: 6px; }' +
+                        'p { margin: 1px 0; }' +
                         '<' + '/style><' + '/head><' + 'body onload="window.print(); setTimeout(() => window.close(), 500);">';
                     const htmlClose = '<' + '/body><' + '/html>';
                     win.document.write(htmlOpen + content.innerHTML + htmlClose);

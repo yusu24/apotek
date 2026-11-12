@@ -89,6 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reports/sales', App\Livewire\Reports\SalesReport::class)->name('reports.sales');
     Route::get('/reports/sales-chart', App\Livewire\Reports\SalesChart::class)->name('reports.sales-chart');
     Route::get('/reports/stock', App\Livewire\Reports\StockReport::class)->name('reports.stock');
+    Route::get('/reports/stock-opname', App\Livewire\Reports\StockOpnameReport::class)->name('reports.stock-opname');
     Route::get('/reports/transaction-history', App\Livewire\Reports\TransactionHistory::class)->name('reports.transaction-history');
     Route::get('/reports/product-margin', App\Livewire\Reports\ProductMarginReport::class)->name('reports.product-margin');
 
@@ -143,6 +144,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pdf/ledger', [App\Http\Controllers\PdfController::class, 'exportLedger'])->name('pdf.ledger');
     Route::get('/pdf/stock-report', [App\Http\Controllers\PdfController::class, 'exportStockReport'])->name('pdf.stock-report');
     Route::get('/pdf/stock-opname', [App\Http\Controllers\PdfController::class, 'exportStockOpname'])->name('pdf.stock-opname');
+    Route::get('/pdf/stock-opname-variance', [App\Http\Controllers\PdfController::class, 'exportStockOpnameVariance'])->name('pdf.stock-opname-variance');
     Route::get('/pdf/sales-report', [App\Http\Controllers\PdfController::class, 'exportSalesReport'])->name('pdf.sales-report');
     Route::get('/pdf/product-margin', [App\Http\Controllers\PdfController::class, 'exportProductMarginReport'])->name('pdf.product-margin');
     Route::get('/pdf/transaction-history', [App\Http\Controllers\PdfController::class, 'exportTransactionHistory'])->name('pdf.transaction-history');

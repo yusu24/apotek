@@ -616,6 +616,90 @@ class PdfController extends Controller
     }
 
     /**
+     * Export Stock Opname Variance Report to PDF (Laporan Selisih Stok Opname)
+     */
+    public function exportStockOpnameVariance(Request $request)
+    {
+        $startDate = $request->get('startDate', now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('endDate', now()->endOfMonth()->format('Y-m-d'));
+        $categoryFilter = $request->get('categoryFilter', '');
+        $varianceType = $request->get('varianceType', 'all');
+        $search = $request->get('search', '');
+
+        $baseQuery = StockMovement::query()
+            ->where('stock_movements.type', 'adjustment')
+            ->join('products', 'products.id', '=', 'stock_movements.product_id')
+            ->leftJoin('batches', 'batches.id', '=', 'stock_movements.batch_id');
+
+        if ($startDate) {
+            $baseQuery->whereDate('stock_movements.created_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $baseQuery->whereDate('stock_movements.created_at', '<=', $endDate);
+        }
+
+        if ($categoryFilter) {
+            $baseQuery->where('products.category_id', $categoryFilter);
+        }
+
+        if ($search) {
+            $searchTerm = '%' . $search . '%';
+            $baseQuery->where(function ($q) use ($searchTerm) {
+                $q->where('products.name', 'like', $searchTerm)
+                  ->orWhere('products.barcode', 'like', $searchTerm)
+                  ->orWhere('stock_movements.doc_ref', 'like', $searchTerm)
+                  ->orWhere('stock_movements.description', 'like', $searchTerm)
+                  ->orWhere('batches.batch_no', 'like', $searchTerm);
+            });
+        }
+
+        $stats = \App\Livewire\Reports\StockOpnameReport::getSummaryStats($baseQuery);
+
+        $query = (clone $baseQuery)
+            ->with(['product.category', 'product.unit', 'batch', 'user'])
+            ->select('stock_movements.*')
+            ->selectRaw('CASE WHEN COALESCE(batches.buy_price, 0) > 0 THEN batches.buy_price ELSE COALESCE(products.purchase_price, 0) END as unit_hpp');
+
+        if ($varianceType === 'minus') {
+            $query->where('stock_movements.quantity', '<', 0);
+        } elseif ($varianceType === 'plus') {
+            $query->where('stock_movements.quantity', '>', 0);
+        }
+
+        $movements = $query->orderBy('stock_movements.created_at', 'desc')
+            ->orderBy('stock_movements.id', 'desc')
+            ->limit(1000)
+            ->get();
+
+        $storeName = \App\Models\Setting::get('store_name');
+        if (!$storeName || $storeName === 'Laravel') {
+            $storeName = config('app.name') === 'Laravel' ? 'APOTEK' : config('app.name');
+        }
+
+        $store = [
+            'name' => $storeName,
+            'address' => \App\Models\Setting::get('store_address'),
+            'phone' => \App\Models\Setting::get('store_phone'),
+        ];
+
+        $pdf = Pdf::loadView('pdf.stock-opname-variance', [
+            'movements' => $movements,
+            'stats' => $stats,
+            'store' => $store,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'varianceType' => $varianceType,
+            'printedBy' => auth()->user()->name ?? 'System',
+            'printedAt' => Carbon::now()->format('d/m/Y H:i'),
+        ]);
+
+        $filename = 'Laporan-Selisih-Stok-Opname-' . Carbon::now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->setPaper('a4', 'landscape')->stream($filename);
+    }
+
+    /**
      * Export Sales Report to PDF
      */
     public function exportSalesReport(Request $request)

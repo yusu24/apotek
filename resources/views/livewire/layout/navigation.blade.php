@@ -44,6 +44,7 @@ new class extends Component
         'reports.sales' => 'Laporan Penjualan',
         'reports.sales-chart' => 'Grafik Penjualan',
         'reports.stock' => 'Laporan Stok',
+        'reports.stock-opname' => 'Laporan Selisih Stok Opname',
         'reports.transaction-history' => 'Riwayat Transaksi Produk',
         'reports.product-margin' => 'Laporan Margin Produk',
         
@@ -380,6 +381,10 @@ new class extends Component
                     <a href="{{ route('reports.stock') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.stock') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
                         <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                         <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Stok</span>
+                    </a>
+                    <a href="{{ route('reports.stock-opname') }}" wire:navigate class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-normal {{ request()->routeIs('reports.stock-opname') ? 'text-white bg-blue-800' : 'text-white hover:text-white hover:bg-blue-800/50' }}">
+                        <svg class="w-5 h-5 flex-shrink-0 transition-all duration-300" :class="$store.sidebar.collapsed ? 'xl:w-[26px] xl:h-[26px]' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        <span class="truncate" :class="{'xl:hidden': $store.sidebar.collapsed}">Laporan Selisih Opname</span>
                     </a>
                     @endcan
 

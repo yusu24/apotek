@@ -162,20 +162,26 @@
         </div>
 
         {{-- Beban --}}
-        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+        <div x-data class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-100 dark:border-gray-700 shadow-sm p-4 hover:shadow-md transition-all duration-200 flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Beban</span>
-                    <div class="w-8 h-8 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                    <button type="button"
+                            @click="$dispatch('open-beban-detail-modal')"
+                            title="Klik untuk melihat rincian apa saja yang menjadi beban"
+                            class="w-8 h-8 rounded-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/30 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 cursor-pointer ring-1 ring-rose-200/70 hover:ring-rose-300 hover:scale-105 active:scale-95 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
+                    </button>
                 </div>
                 <div class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight truncate" title="Rp {{ number_format($expenses, 0, ',', '.') }}">
                     Rp {{ number_format($expenses, 0, ',', '.') }}
                 </div>
-                <div class="mt-1 text-[11px] text-gray-400 dark:text-gray-500 truncate">
-                    Operasional & Lainnya
-                </div>
+                <button type="button"
+                        @click="$dispatch('open-beban-detail-modal')"
+                        class="mt-1 text-[11px] text-gray-400 hover:text-rose-600 dark:text-gray-500 truncate flex items-center gap-1 cursor-pointer transition-colors">
+                    <span>Operasional & Lainnya</span>
+                    <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
             </div>
             <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full mt-3 overflow-hidden">
                 <div class="h-full bg-rose-500 rounded-full" style="width: 100%;"></div>
@@ -499,6 +505,183 @@
                             <button type="button" @click="openImportOmset = false" class="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0">Batal</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Rincian Komponen Total Beban -->
+    <div x-data="{ openBebanModal: false, activeTab: 'kategori' }"
+         @open-beban-detail-modal.window="openBebanModal = true"
+         @keydown.escape.window="openBebanModal = false"
+         class="relative z-[110]"
+         role="dialog"
+         aria-modal="true"
+         x-cloak>
+        <div x-show="openBebanModal"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-gray-900/60 backdrop-blur-2xs transition-opacity"
+             @click="openBebanModal = false"></div>
+
+        <div x-show="openBebanModal"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex items-center justify-center min-h-full p-4">
+                <div class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all w-full max-w-2xl border border-gray-100"
+                     @click.stop>
+                    <!-- Modal Header -->
+                    <div class="px-6 py-4 bg-rose-50/70 border-b border-rose-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-gray-900">Rincian Komponen Total Beban</h3>
+                                <p class="text-xs text-gray-500">
+                                    Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}
+                                </p>
+                            </div>
+                        </div>
+                        <button type="button" @click="openBebanModal = false" class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-white/80 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="p-6 space-y-5 max-h-[72vh] overflow-y-auto">
+                        <!-- Summary Banner -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                            <div>
+                                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Beban Operasional</span>
+                                <div class="text-2xl font-extrabold text-rose-600 mt-0.5">
+                                    Rp {{ number_format($expenses, 0, ',', '.') }}
+                                </div>
+                                @if(($otherExpenseAmount ?? 0) > 0)
+                                    <div class="text-xs text-gray-500 mt-0.5">
+                                        + Beban Lain-lain: <span class="font-semibold text-gray-700">Rp {{ number_format($otherExpenseAmount, 0, ',', '.') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="text-xs text-gray-600 bg-white p-3 rounded-lg border border-gray-100 max-w-xs leading-relaxed">
+                                <span class="font-bold text-gray-800 block mb-0.5">Apa saja yang termasuk Beban?</span>
+                                Seluruh pengeluaran operasional apotek pada menu <strong>Pengeluaran & Pemasukan</strong> (di luar HPP obat & Pajak Penghasilan/PPh).
+                            </div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="flex border-b border-gray-200 gap-4">
+                            <button type="button"
+                                    @click="activeTab = 'kategori'"
+                                    :class="activeTab === 'kategori' ? 'border-rose-600 text-rose-600 font-bold' : 'border-transparent text-gray-500 hover:text-gray-700 font-medium'"
+                                    class="pb-2.5 text-xs uppercase tracking-wider border-b-2 transition-colors cursor-pointer">
+                                Kategori Beban ({{ isset($bebanCategoryBreakdown) ? count($bebanCategoryBreakdown) : 0 }})
+                            </button>
+                            <button type="button"
+                                    @click="activeTab = 'transaksi'"
+                                    :class="activeTab === 'transaksi' ? 'border-rose-600 text-rose-600 font-bold' : 'border-transparent text-gray-500 hover:text-gray-700 font-medium'"
+                                    class="pb-2.5 text-xs uppercase tracking-wider border-b-2 transition-colors cursor-pointer">
+                                Daftar Transaksi Periode Ini ({{ isset($allBebanModalItems) ? count($allBebanModalItems) : 0 }})
+                            </button>
+                        </div>
+
+                        <!-- Tab 1: Breakdown per Kategori Beban -->
+                        <div x-show="activeTab === 'kategori'" class="space-y-2.5">
+                            @if(isset($bebanCategoryBreakdown) && count($bebanCategoryBreakdown) > 0)
+                                <div class="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+                                    @foreach($bebanCategoryBreakdown as $catItem)
+                                        @php
+                                            $totalBebanAll = max(1, ($expenses + ($otherExpenseAmount ?? 0)));
+                                            $pct = $catItem['total'] > 0 ? round(($catItem['total'] / $totalBebanAll) * 100, 1) : 0;
+                                        @endphp
+                                        <div class="p-3.5 bg-white hover:bg-gray-50 transition flex items-center justify-between gap-4">
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="w-2 h-2 rounded-full {{ $catItem['total'] > 0 ? 'bg-rose-500' : 'bg-gray-300' }}"></span>
+                                                    <span class="text-sm font-semibold text-gray-800 truncate">{{ $catItem['category'] }}</span>
+                                                    <span class="text-[11px] px-2 py-0.5 rounded-full {{ $catItem['count'] > 0 ? 'bg-rose-50 text-rose-700 font-semibold' : 'bg-gray-100 text-gray-500' }}">
+                                                        {{ $catItem['count'] }} transaksi
+                                                    </span>
+                                                </div>
+                                                @if($catItem['total'] > 0)
+                                                    <div class="w-full h-1.5 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                                                        <div class="h-full bg-rose-500 rounded-full" style="width: {{ min(100, max(3, $pct)) }}%;"></div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="text-right shrink-0">
+                                                <div class="text-sm font-bold {{ $catItem['total'] > 0 ? 'text-rose-600' : 'text-gray-400' }}">
+                                                    Rp {{ number_format($catItem['total'], 0, ',', '.') }}
+                                                </div>
+                                                @if($catItem['total'] > 0)
+                                                    <div class="text-[10px] text-gray-500">{{ $pct }}%</div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-8 text-gray-400 text-sm">
+                                    Belum ada kategori beban yang terdaftar.
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Tab 2: Rincian Transaksi Beban pada Periode Ini -->
+                        <div x-show="activeTab === 'transaksi'">
+                            @if(isset($allBebanModalItems) && count($allBebanModalItems) > 0)
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                                    <table class="w-full text-xs text-left">
+                                        <thead class="bg-blue-950 text-white uppercase tracking-wider">
+                                            <tr>
+                                                <th class="px-3.5 py-2.5">Tanggal</th>
+                                                <th class="px-3.5 py-2.5">Keterangan</th>
+                                                <th class="px-3.5 py-2.5">Kategori</th>
+                                                <th class="px-3.5 py-2.5 text-right">Nominal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100 bg-white">
+                                            @foreach($allBebanModalItems as $item)
+                                                <tr class="hover:bg-gray-50">
+                                                    <td class="px-3.5 py-2.5 whitespace-nowrap text-gray-600">{{ \Carbon\Carbon::parse($item->date)->format('d/m/Y') }}</td>
+                                                    <td class="px-3.5 py-2.5 font-medium text-gray-900">{{ $item->description }}</td>
+                                                    <td class="px-3.5 py-2.5">
+                                                        <span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-medium capitalize">{{ $item->category ?? '-' }}</span>
+                                                    </td>
+                                                    <td class="px-3.5 py-2.5 text-right font-bold text-rose-600 whitespace-nowrap">Rp {{ number_format($item->amount, 0, ',', '.') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                                    <p class="text-sm font-semibold text-gray-600">Belum ada transaksi beban pada periode ini</p>
+                                    <p class="text-xs text-gray-400 mt-1">Tambahkan pengeluaran operasional seperti listrik, gaji, sewa, atau perlengkapan di menu Pengeluaran.</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between gap-2">
+                        <a href="{{ route('finance.expenses') }}" wire:navigate class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            <span>Kelola / Tambah Pengeluaran Beban</span>
+                        </a>
+                        <button type="button" @click="openBebanModal = false" class="btn btn-secondary btn-sm">
+                            Tutup
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

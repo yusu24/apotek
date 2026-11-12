@@ -29,43 +29,49 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        if (class_exists(\Doctrine\DBAL\Connection::class)) {
+        // Skip DB queries on CLI commands like `serve`, `view:clear`, `config:clear`, etc.
+        $isServeOrCacheCommand = app()->runningInConsole() && isset($_SERVER['argv'][1]) && in_array($_SERVER['argv'][1], [
+            'serve', 'view:clear', 'view:cache', 'config:clear', 'config:cache', 'cache:clear', 'route:clear', 'route:cache', 'optimize', 'optimize:clear', 'package:discover'
+        ]);
+
+        if (!$isServeOrCacheCommand) {
             try {
-                \Illuminate\Support\Facades\DB::connection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-            } catch (\Throwable $e) {
-                // Ignore database connection failures during early boot/CLI tasks
-            }
-        }
+                // Quick check if DB connection is reachable before running schema/doctrine queries
+                \Illuminate\Support\Facades\DB::connection()->getPdo();
 
-        try {
-            if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
-                $mailSettings = \App\Models\Setting::whereIn('key', [
-                    'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'
-                ])->pluck('value', 'key')->toArray();
-
-                if (!empty($mailSettings['mail_host'])) {
-                    $mailPassword = $mailSettings['mail_password'] ?? config('mail.mailers.smtp.password');
-                    if (!empty($mailPassword)) {
-                        try {
-                            $mailPassword = \Illuminate\Support\Facades\Crypt::decryptString($mailPassword);
-                        } catch (\Throwable $e) {
-                            // Leave as is if already plain text or decryption fails
-                        }
-                    }
-
-                    config([
-                        'mail.mailers.smtp.host' => $mailSettings['mail_host'],
-                        'mail.mailers.smtp.port' => $mailSettings['mail_port'] ?? config('mail.mailers.smtp.port'),
-                        'mail.mailers.smtp.encryption' => $mailSettings['mail_encryption'] ?? config('mail.mailers.smtp.encryption'),
-                        'mail.mailers.smtp.username' => $mailSettings['mail_username'] ?? config('mail.mailers.smtp.username'),
-                        'mail.mailers.smtp.password' => $mailPassword,
-                        'mail.from.address' => $mailSettings['mail_from_address'] ?? config('mail.from.address'),
-                        'mail.from.name' => $mailSettings['mail_from_name'] ?? config('mail.from.name'),
-                    ]);
+                if (class_exists(\Doctrine\DBAL\Connection::class)) {
+                    \Illuminate\Support\Facades\DB::connection()->getDoctrineConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
                 }
+
+                if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+                    $mailSettings = \App\Models\Setting::whereIn('key', [
+                        'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'
+                    ])->pluck('value', 'key')->toArray();
+
+                    if (!empty($mailSettings['mail_host'])) {
+                        $mailPassword = $mailSettings['mail_password'] ?? config('mail.mailers.smtp.password');
+                        if (!empty($mailPassword)) {
+                            try {
+                                $mailPassword = \Illuminate\Support\Facades\Crypt::decryptString($mailPassword);
+                            } catch (\Throwable $e) {
+                                // Leave as is if already plain text or decryption fails
+                            }
+                        }
+
+                        config([
+                            'mail.mailers.smtp.host' => $mailSettings['mail_host'],
+                            'mail.mailers.smtp.port' => $mailSettings['mail_port'] ?? config('mail.mailers.smtp.port'),
+                            'mail.mailers.smtp.encryption' => $mailSettings['mail_encryption'] ?? config('mail.mailers.smtp.encryption'),
+                            'mail.mailers.smtp.username' => $mailSettings['mail_username'] ?? config('mail.mailers.smtp.username'),
+                            'mail.mailers.smtp.password' => $mailPassword,
+                            'mail.from.address' => $mailSettings['mail_from_address'] ?? config('mail.from.address'),
+                            'mail.from.name' => $mailSettings['mail_from_name'] ?? config('mail.from.name'),
+                        ]);
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Ignore DB errors during early boot/migrations or when MySQL is stopped
             }
-        } catch (\Throwable $e) {
-            // Ignore DB errors during early boot/migrations
         }
 
         // Prevent modification when impersonating

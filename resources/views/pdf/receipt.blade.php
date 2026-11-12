@@ -6,197 +6,236 @@
     <title>Struk Transaksi</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
+            line-height: 1.35;
             width: 100%;
             margin: 0;
             padding: 0;
             color: #000;
         }
+        .text-left { text-align: left; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .font-bold { font-weight: bold; }
-        .border-t { border-top: 1px dashed #000; margin: 5px 0; padding-top: 5px; }
-        .border-b { border-bottom: 1px dashed #000; margin: 5px 0; padding-bottom: 5px; }
+        .dashed-line {
+            border-bottom: 1px dashed #000;
+            margin: 5px 0;
+        }
         table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: top; padding: 2px 0; }
-        .header { margin-bottom: 10px; }
-        .shop-name { font-size: 14px; font-weight: bold; text-transform: uppercase; }
-        .meta { font-size: 10px; margin: 5px 0; }
+        td, th { vertical-align: top; padding: 1.5px 0; }
+        .header { text-align: left; margin-bottom: 4px; }
+        .shop-name { font-size: 12px; font-weight: normal; }
+        .store-address { font-size: 10.5px; line-height: 1.3; }
+        .meta-table { font-size: 10.5px; margin: 5px 0 8px 0; }
+        .items-table { font-size: 10.5px; width: 100%; }
+        .items-table thead th {
+            font-weight: normal;
+            text-transform: uppercase;
+            padding-bottom: 3px;
+            border-bottom: 1px dashed #000;
+        }
+        .items-table tbody td {
+            padding-top: 3px;
+            padding-bottom: 2px;
+        }
+        .totals-table { width: 100%; margin-top: 8px; font-size: 10.5px; }
+        .totals-label { text-align: right; width: 55%; padding-right: 8px; }
+        .totals-value { text-align: right; width: 45%; }
+        .footer {
+            margin-top: 10px;
+            padding-top: 6px;
+            border-top: 1px dashed #000;
+            text-align: center;
+            font-size: 10px;
+            line-height: 1.35;
+        }
     </style>
 </head>
 <body>
-    <div class="header text-center">
-        <div class="shop-name">{{ \App\Models\Setting::get('store_name') ?? config('app.name', 'APOTEK') }}</div>
-        <div>{{ \App\Models\Setting::get('store_address') ?? 'Jl. Raya Apotek No. 123' }}</div>
-        <div>Telp: {{ \App\Models\Setting::get('store_phone') ?? '0812-3456-7890' }}</div>
+    @php
+        $ppnRate = \App\Models\Setting::get('pos_ppn_rate', 11);
+        $storeName = \App\Models\Setting::get('store_name') ?? config('app.name', 'Apotek');
+        $storeAddress = \App\Models\Setting::get('store_address') ?? 'Jl. Raya Apotek No. 123';
+        $storePhone = \App\Models\Setting::get('store_phone') ?? '0812-3456-7890';
+        $taxId = \App\Models\Setting::get('store_tax_id');
+        $companyName = \App\Models\Setting::get('store_bank_holder');
+        $footerNote = \App\Models\Setting::get('store_footer_note', "Terima Kasih - Semoga Cepat Sembuh\nBarang yang sudah dibeli\ntidak dapat ditukar/dikembalikan");
+
+        $patientName = $sale->patient_name ?: ($sale->customer->name ?? '-');
+        $jenisObat = $sale->saleItems
+            ->map(fn($item) => $item->product?->category?->name)
+            ->filter()
+            ->unique()
+            ->implode(', ') ?: 'Obat Bebas';
+
+        $saleDateFormatted = \Carbon\Carbon::parse($sale->date)->format('j M Y') . '  ' . ($sale->created_at ? $sale->created_at->format('H:i') : \Carbon\Carbon::parse($sale->date)->format('H:i'));
+        $totalAfterDiscount = max(0, $sale->total_amount - $sale->discount + ($sale->ppn_mode === 'exclusive' ? $sale->tax : 0));
+    @endphp
+
+    <div class="header">
+        <div class="shop-name">{{ $storeName }}</div>
+        <div class="store-address">
+            {{ $storeAddress }}<br>
+            {{ $storePhone }}
+        </div>
     </div>
 
-    <div class="meta border-b">
-        <table style="font-size: 9px;">
-            <tr>
-                <td style="width: 35%;">No</td>
-                <td>: {{ $sale->invoice_no }}</td>
-            </tr>
-            <tr>
-                <td>Tanggal</td>
-                <td>: {{ $sale->date->format('d/m/Y') }}</td>
-            </tr>
-            <tr>
-                <td>Waktu</td>
-                <td>: {{ $sale->date->format('H:i') }}</td>
-            </tr>
-            <tr>
-                <td>Kasir</td>
-                <td>: {{ $sale->user->name }}</td>
-            </tr>
-        </table>
-    </div>
+    <div class="dashed-line"></div>
 
-    @if($sale->patient_name)
-    <div class="meta border-b" style="padding-top: 5px;">
-        <div style="font-weight: bold; margin-bottom: 3px;">DATA PASIEN</div>
-        <table style="font-size: 9px;">
-            <tr>
-                <td style="width: 30%;">Nama</td>
-                <td>: {{ $sale->patient_name }}</td>
-            </tr>
-            @if($sale->patient_doctor_name)
-            <tr>
-                <td>Dokter</td>
-                <td>: {{ $sale->patient_doctor_name }}</td>
-            </tr>
-            @endif
-            @if($sale->patient_birth_date)
-            <tr>
-                <td>Tgl Lahir</td>
-                <td>: {{ \Carbon\Carbon::parse($sale->patient_birth_date)->format('d/m/Y') }}</td>
-            </tr>
-            @endif
-            @if($sale->patient_phone)
-            <tr>
-                <td>Telepon</td>
-                <td>: {{ $sale->patient_phone }}</td>
-            </tr>
-            @endif
-            @if($sale->patient_address)
-            <tr>
-                <td>Alamat</td>
-                <td>: {{ $sale->patient_address }}</td>
-            </tr>
-            @endif
-            @if($sale->patient_email)
-            <tr>
-                <td>Email</td>
-                <td>: {{ $sale->patient_email }}</td>
-            </tr>
-            @endif
-        </table>
-    </div>
-    @endif
+    <table class="meta-table">
+        <tr>
+            <td style="width: 34%;">No Faktur</td>
+            <td style="width: 3%;">:</td>
+            <td>{{ $sale->invoice_no }}</td>
+        </tr>
+        <tr>
+            <td>Tanggal</td>
+            <td>:</td>
+            <td>{{ $saleDateFormatted }}</td>
+        </tr>
+        <tr>
+            <td>Nama Pasien</td>
+            <td>:</td>
+            <td style="text-transform: uppercase;">{{ $patientName }}</td>
+        </tr>
+        @if($sale->patient_doctor_name)
+        <tr>
+            <td>Dokter</td>
+            <td>:</td>
+            <td>{{ $sale->patient_doctor_name }}</td>
+        </tr>
+        @endif
+        <tr>
+            <td>Jns Obat</td>
+            <td>:</td>
+            <td>{{ $jenisObat }}</td>
+        </tr>
+        <tr>
+            <td>Petugas</td>
+            <td>:</td>
+            <td style="text-transform: uppercase;">{{ $sale->user->name ?? '-' }}</td>
+        </tr>
+        @if($sale->payment_method === 'tempo' && $sale->receivables)
+        <tr>
+            <td>Jatuh Tempo</td>
+            <td>:</td>
+            <td>{{ $sale->receivables->due_date ? $sale->receivables->due_date->format('d/m/Y') : '-' }}</td>
+        </tr>
+        @endif
+    </table>
 
-    <div class="items">
-        <table>
-            @foreach($sale->saleItems as $item)
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th class="text-left" style="width: 10%;">NO</th>
+                <th class="text-left" style="width: 46%;">NAMA BARANG</th>
+                <th class="text-center" style="width: 20%;">JUMLAH</th>
+                <th class="text-right" style="width: 24%;">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($sale->saleItems as $index => $item)
+                @php
+                    $qtyFormatted = number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.');
+                    $unitShort = $item->unit->name ?? '';
+                @endphp
                 <tr>
-                    <td colspan="2">{{ $item->product->name }}</td>
-                </tr>
-                <tr>
-                    <td>{{ $item->quantity }} x {{ number_format($item->sell_price, 0, ',', '.') }}</td>
+                    <td class="text-left">{{ $index + 1 }}.</td>
+                    <td class="text-left" style="padding-right: 4px;">
+                        {{ $item->product->name }}
+                        @if($item->notes)
+                            <div style="font-size: 9px; color: #333;">({{ $item->notes }})</div>
+                        @endif
+                        @if($item->discount_amount > 0)
+                            <div style="font-size: 9px; color: #333;">(Disc: -{{ number_format($item->discount_amount * $item->quantity, 0, ',', '.') }})</div>
+                        @endif
+                    </td>
+                    <td class="text-center">{{ $qtyFormatted }} {{ $unitShort }}</td>
                     <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                 </tr>
-                @if($item->discount_amount > 0)
-                <tr>
-                    <td colspan="2" style="font-size: 10px; color: #666;">Disc: -{{ number_format($item->discount_amount * $item->quantity, 0, ',', '.') }}</td>
-                </tr>
-                @endif
-                @if($item->notes)
-                <tr>
-                    <td colspan="2" style="font-size: 10px; font-style: italic; color: #666;">{{ $item->notes }}</td>
-                </tr>
-                @endif
             @endforeach
-        </table>
-    </div>
+        </tbody>
+    </table>
 
-    <div class="border-t">
-        <table>
+    <table class="totals-table">
+        <tr>
+            <td class="totals-label">Sub Total:</td>
+            <td class="totals-value">{{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td class="totals-label">Diskon:</td>
+            <td class="totals-value">{{ number_format($sale->discount, 0, ',', '.') }}</td>
+        </tr>
+        @if($sale->ppn_mode === 'exclusive' && $sale->tax > 0)
+        <tr>
+            <td class="totals-label">PPN ({{ $ppnRate }}%):</td>
+            <td class="totals-value">{{ number_format($sale->tax, 0, ',', '.') }}</td>
+        </tr>
+        @endif
+        <tr>
+            <td class="totals-label">Total:</td>
+            <td class="totals-value">{{ number_format($totalAfterDiscount, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td class="totals-label">Pembulatan:</td>
+            <td class="totals-value">{{ number_format($sale->rounding, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td class="totals-label">Grand Total:</td>
+            <td class="totals-value">{{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td class="totals-label">Donasi:</td>
+            <td class="totals-value"></td>
+        </tr>
+        <tr>
+            <td class="totals-label">Bayar:</td>
+            <td class="totals-value">{{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+        </tr>
+        @if($sale->payment_method === 'cash')
+            @if($sale->change_amount > 0)
             <tr>
-                <td>Subtotal:</td>
-                <td class="text-right font-bold">Rp. {{ number_format($sale->total_amount, 0, ',', '.') }},-</td>
+                <td class="totals-label">Kembali:</td>
+                <td class="totals-value">{{ number_format($sale->change_amount, 0, ',', '.') }}</td>
             </tr>
-            @if($sale->discount > 0)
+            @else
             <tr>
-                <td>Diskon:</td>
-                <td class="text-right">- Rp. {{ number_format($sale->discount, 0, ',', '.') }},-</td>
+                <td class="totals-label">Nomor Kartu:</td>
+                <td class="totals-value">TUNAI</td>
             </tr>
             @endif
-            @if($sale->service_charge_amount > 0)
+        @elseif($sale->payment_method === 'tempo')
             <tr>
-                <td>Service ({{ $sale->service_charge_percentage }}%):</td>
-                <td class="text-right">Rp. {{ number_format($sale->service_charge_amount, 0, ',', '.') }},-</td>
-            </tr>
-            @endif
-            @if($sale->tax > 0)
-            <tr>
-                <td>PPN ({{ strtoupper($sale->ppn_mode) }}):</td>
-                <td class="text-right">Rp. {{ number_format($sale->tax, 0, ',', '.') }},-</td>
-            </tr>
-            @endif
-            @if($sale->rounding != 0)
-            <tr>
-                <td>Pembulatan:</td>
-                <td class="text-right">{{ $sale->rounding > 0 ? '+' : '' }} Rp. {{ number_format($sale->rounding, 0, ',', '.') }},-</td>
-            </tr>
-            @endif
-        </table>
-    </div>
-
-    <div class="border-t">
-        <table>
-            <tr>
-                <td class="font-bold">TOTAL:</td>
-                <td class="text-right font-bold" style="font-size: 14px;">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
-            </tr>
-            @if($sale->payment_method === 'tempo')
-            <tr>
-                <td>Status:</td>
-                <td class="text-right font-bold" style="text-transform: uppercase;">TEMPO</td>
-            </tr>
-            <tr>
-                <td>Uang Muka / DP:</td>
-                <td class="text-right">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</td>
+                <td class="totals-label">Nomor Kartu:</td>
+                <td class="totals-value">TEMPO</td>
             </tr>
             @if($sale->receivables)
             <tr>
-                <td class="font-bold">Sisa Tagihan:</td>
-                <td class="text-right font-bold">Rp. {{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }},-</td>
-            </tr>
-            <tr>
-                <td>Jatuh Tempo:</td>
-                <td class="text-right">{{ $sale->receivables->due_date ? $sale->receivables->due_date->format('d/m/Y') : '-' }}</td>
+                <td class="totals-label">Sisa Tagihan:</td>
+                <td class="totals-value">{{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</td>
             </tr>
             @endif
-            @else
+        @else
             <tr>
-                <td>Status:</td>
-                <td class="text-right font-bold">LUNAS ({{ strtoupper($sale->payment_method) }})</td>
+                <td class="totals-label">Nomor Kartu:</td>
+                <td class="totals-value">{{ strtoupper($sale->payment_method) }}</td>
             </tr>
-            <tr>
-                <td>Bayar:</td>
-                <td class="text-right">Rp. {{ number_format($sale->cash_amount, 0, ',', '.') }},-</td>
-            </tr>
-            <tr>
-                <td>Kembali:</td>
-                <td class="text-right">Rp. {{ number_format($sale->change_amount, 0, ',', '.') }},-</td>
-            </tr>
-            @endif
-        </table>
-    </div>
+        @endif
+    </table>
 
-    <div class="border-t text-center" style="margin-top: 10px; font-size: 10px;">
-        Terima Kasih atas Kunjungan Anda<br>
-        Semoga Lekas Sembuh
+    <div class="footer">
+        @if($sale->ppn_mode !== 'exclusive')
+            <div>Harga Sudah Termasuk PPN</div>
+        @endif
+        @if($companyName)
+            <div style="text-transform: uppercase;">{{ $companyName }}</div>
+        @endif
+        @if($taxId)
+            <div>NPWP : {{ $taxId }}</div>
+        @endif
+        <div>{{ $storeAddress }}</div>
+        <div>{!! nl2br(e($footerNote)) !!}</div>
     </div>
 </body>
 </html>

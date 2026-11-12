@@ -2,8 +2,22 @@
     @php
         $ppnRate = \App\Models\Setting::get('pos_ppn_rate', 11);
         $isA4 = $paperSize === 'A4';
-        $widthClass = $isA4 ? 'w-[210mm]' : ($paperSize === '80mm' ? 'w-[80mm]' : 'w-[58mm]');
-        $baseFontSize = $isA4 ? 'text-sm' : 'text-[11px]';
+        $storeName = \App\Models\Setting::get('store_name', config('app.name', 'Apotek'));
+        $storeAddress = \App\Models\Setting::get('store_address', 'Jl. Raya Apotek No. 123');
+        $storePhone = \App\Models\Setting::get('store_phone', '0812-3456-7890');
+        $taxId = \App\Models\Setting::get('store_tax_id');
+        $companyName = \App\Models\Setting::get('store_bank_holder');
+        $footerNote = \App\Models\Setting::get('store_footer_note', "Terima Kasih - Semoga Cepat Sembuh\nBarang yang sudah dibeli\ntidak dapat ditukar/dikembalikan");
+
+        $patientName = $sale->patient_name ?: ($sale->customer->name ?? '-');
+        $jenisObat = $sale->saleItems
+            ->map(fn($item) => $item->product?->category?->name)
+            ->filter()
+            ->unique()
+            ->implode(', ') ?: 'Obat Bebas';
+
+        $saleDateFormatted = \Carbon\Carbon::parse($sale->date)->format('j M Y') . '  ' . ($sale->created_at ? $sale->created_at->format('H:i') : \Carbon\Carbon::parse($sale->date)->format('H:i'));
+        $totalAfterDiscount = max(0, $sale->total_amount - $sale->discount + ($sale->ppn_mode === 'exclusive' ? $sale->tax : 0));
     @endphp
 
     <style>
@@ -14,266 +28,304 @@
             padding: 0;
         }
         body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 15px;
-            padding: 15px;
-            @if($paperSize === 'A4')
-                font-family: sans-serif;
-                padding: 25px;
-            @endif
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: {{ $isA4 ? '13px' : '12px' }};
+            line-height: 1.35;
+            padding: {{ $isA4 ? '25px' : '12px' }};
         }
         .receipt-container {
             margin: 0 auto;
             width: 100%;
-            max-width: 600px;
+            max-width: {{ $isA4 ? '650px' : '320px' }};
         }
+        .text-left { text-align: left; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .font-bold { font-weight: bold; }
-        .border-t { border-top: 1px dashed #000; margin: 5px 0; }
-        .border-b { border-bottom: 1px dashed #000; margin: 5px 0; }
-        table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: top; padding: 3px 0; }
-        .header { margin-bottom: 15px; }
-        .shop-name { font-size: {{ $isA4 ? '26px' : '20px' }}; font-weight: bold; text-transform: uppercase; }
-        .store-address { font-size: {{ $isA4 ? '14px' : '13px' }}; line-height: 1.4; }
-        .meta-table { font-size: {{ $isA4 ? '14px' : '13px' }}; }
-        .section-title { font-size: {{ $isA4 ? '14px' : '13px' }}; font-weight: bold; margin-bottom: 3px; }
-        .items td { font-size: {{ $isA4 ? '15px' : '14px' }}; }
-        .item-note, .item-discount-note { font-size: 11px; }
-        .totals td { font-size: {{ $isA4 ? '15px' : '14px' }}; }
-        .bank-details { margin-top: 10px; font-size: 13px; }
-        .footer-note { margin-top: 15px; font-size: {{ $isA4 ? '14px' : '13px' }}; white-space: pre-line; line-height: 1.4; }
-        
-        @media print { 
-            .no-print { display: none !important; } 
-            body { 
+        .dashed-line {
+            border-bottom: 1px dashed #000;
+            margin: 6px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            vertical-align: top;
+            padding: 1.5px 0;
+        }
+        .header {
+            text-align: left;
+            margin-bottom: 4px;
+        }
+        .shop-name {
+            font-size: {{ $isA4 ? '16px' : '12.5px' }};
+            font-weight: normal;
+        }
+        .store-address {
+            font-size: {{ $isA4 ? '13px' : '11.5px' }};
+            line-height: 1.3;
+        }
+        .meta-table {
+            margin-top: 6px;
+            margin-bottom: 8px;
+            font-size: {{ $isA4 ? '13px' : '11.5px' }};
+        }
+        .meta-table td {
+            padding: 1px 0;
+        }
+        .items-table {
+            width: 100%;
+            font-size: {{ $isA4 ? '13px' : '11.5px' }};
+        }
+        .items-table thead th {
+            font-weight: normal;
+            text-transform: uppercase;
+            padding-bottom: 3px;
+            border-bottom: 1px dashed #000;
+        }
+        .items-table tbody td {
+            padding-top: 4px;
+            padding-bottom: 2px;
+        }
+        .item-note, .item-discount-note {
+            font-size: {{ $isA4 ? '11px' : '10px' }};
+            color: #333;
+        }
+        .totals-table {
+            width: 100%;
+            margin-top: 8px;
+            font-size: {{ $isA4 ? '13px' : '11.5px' }};
+        }
+        .totals-table td {
+            padding: 1px 0;
+        }
+        .totals-label {
+            text-align: right;
+            width: 55%;
+            padding-right: 8px;
+        }
+        .totals-value {
+            text-align: right;
+            width: 45%;
+        }
+        .footer {
+            margin-top: 10px;
+            padding-top: 6px;
+            border-top: 1px dashed #000;
+            text-align: center;
+            font-size: {{ $isA4 ? '12.5px' : '11px' }};
+            line-height: 1.35;
+        }
+        .footer-note {
+            white-space: pre-line;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body {
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 11px !important;
                 @if($paperSize === 'A4')
-                    font-family: sans-serif !important;
                     width: 210mm !important;
                     padding: 10mm !important;
-                    font-size: 13px !important;
+                    font-size: 12px !important;
                 @elseif($paperSize === '80mm')
                     width: 80mm !important;
-                    padding: 3mm !important;
+                    padding: 2mm 3mm !important;
+                    font-size: 11px !important;
                 @else
                     width: 58mm !important;
-                    padding: 2mm !important;
+                    padding: 1.5mm 2mm !important;
+                    font-size: 10px !important;
                 @endif
             }
             .receipt-container {
                 width: 100% !important;
                 max-width: 100% !important;
             }
-            .shop-name { font-size: {{ $isA4 ? '22px' : '15px' }} !important; }
-            .store-address { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
-            .meta-table { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
-            .section-title { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
-            .items td { font-size: {{ $isA4 ? '12px' : '10px' }} !important; }
-            .item-note, .item-discount-note { font-size: 8px !important; }
-            .totals td { font-size: {{ $isA4 ? '12px' : '10px' }} !important; }
-            .bank-details { font-size: 9px !important; }
-            .footer-note { font-size: {{ $isA4 ? '11px' : '9px' }} !important; }
+            .shop-name { font-size: {{ $isA4 ? '15px' : ($paperSize === '80mm' ? '11.5px' : '10.5px') }} !important; }
+            .store-address,
+            .meta-table,
+            .items-table,
+            .totals-table { font-size: {{ $isA4 ? '12px' : ($paperSize === '80mm' ? '11px' : '9.5px') }} !important; }
+            .item-note, .item-discount-note { font-size: {{ $isA4 ? '10px' : '8.5px' }} !important; }
+            .footer { font-size: {{ $isA4 ? '11.5px' : ($paperSize === '80mm' ? '10.5px' : '9px') }} !important; }
         }
     </style>
 
     <div class="receipt-container">
-        <div class="header text-center">
+        <!-- Header (Rata Kiri seperti contoh struk) -->
+        <div class="header">
             @if($logoPath = \App\Models\Setting::get('store_logo_path'))
-                <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: {{ $isA4 ? '60mm' : '40mm' }}; max-height: 25mm; margin-bottom: 10px; margin-left: auto; margin-right: auto; display: block;" alt="Logo">
+                <img src="{{ asset('storage/' . $logoPath) }}" style="max-width: {{ $isA4 ? '50mm' : '35mm' }}; max-height: 20mm; margin-bottom: 6px; display: block;" alt="Logo">
             @endif
-            <div class="shop-name">{{ \App\Models\Setting::get('store_name', config('app.name', 'Apotek')) }}</div>
+            <div class="shop-name">{{ $storeName }}</div>
             <div class="store-address">
-                {{ \App\Models\Setting::get('store_address', 'Jl. Raya Apotek No. 123') }}
-                <br>Telp: {{ \App\Models\Setting::get('store_phone', '0812-3456-7890') }}
+                {{ $storeAddress }}<br>
+                {{ $storePhone }}
             </div>
-            @if($taxId = \App\Models\Setting::get('store_tax_id'))
-                <div style="font-size: 9px; margin-top: 2px;">NPWP: {{ $taxId }}</div>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <!-- Metadata Transaksi -->
+        <table class="meta-table">
+            <tr>
+                <td style="width: 34%;">No Faktur</td>
+                <td style="width: 3%;">:</td>
+                <td>{{ $sale->invoice_no }}</td>
+            </tr>
+            <tr>
+                <td>Tanggal</td>
+                <td>:</td>
+                <td>{{ $saleDateFormatted }}</td>
+            </tr>
+            <tr>
+                <td>Nama Pasien</td>
+                <td>:</td>
+                <td style="text-transform: uppercase;">{{ $patientName }}</td>
+            </tr>
+            @if($sale->patient_doctor_name)
+            <tr>
+                <td>Dokter</td>
+                <td>:</td>
+                <td>{{ $sale->patient_doctor_name }}</td>
+            </tr>
             @endif
-        </div>
+            <tr>
+                <td>Jns Obat</td>
+                <td>:</td>
+                <td>{{ $jenisObat }}</td>
+            </tr>
+            <tr>
+                <td>Petugas</td>
+                <td>:</td>
+                <td style="text-transform: uppercase;">{{ $sale->user->name ?? '-' }}</td>
+            </tr>
+            @if($sale->payment_method === 'tempo' && $sale->receivables)
+            <tr>
+                <td>Jatuh Tempo</td>
+                <td>:</td>
+                <td>{{ $sale->receivables->due_date->format('d/m/Y') }}</td>
+            </tr>
+            @endif
+        </table>
 
-
-        <div class="meta border-b pb-2">
-            <table class="meta-table">
+        <!-- Tabel Daftar Barang -->
+        <table class="items-table">
+            <thead>
                 <tr>
-                    <td style="width: {{ $isA4 ? '30%' : '35%' }};">No</td>
-                    <td>: {{ $sale->invoice_no }}</td>
+                    <th class="text-left" style="width: 10%;">NO</th>
+                    <th class="text-left" style="width: 46%;">NAMA BARANG</th>
+                    <th class="text-center" style="width: 20%;">JUMLAH</th>
+                    <th class="text-right" style="width: 24%;">TOTAL</th>
                 </tr>
-                <tr>
-                    <td>Tanggal</td>
-                    <td>: {{ $sale->date }}</td>
-                </tr>
-                <tr>
-                    <td>Waktu</td>
-                    <td>: {{ $sale->created_at->format('H:i') }}</td>
-                </tr>
-                <tr>
-                    <td>Kasir</td>
-                    <td>: {{ $sale->user->name }}</td>
-                </tr>
-                @if($sale->payment_method === 'tempo' && $sale->receivables)
-                <tr>
-                    <td class="font-bold">Jatuh Tempo</td>
-                    <td class="font-bold">: {{ $sale->receivables->due_date->format('d/m/Y') }}</td>
-                </tr>
-                @endif
-            </table>
-        </div>
-
-        @if($sale->patient_name)
-        <div class="meta border-b pb-2 mt-2">
-            <div class="section-title">DATA PASIEN</div>
-            <table class="meta-table">
-                <tr>
-                    <td style="width: {{ $isA4 ? '30%' : '35%' }};">Nama</td>
-                    <td>: {{ $sale->patient_name }}</td>
-                </tr>
-                @if($sale->patient_doctor_name)
-                <tr>
-                    <td>Dokter</td>
-                    <td>: {{ $sale->patient_doctor_name }}</td>
-                </tr>
-                @endif
-                @if($sale->patient_birth_date)
-                <tr>
-                    <td>Tgl Lahir</td>
-                    <td>: {{ formatDate($sale->patient_birth_date) }}</td>
-                </tr>
-                @endif
-                @if($sale->patient_phone)
-                <tr>
-                    <td>Telepon</td>
-                    <td>: {{ $sale->patient_phone }}</td>
-                </tr>
-                @endif
-                @if($sale->patient_address)
-                <tr>
-                    <td>Alamat</td>
-                    <td>: {{ $sale->patient_address }}</td>
-                </tr>
-                @endif
-                @if($sale->patient_email)
-                <tr>
-                    <td>Email</td>
-                    <td>: {{ $sale->patient_email }}</td>
-                </tr>
-                @endif
-            </table>
-        </div>
-        @endif
-
-        <div class="items">
-            <table>
-                @if($isA4)
-                <thead class="border-b">
+            </thead>
+            <tbody>
+                @foreach($sale->saleItems as $index => $item)
+                    @php
+                        $qtyFormatted = number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.');
+                        $unitShort = $item->unit->name ?? '';
+                    @endphp
                     <tr>
-                        <th class="text-left py-2">Item</th>
-                        <th class="text-center py-2">Qty</th>
-                        <th class="text-right py-2">Harga</th>
-                        <th class="text-right py-2">Total</th>
+                        <td class="text-left">{{ $index + 1 }}.</td>
+                        <td class="text-left" style="padding-right: 4px;">
+                            {{ $item->product->name }}
+                            @if($item->notes)
+                                <div class="item-note">({{ $item->notes }})</div>
+                            @endif
+                            @if($item->discount_amount > 0)
+                                <div class="item-discount-note">(Disc: -{{ number_format($item->discount_amount * $item->quantity, 0, ',', '.') }})</div>
+                            @endif
+                        </td>
+                        <td class="text-center" style="white-space: nowrap;">{{ $qtyFormatted }} {{ $unitShort }}</td>
+                        <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
-                </thead>
-                @endif
-                <tbody>
-                    @foreach($sale->saleItems as $item)
-                        @if(!$isA4)
-                        <tr>
-                            <td colspan="2" class="font-bold">
-                                {{ $item->product->name }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.') }} {{ $item->unit->name ?? '' }} x {{ number_format($item->sell_price, 0, ',', '.') }}</td>
-                            <td class="text-right">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                        </tr>
-                        @else
-                        <tr class="border-b border-gray-100">
-                            <td class="py-2">
-                                {{ $item->product->name }}
-                                @if($item->notes)
-                                    <div class="item-note" style="color: #666;">(Note: {{ $item->notes }})</div>
-                                @endif
-                            </td>
-                            <td class="text-center py-2">{{ number_format($item->quantity, $item->quantity == floor($item->quantity) ? 0 : 2, ',', '.') }} {{ $item->unit->name ?? '' }}</td>
-                            <td class="text-right py-2">{{ number_format($item->sell_price, 0, ',', '.') }}</td>
-                            <td class="text-right py-2">{{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                        </tr>
-                        @endif
+                @endforeach
+            </tbody>
+        </table>
 
-                        @if(!$isA4 && $item->notes)
-                        <tr>
-                            <td colspan="2" class="item-note" style="font-style: italic;">(Note: {{ $item->notes }})</td>
-                        </tr>
-                        @endif
-
-                        @if($item->discount_amount > 0)
-                        <tr>
-                            <td class="item-discount-note" style="color: #444;" colspan="{{ $isA4 ? 4 : 2 }}">
-                                (Diskon Item: -{{ number_format($item->discount_amount * $item->quantity, 0, ',', '.') }})
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        <div class="border-t"></div>
-
-        <div class="totals pt-2">
-            <table style="margin-left: auto; width: {{ $isA4 ? '40%' : '100%' }};">
-                <tr>
-                    <td>Subtotal</td>
-                    <td class="text-right">{{ number_format($sale->total_amount, 0, ',', '.') }}</td>
-                </tr>
-                @if($sale->discount > 0)
-                <tr>
-                    <td>Diskon Global</td>
-                    <td class="text-right">-{{ number_format($sale->discount, 0, ',', '.') }}</td>
-                </tr>
-                @endif
-                @if($sale->tax > 0)
-                <tr>
-                    <td>PPN ({{ $ppnRate }}%)</td>
-                    <td class="text-right">{{ number_format($sale->tax, 0, ',', '.') }}</td>
-                </tr>
-                @endif
-                @if($sale->rounding != 0)
-                <tr>
-                    <td>Pembulatan</td>
-                    <td class="text-right">{{ number_format($sale->rounding, 0, ',', '.') }}</td>
-                </tr>
-                @endif
-                <tr class="font-bold">
-                    <td style="padding-top: 5px; font-size: 14px;">TOTAL</td>
-                    <td class="text-right" style="padding-top: 5px; font-size: 14px;">Rp. {{ number_format($sale->grand_total, 0, ',', '.') }},-</td>
-                </tr>
-                <tr class="border-t">
-                    <td style="padding-top: 5px;">{{ ucfirst($sale->payment_method) }}</td>
-                    <td class="text-right" style="padding-top: 5px;">{{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
-                </tr>
+        <!-- Rincian Total & Pembayaran -->
+        <table class="totals-table">
+            <tr>
+                <td class="totals-label">Sub Total:</td>
+                <td class="totals-value">{{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="totals-label">Diskon:</td>
+                <td class="totals-value">{{ number_format($sale->discount, 0, ',', '.') }}</td>
+            </tr>
+            @if($sale->ppn_mode === 'exclusive' && $sale->tax > 0)
+            <tr>
+                <td class="totals-label">PPN ({{ $ppnRate }}%):</td>
+                <td class="totals-value">{{ number_format($sale->tax, 0, ',', '.') }}</td>
+            </tr>
+            @endif
+            <tr>
+                <td class="totals-label">Total:</td>
+                <td class="totals-value">{{ number_format($totalAfterDiscount, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="totals-label">Pembulatan:</td>
+                <td class="totals-value">{{ number_format($sale->rounding, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="totals-label">Grand Total:</td>
+                <td class="totals-value">{{ number_format($sale->grand_total, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td class="totals-label">Donasi:</td>
+                <td class="totals-value"></td>
+            </tr>
+            <tr>
+                <td class="totals-label">Bayar:</td>
+                <td class="totals-value">{{ number_format($sale->cash_amount, 0, ',', '.') }}</td>
+            </tr>
+            @if($sale->payment_method === 'cash')
                 @if($sale->change_amount > 0)
                 <tr>
-                    <td>Kembali</td>
-                    <td class="text-right">{{ number_format($sale->change_amount, 0, ',', '.') }}</td>
+                    <td class="totals-label">Kembali:</td>
+                    <td class="totals-value">{{ number_format($sale->change_amount, 0, ',', '.') }}</td>
+                </tr>
+                @else
+                <tr>
+                    <td class="totals-label">Nomor Kartu:</td>
+                    <td class="totals-value">TUNAI</td>
                 </tr>
                 @endif
-            </table>
-        </div>
+            @elseif($sale->payment_method === 'tempo')
+                <tr>
+                    <td class="totals-label">Nomor Kartu:</td>
+                    <td class="totals-value">TEMPO</td>
+                </tr>
+                @if($sale->receivables)
+                <tr>
+                    <td class="totals-label">Sisa Tagihan:</td>
+                    <td class="totals-value">{{ number_format($sale->receivables->remaining_balance, 0, ',', '.') }}</td>
+                </tr>
+                @endif
+            @else
+                <tr>
+                    <td class="totals-label">Nomor Kartu:</td>
+                    <td class="totals-value">{{ strtoupper($sale->payment_method) }}</td>
+                </tr>
+            @endif
+        </table>
 
-        @if($bankAccount = \App\Models\Setting::get('store_bank_account'))
-            <div class="border-t text-center bank-details">
-                <div class="font-bold">Penerimaan via Bank</div>
-                <div>{{ \App\Models\Setting::get('store_bank_name', '-') }} - {{ $bankAccount }}</div>
-                <div>A/n: {{ \App\Models\Setting::get('store_bank_holder', '-') }}</div>
-            </div>
-        @endif
-
-        <div class="border-t text-center footer-note">
-            {{ \App\Models\Setting::get('store_footer_note', "Terima Kasih atas Kunjungan Anda\nSemoga Lekas Sembuh") }}
+        <!-- Footer -->
+        <div class="footer">
+            @if($sale->ppn_mode !== 'exclusive')
+                <div>Harga Sudah Termasuk PPN</div>
+            @endif
+            @if($companyName)
+                <div style="text-transform: uppercase;">{{ $companyName }}</div>
+            @endif
+            @if($taxId)
+                <div>NPWP : {{ $taxId }}</div>
+            @endif
+            <div>{{ $storeAddress }}</div>
+            <div class="footer-note">{{ $footerNote }}</div>
         </div>
     </div>
 </div>

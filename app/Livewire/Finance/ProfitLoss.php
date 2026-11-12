@@ -134,6 +134,42 @@ class ProfitLoss extends Component
     {
         $data = (new ProfitLossService())->calculateMetrics($this->startDate, $this->endDate);
 
+        // Build category breakdown for the Total Beban modal (combining active ExpenseCategories + actual expenses in period)
+        $rawExpenses = $data['expenseDetails'];
+        $otherExpenses = $data['otherExpenseDetails'] ?? collect();
+        $allBebanItems = $rawExpenses->concat($otherExpenses)->sortByDesc('date')->values();
+
+        $activeExpenseCategories = \App\Models\ExpenseCategory::active()
+            ->where('type', 'expense')
+            ->orderBy('name')
+            ->pluck('name')
+            ->toArray();
+
+        $groupedByCat = $allBebanItems->groupBy(function ($item) {
+            return $item->category ?: 'Lainnya';
+        })->map(function ($items, $catName) {
+            return [
+                'category' => $catName,
+                'count' => $items->count(),
+                'total' => (float) $items->sum('amount'),
+            ];
+        });
+
+        // Ensure all active expense categories (except tax keywords) also appear so user sees what counts as Beban even when Rp 0
+        $taxKeywords = ['pajak', 'tax', 'beban pajak', 'income tax', 'pph', 'pajak penghasilan'];
+        foreach ($activeExpenseCategories as $catName) {
+            if (!in_array(strtolower($catName), $taxKeywords) && !$groupedByCat->has($catName)) {
+                $groupedByCat->put($catName, [
+                    'category' => $catName,
+                    'count' => 0,
+                    'total' => 0,
+                ]);
+            }
+        }
+
+        $data['bebanCategoryBreakdown'] = $groupedByCat->sortByDesc('total')->values();
+        $data['allBebanModalItems'] = $allBebanItems;
+
         // Paginate collections for the view
         $data['salesDetails'] = $this->paginateCollection($data['salesDetails'], $this->perPage, 'salesPage');
         $data['cogsDetails'] = $this->paginateCollection($data['cogsDetails'], $this->perPage, 'cogsPage');

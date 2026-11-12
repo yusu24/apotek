@@ -171,6 +171,12 @@
             'url' => route('reports.stock'),
             'keywords' => 'laporan stok rekap stok habis menipis expired kadaluarsa',
         ];
+        $reportPages[] = [
+            'code' => 'LSO',
+            'title' => 'Laporan Selisih Stok Opname',
+            'url' => route('reports.stock-opname'),
+            'keywords' => 'laporan stok opname selisih minus plus fisik sistem koreksi',
+        ];
     }
     if ($user && $user->can('view stock movements')) {
         $reportPages[] = [

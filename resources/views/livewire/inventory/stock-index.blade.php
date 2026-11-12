@@ -107,6 +107,12 @@
             </div>
 
             <div class="flex gap-2 w-full md:w-auto justify-end shrink-0">
+                <a href="{{ route('reports.stock-opname') }}" wire:navigate class="btn bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-sm" title="Lihat Laporan Selisih Stok Opname">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-1">Laporan Selisih</span>
+                </a>
                 <div class="relative btn-export-dropdown" x-data="{ open: false }" @click.outside="open = false">
                     <button @click="open = !open" class="btn btn-export-excel" title="Export">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
